@@ -27,45 +27,61 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.robotcontroller.external.samples;
+package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-
-/**
- * {@link SensorMRRangeSensor} illustrates how to use the Modern Robotics
- * Range Sensor.
+/*
+ * This is an example LinearOpMode that shows how to use
+ * a REV Robotics Touch Sensor.
  *
- * The op mode assumes that the range sensor is configured with a name of "sensor_range".
+ * It assumes that the touch sensor is configured with a name of "digitalTouch".
  *
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
- *
- * @see <a href="http://modernroboticsinc.com/range-sensor">MR Range Sensor</a>
+ * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list.
  */
-@Autonomous(name = "Sensor: MR range sensor", group = "Sensor")
-@Disabled
-public class SensorMRRangeSensor extends LinearOpMode {
+@Autonomous(name = "Sensor: Digital touch", group = "Sensor")
 
-    ModernRoboticsI2cRangeSensor rangeSensor;
+public class SensorDigitalTouch extends LinearOpMode {
+    /**
+     * The REV Robotics Touch Sensor
+     * is treated as a digital channel.  It is HIGH if the button is unpressed.
+     * It pulls LOW if the button is pressed.
+     *
+     * Also, when you connect a REV Robotics Touch Sensor to the digital I/O port on the
+     * Expansion Hub using a 4-wire JST cable, the second pin gets connected to the Touch Sensor.
+     * The lower (first) pin stays unconnected.*
+     */
 
-    @Override public void runOpMode() {
+    DigitalChannel digitalTouch;  // Hardware Device Object
 
-        // get a reference to our compass
-        rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "sensor_range");
+    @Override
+    public void runOpMode() {
 
-        // wait for the start button to be pressed
+        // get a reference to our digitalTouch object.
+        digitalTouch = hardwareMap.get(DigitalChannel.class, "sensor_digital");
+
+        // set the digital channel to input.
+        digitalTouch.setMode(DigitalChannel.Mode.INPUT);
+
+        // wait for the start button to be pressed.
         waitForStart();
 
+        // while the op mode is active, loop and read the light levels.
+        // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
         while (opModeIsActive()) {
-            telemetry.addData("raw ultrasonic", rangeSensor.rawUltrasonic());
-            telemetry.addData("raw optical", rangeSensor.rawOptical());
-            telemetry.addData("cm optical", "%.2f cm", rangeSensor.cmOptical());
-            telemetry.addData("cm", "%.2f cm", rangeSensor.getDistance(DistanceUnit.CM));
+
+            // send the info back to driver station using telemetry function.
+            // if the digital channel returns true it's HIGH and the button is unpressed.
+            if (digitalTouch.getState() == true) {
+                telemetry.addData("Digital Touch", "Is Pressed");
+            } else {
+                telemetry.addData("Digital Touch", "Is Not Pressed");
+            }
+
             telemetry.update();
         }
     }
