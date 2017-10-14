@@ -1,0 +1,115 @@
+package org.firstinspires.ftc.teamcode;
+
+/**
+ * Class rr_Constants provides all constants that will be used
+ * Ensures that all values are in sync
+ * Also contains enumerations for direction, motors and beacon buttons
+ *
+ */
+public class rr_Constants {
+
+    //Constants for Debugging
+    final static boolean DEBUG = false;
+    final static long DEBUG_MESSAGE_DISPLAY_TIME = 10; //time to flash DEBUG message on telemtry
+    final static boolean DEBUG_AUTO_CLEAR = false;  //will the screen refresh after each telemtry
+
+    //Constants for Diagnostics
+    final static int MAX_ROBOT_DIAGNOSTIC_TESTS = 20;
+    final static String DIAG_RESULTS_RELATIVE_FILE_PATH = "/PACAR/DiagResults.xml";
+
+    // Encoder constants
+    final static int TETRIX_MOTOR_ENCODER_COUNTS_PER_REVOLUTION = 1440;
+    final static int ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION = 1120;
+    final static float MATRIX_MOTOR_ENCODER_COUNTS_PER_REVOLUTION = 1478.4f;
+
+    //Motor constants
+    final static float MOTOR_LOWER_POWER_THRESHOLD = 0.20f;
+    final static int MAX_MOTOR_LOOP_TIME = 10000;     //max time to wait in a tight loop
+    final static int ENCODED_MOTOR_STALL_TIME_DELTA = 200; //time to wait in stall check code
+
+    //encoder clicks to check motors for stall
+    final static int ENCODED_MOTOR_STALL_CLICKS_ANDYMARK = 10;
+    final static int ENCODED_MOTOR_STALL_CLICKS_TETRIX = 10;
+    final static int ENCODED_MOTOR_STALL_CLICKS_MATRIX = 5;
+
+
+    //Base Motor power limits
+    final static float MOTOR_RAMP_FB_POWER_LOWER_LIMIT = 0.3f;
+    final static float MOTOR_RAMP_FB_POWER_UPPER_LIMIT = 0.78f;
+    final static float MOTOR_RAMP_SIDEWAYS_POWER_LOWER_LIMIT = 0.6f;
+    final static float MOTOR_RAMP_SIDEWAYS_POWER_UPPER_LIMIT = 0.78f;
+    final static float MAX_ROBOT_TURN_MOTOR_VELOCITY = 0.78f;
+    final static float MIN_ROBOT_TURN_MOTOR_VELOCITY = 0.15f;
+
+    //Base Motor Trims
+    final static float LEFT_MOTOR_TRIM_FACTOR = 0.95f;
+    final static float RIGHT_MOTOR_TRIM_FACTOR = 1.0f;
+
+    //index of motors
+    final static int FRONT_LEFT_MOTOR = 0;
+    final static int FRONT_RIGHT_MOTOR = 1;
+    final static int BACK_LEFT_MOTOR = 2;
+    final static int BACK_RIGHT_MOTOR = 3;
+
+    //index of color sensors
+    final static int RIGHT_JEWEL_SENSOR = 0;
+    final static int LEFT_JEWEL_SENSOR = 1;
+    final static int FLOOR_COLOR_SENSOR = 2;
+
+    //TODO: index of servos
+
+    // Mecanum wheel properties
+    final static float MECCANUM_WHEEL_DIAMETER = 4f;   //in inches
+    final static float MECCANUM_WHEEL_ENCODER_MARGIN = 50;
+    final static float MECCANUM_WHEEL_SIDE_TRACK_DISTANCE = 13.0f;
+    final static float MECCANUM_WHEEL_FRONT_TRACK_DISTANCE = 14.5f;
+
+    //Power Factors
+    final static float STANDARD_DRIVE_POWER_FACTOR = 0.7f;
+    final static float TURN_POWER_FACTOR = 0.95f;
+
+    //Gamepad Thresholds
+    final static float ANALOG_STICK_THRESHOLD = .25f;
+    final static float TRIGGER_THRESHOLD = .10f;
+
+    //distance between wheels left to right of the Robot in inches.
+    final static float ROBOT_TRACK_DISTANCE = 13.7f; //adjusted from observation.
+
+    //the value below for floor color sensor is the fallback value.
+    //it needs to be adjusted if the height of the floor color sensor
+    //is changed.
+    //normally Floor sensor calibration automatically sets values in
+    //an XML file adjusting for the light in the competition venue.
+
+    final static float FLOOR_WHITE_THRESHOLD = 30f; //may need to calibrate
+    final static float FLOOR_WHITE_MARGIN = 3f; //may need to calibrate
+
+    //Range Sensor Threshold
+    final static double RANGESENSOR_OPTICAL_PROXIMITY_THRESHOLD = 1.0d;
+
+    //Timers
+    public static final int GENERIC_TIMER = 0;
+    public static final int DPAD_TIMER = 1;
+
+    //Enumerations
+    DirectionEnum Direction;
+    TurnDirectionEnum TurnDirection;
+
+    enum AllianceColorEnum {
+        BLUE,
+        RED
+    }
+
+    //values that control the worm drive motor to adjust tension of the Launch arm
+
+    // Direction of movement for autonomous
+    enum DirectionEnum
+    {
+        Forward, Backward, SidewaysLeft, SidewaysRight
+    }
+    // Direction of turning
+    enum TurnDirectionEnum
+    {
+        Clockwise, Counterclockwise
+    }
+}
