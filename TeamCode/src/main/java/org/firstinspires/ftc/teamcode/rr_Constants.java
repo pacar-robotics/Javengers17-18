@@ -45,6 +45,23 @@ public class rr_Constants {
     final static float LEFT_MOTOR_TRIM_FACTOR = 0.95f;
     final static float RIGHT_MOTOR_TRIM_FACTOR = 1.0f;
 
+    //Cube Arm Constants TODO: CHANGE
+    final static float CUBE_ARM_UPPER_LIMIT = 0;
+    final static float CUBE_ARM_LOWER_LIMIT = 10000;
+    final static float ONE_CUBE_ROW_4 = 0; //Highest
+    final static float ONE_CUBE_ROW_3 = 0;
+    final static float ONE_CUBE_ROW_2 = 0;
+    final static float ONE_CUBE_ROW_1 = 0; //Lowest
+    final static float TWO_CUBE_POS_1 = 0; //Lowest
+    final static float TWO_CUBE_POS_2 = 0;
+    final static float TWO_CUBE_POS_3 = 0; //Highest
+    final static float CUBE_ARM_GRAB = 0;
+    final static float CUBE_ARM_POWER_FACTOR = 0.25f;
+    final static double CUBE_CLAW_OPEN = 0.1;
+    final static double CUBE_CLAW_ONE_CLOSED = 0.1;
+    final static double CUBE_CLAW_TWO_CLOSED = 0.1;
+    final static double CUBE_ORIENTATION_HORIZONTAL = 0.1;
+    final static double CUBE_ORIENTATION_VERTICAL = 0.1;
     //index of motors
     final static int FRONT_LEFT_MOTOR = 0;
     final static int FRONT_RIGHT_MOTOR = 1;
@@ -54,11 +71,7 @@ public class rr_Constants {
     final static int RELIC_ARM_EXTEND = 5;
 
     //Servo Positions TODO: CHANGE POSITIONS
-    final static double CUBE_CLAW_OPEN = 0.1;
-    final static double CUBE_CLAW_ONE_CLOSED = 0.1;
-    final static double CUBE_CLAW_TWO_CLOSED = 0.1;
-    final static double CUBE_ORIENTATION_HORIZONTAL = 0.1;
-    final static double CUBE_ORIENTATION_VERTICAL = 0.1;
+
     final static double JEWEL_KNOCKER_LEFT = 0.1;
     final static double JEWEL_KNOCKER_RIGHT = 0.1;
     final static double JEWEL_KNOCKER_NEUTRAL = 0.1;

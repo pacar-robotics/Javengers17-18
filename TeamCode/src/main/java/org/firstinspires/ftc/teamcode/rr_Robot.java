@@ -147,6 +147,8 @@ public class rr_Robot {
         aOpMode.DBG("Exiting Robot init");
     }
 
+    //MOTOR METHODS
+
     /**
      * Sets the power of the motor
      *
@@ -175,6 +177,10 @@ public class rr_Robot {
 
         motorArray[motorName].setMode(runMode);
     }
+
+
+    //CONTROL OF WHEELS
+
 
     /**
      * Runs robot to a specific position. Can be called by other, more specific methods to move forwards, backwards or sideways.
@@ -382,6 +388,62 @@ public class rr_Robot {
         }
     }
 
+    //CONTROL OF CUBE ARM
+
+    //used in TeleOp
+    public void setCubeArmPower(rr_OpMode aOpMode, float power) {
+        motorArray[CUBE_ARM].setPower(power);
+    }
+
+    public void moveCubeArmToPositionWithLimits(rr_OpMode aOpMode, int position, float power) throws InterruptedException {
+        //set the mode to be RUN_TO_POSITION
+        motorArray[CUBE_ARM].setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        Thread.sleep(50);
+
+        //Now set the target
+        motorArray[CUBE_ARM].setTargetPosition(position);
+
+        //now set the power
+        motorArray[CUBE_ARM].setPower(power);
+
+        //reset clock;
+        aOpMode.reset_timer_array(GENERIC_TIMER);
+
+
+        while (motorArray[CUBE_ARM].isBusy() && motorArray[CUBE_ARM].getCurrentPosition() < CUBE_ARM_UPPER_LIMIT &&
+                motorArray[CUBE_ARM].getCurrentPosition() > CUBE_ARM_LOWER_LIMIT)
+        {
+            aOpMode.idle();
+        }
+        //stop the motor
+        motorArray[CUBE_ARM].setPower(0.0f);
+    }
+
+    public void openCubeClawServo() throws InterruptedException{
+        cubeClaw.setPosition(CUBE_CLAW_OPEN);
+        Thread.sleep(100);
+    }
+
+    public void closeCubeClawServoOneCube() throws InterruptedException{
+        cubeClaw.setPosition(CUBE_CLAW_ONE_CLOSED);
+        Thread.sleep(100);
+    }
+
+    public void closeCubeClawServoTwoCube() throws InterruptedException{
+        cubeClaw.setPosition(CUBE_CLAW_TWO_CLOSED);
+        Thread.sleep(100);
+    }
+
+    public void setCubeClawToHorizontal() throws InterruptedException{
+        cubeOrientation.setPosition(CUBE_ORIENTATION_HORIZONTAL);
+        Thread.sleep(100);
+    }
+
+    public void setCubeClawToVertical() throws InterruptedException{
+        cubeOrientation.setPosition(CUBE_ORIENTATION_VERTICAL);
+        Thread.sleep(100);
+    }
+
 
     /**
      * Tests motors using debug statements
@@ -504,8 +566,6 @@ public class rr_Robot {
 
 
 
-    //TODO: Process below is similar process for Jewel
-
     public rr_Constants.JewelColorEnum getJewelLeftColor(rr_OpMode aOpMode) throws InterruptedException {
         Thread.sleep(30);
 
@@ -547,31 +607,6 @@ public class rr_Robot {
                 motorArray[BACK_LEFT_MOTOR].isBusy() || motorArray[BACK_RIGHT_MOTOR].isBusy());
     }
 
-
-    public void openCubeClawServo() throws InterruptedException{
-        cubeClaw.setPosition(CUBE_CLAW_OPEN);
-        Thread.sleep(100);
-    }
-
-    public void closeCubeClawServoOneCube() throws InterruptedException{
-        cubeClaw.setPosition(CUBE_CLAW_ONE_CLOSED);
-        Thread.sleep(100);
-    }
-
-    public void closeCubeClawServoTwoCube() throws InterruptedException{
-        cubeClaw.setPosition(CUBE_CLAW_TWO_CLOSED);
-        Thread.sleep(100);
-    }
-
-    public void setCubeClawToHorizontal() throws InterruptedException{
-        cubeOrientation.setPosition(CUBE_ORIENTATION_HORIZONTAL);
-        Thread.sleep(100);
-    }
-
-    public void setCubeClawToVertical() throws InterruptedException{
-        cubeOrientation.setPosition(CUBE_ORIENTATION_VERTICAL);
-        Thread.sleep(100);
-    }
 
     public void setJewelKnockerRight() throws InterruptedException{
         jewelKnocker.setPosition(JEWEL_KNOCKER_RIGHT);
