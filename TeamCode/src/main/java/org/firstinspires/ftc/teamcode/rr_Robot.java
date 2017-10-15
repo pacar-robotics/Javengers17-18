@@ -17,7 +17,9 @@ import org.firstinspires.ftc.robotcontroller.external.samples.SensorREVColorDist
 
 import java.text.DecimalFormat;
 import static org.firstinspires.ftc.teamcode.rr_Constants.*;
-
+import static org.firstinspires.ftc.teamcode.rr_Constants.DirectionEnum.Backward;
+import static org.firstinspires.ftc.teamcode.rr_Constants.DirectionEnum.Forward;
+import static org.firstinspires.ftc.teamcode.rr_Constants.DirectionEnum.SidewaysLeft;
 
 
 public class rr_Robot {
@@ -320,31 +322,64 @@ public class rr_Robot {
      * Runs robot to a specific position while driving forwards or backwards
      *
      * @param aOpMode       an object of the rr_OpMode class
-     * @param position      encoder position of each wheel
+     * @param distance      distance each wheel will go in in
      * @param power         desired power of motor
      * @param isRampedPower ramps power to prevent jerking if true
      * @throws InterruptedException
      */
-    public void runRobotToPositionFB(rr_OpMode aOpMode, int position,
+    public void moveRobotToPositionFB(rr_OpMode aOpMode, float distance,
                                      float power, boolean isRampedPower)
             throws InterruptedException {
+        //we need to store the encoder target position
+        int targetPosition;
+        //calculate target position from the input distance in cm
+        targetPosition = (int) ((distance / (Math.PI * MECCANUM_WHEEL_DIAMETER)) * ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION);
         //using the generic method with all powers set to the same value and all positions set to the same position
         runRobotToPosition(aOpMode, power, power, power, power,
-                position, position, position, position, isRampedPower);
+                targetPosition, targetPosition, targetPosition, targetPosition, isRampedPower);
     }
 
     /**
      * Runs robot to a specific position while driving sideways
      *
      * @param aOpMode  an object of the rr_OpMode class
-     * @param position encoder position of the motors
-     * @param power    generic power of the motors
+     * @param distance distance wheels will go in in
+     * @param power    generic power of the motors (positive = left, negative = right)
      */
-    public void runRobotToPositionSideways(rr_OpMode aOpMode, int position,
+    public void moveRobotToPositionSideways(rr_OpMode aOpMode, float distance,
                                            float power, boolean isRampedPower)
             throws InterruptedException {
+        //we need to
+        //store the encoder target position
+        int targetPosition;
+        //calculate target position from the input distance in cm
+        targetPosition = (int) ((distance / (Math.PI * MECCANUM_WHEEL_DIAMETER)) * ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION);
         //using the generic method with all powers set to the same value and all positions set to the same position
-        runRobotToPosition(aOpMode, power, power, power, power, -position, position, position, -position, isRampedPower);
+        runRobotToPosition(aOpMode, power, power, power, power,
+                -targetPosition, targetPosition, targetPosition, -targetPosition, isRampedPower);
+    }
+
+    /**
+     * moveWheels method
+     *
+     * @param aOpMode   - object of vv_OpMode class
+     * @param distance  - in centimeters
+     * @param power     - float
+     * @param Direction - forward, backward, sideways left, or sideways right
+     * @throws InterruptedException
+     */
+    public void moveWheels(rr_OpMode aOpMode, float distance, float power,
+                           DirectionEnum Direction, boolean isRampedPower)
+            throws InterruptedException {
+        if (Direction == Forward) {
+            moveRobotToPositionFB(aOpMode, distance, power, isRampedPower);
+        } else if (Direction == Backward) {
+            moveRobotToPositionFB(aOpMode, -distance, power, isRampedPower);
+        } else if (Direction == DirectionEnum.SidewaysLeft) {
+            moveRobotToPositionSideways(aOpMode, distance, power, isRampedPower);
+        } else if (Direction == DirectionEnum.SidewaysRight) {
+            moveRobotToPositionSideways(aOpMode, -distance, power, isRampedPower);
+        }
     }
 
 
@@ -585,204 +620,7 @@ public class rr_Robot {
     }
 
 
-    public void universalMoveRobotForDuration(rr_OpMode aOpMode, double xAxisVelocity,
-                                              double yAxisVelocity, double rotationalVelocity, long duration)
-            throws InterruptedException {
-        double fl_velocity = 0;
-        double fr_velocity = 0;
-        double bl_velocity = 0;
-        double br_velocity = 0;
-        double trackDistanceAverage = (MECCANUM_WHEEL_FRONT_TRACK_DISTANCE +
-                MECCANUM_WHEEL_SIDE_TRACK_DISTANCE) / 2.0f;
-
-        //calculate velocities at each wheel.
-
-
-        fl_velocity = xAxisVelocity + yAxisVelocity - rotationalVelocity *
-                trackDistanceAverage;
-
-        fr_velocity = xAxisVelocity - yAxisVelocity + rotationalVelocity *
-                trackDistanceAverage;
-
-        bl_velocity = xAxisVelocity - yAxisVelocity - rotationalVelocity *
-                trackDistanceAverage;
-
-        br_velocity = xAxisVelocity + yAxisVelocity + rotationalVelocity *
-                trackDistanceAverage;
-
-        //reset all encoders.
-
-        motorArray[FRONT_LEFT_MOTOR].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorArray[FRONT_RIGHT_MOTOR].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorArray[BACK_LEFT_MOTOR].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorArray[BACK_RIGHT_MOTOR].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        Thread.sleep(50);
-
-        //switch to RUN_WITH_ENCODERS to normalize for speed.
-
-        motorArray[FRONT_LEFT_MOTOR].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorArray[FRONT_RIGHT_MOTOR].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorArray[BACK_LEFT_MOTOR].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorArray[BACK_RIGHT_MOTOR].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-
-        //start slow to prevent skid.
-        //may replace with ramp to improve performance.
-
-        motorArray[FRONT_LEFT_MOTOR].setPower(Math.abs(fl_velocity) > MOTOR_LOWER_POWER_THRESHOLD ?
-                Math.signum(fl_velocity) * MOTOR_LOWER_POWER_THRESHOLD : fl_velocity);
-        motorArray[FRONT_RIGHT_MOTOR].setPower(Math.abs(fr_velocity) > MOTOR_LOWER_POWER_THRESHOLD ?
-                Math.signum(fr_velocity) * MOTOR_LOWER_POWER_THRESHOLD : fr_velocity);
-        motorArray[BACK_LEFT_MOTOR].setPower(Math.abs(bl_velocity) > MOTOR_LOWER_POWER_THRESHOLD ?
-                Math.signum(bl_velocity) * MOTOR_LOWER_POWER_THRESHOLD : bl_velocity);
-        motorArray[BACK_RIGHT_MOTOR].setPower(Math.abs(br_velocity) > MOTOR_LOWER_POWER_THRESHOLD ?
-                Math.signum(br_velocity) * MOTOR_LOWER_POWER_THRESHOLD : br_velocity);
-
-        //
-
-        aOpMode.reset_timer_array(GENERIC_TIMER);
-        //stop 100 ms before end
-        while (aOpMode.time_elapsed_array(GENERIC_TIMER) < duration - 100) {
-
-            //apply specific powers to motors to get desired movement
-            //wait till duration is complete.
-            motorArray[FRONT_LEFT_MOTOR].setPower(fl_velocity);
-            motorArray[FRONT_RIGHT_MOTOR].setPower(fr_velocity);
-            motorArray[BACK_LEFT_MOTOR].setPower(bl_velocity);
-            motorArray[BACK_RIGHT_MOTOR].setPower(br_velocity);
-            aOpMode.idle();
-        }
-
-        //end slow
-        motorArray[FRONT_LEFT_MOTOR].setPower(Math.abs(fl_velocity) > MOTOR_LOWER_POWER_THRESHOLD ?
-                Math.signum(fl_velocity) * MOTOR_LOWER_POWER_THRESHOLD : fl_velocity);
-        motorArray[FRONT_RIGHT_MOTOR].setPower(Math.abs(fr_velocity) > MOTOR_LOWER_POWER_THRESHOLD ?
-                Math.signum(fr_velocity) * MOTOR_LOWER_POWER_THRESHOLD : fr_velocity);
-        motorArray[BACK_LEFT_MOTOR].setPower(Math.abs(bl_velocity) > MOTOR_LOWER_POWER_THRESHOLD ?
-                Math.signum(bl_velocity) * MOTOR_LOWER_POWER_THRESHOLD : bl_velocity);
-        motorArray[BACK_RIGHT_MOTOR].setPower(Math.abs(br_velocity) > MOTOR_LOWER_POWER_THRESHOLD ?
-                Math.signum(br_velocity) * MOTOR_LOWER_POWER_THRESHOLD : br_velocity);
-
-        aOpMode.reset_timer_array(GENERIC_TIMER);
-        //stop 100 ms before end
-        while (aOpMode.time_elapsed_array(GENERIC_TIMER) < 100) {
-            aOpMode.idle();
-        }
-
-
-        //stop all motors
-        stopBaseMotors(aOpMode);
-
-
-    }
-
     public void universalMoveRobot(rr_OpMode aOpMode, double xAxisVelocity,
-                                   double yAxisVelocity, double rotationalVelocity,
-                                   long duration, rr_OpMode.StopCondition condition,
-                                   boolean isPulsed, long pulseWidthDuration, long pulseRestDuration)
-            throws InterruptedException {
-        double fl_velocity = 0;
-        double fr_velocity = 0;
-        double bl_velocity = 0;
-        double br_velocity = 0;
-        double trackDistanceAverage = (MECCANUM_WHEEL_FRONT_TRACK_DISTANCE +
-                MECCANUM_WHEEL_SIDE_TRACK_DISTANCE) / 2.0f;
-
-
-        //calculate velocities at each wheel.
-
-        fl_velocity = yAxisVelocity + xAxisVelocity - rotationalVelocity *
-                trackDistanceAverage;
-
-        fr_velocity = yAxisVelocity - xAxisVelocity + rotationalVelocity *
-                trackDistanceAverage;
-
-        bl_velocity = yAxisVelocity - xAxisVelocity - rotationalVelocity *
-                trackDistanceAverage;
-
-        br_velocity = yAxisVelocity + xAxisVelocity + rotationalVelocity *
-                trackDistanceAverage;
-
-        //reset all encoders.
-
-        motorArray[FRONT_LEFT_MOTOR].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorArray[FRONT_RIGHT_MOTOR].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorArray[BACK_LEFT_MOTOR].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorArray[BACK_RIGHT_MOTOR].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        Thread.sleep(50);
-
-        //switch to RUN_WITH_ENCODERS to normalize for speed.
-
-        motorArray[FRONT_LEFT_MOTOR].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorArray[FRONT_RIGHT_MOTOR].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorArray[BACK_LEFT_MOTOR].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorArray[BACK_RIGHT_MOTOR].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-
-        //start slow to prevent skid.
-        //may replace with ramp to improve performance.
-
-        motorArray[FRONT_LEFT_MOTOR].setPower(Math.abs(fl_velocity) > MOTOR_LOWER_POWER_THRESHOLD ?
-                Math.signum(fl_velocity) * MOTOR_LOWER_POWER_THRESHOLD : fl_velocity * LEFT_MOTOR_TRIM_FACTOR);
-        motorArray[FRONT_RIGHT_MOTOR].setPower(Math.abs(fr_velocity) > MOTOR_LOWER_POWER_THRESHOLD ?
-                Math.signum(fr_velocity) * MOTOR_LOWER_POWER_THRESHOLD : fr_velocity * RIGHT_MOTOR_TRIM_FACTOR);
-        motorArray[BACK_LEFT_MOTOR].setPower(Math.abs(bl_velocity) > MOTOR_LOWER_POWER_THRESHOLD ?
-                Math.signum(bl_velocity) * MOTOR_LOWER_POWER_THRESHOLD : bl_velocity * LEFT_MOTOR_TRIM_FACTOR);
-        motorArray[BACK_RIGHT_MOTOR].setPower(Math.abs(br_velocity) > MOTOR_LOWER_POWER_THRESHOLD ?
-                Math.signum(br_velocity) * MOTOR_LOWER_POWER_THRESHOLD : br_velocity * RIGHT_MOTOR_TRIM_FACTOR);
-
-        //
-
-        aOpMode.reset_timer_array(GENERIC_TIMER);
-        //stop 100 ms before end
-        while ((aOpMode.time_elapsed_array(GENERIC_TIMER) < (duration - 100)) &&
-                (!condition.stopCondition(aOpMode))) {
-
-            //condition will return true when it reaches state meant to stop movement
-
-            //apply specific powers to motors to get desired movement
-            //wait till duration is complete.
-            motorArray[FRONT_LEFT_MOTOR].setPower(fl_velocity * LEFT_MOTOR_TRIM_FACTOR);
-            motorArray[FRONT_RIGHT_MOTOR].setPower(fr_velocity * RIGHT_MOTOR_TRIM_FACTOR);
-            motorArray[BACK_LEFT_MOTOR].setPower(bl_velocity * LEFT_MOTOR_TRIM_FACTOR);
-            motorArray[BACK_RIGHT_MOTOR].setPower(br_velocity * RIGHT_MOTOR_TRIM_FACTOR);
-
-            if (isPulsed) {
-                //run the motors for the pulseWidthDuration
-                //by sleeping, we let the motors that are running to continue to run
-                Thread.sleep(pulseWidthDuration);
-
-                //stop motors
-                stopBaseMotors(aOpMode);
-                //pause for pulseRestDuration
-                Thread.sleep(pulseRestDuration);
-                //this allows the robot to move slowly and gives the sensor time to read
-            }
-            aOpMode.idle();
-        }
-
-        //end slow
-        motorArray[FRONT_LEFT_MOTOR].setPower(Math.abs(fl_velocity) > MOTOR_LOWER_POWER_THRESHOLD ?
-                Math.signum(fl_velocity) * MOTOR_LOWER_POWER_THRESHOLD : fl_velocity * LEFT_MOTOR_TRIM_FACTOR);
-        motorArray[FRONT_RIGHT_MOTOR].setPower(Math.abs(fr_velocity) > MOTOR_LOWER_POWER_THRESHOLD ?
-                Math.signum(fr_velocity) * MOTOR_LOWER_POWER_THRESHOLD : fr_velocity * RIGHT_MOTOR_TRIM_FACTOR);
-        motorArray[BACK_LEFT_MOTOR].setPower(Math.abs(bl_velocity) > MOTOR_LOWER_POWER_THRESHOLD ?
-                Math.signum(bl_velocity) * MOTOR_LOWER_POWER_THRESHOLD : bl_velocity * LEFT_MOTOR_TRIM_FACTOR);
-        motorArray[BACK_RIGHT_MOTOR].setPower(Math.abs(br_velocity) > MOTOR_LOWER_POWER_THRESHOLD ?
-                Math.signum(br_velocity) * MOTOR_LOWER_POWER_THRESHOLD : br_velocity * RIGHT_MOTOR_TRIM_FACTOR);
-
-        aOpMode.reset_timer_array(GENERIC_TIMER);
-        //stop 100 ms before end
-        while (aOpMode.time_elapsed_array(GENERIC_TIMER) < 100) {
-            aOpMode.idle();
-        }
-
-
-        //stop all motors
-        stopBaseMotors(aOpMode);
-    }
-
-    public void universalMoveRobotForTeleOp(rr_OpMode aOpMode, double xAxisVelocity,
                                             double yAxisVelocity)
             throws InterruptedException {
         double fl_velocity = 0;
