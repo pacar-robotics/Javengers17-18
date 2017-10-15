@@ -50,13 +50,26 @@ public class rr_Constants {
     final static int FRONT_RIGHT_MOTOR = 1;
     final static int BACK_LEFT_MOTOR = 2;
     final static int BACK_RIGHT_MOTOR = 3;
+    final static int CUBE_ARM = 4;
+    final static int RELIC_ARM_EXTEND = 5;
 
-    //index of color sensors
-    final static int RIGHT_JEWEL_SENSOR = 0;
-    final static int LEFT_JEWEL_SENSOR = 1;
-    final static int FLOOR_COLOR_SENSOR = 2;
+    //Servo Positions TODO: CHANGE POSITIONS
+    final static double CUBE_CLAW_OPEN = 0.1;
+    final static double CUBE_CLAW_ONE_CLOSED = 0.1;
+    final static double CUBE_CLAW_TWO_CLOSED = 0.1;
+    final static double CUBE_ORIENTATION_HORIZONTAL = 0.1;
+    final static double CUBE_ORIENTATION_VERTICAL = 0.1;
+    final static double JEWEL_KNOCKER_LEFT = 0.1;
+    final static double JEWEL_KNOCKER_RIGHT = 0.1;
+    final static double JEWEL_KNOCKER_NEUTRAL = 0.1;
+    final static double JEWEL_ARM_IN = 0.1;
+    final static double JEWEL_ARM_OUT = 0.1;
+    final static double RELIC_CLAW_ANGLE_GRAB = 0.1;
+    final static double RELIC_CLAW_ANGLE_EXTEND = 0.1;
+    final static double RELIC_CLAW_OPEN = 0.1;
+    final static double RELIC_CLAW_CLOSED = 0.1;
 
-    //TODO: index of servos
+    final static double RELIC_ARM_RETRACT_POWER = 0;
 
     // Mecanum wheel properties
     final static float MECCANUM_WHEEL_DIAMETER = 4f;   //in inches
@@ -74,6 +87,10 @@ public class rr_Constants {
 
     //distance between wheels left to right of the Robot in inches.
     final static float ROBOT_TRACK_DISTANCE = 13.7f; //adjusted from observation.
+
+    //Sensor Constants TODO: CHANGE
+    final static float JEWEL_RED_THRESHOLD = 0.5f;
+    final static float JEWEL_BLUE_THRESHOLD = 0.5f;
 
     //the value below for floor color sensor is the fallback value.
     //it needs to be adjusted if the height of the floor color sensor
@@ -94,10 +111,18 @@ public class rr_Constants {
     //Enumerations
     DirectionEnum Direction;
     TurnDirectionEnum TurnDirection;
+    JewelColorEnum JewelColor;
+
 
     enum AllianceColorEnum {
         BLUE,
         RED
+    }
+
+    enum JewelColorEnum {
+        BLUE,
+        RED,
+        UNKNOWN
     }
 
     //values that control the worm drive motor to adjust tension of the Launch arm

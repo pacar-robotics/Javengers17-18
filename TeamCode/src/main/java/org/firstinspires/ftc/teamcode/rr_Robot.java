@@ -1,23 +1,21 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Color;
 import android.util.Log;
 
 import com.kauailabs.navx.ftc.AHRS;
 import com.kauailabs.navx.ftc.navXPIDController;
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.I2cAddr;
-import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import java.text.DecimalFormat;
+import org.firstinspires.ftc.robotcontroller.external.samples.SensorREVColorDistance;
 
+import java.text.DecimalFormat;
 import static org.firstinspires.ftc.teamcode.rr_Constants.*;
 
 
@@ -42,7 +40,19 @@ public class rr_Robot {
     //Motors
     private DcMotor motorArray[];
 
-    //Color Sensors
+    //Servo
+    private Servo cubeClaw;
+    private Servo cubeOrientation;
+    private Servo jewelArm;
+    private Servo jewelKnocker;
+    private Servo relicClaw;
+    private Servo relicClawAngle;
+    private Servo relicArmRetract; //Continuous servo
+
+    //TODO: Color Sensors
+    private ColorSensor leftJewelColorDistance;
+    private ColorSensor rightJewelColorDistance;
+    private ColorSensor floorColorSensor; //TODO: IS THIS A THING?
 
     protected navXPIDController yawPIDController;
 
@@ -63,19 +73,36 @@ public class rr_Robot {
         aOpMode.DBG("in Robot init");
         hwMap = ahwMap;
 
-        // Define and Initialize motors, sensors, and servos
+        //Define and Initialize motors, sensors, and servos
 
-        //Make motorArray comprised of DcMotors
+        //Instantiate motorArray
         motorArray = new DcMotor[10];
 
+        //Map Motors
         motorArray[FRONT_LEFT_MOTOR] = hwMap.get(DcMotor.class, "motor_front_left");
         motorArray[FRONT_RIGHT_MOTOR] = hwMap.get(DcMotor.class, "motor_front_right");
         motorArray[BACK_LEFT_MOTOR] = hwMap.get(DcMotor.class, "motor_back_left");
         motorArray[BACK_RIGHT_MOTOR] = hwMap.get(DcMotor.class, "motor_back_right");
+        motorArray[CUBE_ARM] = hwMap.get(DcMotor.class, "motor_cube_arm");
+        motorArray[RELIC_ARM_EXTEND] = hwMap.get(DcMotor.class, "motor_relic_extend");
+
 
         //TODO: Map Sensors and Servos
 
+        //Map Servos
+        cubeClaw = hwMap.get(Servo.class, "servo_cube_claw");
+        cubeOrientation = hwMap.get(Servo.class, "servo_cube_orientatoin");
+        jewelArm = hwMap.get(Servo.class, "servo_jewel_arm");
+        jewelKnocker = hwMap.get(Servo.class, "servo_jewel_knocker");
+        relicClaw = hwMap.get(Servo.class, "servo_relic_claw");
+        relicClawAngle = hwMap.get(Servo.class, "servo_claw_angle");
+        relicArmRetract = hwMap.get(Servo.class, "servo_relic_retract");
+
+        //Map Sensors
+        leftJewelColorDistance = hwMap.get(ColorSensor.class, "left_color_distance");
+        rightJewelColorDistance = hwMap.get(ColorSensor.class, "right_color_distance");
         rangeSensor = hwMap.get(ModernRoboticsI2cRangeSensor.class, "range_sensor");
+
 
         aOpMode.DBG("Begin Gyro Calib");
         //allocate the mxp gyro sensor.
@@ -440,57 +467,39 @@ public class rr_Robot {
         }
     }
 
-    //TODO: Do we want to combine all common methods of color and touch sensors into one?
-    //Process of above is defined in comments below
-
-//    /**
-//     * Turns floor color sensor on
-//     * @param aOpMode   an object of the rr_OpMode class
-//     * @throws InterruptedException
-//     */
-//    public void enableFloorColorSensorLed(rr_OpMode aOpMode) throws InterruptedException {
-//        floorColorSensor.enableLed(true);
-//        //wait for it to turn on.
-//        Thread.sleep(300);
-//    }
-//
-//    //turn the color sensor LED on the floor of the robot off
-//    public void disableFloorColorSensorLed(rr_OpMode aOPMode) throws InterruptedException {
-//        floorColorSensor.enableLed(false);
-//        //wait for it to turn off.
-//        Thread.sleep(300);
-//    }
 
 
     //TODO: Process below is similar process for Jewel
 
-//    public rr_Constants.BeaconColorEnum getBeaconLeftColor(rr_OpMode aOpMode) throws InterruptedException {
-//        Thread.sleep(30);
-//        if ((beaconLeftColorSensor.red() > BEACON_RED_THRESHOLD) &&
-//                (beaconLeftColorSensor.red() > beaconLeftColorSensor.blue())) {
-//            return rr_Constants.BeaconColorEnum.RED;
-//        }
-//        if ((beaconLeftColorSensor.blue() > BEACON_BLUE_THRESHOLD) &&
-//                (beaconLeftColorSensor.blue() > beaconLeftColorSensor.red())) {
-//            return rr_Constants.BeaconColorEnum.BLUE;
-//        }
-//
-//        return rr_Constants.BeaconColorEnum.UNKNOWN;
-//    }
-//
-//    public rr_Constants.BeaconColorEnum getBeaconRightColor(rr_OpMode aOpMode) throws InterruptedException {
-//        Thread.sleep(30);
-//        if ((beaconRightColorSensor.red() > BEACON_RED_THRESHOLD) &&
-//                (beaconRightColorSensor.red() > beaconRightColorSensor.blue())) {
-//            return rr_Constants.BeaconColorEnum.RED;
-//        }
-//        if ((beaconRightColorSensor.blue() > BEACON_BLUE_THRESHOLD) &&
-//                (beaconRightColorSensor.blue() > beaconRightColorSensor.red())) {
-//            return rr_Constants.BeaconColorEnum.BLUE;
-//        }
-//
-//        return rr_Constants.BeaconColorEnum.UNKNOWN;
-//    }
+    public rr_Constants.JewelColorEnum getJewelLeftColor(rr_OpMode aOpMode) throws InterruptedException {
+        Thread.sleep(30);
+
+        if ((leftJewelColorDistance.red() > JEWEL_RED_THRESHOLD) &&
+                (leftJewelColorDistance.red() > leftJewelColorDistance.blue())) {
+            return rr_Constants.JewelColorEnum.RED;
+        }
+        if ((leftJewelColorDistance.blue() > JEWEL_BLUE_THRESHOLD) &&
+                (leftJewelColorDistance.blue() > leftJewelColorDistance.red())) {
+            return rr_Constants.JewelColorEnum.BLUE;
+        }
+
+        return rr_Constants.JewelColorEnum.UNKNOWN;
+    }
+
+    public rr_Constants.JewelColorEnum getJewelRightColor(rr_OpMode aOpMode) throws InterruptedException {
+        Thread.sleep(30);
+
+        if ((rightJewelColorDistance.red() > JEWEL_RED_THRESHOLD) &&
+                (rightJewelColorDistance.red() > rightJewelColorDistance.blue())) {
+            return rr_Constants.JewelColorEnum.RED;
+        }
+        if ((rightJewelColorDistance.blue() > JEWEL_BLUE_THRESHOLD) &&
+                (rightJewelColorDistance.blue() > rightJewelColorDistance.red())) {
+            return rr_Constants.JewelColorEnum.BLUE;
+        }
+
+        return rr_Constants.JewelColorEnum.UNKNOWN;
+    }
 
 
 
@@ -504,35 +513,77 @@ public class rr_Robot {
     }
 
 
+    public void openCubeClawServo() throws InterruptedException{
+        cubeClaw.setPosition(CUBE_CLAW_OPEN);
+        Thread.sleep(100);
+    }
+
+    public void closeCubeClawServoOneCube() throws InterruptedException{
+        cubeClaw.setPosition(CUBE_CLAW_ONE_CLOSED);
+        Thread.sleep(100);
+    }
+
+    public void closeCubeClawServoTwoCube() throws InterruptedException{
+        cubeClaw.setPosition(CUBE_CLAW_TWO_CLOSED);
+        Thread.sleep(100);
+    }
+
+    public void setCubeClawToHorizontal() throws InterruptedException{
+        cubeOrientation.setPosition(CUBE_ORIENTATION_HORIZONTAL);
+        Thread.sleep(100);
+    }
+
+    public void setCubeClawToVertical() throws InterruptedException{
+        cubeOrientation.setPosition(CUBE_ORIENTATION_VERTICAL);
+        Thread.sleep(100);
+    }
+
+    public void setJewelKnockerRight() throws InterruptedException{
+        jewelKnocker.setPosition(JEWEL_KNOCKER_RIGHT);
+        Thread.sleep(100);
+    }
+
+    public void setJewelKnockerLeft() throws InterruptedException{
+        jewelKnocker.setPosition(JEWEL_KNOCKER_LEFT);
+        Thread.sleep(100);
+    }
+
+    public void setJewelKnockerNeutral() throws InterruptedException{
+        jewelKnocker.setPosition(JEWEL_KNOCKER_NEUTRAL);
+        Thread.sleep(100);
+    }
+
+    public void setJewelArmIn() throws InterruptedException{
+        jewelArm.setPosition(JEWEL_ARM_IN);
+        Thread.sleep(100);
+    }
+
+    public void setJewelArmOut() throws InterruptedException{
+        jewelArm.setPosition(JEWEL_ARM_OUT);
+        Thread.sleep(100);
+    }
 
 
-    //TODO: Do we want to combine sets and gets of Servos into one method using array?
-    //Process above is ike process below
+    public void setRelicArmAngleGrab() throws InterruptedException{
+        relicClawAngle.setPosition(RELIC_CLAW_ANGLE_GRAB);
+        Thread.sleep(100);
+    }
 
-//    public void openFrontLauncherGate() throws InterruptedException {
-//        launcherFrontGateServo.setPosition(LAUNCH_FRONT_GATE_SERVO_OPEN);
-//        Thread.sleep(100);
-//    }
-//
-//    public void closeFrontLauncherGate() throws InterruptedException {
-//        launcherFrontGateServo.setPosition(LAUNCH_FRONT_GATE_SERVO_CLOSED);
-//        Thread.sleep(100);
-//    }
-//
-//
-//    public double getFrontLauncherGateServoPosition(rr_OpMode aOpMode) {
-//        return launcherFrontGateServo.getPosition();
-//    }
-//
-//    public void setFrontLauncherGateServoPosition(rr_OpMode aOpMode, double position) {
-//        launcherFrontGateServo.setPosition(position);
-//    }
-//
-//
-//    public int getBeaconLeftColorGreenValue(rr_OpMode aOpMode) {
-//
-//        return beaconLeftColorSensor.green();
-//    }
+    public void setRelicArmAngleExtend() throws InterruptedException{
+        relicClawAngle.setPosition(RELIC_CLAW_ANGLE_EXTEND);
+        Thread.sleep(100);
+    }
+
+    public void setRelicClawClosed() throws InterruptedException{
+        relicClaw.setPosition(RELIC_CLAW_CLOSED);
+        Thread.sleep(100);
+    }
+
+    public void setRelicClawOpen() throws InterruptedException{
+        relicClaw.setPosition(RELIC_CLAW_OPEN);
+        Thread.sleep(100);
+    }
+
 
     public void universalMoveRobotForDuration(rr_OpMode aOpMode, double xAxisVelocity,
                                               double yAxisVelocity, double rotationalVelocity, long duration)
