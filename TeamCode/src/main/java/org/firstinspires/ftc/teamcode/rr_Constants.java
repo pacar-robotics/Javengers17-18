@@ -46,6 +46,7 @@ public class rr_Constants {
     final static float RIGHT_MOTOR_TRIM_FACTOR = 1.0f;
 
     //Cube Arm Constants TODO: CHANGE
+    final static int CUBE_ARM_MAX_DURATION = 5000;
     final static float CUBE_ARM_UPPER_LIMIT = 0;
     final static float CUBE_ARM_LOWER_LIMIT = 10000;
     final static float ONE_CUBE_ROW_4 = 0; //Highest
@@ -57,11 +58,26 @@ public class rr_Constants {
     final static float TWO_CUBE_POS_3 = 0; //Highest
     final static float CUBE_ARM_GRAB = 0;
     final static float CUBE_ARM_POWER_FACTOR = 0.25f;
-    final static double CUBE_CLAW_OPEN = 0.1;
-    final static double CUBE_CLAW_ONE_CLOSED = 0.1;
-    final static double CUBE_CLAW_TWO_CLOSED = 0.1;
-    final static double CUBE_ORIENTATION_HORIZONTAL = 0.1;
-    final static double CUBE_ORIENTATION_VERTICAL = 0.1;
+    final static float CUBE_CLAW_OPEN = 0.1f;
+    final static float CUBE_CLAW_ONE_CLOSED = 0.1f;
+    final static float CUBE_CLAW_TWO_CLOSED = 0.1f;
+    final static float CUBE_ORIENTATION_HORIZONTAL = 0.1f;
+    final static float CUBE_ORIENTATION_VERTICAL = 0.1f;
+
+    //Relic Arm Constants TODO: Change
+    final static float RELIC_EXTEND_POWER = 1.0f;
+    final static float RELIC_RETRACT_POWER = 1.0f;
+    final static int RELIC_UPPER_LIMIT = 1000;
+    final static int RELIC_LOWER_LIMIT = 1000;
+    final static int RELIC_ZONE_1 = 1000;
+    final static int RELIC_ZONE_2 = 1000;
+    final static int RELIC_ZONE_3 = 1000;
+    final static int RELIC_MAX_DURATION = 5000;
+    final static float RELIC_CLAW_ANGLE_GRAB = 0.1f;
+    final static float RELIC_CLAW_ANGLE_EXTEND = 0.1f;
+    final static float RELIC_CLAW_OPEN = 0.1f;
+    final static float RELIC_CLAW_CLOSED = 0.1f;
+
     //index of motors
     final static int FRONT_LEFT_MOTOR = 0;
     final static int FRONT_RIGHT_MOTOR = 1;
@@ -72,15 +88,11 @@ public class rr_Constants {
 
     //Servo Positions TODO: CHANGE POSITIONS
 
-    final static double JEWEL_KNOCKER_LEFT = 0.1;
-    final static double JEWEL_KNOCKER_RIGHT = 0.1;
-    final static double JEWEL_KNOCKER_NEUTRAL = 0.1;
-    final static double JEWEL_ARM_IN = 0.1;
-    final static double JEWEL_ARM_OUT = 0.1;
-    final static double RELIC_CLAW_ANGLE_GRAB = 0.1;
-    final static double RELIC_CLAW_ANGLE_EXTEND = 0.1;
-    final static double RELIC_CLAW_OPEN = 0.1;
-    final static double RELIC_CLAW_CLOSED = 0.1;
+    final static float JEWEL_KNOCKER_LEFT = 0.1f;
+    final static float JEWEL_KNOCKER_RIGHT = 0.1f;
+    final static float JEWEL_KNOCKER_NEUTRAL = 0.1f;
+    final static float JEWEL_ARM_IN = 0.1f;
+    final static float JEWEL_ARM_OUT = 0.1f;
 
     final static double RELIC_ARM_RETRACT_POWER = 0;
 

@@ -406,12 +406,12 @@ public class rr_Robot {
         //now set the power
         motorArray[CUBE_ARM].setPower(power);
 
-        //reset clock;
+        //reset clock for checking stall
         aOpMode.reset_timer_array(GENERIC_TIMER);
 
 
         while (motorArray[CUBE_ARM].isBusy() && motorArray[CUBE_ARM].getCurrentPosition() < CUBE_ARM_UPPER_LIMIT &&
-                motorArray[CUBE_ARM].getCurrentPosition() > CUBE_ARM_LOWER_LIMIT)
+                motorArray[CUBE_ARM].getCurrentPosition() > CUBE_ARM_LOWER_LIMIT && (aOpMode.time_elapsed_array(GENERIC_TIMER) < CUBE_ARM_MAX_DURATION))
         {
             aOpMode.idle();
         }
@@ -444,7 +444,64 @@ public class rr_Robot {
         Thread.sleep(100);
     }
 
+    //RELIC ARM CONTROL
 
+    public void extendRelicArmToPositionWithLimits(rr_OpMode aOpMode, int position, float power) throws InterruptedException {
+       if (motorArray[RELIC_ARM_EXTEND].getCurrentPosition() < position) {
+
+            //set the mode to be RUN_TO_POSITION
+            motorArray[RELIC_ARM_EXTEND].setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            Thread.sleep(50);
+
+            //Now set the target
+            motorArray[RELIC_ARM_EXTEND].setTargetPosition(position);
+
+            //now set the power
+            motorArray[RELIC_ARM_EXTEND].setPower(power);
+
+            //reset clock for stall
+            aOpMode.reset_timer_array(GENERIC_TIMER);
+
+
+            while (motorArray[RELIC_ARM_EXTEND].isBusy() && motorArray[RELIC_ARM_EXTEND].getCurrentPosition() < RELIC_UPPER_LIMIT &&
+                    motorArray[RELIC_ARM_EXTEND].getCurrentPosition() > RELIC_LOWER_LIMIT && (aOpMode.time_elapsed_array(GENERIC_TIMER) < RELIC_MAX_DURATION)) {
+                aOpMode.idle();
+            }
+            //stop the motor
+            motorArray[CUBE_ARM].setPower(0.0f);
+        } else {
+           aOpMode.telemetryAddData("Error", "Relic Arm", "Asked to be retracted in extend method");
+       }
+    }
+
+    public void setPowerExtendRelicArm(rr_OpMode aOpMode, float power) {
+        motorArray[RELIC_ARM_EXTEND].setPower(power);
+    }
+    public void setPowerRetractRelicArm(rr_OpMode aOpMode, float power) {
+        relicArmRetract.setPosition(power);
+    }
+
+    public void setRelicArmAngleGrab() throws InterruptedException{
+        relicClawAngle.setPosition(RELIC_CLAW_ANGLE_GRAB);
+        Thread.sleep(100);
+    }
+
+    public void setRelicArmAngleExtend() throws InterruptedException{
+        relicClawAngle.setPosition(RELIC_CLAW_ANGLE_EXTEND);
+        Thread.sleep(100);
+    }
+
+    public void setRelicClawClosed() throws InterruptedException{
+        relicClaw.setPosition(RELIC_CLAW_CLOSED);
+        Thread.sleep(100);
+    }
+
+    public void setRelicClawOpen() throws InterruptedException{
+        relicClaw.setPosition(RELIC_CLAW_OPEN);
+        Thread.sleep(100);
+    }
+
+    
     /**
      * Tests motors using debug statements
      *
@@ -632,28 +689,6 @@ public class rr_Robot {
         jewelArm.setPosition(JEWEL_ARM_OUT);
         Thread.sleep(100);
     }
-
-
-    public void setRelicArmAngleGrab() throws InterruptedException{
-        relicClawAngle.setPosition(RELIC_CLAW_ANGLE_GRAB);
-        Thread.sleep(100);
-    }
-
-    public void setRelicArmAngleExtend() throws InterruptedException{
-        relicClawAngle.setPosition(RELIC_CLAW_ANGLE_EXTEND);
-        Thread.sleep(100);
-    }
-
-    public void setRelicClawClosed() throws InterruptedException{
-        relicClaw.setPosition(RELIC_CLAW_CLOSED);
-        Thread.sleep(100);
-    }
-
-    public void setRelicClawOpen() throws InterruptedException{
-        relicClaw.setPosition(RELIC_CLAW_OPEN);
-        Thread.sleep(100);
-    }
-
 
     public void universalMoveRobot(rr_OpMode aOpMode, double xAxisVelocity,
                                             double yAxisVelocity)
