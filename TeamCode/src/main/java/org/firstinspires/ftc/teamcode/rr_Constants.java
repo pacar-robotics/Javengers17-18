@@ -94,7 +94,7 @@ public class rr_Constants {
     final static int CUBE_ARM = 4;
     final static int RELIC_ARM_EXTEND = 5;
 
-    // Mecanum wheel properties
+    //Mecanum wheel properties
     final static float MECANUM_WHEEL_DIAMETER = 4f;   //in inches
     final static float MECANUM_WHEEL_ENCODER_MARGIN = 50;
     final static float MECANUM_WHEEL_SIDE_TRACK_DISTANCE = 13.0f;
@@ -103,6 +103,7 @@ public class rr_Constants {
     //Power Factors
     final static float STANDARD_DRIVE_POWER_FACTOR = 0.7f;
     final static float TURN_POWER_FACTOR = 0.95f;
+    final static float SCORING_DRIVE_POWER_FACTOR = 0.25f;  //TODO: CHANGE LATER
 
     //Gamepad Thresholds
     final static float ANALOG_STICK_THRESHOLD = .25f;

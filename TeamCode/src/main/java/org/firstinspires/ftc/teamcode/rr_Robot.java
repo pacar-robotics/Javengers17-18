@@ -68,7 +68,8 @@ public class rr_Robot {
 
     private ElapsedTime period = new ElapsedTime();
 
-    public void init(rr_OpMode aOpMode, HardwareMap ahwMap) throws InterruptedException {
+
+    public rr_Robot(rr_OpMode aOpMode, HardwareMap ahwMap) throws InterruptedException {
         // save reference to HW Map
         aOpMode.DBG("in Robot init");
         hwMap = ahwMap;
@@ -154,6 +155,7 @@ public class rr_Robot {
 
         aOpMode.DBG("Exiting Robot init");
     }
+
 
 
     //MOTOR METHODS
@@ -863,122 +865,6 @@ public class rr_Robot {
         } else {
             return ((power < MIN_ROBOT_TURN_MOTOR_VELOCITY ? MIN_ROBOT_TURN_MOTOR_VELOCITY :
                     (power > MAX_ROBOT_TURN_MOTOR_VELOCITY ? MAX_ROBOT_TURN_MOTOR_VELOCITY : power)));
-        }
-    }
-
-
-    //TODO: Put this in TeleLib
-    public double getGamePad1RightJoystickPolarMagnitude(rr_OpMode aOpMode) {
-        //returns the magnitude of the polar vector for the rotation calculations
-        //for field oriented drive
-        //inverted y
-        if ((Math.abs(aOpMode.gamepad1.right_stick_x) > ANALOG_STICK_THRESHOLD) ||
-                (Math.abs(aOpMode.gamepad1.right_stick_y) > ANALOG_STICK_THRESHOLD)) {
-            return (Math.sqrt(Math.pow(aOpMode.gamepad1.right_stick_x, 2.0) +
-                    Math.pow(-aOpMode.gamepad1.right_stick_y, 2.0)));
-        } else {
-            return 0;
-        }
-
-    }
-
-    //TODO: Put this in TeleLib
-    public double getGamePad1RightJoystickPolarAngle(rr_OpMode aOpMode) {
-        //returns polar angle in degrees of vector for the rotation calculations
-        //for field oriented drive.
-        //inverted y
-        if ((Math.abs(aOpMode.gamepad1.right_stick_x) > ANALOG_STICK_THRESHOLD) ||
-                (Math.abs(aOpMode.gamepad1.right_stick_y) > ANALOG_STICK_THRESHOLD)) {
-            return (Math.toDegrees(Math.atan2(aOpMode.gamepad1.right_stick_x,
-                    -aOpMode.gamepad1.right_stick_y)));
-        } else {
-            return 0;
-        }
-    }
-
-    //TODO: Put this in TeleLib
-    public double getGamePad1LeftJoystickPolarMagnitude(rr_OpMode aOpMode) {
-        //returns the magnitude of the polar vector for the rotation calculations
-        //for field oriented drive
-        //inverted y
-        if ((Math.abs(aOpMode.gamepad1.left_stick_x) > ANALOG_STICK_THRESHOLD) ||
-                (Math.abs(aOpMode.gamepad1.left_stick_y) > ANALOG_STICK_THRESHOLD)) {
-            return (Math.sqrt(Math.pow(aOpMode.gamepad1.left_stick_x, 2.0) +
-                    Math.pow(-aOpMode.gamepad1.left_stick_y, 2.0)));
-        } else {
-            return 0;
-        }
-    }
-
-    //TODO: Put this in TeleLib
-    public double getGamePad1LeftJoystickPolarAngle(rr_OpMode aOpMode) {
-        //returns polar angle in degrees of vector for the rotation calculations
-        //for field oriented drive.
-        //inverted y
-        if ((Math.abs(aOpMode.gamepad1.left_stick_x) > ANALOG_STICK_THRESHOLD) ||
-                (Math.abs(aOpMode.gamepad1.left_stick_y) > ANALOG_STICK_THRESHOLD)) {
-            return (Math.toDegrees(Math.atan2(aOpMode.gamepad1.left_stick_x,
-                    -aOpMode.gamepad1.left_stick_y)));
-        } else {
-            return 0;
-        }
-    }
-
-
-    //TODO: Put this in TeleLib
-    public double getGamePad2RightJoystickPolarMagnitude(rr_OpMode aOpMode) {
-        //returns the magnitude of the polar vector for the rotation calculations
-        //for field oriented drive
-        //inverted y
-        if ((Math.abs(aOpMode.gamepad2.right_stick_x) > ANALOG_STICK_THRESHOLD) ||
-                (Math.abs(aOpMode.gamepad2.right_stick_y) > ANALOG_STICK_THRESHOLD)) {
-            return (Math.sqrt(Math.pow(aOpMode.gamepad2.right_stick_x, 2.0) +
-                    Math.pow(-aOpMode.gamepad2.right_stick_y, 2.0)));
-        } else {
-            return 0;
-        }
-
-    }
-
-    //TODO: Put this in TeleLib
-    public double getGamePad2RightJoystickPolarAngle(rr_OpMode aOpMode) {
-        //returns polar angle in degrees of vector for the rotation calculations
-        //for field oriented drive.
-        //inverted y
-        if ((Math.abs(aOpMode.gamepad2.right_stick_x) > ANALOG_STICK_THRESHOLD) ||
-                (Math.abs(aOpMode.gamepad2.right_stick_y) > ANALOG_STICK_THRESHOLD)) {
-            return (Math.toDegrees(Math.atan2(aOpMode.gamepad2.right_stick_x,
-                    -aOpMode.gamepad2.right_stick_y)));
-        } else {
-            return 0;
-        }
-    }
-
-    //TODO: Put this in TeleLib
-    public double getGamePad2LeftJoystickPolarMagnitude(rr_OpMode aOpMode) {
-        //returns the magnitude of the polar vector for the rotation calculations
-        //for field oriented drive
-        //inverted y
-        if ((Math.abs(aOpMode.gamepad2.left_stick_x) > ANALOG_STICK_THRESHOLD) ||
-                (Math.abs(aOpMode.gamepad2.left_stick_y) > ANALOG_STICK_THRESHOLD)) {
-            return (Math.sqrt(Math.pow(aOpMode.gamepad2.left_stick_x, 2.0) +
-                    Math.pow(-aOpMode.gamepad2.left_stick_y, 2.0)));
-        } else {
-            return 0;
-        }
-    }
-
-    //TODO: Put this in TeleLib
-    public double getGamePad2LeftJoystickPolarAngle(rr_OpMode aOpMode) {
-        //returns polar angle in degrees of vector for the rotation calculations
-        //for field oriented drive.
-        //inverted y
-        if ((Math.abs(aOpMode.gamepad2.left_stick_x) > ANALOG_STICK_THRESHOLD) ||
-                (Math.abs(aOpMode.gamepad2.left_stick_y) > ANALOG_STICK_THRESHOLD)) {
-            return (Math.toDegrees(Math.atan2(aOpMode.gamepad2.left_stick_x,
-                    -aOpMode.gamepad2.left_stick_y)));
-        } else {
-            return 0;
         }
     }
 
