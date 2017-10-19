@@ -145,6 +145,16 @@ public class rr_Robot {
         stopBaseMotors(aOpMode);
 
         aOpMode.DBG("Exiting Robot init");
+
+        aOpMode.DBG("Presetting Servos");
+
+        //Setting servos to intitial position TODO: CHANGE
+        closeCubeClawServoOneCube();
+        setCubeClawToHorizontal();
+        setJewelKnockerNeutral();
+        setJewelArmIn();
+        setRelicClawClosed();
+        setRelicArmAngleGrab();
     }
 
     //MOTOR METHODS
@@ -501,7 +511,68 @@ public class rr_Robot {
         Thread.sleep(100);
     }
 
-    
+
+    //JEWEL ARM CONTROL
+
+    public void setJewelKnockerRight() throws InterruptedException{
+        jewelKnocker.setPosition(JEWEL_KNOCKER_RIGHT);
+        Thread.sleep(100);
+    }
+
+    public void setJewelKnockerLeft() throws InterruptedException{
+        jewelKnocker.setPosition(JEWEL_KNOCKER_LEFT);
+        Thread.sleep(100);
+    }
+
+    public void setJewelKnockerNeutral() throws InterruptedException{
+        jewelKnocker.setPosition(JEWEL_KNOCKER_NEUTRAL);
+        Thread.sleep(100);
+    }
+
+    public void setJewelArmIn() throws InterruptedException{
+        jewelArm.setPosition(JEWEL_ARM_IN);
+        Thread.sleep(100);
+    }
+
+    public void setJewelArmOut() throws InterruptedException{
+        jewelArm.setPosition(JEWEL_ARM_OUT);
+        Thread.sleep(100);
+    }
+
+
+    //JEWEL COLOR SENSORS
+
+    public rr_Constants.JewelColorEnum getJewelLeftColor(rr_OpMode aOpMode) throws InterruptedException {
+        Thread.sleep(30);
+
+        if ((leftJewelColorDistance.red() > JEWEL_RED_THRESHOLD) &&
+                (leftJewelColorDistance.red() > leftJewelColorDistance.blue())) {
+            return rr_Constants.JewelColorEnum.RED;
+        }
+        if ((leftJewelColorDistance.blue() > JEWEL_BLUE_THRESHOLD) &&
+                (leftJewelColorDistance.blue() > leftJewelColorDistance.red())) {
+            return rr_Constants.JewelColorEnum.BLUE;
+        }
+
+        return rr_Constants.JewelColorEnum.UNKNOWN;
+    }
+
+    public rr_Constants.JewelColorEnum getJewelRightColor(rr_OpMode aOpMode) throws InterruptedException {
+        Thread.sleep(30);
+
+        if ((rightJewelColorDistance.red() > JEWEL_RED_THRESHOLD) &&
+                (rightJewelColorDistance.red() > rightJewelColorDistance.blue())) {
+            return rr_Constants.JewelColorEnum.RED;
+        }
+        if ((rightJewelColorDistance.blue() > JEWEL_BLUE_THRESHOLD) &&
+                (rightJewelColorDistance.blue() > rightJewelColorDistance.red())) {
+            return rr_Constants.JewelColorEnum.BLUE;
+        }
+
+        return rr_Constants.JewelColorEnum.UNKNOWN;
+    }
+
+
     /**
      * Tests motors using debug statements
      *
@@ -623,37 +694,6 @@ public class rr_Robot {
 
 
 
-    public rr_Constants.JewelColorEnum getJewelLeftColor(rr_OpMode aOpMode) throws InterruptedException {
-        Thread.sleep(30);
-
-        if ((leftJewelColorDistance.red() > JEWEL_RED_THRESHOLD) &&
-                (leftJewelColorDistance.red() > leftJewelColorDistance.blue())) {
-            return rr_Constants.JewelColorEnum.RED;
-        }
-        if ((leftJewelColorDistance.blue() > JEWEL_BLUE_THRESHOLD) &&
-                (leftJewelColorDistance.blue() > leftJewelColorDistance.red())) {
-            return rr_Constants.JewelColorEnum.BLUE;
-        }
-
-        return rr_Constants.JewelColorEnum.UNKNOWN;
-    }
-
-    public rr_Constants.JewelColorEnum getJewelRightColor(rr_OpMode aOpMode) throws InterruptedException {
-        Thread.sleep(30);
-
-        if ((rightJewelColorDistance.red() > JEWEL_RED_THRESHOLD) &&
-                (rightJewelColorDistance.red() > rightJewelColorDistance.blue())) {
-            return rr_Constants.JewelColorEnum.RED;
-        }
-        if ((rightJewelColorDistance.blue() > JEWEL_BLUE_THRESHOLD) &&
-                (rightJewelColorDistance.blue() > rightJewelColorDistance.red())) {
-            return rr_Constants.JewelColorEnum.BLUE;
-        }
-
-        return rr_Constants.JewelColorEnum.UNKNOWN;
-    }
-
-
 
     public float getMxpGyroSensorHeading(rr_OpMode aOpMode) {
         return baseMxpGyroSensor.getYaw();
@@ -662,32 +702,6 @@ public class rr_Robot {
     public boolean baseMotorsAreBusy() {
         return (motorArray[FRONT_LEFT_MOTOR].isBusy() || motorArray[FRONT_RIGHT_MOTOR].isBusy() ||
                 motorArray[BACK_LEFT_MOTOR].isBusy() || motorArray[BACK_RIGHT_MOTOR].isBusy());
-    }
-
-
-    public void setJewelKnockerRight() throws InterruptedException{
-        jewelKnocker.setPosition(JEWEL_KNOCKER_RIGHT);
-        Thread.sleep(100);
-    }
-
-    public void setJewelKnockerLeft() throws InterruptedException{
-        jewelKnocker.setPosition(JEWEL_KNOCKER_LEFT);
-        Thread.sleep(100);
-    }
-
-    public void setJewelKnockerNeutral() throws InterruptedException{
-        jewelKnocker.setPosition(JEWEL_KNOCKER_NEUTRAL);
-        Thread.sleep(100);
-    }
-
-    public void setJewelArmIn() throws InterruptedException{
-        jewelArm.setPosition(JEWEL_ARM_IN);
-        Thread.sleep(100);
-    }
-
-    public void setJewelArmOut() throws InterruptedException{
-        jewelArm.setPosition(JEWEL_ARM_OUT);
-        Thread.sleep(100);
     }
 
     public void universalMoveRobot(rr_OpMode aOpMode, double xAxisVelocity,
@@ -954,6 +968,4 @@ public class rr_Robot {
             super(message);
         }
     }
-
-
 }
