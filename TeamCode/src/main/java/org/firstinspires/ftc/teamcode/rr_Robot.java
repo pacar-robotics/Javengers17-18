@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.SensorREVColorDistance;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import java.text.DecimalFormat;
 import static org.firstinspires.ftc.teamcode.rr_Constants.*;
@@ -145,6 +146,16 @@ public class rr_Robot {
         stopBaseMotors(aOpMode);
 
         aOpMode.DBG("Exiting Robot init");
+
+        aOpMode.DBG("Presetting Servos");
+
+        //Setting servos to intitial position TODO: CHANGE
+        closeCubeClawServoOneCube();
+        setCubeClawToHorizontal();
+        setJewelKnockerNeutral();
+        setJewelArmIn();
+        setRelicClawClosed();
+        setRelicArmAngleGrab();
     }
 
     //MOTOR METHODS
@@ -178,6 +189,39 @@ public class rr_Robot {
         motorArray[motorName].setMode(runMode);
     }
 
+    public int getMotorPosition(rr_OpMode aOpMode, int MotorNumber) {
+        return motorArray[MotorNumber].getCurrentPosition();
+    }
+
+
+
+    //SENSOR METHODS
+
+    public int getRangeSensorUltrasonicRaw(rr_OpMode aOpMode) {
+        return rangeSensor.rawUltrasonic();
+    }
+
+    public int getRangeSensorOpticalRaw(rr_OpMode aOpMode) {
+        return rangeSensor.rawOptical();
+    }
+
+    public double getRangeSensorDistance(rr_OpMode aOpMode) {
+        return rangeSensor.getDistance(DistanceUnit.CM);
+    }
+
+    public double getRangeSensorOpticalCM(rr_OpMode aOpMode) {
+        return rangeSensor.cmOptical();
+    }
+
+    public float getMxpGyroSensorHeading(rr_OpMode aOpMode) {
+        return baseMxpGyroSensor.getYaw();
+    }
+
+    protected void setMxpGyroZeroYaw(rr_OpMode aOpMode) {
+        baseMxpGyroSensor.zeroYaw();
+    }
+
+
 
     //CONTROL OF WHEELS
 
@@ -199,7 +243,7 @@ public class rr_Robot {
                                    float bl_Power, float br_Power, int fl_Position,
                                    int fr_Position, int bl_Position, int br_Position,
                                    boolean isRampedPower)
-                                   throws InterruptedException {
+            throws InterruptedException {
 
         double rampedPower;
 
@@ -334,7 +378,7 @@ public class rr_Robot {
      * @throws InterruptedException
      */
     public void moveRobotToPositionFB(rr_OpMode aOpMode, float distance,
-                                     float power, boolean isRampedPower)
+                                      float power, boolean isRampedPower)
             throws InterruptedException {
         //we need to store the encoder target position
         int targetPosition;
@@ -353,7 +397,7 @@ public class rr_Robot {
      * @param power    generic power of the motors (positive = left, negative = right)
      */
     public void moveRobotToPositionSideways(rr_OpMode aOpMode, float distance,
-                                           float power, boolean isRampedPower)
+                                            float power, boolean isRampedPower)
             throws InterruptedException {
         //we need to
         //store the encoder target position
@@ -386,165 +430,6 @@ public class rr_Robot {
         } else if (Direction == DirectionEnum.SidewaysRight) {
             moveRobotToPositionSideways(aOpMode, -distance, power, isRampedPower);
         }
-    }
-
-    //CONTROL OF CUBE ARM
-
-    //used in TeleOp
-    public void setCubeArmPower(rr_OpMode aOpMode, float power) {
-        motorArray[CUBE_ARM].setPower(power);
-    }
-
-    public void moveCubeArmToPositionWithLimits(rr_OpMode aOpMode, int position, float power) throws InterruptedException {
-        //set the mode to be RUN_TO_POSITION
-        motorArray[CUBE_ARM].setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        Thread.sleep(50);
-
-        //Now set the target
-        motorArray[CUBE_ARM].setTargetPosition(position);
-
-        //now set the power
-        motorArray[CUBE_ARM].setPower(power);
-
-        //reset clock for checking stall
-        aOpMode.reset_timer_array(GENERIC_TIMER);
-
-
-        while (motorArray[CUBE_ARM].isBusy() && motorArray[CUBE_ARM].getCurrentPosition() < CUBE_ARM_UPPER_LIMIT &&
-                motorArray[CUBE_ARM].getCurrentPosition() > CUBE_ARM_LOWER_LIMIT && (aOpMode.time_elapsed_array(GENERIC_TIMER) < CUBE_ARM_MAX_DURATION))
-        {
-            aOpMode.idle();
-        }
-        //stop the motor
-        motorArray[CUBE_ARM].setPower(0.0f);
-    }
-
-    public void openCubeClawServo() throws InterruptedException{
-        cubeClaw.setPosition(CUBE_CLAW_OPEN);
-        Thread.sleep(100);
-    }
-
-    public void closeCubeClawServoOneCube() throws InterruptedException{
-        cubeClaw.setPosition(CUBE_CLAW_ONE_CLOSED);
-        Thread.sleep(100);
-    }
-
-    public void closeCubeClawServoTwoCube() throws InterruptedException{
-        cubeClaw.setPosition(CUBE_CLAW_TWO_CLOSED);
-        Thread.sleep(100);
-    }
-
-    public void setCubeClawToHorizontal() throws InterruptedException{
-        cubeOrientation.setPosition(CUBE_ORIENTATION_HORIZONTAL);
-        Thread.sleep(100);
-    }
-
-    public void setCubeClawToVertical() throws InterruptedException{
-        cubeOrientation.setPosition(CUBE_ORIENTATION_VERTICAL);
-        Thread.sleep(100);
-    }
-
-    //RELIC ARM CONTROL
-
-    public void extendRelicArmToPositionWithLimits(rr_OpMode aOpMode, int position, float power) throws InterruptedException {
-       if (motorArray[RELIC_ARM_EXTEND].getCurrentPosition() < position) {
-
-            //set the mode to be RUN_TO_POSITION
-            motorArray[RELIC_ARM_EXTEND].setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            Thread.sleep(50);
-
-            //Now set the target
-            motorArray[RELIC_ARM_EXTEND].setTargetPosition(position);
-
-            //now set the power
-            motorArray[RELIC_ARM_EXTEND].setPower(power);
-
-            //reset clock for stall
-            aOpMode.reset_timer_array(GENERIC_TIMER);
-
-
-            while (motorArray[RELIC_ARM_EXTEND].isBusy() && motorArray[RELIC_ARM_EXTEND].getCurrentPosition() < RELIC_UPPER_LIMIT &&
-                    motorArray[RELIC_ARM_EXTEND].getCurrentPosition() > RELIC_LOWER_LIMIT && (aOpMode.time_elapsed_array(GENERIC_TIMER) < RELIC_MAX_DURATION)) {
-                aOpMode.idle();
-            }
-            //stop the motor
-            motorArray[CUBE_ARM].setPower(0.0f);
-        } else {
-           aOpMode.telemetryAddData("Error", "Relic Arm", "Asked to be retracted in extend method");
-       }
-    }
-
-    public void setPowerExtendRelicArm(rr_OpMode aOpMode, float power) {
-        motorArray[RELIC_ARM_EXTEND].setPower(power);
-    }
-    public void setPowerRetractRelicArm(rr_OpMode aOpMode, float power) {
-        relicArmRetract.setPosition(power);
-    }
-
-    public void setRelicArmAngleGrab() throws InterruptedException{
-        relicClawAngle.setPosition(RELIC_CLAW_ANGLE_GRAB);
-        Thread.sleep(100);
-    }
-
-    public void setRelicArmAngleExtend() throws InterruptedException{
-        relicClawAngle.setPosition(RELIC_CLAW_ANGLE_EXTEND);
-        Thread.sleep(100);
-    }
-
-    public void setRelicClawClosed() throws InterruptedException{
-        relicClaw.setPosition(RELIC_CLAW_CLOSED);
-        Thread.sleep(100);
-    }
-
-    public void setRelicClawOpen() throws InterruptedException{
-        relicClaw.setPosition(RELIC_CLAW_OPEN);
-        Thread.sleep(100);
-    }
-
-    
-    /**
-     * Tests motors using debug statements
-     *
-     * @param aOpMode   an object of the rr_OpMode class
-     * @param motorName name of the motor
-     * @param power     desired motor power
-     * @param duration  duration in seconds
-     * @throws InterruptedException
-     */
-    public void testMotor(rr_OpMode aOpMode, int motorName, float power, long duration) throws InterruptedException {
-        aOpMode.DBG("In test motor in vv_robot");
-
-        aOpMode.DBG("after checkname assertion in vv_robot");
-
-        //save the old run mode
-        DcMotor.RunMode oldRunMode = motorArray[motorName].getMode();
-        aOpMode.DBG("after getmode in vv_robot");
-
-        //change mode to run without encoders
-
-        motorArray[motorName].setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-
-        aOpMode.DBG("after runmode set in vv_robot");
-
-        //set the power to motor
-        motorArray[motorName].setPower(power);
-
-        aOpMode.DBG("after power set in vv_robot");
-
-        //reset the timer
-        aOpMode.reset_timer_array(GENERIC_TIMER);
-        while (aOpMode.time_elapsed_array(GENERIC_TIMER) < duration) {
-            //wait till duration is complete.
-            aOpMode.DBG("In motor loop in vv_robot");
-            aOpMode.idle();
-        }
-        //stop the motor
-
-        motorArray[motorName].setPower(0.0f);
-
-        //restore old motor mode
-        motorArray[motorName].setMode(oldRunMode);
     }
 
 
@@ -622,76 +507,13 @@ public class rr_Robot {
     }
 
 
-
-    public rr_Constants.JewelColorEnum getJewelLeftColor(rr_OpMode aOpMode) throws InterruptedException {
-        Thread.sleep(30);
-
-        if ((leftJewelColorDistance.red() > JEWEL_RED_THRESHOLD) &&
-                (leftJewelColorDistance.red() > leftJewelColorDistance.blue())) {
-            return rr_Constants.JewelColorEnum.RED;
-        }
-        if ((leftJewelColorDistance.blue() > JEWEL_BLUE_THRESHOLD) &&
-                (leftJewelColorDistance.blue() > leftJewelColorDistance.red())) {
-            return rr_Constants.JewelColorEnum.BLUE;
-        }
-
-        return rr_Constants.JewelColorEnum.UNKNOWN;
-    }
-
-    public rr_Constants.JewelColorEnum getJewelRightColor(rr_OpMode aOpMode) throws InterruptedException {
-        Thread.sleep(30);
-
-        if ((rightJewelColorDistance.red() > JEWEL_RED_THRESHOLD) &&
-                (rightJewelColorDistance.red() > rightJewelColorDistance.blue())) {
-            return rr_Constants.JewelColorEnum.RED;
-        }
-        if ((rightJewelColorDistance.blue() > JEWEL_BLUE_THRESHOLD) &&
-                (rightJewelColorDistance.blue() > rightJewelColorDistance.red())) {
-            return rr_Constants.JewelColorEnum.BLUE;
-        }
-
-        return rr_Constants.JewelColorEnum.UNKNOWN;
-    }
-
-
-
-    public float getMxpGyroSensorHeading(rr_OpMode aOpMode) {
-        return baseMxpGyroSensor.getYaw();
-    }
-
     public boolean baseMotorsAreBusy() {
         return (motorArray[FRONT_LEFT_MOTOR].isBusy() || motorArray[FRONT_RIGHT_MOTOR].isBusy() ||
                 motorArray[BACK_LEFT_MOTOR].isBusy() || motorArray[BACK_RIGHT_MOTOR].isBusy());
     }
 
-
-    public void setJewelKnockerRight() throws InterruptedException{
-        jewelKnocker.setPosition(JEWEL_KNOCKER_RIGHT);
-        Thread.sleep(100);
-    }
-
-    public void setJewelKnockerLeft() throws InterruptedException{
-        jewelKnocker.setPosition(JEWEL_KNOCKER_LEFT);
-        Thread.sleep(100);
-    }
-
-    public void setJewelKnockerNeutral() throws InterruptedException{
-        jewelKnocker.setPosition(JEWEL_KNOCKER_NEUTRAL);
-        Thread.sleep(100);
-    }
-
-    public void setJewelArmIn() throws InterruptedException{
-        jewelArm.setPosition(JEWEL_ARM_IN);
-        Thread.sleep(100);
-    }
-
-    public void setJewelArmOut() throws InterruptedException{
-        jewelArm.setPosition(JEWEL_ARM_OUT);
-        Thread.sleep(100);
-    }
-
     public void universalMoveRobot(rr_OpMode aOpMode, double xAxisVelocity,
-                                            double yAxisVelocity)
+                                   double yAxisVelocity)
             throws InterruptedException {
         double fl_velocity = 0;
         double fr_velocity = 0;
@@ -735,21 +557,6 @@ public class rr_Robot {
         motorArray[FRONT_RIGHT_MOTOR].setPower(fr_velocity * RIGHT_MOTOR_TRIM_FACTOR);
         motorArray[BACK_LEFT_MOTOR].setPower(bl_velocity * LEFT_MOTOR_TRIM_FACTOR);
         motorArray[BACK_RIGHT_MOTOR].setPower(br_velocity * RIGHT_MOTOR_TRIM_FACTOR);
-    }
-
-
-    public float limit_power(rr_OpMode aOpMode, float power) {
-        //Check and limit the power being applied to motors during turns
-        if (power == 0) {
-            return 0;
-        } else {
-            return ((power < MIN_ROBOT_TURN_MOTOR_VELOCITY ? MIN_ROBOT_TURN_MOTOR_VELOCITY :
-                    (power > MAX_ROBOT_TURN_MOTOR_VELOCITY ? MAX_ROBOT_TURN_MOTOR_VELOCITY : power)));
-        }
-    }
-
-    public int getMotorPosition(rr_OpMode aOpMode, int MotorNumber) {
-        return motorArray[MotorNumber].getCurrentPosition();
     }
 
     public void turnPidMxpAbsoluteDegrees(rr_OpMode aOpMode, float turndegrees, float toleranceDegrees)
@@ -819,6 +626,246 @@ public class rr_Robot {
         }
 
     }
+
+
+
+    //CUBE ARM CONTROL
+
+
+
+    //used in TeleOp
+    public void setCubeArmPower(rr_OpMode aOpMode, float power) {
+        motorArray[CUBE_ARM].setPower(power);
+    }
+
+    public void moveCubeArmToPositionWithLimits(rr_OpMode aOpMode, int position, float power) throws InterruptedException {
+        //set the mode to be RUN_TO_POSITION
+        motorArray[CUBE_ARM].setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        Thread.sleep(50);
+
+        //Now set the target
+        motorArray[CUBE_ARM].setTargetPosition(position);
+
+        //now set the power
+        motorArray[CUBE_ARM].setPower(power);
+
+        //reset clock for checking stall
+        aOpMode.reset_timer_array(GENERIC_TIMER);
+
+
+        while (motorArray[CUBE_ARM].isBusy() && motorArray[CUBE_ARM].getCurrentPosition() < CUBE_ARM_UPPER_LIMIT &&
+                motorArray[CUBE_ARM].getCurrentPosition() > CUBE_ARM_LOWER_LIMIT && (aOpMode.time_elapsed_array(GENERIC_TIMER) < CUBE_ARM_MAX_DURATION))
+        {
+            aOpMode.idle();
+        }
+        //stop the motor
+        motorArray[CUBE_ARM].setPower(0.0f);
+    }
+
+    public void openCubeClawServo() throws InterruptedException{
+        cubeClaw.setPosition(CUBE_CLAW_OPEN);
+        Thread.sleep(100);
+    }
+
+    public void closeCubeClawServoOneCube() throws InterruptedException{
+        cubeClaw.setPosition(CUBE_CLAW_ONE_CLOSED);
+        Thread.sleep(100);
+    }
+
+    public void closeCubeClawServoTwoCube() throws InterruptedException{
+        cubeClaw.setPosition(CUBE_CLAW_TWO_CLOSED);
+        Thread.sleep(100);
+    }
+
+    public void setCubeClawToHorizontal() throws InterruptedException{
+        cubeOrientation.setPosition(CUBE_ORIENTATION_HORIZONTAL);
+        Thread.sleep(100);
+    }
+
+    public void setCubeClawToVertical() throws InterruptedException{
+        cubeOrientation.setPosition(CUBE_ORIENTATION_VERTICAL);
+        Thread.sleep(100);
+    }
+
+
+    //RELIC ARM CONTROL
+
+
+    public void extendRelicArmToPositionWithLimits(rr_OpMode aOpMode, int position, float power) throws InterruptedException {
+        if (motorArray[RELIC_ARM_EXTEND].getCurrentPosition() < position) {
+
+            //set the mode to be RUN_TO_POSITION
+            motorArray[RELIC_ARM_EXTEND].setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            Thread.sleep(50);
+
+            //Now set the target
+            motorArray[RELIC_ARM_EXTEND].setTargetPosition(position);
+
+            //now set the power
+            motorArray[RELIC_ARM_EXTEND].setPower(power);
+
+            //reset clock for stall
+            aOpMode.reset_timer_array(GENERIC_TIMER);
+
+
+            while (motorArray[RELIC_ARM_EXTEND].isBusy() && motorArray[RELIC_ARM_EXTEND].getCurrentPosition() < RELIC_UPPER_LIMIT &&
+                    motorArray[RELIC_ARM_EXTEND].getCurrentPosition() > RELIC_LOWER_LIMIT && (aOpMode.time_elapsed_array(GENERIC_TIMER) < RELIC_MAX_DURATION)) {
+                aOpMode.idle();
+            }
+            //stop the motor
+            motorArray[CUBE_ARM].setPower(0.0f);
+        } else {
+            aOpMode.telemetryAddData("Error", "Relic Arm", "Asked to be retracted in extend method");
+        }
+    }
+
+    public void setPowerExtendRelicArm(rr_OpMode aOpMode, float power) {
+        motorArray[RELIC_ARM_EXTEND].setPower(power);
+    }
+    public void setPowerRetractRelicArm(rr_OpMode aOpMode, float power) {
+        relicArmRetract.setPosition(power);
+    }
+
+    public void setRelicArmAngleGrab() throws InterruptedException{
+        relicClawAngle.setPosition(RELIC_CLAW_ANGLE_GRAB);
+        Thread.sleep(100);
+    }
+
+    public void setRelicArmAngleExtend() throws InterruptedException{
+        relicClawAngle.setPosition(RELIC_CLAW_ANGLE_EXTEND);
+        Thread.sleep(100);
+    }
+
+    public void setRelicClawClosed() throws InterruptedException{
+        relicClaw.setPosition(RELIC_CLAW_CLOSED);
+        Thread.sleep(100);
+    }
+
+    public void setRelicClawOpen() throws InterruptedException{
+        relicClaw.setPosition(RELIC_CLAW_OPEN);
+        Thread.sleep(100);
+    }
+
+
+    //JEWEL ARM CONTROL
+
+
+    public void setJewelKnockerRight() throws InterruptedException{
+        jewelKnocker.setPosition(JEWEL_KNOCKER_RIGHT);
+        Thread.sleep(100);
+    }
+
+    public void setJewelKnockerLeft() throws InterruptedException{
+        jewelKnocker.setPosition(JEWEL_KNOCKER_LEFT);
+        Thread.sleep(100);
+    }
+
+    public void setJewelKnockerNeutral() throws InterruptedException{
+        jewelKnocker.setPosition(JEWEL_KNOCKER_NEUTRAL);
+        Thread.sleep(100);
+    }
+
+    public void setJewelArmIn() throws InterruptedException{
+        jewelArm.setPosition(JEWEL_ARM_IN);
+        Thread.sleep(100);
+    }
+
+    public void setJewelArmOut() throws InterruptedException{
+        jewelArm.setPosition(JEWEL_ARM_OUT);
+        Thread.sleep(100);
+    }
+
+
+    //JEWEL COLOR SENSORS
+
+
+    public rr_Constants.JewelColorEnum getJewelLeftColor(rr_OpMode aOpMode) throws InterruptedException {
+        Thread.sleep(30);
+
+        if ((leftJewelColorDistance.red() > JEWEL_RED_THRESHOLD) &&
+                (leftJewelColorDistance.red() > leftJewelColorDistance.blue())) {
+            return rr_Constants.JewelColorEnum.RED;
+        }
+        if ((leftJewelColorDistance.blue() > JEWEL_BLUE_THRESHOLD) &&
+                (leftJewelColorDistance.blue() > leftJewelColorDistance.red())) {
+            return rr_Constants.JewelColorEnum.BLUE;
+        }
+
+        return rr_Constants.JewelColorEnum.UNKNOWN;
+    }
+
+    public rr_Constants.JewelColorEnum getJewelRightColor(rr_OpMode aOpMode) throws InterruptedException {
+        Thread.sleep(30);
+
+        if ((rightJewelColorDistance.red() > JEWEL_RED_THRESHOLD) &&
+                (rightJewelColorDistance.red() > rightJewelColorDistance.blue())) {
+            return rr_Constants.JewelColorEnum.RED;
+        }
+        if ((rightJewelColorDistance.blue() > JEWEL_BLUE_THRESHOLD) &&
+                (rightJewelColorDistance.blue() > rightJewelColorDistance.red())) {
+            return rr_Constants.JewelColorEnum.BLUE;
+        }
+
+        return rr_Constants.JewelColorEnum.UNKNOWN;
+    }
+
+
+    /**
+     * Tests motors using debug statements
+     *
+     * @param aOpMode   an object of the rr_OpMode class
+     * @param motorName name of the motor
+     * @param power     desired motor power
+     * @param duration  duration in seconds
+     * @throws InterruptedException
+     */
+    public void testMotor(rr_OpMode aOpMode, int motorName, float power, long duration) throws InterruptedException {
+        aOpMode.DBG("In test motor in vv_robot");
+
+        aOpMode.DBG("after checkname assertion in vv_robot");
+
+        //save the old run mode
+        DcMotor.RunMode oldRunMode = motorArray[motorName].getMode();
+        aOpMode.DBG("after getmode in vv_robot");
+
+        //change mode to run without encoders
+
+        motorArray[motorName].setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+
+        aOpMode.DBG("after runmode set in vv_robot");
+
+        //set the power to motor
+        motorArray[motorName].setPower(power);
+
+        aOpMode.DBG("after power set in vv_robot");
+
+        //reset the timer
+        aOpMode.reset_timer_array(GENERIC_TIMER);
+        while (aOpMode.time_elapsed_array(GENERIC_TIMER) < duration) {
+            //wait till duration is complete.
+            aOpMode.DBG("In motor loop in vv_robot");
+            aOpMode.idle();
+        }
+        //stop the motor
+
+        motorArray[motorName].setPower(0.0f);
+
+        //restore old motor mode
+        motorArray[motorName].setMode(oldRunMode);
+    }
+
+
+    public float limit_power(rr_OpMode aOpMode, float power) {
+        //Check and limit the power being applied to motors during turns
+        if (power == 0) {
+            return 0;
+        } else {
+            return ((power < MIN_ROBOT_TURN_MOTOR_VELOCITY ? MIN_ROBOT_TURN_MOTOR_VELOCITY :
+                    (power > MAX_ROBOT_TURN_MOTOR_VELOCITY ? MAX_ROBOT_TURN_MOTOR_VELOCITY : power)));
+        }
+    }
+
 
     //TODO: Put this in TeleLib
     public double getGamePad1RightJoystickPolarMagnitude(rr_OpMode aOpMode) {
@@ -936,11 +983,6 @@ public class rr_Robot {
     }
 
 
-    protected void setMxpGyroZeroYaw(rr_OpMode aOpMode) {
-        baseMxpGyroSensor.zeroYaw();
-    }
-
-
     class MotorNameNotKnownException extends Exception {
 
         MotorNameNotKnownException(String message) {
@@ -954,6 +996,4 @@ public class rr_Robot {
             super(message);
         }
     }
-
-
 }

@@ -78,6 +78,13 @@ public class rr_Constants {
     final static float RELIC_CLAW_OPEN = 0.1f;
     final static float RELIC_CLAW_CLOSED = 0.1f;
 
+    //Jewel Arm Constants TODO: CHANGE
+    final static float JEWEL_KNOCKER_LEFT = 0.1f;
+    final static float JEWEL_KNOCKER_RIGHT = 0.1f;
+    final static float JEWEL_KNOCKER_NEUTRAL = 0.1f;
+    final static float JEWEL_ARM_IN = 0.1f;
+    final static float JEWEL_ARM_OUT = 0.1f;
+
     //index of motors
     final static int FRONT_LEFT_MOTOR = 0;
     final static int FRONT_RIGHT_MOTOR = 1;
@@ -85,14 +92,6 @@ public class rr_Constants {
     final static int BACK_RIGHT_MOTOR = 3;
     final static int CUBE_ARM = 4;
     final static int RELIC_ARM_EXTEND = 5;
-
-    //Servo Positions TODO: CHANGE POSITIONS
-
-    final static float JEWEL_KNOCKER_LEFT = 0.1f;
-    final static float JEWEL_KNOCKER_RIGHT = 0.1f;
-    final static float JEWEL_KNOCKER_NEUTRAL = 0.1f;
-    final static float JEWEL_ARM_IN = 0.1f;
-    final static float JEWEL_ARM_OUT = 0.1f;
 
     final static double RELIC_ARM_RETRACT_POWER = 0;
 
