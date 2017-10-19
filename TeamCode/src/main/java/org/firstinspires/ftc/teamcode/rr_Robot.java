@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.graphics.Color;
 import android.util.Log;
 
 import com.kauailabs.navx.ftc.AHRS;
@@ -13,14 +12,12 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.SensorREVColorDistance;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import java.text.DecimalFormat;
 import static org.firstinspires.ftc.teamcode.rr_Constants.*;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DirectionEnum.Backward;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DirectionEnum.Forward;
-import static org.firstinspires.ftc.teamcode.rr_Constants.DirectionEnum.SidewaysLeft;
 
 
 public class rr_Robot {
@@ -145,8 +142,6 @@ public class rr_Robot {
         // Set all base motors to zero power
         stopBaseMotors(aOpMode);
 
-        aOpMode.DBG("Exiting Robot init");
-
         aOpMode.DBG("Presetting Servos");
 
         //Setting servos to intitial position TODO: CHANGE
@@ -156,9 +151,13 @@ public class rr_Robot {
         setJewelArmIn();
         setRelicClawClosed();
         setRelicArmAngleGrab();
+
+        aOpMode.DBG("Exiting Robot init");
     }
 
+
     //MOTOR METHODS
+
 
     /**
      * Sets the power of the motor
@@ -196,6 +195,7 @@ public class rr_Robot {
 
 
     //SENSOR METHODS
+
 
     public int getRangeSensorUltrasonicRaw(rr_OpMode aOpMode) {
         return rangeSensor.rawUltrasonic();
@@ -289,7 +289,7 @@ public class rr_Robot {
 
         while (baseMotorsAreBusy() && (aOpMode.time_elapsed_array(GENERIC_TIMER) < MAX_MOTOR_LOOP_TIME) &&
                 (Math.abs(fl_Position - motorArray[FRONT_LEFT_MOTOR].getCurrentPosition())
-                        >= MECCANUM_WHEEL_ENCODER_MARGIN)) {
+                        >= MECANUM_WHEEL_ENCODER_MARGIN)) {
             //wait until motors havce completed movement or timed out.
             //report motor positions for debugging
 
@@ -372,7 +372,7 @@ public class rr_Robot {
      * Runs robot to a specific position while driving forwards or backwards
      *
      * @param aOpMode       an object of the rr_OpMode class
-     * @param distance      distance each wheel will go in in
+     * @param distance      distance each wheel will go in inches
      * @param power         desired power of motor
      * @param isRampedPower ramps power to prevent jerking if true
      * @throws InterruptedException
@@ -383,7 +383,7 @@ public class rr_Robot {
         //we need to store the encoder target position
         int targetPosition;
         //calculate target position from the input distance in cm
-        targetPosition = (int) ((distance / (Math.PI * MECCANUM_WHEEL_DIAMETER)) * ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION);
+        targetPosition = (int) ((distance / (Math.PI * MECANUM_WHEEL_DIAMETER)) * ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION);
         //using the generic method with all powers set to the same value and all positions set to the same position
         runRobotToPosition(aOpMode, power, power, power, power,
                 targetPosition, targetPosition, targetPosition, targetPosition, isRampedPower);
@@ -393,7 +393,7 @@ public class rr_Robot {
      * Runs robot to a specific position while driving sideways
      *
      * @param aOpMode  an object of the rr_OpMode class
-     * @param distance distance wheels will go in in
+     * @param distance distance wheels will go in inches
      * @param power    generic power of the motors (positive = left, negative = right)
      */
     public void moveRobotToPositionSideways(rr_OpMode aOpMode, float distance,
@@ -403,7 +403,7 @@ public class rr_Robot {
         //store the encoder target position
         int targetPosition;
         //calculate target position from the input distance in cm
-        targetPosition = (int) ((distance / (Math.PI * MECCANUM_WHEEL_DIAMETER)) * ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION);
+        targetPosition = (int) ((distance / (Math.PI * MECANUM_WHEEL_DIAMETER)) * ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION);
         //using the generic method with all powers set to the same value and all positions set to the same position
         runRobotToPosition(aOpMode, power, power, power, power,
                 -targetPosition, targetPosition, targetPosition, -targetPosition, isRampedPower);
@@ -413,7 +413,7 @@ public class rr_Robot {
      * moveWheels method
      *
      * @param aOpMode   - object of vv_OpMode class
-     * @param distance  - in centimeters
+     * @param distance  - in inches
      * @param power     - float
      * @param Direction - forward, backward, sideways left, or sideways right
      * @throws InterruptedException
@@ -519,8 +519,8 @@ public class rr_Robot {
         double fr_velocity = 0;
         double bl_velocity = 0;
         double br_velocity = 0;
-        double trackDistanceAverage = (MECCANUM_WHEEL_FRONT_TRACK_DISTANCE +
-                MECCANUM_WHEEL_SIDE_TRACK_DISTANCE) / 2.0f;
+        double trackDistanceAverage = (MECANUM_WHEEL_FRONT_TRACK_DISTANCE +
+                MECANUM_WHEEL_SIDE_TRACK_DISTANCE) / 2.0f;
 
 
         //calculate velocities at each wheel.
@@ -635,7 +635,7 @@ public class rr_Robot {
 
     //used in TeleOp
     public void setCubeArmPower(rr_OpMode aOpMode, float power) {
-        motorArray[CUBE_ARM].setPower(power);
+        motorArray[CUBE_ARM].setPower(power * CUBE_ARM_POWER_FACTOR);
     }
 
     public void moveCubeArmToPositionWithLimits(rr_OpMode aOpMode, int position, float power) throws InterruptedException {

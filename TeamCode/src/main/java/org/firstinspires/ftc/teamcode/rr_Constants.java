@@ -77,6 +77,7 @@ public class rr_Constants {
     final static float RELIC_CLAW_ANGLE_EXTEND = 0.1f;
     final static float RELIC_CLAW_OPEN = 0.1f;
     final static float RELIC_CLAW_CLOSED = 0.1f;
+    final static double RELIC_ARM_RETRACT_POWER = 0;
 
     //Jewel Arm Constants TODO: CHANGE
     final static float JEWEL_KNOCKER_LEFT = 0.1f;
@@ -93,13 +94,11 @@ public class rr_Constants {
     final static int CUBE_ARM = 4;
     final static int RELIC_ARM_EXTEND = 5;
 
-    final static double RELIC_ARM_RETRACT_POWER = 0;
-
     // Mecanum wheel properties
-    final static float MECCANUM_WHEEL_DIAMETER = 4f;   //in inches
-    final static float MECCANUM_WHEEL_ENCODER_MARGIN = 50;
-    final static float MECCANUM_WHEEL_SIDE_TRACK_DISTANCE = 13.0f;
-    final static float MECCANUM_WHEEL_FRONT_TRACK_DISTANCE = 14.5f;
+    final static float MECANUM_WHEEL_DIAMETER = 4f;   //in inches
+    final static float MECANUM_WHEEL_ENCODER_MARGIN = 50;
+    final static float MECANUM_WHEEL_SIDE_TRACK_DISTANCE = 13.0f;
+    final static float MECANUM_WHEEL_FRONT_TRACK_DISTANCE = 14.5f;
 
     //Power Factors
     final static float STANDARD_DRIVE_POWER_FACTOR = 0.7f;
