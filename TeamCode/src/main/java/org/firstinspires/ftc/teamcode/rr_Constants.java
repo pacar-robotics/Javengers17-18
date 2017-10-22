@@ -4,7 +4,6 @@ package org.firstinspires.ftc.teamcode;
  * Class rr_Constants provides all constants that will be used
  * Ensures that all values are in sync
  * Also contains enumerations for direction, motors and beacon buttons
- *
  */
 public class rr_Constants {
 
@@ -153,13 +152,12 @@ public class rr_Constants {
     //values that control the worm drive motor to adjust tension of the Launch arm
 
     // Direction of movement for autonomous
-    enum DirectionEnum
-    {
+    enum DirectionEnum {
         Forward, Backward, SidewaysLeft, SidewaysRight
     }
+
     // Direction of turning
-    enum TurnDirectionEnum
-    {
+    enum TurnDirectionEnum {
         Clockwise, Counterclockwise
     }
 }
