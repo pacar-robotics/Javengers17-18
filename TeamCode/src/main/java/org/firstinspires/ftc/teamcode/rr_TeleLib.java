@@ -3,8 +3,15 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import static org.firstinspires.ftc.teamcode.rr_Constants.ANALOG_STICK_THRESHOLD;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_SCORING_POWER;
+import static org.firstinspires.ftc.teamcode.rr_Constants.ONE_CUBE_ROW_1;
+import static org.firstinspires.ftc.teamcode.rr_Constants.ONE_CUBE_ROW_2;
+import static org.firstinspires.ftc.teamcode.rr_Constants.ONE_CUBE_ROW_3;
+import static org.firstinspires.ftc.teamcode.rr_Constants.ONE_CUBE_ROW_4;
 import static org.firstinspires.ftc.teamcode.rr_Constants.SCORING_DRIVE_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.STANDARD_DRIVE_POWER_FACTOR;
+import static org.firstinspires.ftc.teamcode.rr_Constants.TRIGGER_THRESHOLD;
 
 public class rr_TeleLib {
 
@@ -15,6 +22,9 @@ public class rr_TeleLib {
         robot = new rr_Robot(aOpMode, aHwMap);
         this.aOpMode = aOpMode;
     }
+
+
+    //************ PROCESS METHODS ************//
 
     public void processWheels() throws InterruptedException {
         //process joysticks
@@ -68,6 +78,61 @@ public class rr_TeleLib {
             robot.stopBaseMotors(aOpMode);
         }
     }
+
+    public void processCubeArm() throws InterruptedException {
+
+        //**** SCORING (GAMEPAD 2) ****//
+        // Manual control takes priority
+        if (aOpMode.gamepad2.left_trigger >= TRIGGER_THRESHOLD) {
+            robot.setCubeArmPower(aOpMode, aOpMode.gamepad2.left_trigger);
+        } else if (aOpMode.gamepad2.right_trigger >= TRIGGER_THRESHOLD) {
+            robot.setCubeArmPower(aOpMode, aOpMode.gamepad2.right_trigger);
+        } else if (aOpMode.gamepad2.left_bumper) {
+            robot.openCubeClawServo();
+        } else if (aOpMode.gamepad2.right_stick_button) {
+            robot.setCubeClawToVertical();
+        } else if (aOpMode.gamepad2.left_stick_button) {
+            robot.setCubeClawToHorizontal();
+        } else {
+
+            // Automatic control
+            if (aOpMode.gamepad2.x) {
+                robot.setCubeClawToHorizontal();
+                robot.moveCubeArmToPositionWithLimits(aOpMode, ONE_CUBE_ROW_1, CUBE_ARM_SCORING_POWER);
+                robot.openCubeClawServo();
+            } else if (aOpMode.gamepad2.a) {
+                robot.setCubeClawToVertical();
+                robot.moveCubeArmToPositionWithLimits(aOpMode, ONE_CUBE_ROW_2, CUBE_ARM_SCORING_POWER);
+                robot.openCubeClawServo();
+            } else if (aOpMode.gamepad2.y) {
+                robot.setCubeClawToVertical();
+                robot.moveCubeArmToPositionWithLimits(aOpMode, ONE_CUBE_ROW_3, CUBE_ARM_SCORING_POWER);
+                robot.openCubeClawServo();
+            } else if (aOpMode.gamepad2.b) {
+                robot.setCubeClawToVertical();
+                robot.moveCubeArmToPositionWithLimits(aOpMode, ONE_CUBE_ROW_4, CUBE_ARM_SCORING_POWER);
+                robot.openCubeClawServo();
+            } else if (aOpMode.gamepad2.dpad_up) {  // Set claw to intake position
+                if (robot.getMotorPosition(aOpMode, CUBE_ARM) == ONE_CUBE_ROW_1) {
+                    // Claw needs room to rotate
+                    robot.moveCubeArmToPositionWithLimits(aOpMode, ONE_CUBE_ROW_3, CUBE_ARM_SCORING_POWER);
+                }
+                robot.setCubeClawToHorizontal();
+                robot.moveCubeArmToPositionWithLimits(aOpMode, ONE_CUBE_ROW_1, CUBE_ARM_SCORING_POWER);
+            }
+        }
+
+
+        //**** COLLECTING (GAMEPAD 1) ****//
+        if (aOpMode.gamepad1.right_bumper) {
+            robot.openCubeClawServo();
+        } else if (aOpMode.gamepad1.left_bumper) {
+            robot.closeCubeClawServoOneCube();
+        }
+    }
+
+
+    //************ JOYSTICK INPUT CONVERSION ************//
 
     public double getGamePad1RightJoystickPolarMagnitude(rr_OpMode aOpMode) {
         //returns the magnitude of the polar vector for the rotation calculations
