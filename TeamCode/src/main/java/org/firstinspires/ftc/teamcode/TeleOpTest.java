@@ -52,29 +52,20 @@ public class TeleOpTest extends LinearOpMode {
         double fr_velocity = 0;
         double bl_velocity = 0;
         double br_velocity = 0;
-        double prevFLVelocity = 0;
-        double prevFRVelocity = 0;
-        double prevBRVelocity = 0;
-        double prevBLVelocity = 0;
 
         //calculate velocities at each wheel.
 
         //blend with prev velocities to smooth out start
 
-        fl_velocity = ((yAxisVelocity + xAxisVelocity) + prevFLVelocity) / 2;
+        fl_velocity = (yAxisVelocity + xAxisVelocity) / 2;
 
-        fr_velocity = ((yAxisVelocity - xAxisVelocity) + prevFRVelocity) / 2;
+        fr_velocity = (yAxisVelocity - xAxisVelocity) / 2;
 
-        bl_velocity = ((yAxisVelocity - xAxisVelocity) + prevBLVelocity) / 2;
+        bl_velocity = (yAxisVelocity - xAxisVelocity) / 2;
 
-        br_velocity = ((yAxisVelocity + xAxisVelocity) + prevBRVelocity) / 2;
+        br_velocity = (yAxisVelocity + xAxisVelocity) / 2;
 
         //save these in variables that are part of vvRobot to be used in next cycle.
-
-        prevFLVelocity = fl_velocity;
-        prevFRVelocity = fr_velocity;
-        prevBLVelocity = bl_velocity;
-        prevBRVelocity = br_velocity;
 
 
         frontLeftWheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -86,28 +77,33 @@ public class TeleOpTest extends LinearOpMode {
         //apply specific powers to motors to get desired movement
         //wait till duration is complete.
 
-
         frontLeftWheel.setPower(fl_velocity );
         frontRightWheel.setPower(fr_velocity);
         backLeftWheel.setPower(bl_velocity);
         backRightWheel.setPower(br_velocity);
 
-        telemetry.addData("FL:", fl_velocity);
-        telemetry.addData("FR:", fr_velocity);
-        telemetry.addData("BL:", bl_velocity);
-        telemetry.addData("BR:", br_velocity);
+        if (Math.abs(gamepad1.right_stick_x) > .25) {
 
-        telemetry.addData("FLP:", frontLeftWheel.getPower());
-        telemetry.addData("FRP:", frontRightWheel.getPower());
-        telemetry.addData("BLP:", backLeftWheel.getPower());
-        telemetry.addData("BRP:", backRightWheel.getPower());
+            float turnVelocity = gamepad1.right_stick_x * .5f;
 
-        telemetry.update();
+            if (gamepad1.right_stick_x > 0) {
+                frontLeftWheel.setPower(fl_velocity );
+                frontRightWheel.setPower(-fr_velocity);
+                backLeftWheel.setPower(bl_velocity);
+                backRightWheel.setPower(-br_velocity);
+                //vvLib.robot.runMotors(aOpMode, turnVelocity, -turnVelocity, turnVelocity, -turnVelocity);
+            } else {
+                //turn counter-clockwise
+                frontLeftWheel.setPower(-fl_velocity );
+                frontRightWheel.setPower(fr_velocity);
+                backLeftWheel.setPower(-bl_velocity);
+                backRightWheel.setPower(br_velocity);
+                //vvLib.robot.runMotors(aOpMode, -turnVelocity, turnVelocity, -turnVelocity, turnVelocity);
+            }
+
+
+        }
     }
-
-
-
-
 }
 
 //END OF PROGRAM
