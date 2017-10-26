@@ -732,20 +732,29 @@ public class rr_Robot {
         relicClawAngle.setPosition(RELIC_CLAW_ANGLE_GRAB);
         Thread.sleep(100);
     }
-
     public void setRelicArmAngleExtend() throws InterruptedException{
         relicClawAngle.setPosition(RELIC_CLAW_ANGLE_EXTEND);
         Thread.sleep(100);
+    }
+    public void setRelicArmAnglePosition(float position) {
+        if (position < RELIC_CLAW_ANGLE_MAX && position < RELIC_CLAW_ANGLE_MIN) {
+            relicClawAngle.setPosition(position);
+        }
+    }
+    public float getRelicArmAnglePosition() {
+        return (float) relicClawAngle.getPosition();
     }
 
     public void setRelicClawClosed() throws InterruptedException{
         relicClaw.setPosition(RELIC_CLAW_CLOSED);
         Thread.sleep(100);
     }
-
     public void setRelicClawOpen() throws InterruptedException{
         relicClaw.setPosition(RELIC_CLAW_OPEN);
         Thread.sleep(100);
+    }
+    public float getRelicClawPosition() throws InterruptedException {
+        return (float) relicClaw.getPosition();
     }
 
 

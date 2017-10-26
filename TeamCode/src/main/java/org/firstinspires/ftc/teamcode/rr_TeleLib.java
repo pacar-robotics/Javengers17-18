@@ -9,6 +9,10 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.ONE_CUBE_ROW_1;
 import static org.firstinspires.ftc.teamcode.rr_Constants.ONE_CUBE_ROW_2;
 import static org.firstinspires.ftc.teamcode.rr_Constants.ONE_CUBE_ROW_3;
 import static org.firstinspires.ftc.teamcode.rr_Constants.ONE_CUBE_ROW_4;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_EXTEND_POWER_FACTOR;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_RETRACT_POWER_FACTOR;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_CLAW_ANGLE_EXTEND;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_CLAW_OPEN;
 import static org.firstinspires.ftc.teamcode.rr_Constants.SCORING_DRIVE_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.STANDARD_DRIVE_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRIGGER_THRESHOLD;
@@ -131,6 +135,41 @@ public class rr_TeleLib {
         }
     }
 
+    public void processRelicArm() throws InterruptedException {
+        if (aOpMode.gamepad1.x) {
+            toggleRelicArm();
+        } else if (aOpMode.gamepad1.b) {
+            toggleRelicArmAngle();
+        } else if (aOpMode.gamepad1.left_trigger >= TRIGGER_THRESHOLD) {
+            robot.setPowerExtendRelicArm(aOpMode, aOpMode.gamepad1.left_trigger * RELIC_ARM_EXTEND_POWER_FACTOR);
+        } else if (aOpMode.gamepad1.right_trigger >= TRIGGER_THRESHOLD) {
+            robot.setPowerRetractRelicArm(aOpMode, aOpMode.gamepad1.left_trigger * RELIC_ARM_RETRACT_POWER_FACTOR);
+        } else if (aOpMode.gamepad1.right_stick_button) {
+            // TODO 17-10-17: Check that lowering and raising methods are not reversed
+            robot.setRelicArmAnglePosition(robot.getRelicArmAnglePosition() - 1);
+        } else if (aOpMode.gamepad1.left_stick_button) {
+            robot.setRelicArmAnglePosition(robot.getRelicArmAnglePosition() + 1);
+        }
+    }
+
+
+    //************ PROCESS HELPER METHODS ************//
+
+    public void toggleRelicArm() throws InterruptedException {
+        if (robot.getRelicClawPosition() == RELIC_CLAW_OPEN) {
+            robot.setRelicClawClosed();
+        } else {
+            robot.setRelicClawOpen();
+        }
+    }
+
+    public void toggleRelicArmAngle() throws InterruptedException {
+        if (robot.getRelicClawPosition() == RELIC_CLAW_ANGLE_EXTEND) {
+            robot.setRelicArmAngleGrab();
+        } else {
+            robot.setRelicArmAngleExtend();
+        }
+    }
 
     //************ JOYSTICK INPUT CONVERSION ************//
 
