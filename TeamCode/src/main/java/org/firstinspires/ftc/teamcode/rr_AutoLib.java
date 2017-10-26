@@ -34,6 +34,42 @@ public class rr_AutoLib {
         this.aOpMode = aOpMode;
     }
 
+    public void universalMoveRobot(rr_OpMode aOpMode, double polarAngle,
+                                   double polarVelocity, double rotationalVelocity,
+                                   long duration, rr_OpMode.StopCondition condition,
+                                   boolean isPulsed, long pulseWidthDuration, long pulseRestDuration)
+            throws InterruptedException {
+
+
+        robot.universalMoveRobotWithCondition(aOpMode, polarVelocity * Math.sin(Math.toRadians(polarAngle)),
+                polarVelocity * Math.cos(Math.toRadians(polarAngle)), rotationalVelocity, duration, condition, isPulsed, pulseWidthDuration, pulseRestDuration);
+    }
+
+    public void redAllianceJewelPush(rr_OpMode aOpMode) throws InterruptedException {
+        if (robot.getJewelLeftColor(aOpMode) == JewelColorEnum.BLUE && robot.getJewelRightColor(aOpMode) == JewelColorEnum.RED) {
+            robot.setJewelKnockerLeft();
+        }
+        else if(robot.getJewelLeftColor(aOpMode) == JewelColorEnum.RED && robot.getJewelRightColor(aOpMode) == JewelColorEnum.BLUE) {
+            robot.setJewelKnockerRight();
+        }
+        else {
+            aOpMode.telemetryAddData("Jewel", "Color Detection", "Unknown");
+            aOpMode.telemetryUpdate();
+        }
+    }
+
+    public void blueAllianceJewelPush(rr_OpMode aOpMode) throws InterruptedException {
+        if (robot.getJewelLeftColor(aOpMode) == JewelColorEnum.BLUE && robot.getJewelRightColor(aOpMode) == JewelColorEnum.RED) {
+            robot.setJewelKnockerRight();
+        }
+        else if(robot.getJewelLeftColor(aOpMode) == JewelColorEnum.RED && robot.getJewelRightColor(aOpMode) == JewelColorEnum.BLUE) {
+            robot.setJewelKnockerLeft();
+        }
+        else {
+            aOpMode.telemetryAddData("Jewel", "Color Detection", "Unknown");
+            aOpMode.telemetryUpdate();
+        }
+    }
 
     //TODO: Jewel is similar to process below
 

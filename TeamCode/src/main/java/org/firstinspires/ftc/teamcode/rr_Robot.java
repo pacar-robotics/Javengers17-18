@@ -561,6 +561,112 @@ public class rr_Robot {
         motorArray[BACK_RIGHT_MOTOR].setPower(br_velocity * RIGHT_MOTOR_TRIM_FACTOR);
     }
 
+    public void universalMoveRobotWithCondition(rr_OpMode aOpMode, double xAxisVelocity,
+                                   double yAxisVelocity, double rotationalVelocity,
+                                   long duration, rr_OpMode.StopCondition condition,
+                                   boolean isPulsed, long pulseWidthDuration, long pulseRestDuration)
+            throws InterruptedException {
+        double fl_velocity = 0;
+        double fr_velocity = 0;
+        double bl_velocity = 0;
+        double br_velocity = 0;
+        double trackDistanceAverage = (MECANUM_WHEEL_FRONT_TRACK_DISTANCE +
+                MECANUM_WHEEL_SIDE_TRACK_DISTANCE) / 2.0f;
+
+
+        //calculate velocities at each wheel.
+
+        fl_velocity = yAxisVelocity + xAxisVelocity - rotationalVelocity *
+                trackDistanceAverage;
+
+        fr_velocity = yAxisVelocity - xAxisVelocity + rotationalVelocity *
+                trackDistanceAverage;
+
+        bl_velocity = yAxisVelocity - xAxisVelocity - rotationalVelocity *
+                trackDistanceAverage;
+
+        br_velocity = yAxisVelocity + xAxisVelocity + rotationalVelocity *
+                trackDistanceAverage;
+
+        //reset all encoders.
+
+        motorArray[FRONT_LEFT_MOTOR].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorArray[FRONT_RIGHT_MOTOR].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorArray[BACK_LEFT_MOTOR].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorArray[BACK_RIGHT_MOTOR].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Thread.sleep(50);
+
+        //switch to RUN_WITH_ENCODERS to normalize for speed.
+
+        motorArray[FRONT_LEFT_MOTOR].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorArray[FRONT_RIGHT_MOTOR].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorArray[BACK_LEFT_MOTOR].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorArray[BACK_RIGHT_MOTOR].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
+        //start slow to prevent skid.
+        //may replace with ramp to improve performance.
+
+        motorArray[FRONT_LEFT_MOTOR].setPower(Math.abs(fl_velocity) > MOTOR_LOWER_POWER_THRESHOLD ?
+                Math.signum(fl_velocity) * MOTOR_LOWER_POWER_THRESHOLD : fl_velocity * LEFT_MOTOR_TRIM_FACTOR);
+        motorArray[FRONT_RIGHT_MOTOR].setPower(Math.abs(fr_velocity) > MOTOR_LOWER_POWER_THRESHOLD ?
+                Math.signum(fr_velocity) * MOTOR_LOWER_POWER_THRESHOLD : fr_velocity * RIGHT_MOTOR_TRIM_FACTOR);
+        motorArray[BACK_LEFT_MOTOR].setPower(Math.abs(bl_velocity) > MOTOR_LOWER_POWER_THRESHOLD ?
+                Math.signum(bl_velocity) * MOTOR_LOWER_POWER_THRESHOLD : bl_velocity * LEFT_MOTOR_TRIM_FACTOR);
+        motorArray[BACK_RIGHT_MOTOR].setPower(Math.abs(br_velocity) > MOTOR_LOWER_POWER_THRESHOLD ?
+                Math.signum(br_velocity) * MOTOR_LOWER_POWER_THRESHOLD : br_velocity * RIGHT_MOTOR_TRIM_FACTOR);
+
+        //
+
+        aOpMode.reset_timer_array(GENERIC_TIMER);
+        //stop 100 ms before end
+        while ((aOpMode.time_elapsed_array(GENERIC_TIMER) < (duration - 100)) &&
+                (!condition.stopCondition(aOpMode))) {
+
+            //condition will return true when it reaches state meant to stop movement
+
+            //apply specific powers to motors to get desired movement
+            //wait till duration is complete.
+            motorArray[FRONT_LEFT_MOTOR].setPower(fl_velocity * LEFT_MOTOR_TRIM_FACTOR);
+            motorArray[FRONT_RIGHT_MOTOR].setPower(fr_velocity * RIGHT_MOTOR_TRIM_FACTOR);
+            motorArray[BACK_LEFT_MOTOR].setPower(bl_velocity * LEFT_MOTOR_TRIM_FACTOR);
+            motorArray[BACK_RIGHT_MOTOR].setPower(br_velocity * RIGHT_MOTOR_TRIM_FACTOR);
+
+            if (isPulsed) {
+                //run the motors for the pulseWidthDuration
+                //by sleeping, we let the motors that are running to continue to run
+                Thread.sleep(pulseWidthDuration);
+
+                //stop motors
+                stopBaseMotors(aOpMode);
+                //pause for pulseRestDuration
+                Thread.sleep(pulseRestDuration);
+                //this allows the robot to move slowly and gives the sensor time to read
+            }
+            aOpMode.idle();
+        }
+
+        //end slow
+        motorArray[FRONT_LEFT_MOTOR].setPower(Math.abs(fl_velocity) > MOTOR_LOWER_POWER_THRESHOLD ?
+                Math.signum(fl_velocity) * MOTOR_LOWER_POWER_THRESHOLD : fl_velocity * LEFT_MOTOR_TRIM_FACTOR);
+        motorArray[FRONT_RIGHT_MOTOR].setPower(Math.abs(fr_velocity) > MOTOR_LOWER_POWER_THRESHOLD ?
+                Math.signum(fr_velocity) * MOTOR_LOWER_POWER_THRESHOLD : fr_velocity * RIGHT_MOTOR_TRIM_FACTOR);
+        motorArray[BACK_LEFT_MOTOR].setPower(Math.abs(bl_velocity) > MOTOR_LOWER_POWER_THRESHOLD ?
+                Math.signum(bl_velocity) * MOTOR_LOWER_POWER_THRESHOLD : bl_velocity * LEFT_MOTOR_TRIM_FACTOR);
+        motorArray[BACK_RIGHT_MOTOR].setPower(Math.abs(br_velocity) > MOTOR_LOWER_POWER_THRESHOLD ?
+                Math.signum(br_velocity) * MOTOR_LOWER_POWER_THRESHOLD : br_velocity * RIGHT_MOTOR_TRIM_FACTOR);
+
+        aOpMode.reset_timer_array(GENERIC_TIMER);
+        //stop 100 ms before end
+        while (aOpMode.time_elapsed_array(GENERIC_TIMER) < 100) {
+            aOpMode.idle();
+        }
+
+
+        //stop all motors
+        stopBaseMotors(aOpMode);
+    }
+
     public void turnPidMxpAbsoluteDegrees(rr_OpMode aOpMode, float turndegrees, float toleranceDegrees)
             throws InterruptedException {
          /* Create a PID Controller which uses the Yaw Angle as input. */
