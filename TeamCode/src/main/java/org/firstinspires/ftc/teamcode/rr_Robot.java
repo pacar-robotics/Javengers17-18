@@ -5,11 +5,14 @@ import android.util.Log;
 import com.kauailabs.navx.ftc.AHRS;
 import com.kauailabs.navx.ftc.navXPIDController;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsTouchSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -54,6 +57,9 @@ public class rr_Robot {
     private ColorSensor rightJewelColorDistance;
     private ColorSensor floorColorSensor; //TODO: IS THIS A THING?
 
+    private DigitalChannel cubeArmUpperLimit;
+    private DigitalChannel cubeArmLowerLimit;
+
     protected navXPIDController yawPIDController;
 
     //Sensors
@@ -80,78 +86,83 @@ public class rr_Robot {
         motorArray = new DcMotor[10];
 
         //Map Motors
-        motorArray[FRONT_LEFT_MOTOR] = hwMap.get(DcMotor.class, "motor_front_left");
-        motorArray[FRONT_RIGHT_MOTOR] = hwMap.get(DcMotor.class, "motor_front_right");
-        motorArray[BACK_LEFT_MOTOR] = hwMap.get(DcMotor.class, "motor_back_left");
-        motorArray[BACK_RIGHT_MOTOR] = hwMap.get(DcMotor.class, "motor_back_right");
+//        motorArray[FRONT_LEFT_MOTOR] = hwMap.get(DcMotor.class, "motor_front_left");
+//        motorArray[FRONT_RIGHT_MOTOR] = hwMap.get(DcMotor.class, "motor_front_right");
+//        motorArray[BACK_LEFT_MOTOR] = hwMap.get(DcMotor.class, "motor_back_left");
+//        motorArray[BACK_RIGHT_MOTOR] = hwMap.get(DcMotor.class, "motor_back_right");
         motorArray[CUBE_ARM] = hwMap.get(DcMotor.class, "motor_cube_arm");
-        motorArray[RELIC_ARM_EXTEND] = hwMap.get(DcMotor.class, "motor_relic_extend");
+//        motorArray[RELIC_ARM_EXTEND] = hwMap.get(DcMotor.class, "motor_relic_extend");
 
 
         //TODO: Map Sensors and Servos
 
         //Map Servos
         cubeClaw = hwMap.get(Servo.class, "servo_cube_claw");
-        cubeOrientation = hwMap.get(Servo.class, "servo_cube_orientatoin");
-        jewelArm = hwMap.get(Servo.class, "servo_jewel_arm");
-        jewelKnocker = hwMap.get(Servo.class, "servo_jewel_knocker");
-        relicClaw = hwMap.get(Servo.class, "servo_relic_claw");
-        relicClawAngle = hwMap.get(Servo.class, "servo_claw_angle");
-        relicArmRetract = hwMap.get(Servo.class, "servo_relic_retract");
+//        cubeOrientation = hwMap.get(Servo.class, "servo_cube_orientatoin");
+//        jewelArm = hwMap.get(Servo.class, "servo_jewel_arm");
+//        jewelKnocker = hwMap.get(Servo.class, "servo_jewel_knocker");
+//        relicClaw = hwMap.get(Servo.class, "servo_relic_claw");
+//        relicClawAngle = hwMap.get(Servo.class, "servo_claw_angle");
+//        relicArmRetract = hwMap.get(Servo.class, "servo_relic_retract");
 
-        //Map Sensors
-        leftJewelColorDistance = hwMap.get(ColorSensor.class, "left_color_distance");
-        rightJewelColorDistance = hwMap.get(ColorSensor.class, "right_color_distance");
-        rangeSensor = hwMap.get(ModernRoboticsI2cRangeSensor.class, "range_sensor");
+//        //Map Sensors
+//        leftJewelColorDistance = hwMap.get(ColorSensor.class, "left_color_distance");
+//        rightJewelColorDistance = hwMap.get(ColorSensor.class, "right_color_distance");
+//        rangeSensor = hwMap.get(ModernRoboticsI2cRangeSensor.class, "range_sensor");
+        cubeArmUpperLimit = hwMap.get(DigitalChannel.class, "cube_arm_upper_limit");
+        cubeArmLowerLimit = hwMap.get(DigitalChannel.class, "cube_arm_lower_limit");
 
+        cubeArmUpperLimit.setMode(DigitalChannel.Mode.INPUT);
+        cubeArmLowerLimit.setMode(DigitalChannel.
+                Mode.INPUT);
 
-        aOpMode.DBG("Begin Gyro Calib");
-        //allocate the mxp gyro sensor.
-        baseMxpGyroSensor = AHRS.getInstance(hwMap.deviceInterfaceModule.get("dim"),
-                NAVX_DIM_I2C_PORT,
-                AHRS.DeviceDataType.kProcessedData);
-
-        while (baseMxpGyroSensor.isCalibrating()) {
-            aOpMode.idle();
-            Thread.sleep(50);
-            aOpMode.telemetryAddData("1 navX-Device", "Status:",
-                    baseMxpGyroSensor.isCalibrating() ?
-                            "CALIBRATING" : "Calibration Complete");
-            aOpMode.telemetryUpdate();
-        }
-
-        aOpMode.DBG("Gyro Calib Complete");
-
-
-
-        //zero out the yaw value, so this will be the frame of reference for future calls.
-        //do not call this for duration of run after this.
-        baseMxpGyroSensor.zeroYaw();
-
-        //wait for these servos to reach desired state
-        Thread.sleep(100);
-
+//        aOpMode.DBG("Begin Gyro Calib");
+//        //allocate the mxp gyro sensor.
+//        baseMxpGyroSensor = AHRS.getInstance(hwMap.deviceInterfaceModule.get("dim"),
+//                NAVX_DIM_I2C_PORT,
+//                AHRS.DeviceDataType.kProcessedData);
+//
+//        while (baseMxpGyroSensor.isCalibrating()) {
+//            aOpMode.idle();
+//            Thread.sleep(50);
+//            aOpMode.telemetryAddData("1 navX-Device", "Status:",
+//                    baseMxpGyroSensor.isCalibrating() ?
+//                            "CALIBRATING" : "Calibration Complete");
+//            aOpMode.telemetryUpdate();
+//        }
+//
+//        aOpMode.DBG("Gyro Calib Complete");
+//
+//
+//
+//        //zero out the yaw value, so this will be the frame of reference for future calls.
+//        //do not call this for duration of run after this.
+//        baseMxpGyroSensor.zeroYaw();
+//
+//        //wait for these servos to reach desired state
+//        Thread.sleep(100);
+//
 
         aOpMode.DBG("Starting Motor Setups");
 
         //Set the Direction of Motors
-        motorArray[FRONT_LEFT_MOTOR].setDirection(DcMotorSimple.Direction.FORWARD);
-        motorArray[FRONT_RIGHT_MOTOR].setDirection(DcMotorSimple.Direction.REVERSE);
-        motorArray[BACK_LEFT_MOTOR].setDirection(DcMotorSimple.Direction.FORWARD);
-        motorArray[BACK_RIGHT_MOTOR].setDirection(DcMotorSimple.Direction.REVERSE);
+//        motorArray[FRONT_LEFT_MOTOR].setDirection(DcMotorSimple.Direction.FORWARD);
+//        motorArray[FRONT_RIGHT_MOTOR].setDirection(DcMotorSimple.Direction.REVERSE);
+//        motorArray[BACK_LEFT_MOTOR].setDirection(DcMotorSimple.Direction.FORWARD);
+//        motorArray[BACK_RIGHT_MOTOR].setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Set all base motors to zero power
-        stopBaseMotors(aOpMode);
+//        stopBaseMotors(aOpMode);
 
-        aOpMode.DBG("Presetting Servos");
+//        aOpMode.DBG("Presetting Servos");
 
-        //Setting servos to intitial position TODO: CHANGE
-        closeCubeClawServoOneCube();
-        setCubeClawToHorizontal();
-        setJewelKnockerNeutral();
-        setJewelArmIn();
-        setRelicClawClosed();
-        setRelicArmAngleGrab();
+//        //Setting servos to intitial position TODO: CHANGE
+//        closeCubeClawServoOneCube();
+//        setCubeClawToHorizontal();
+//        setJewelKnockerNeutral();
+//        setJewelArmIn();
+//        setRelicClawClosed();
+//        setRelicArmAngleGrab();
 
         aOpMode.DBG("Exiting Robot init");
     }
@@ -687,6 +698,29 @@ public class rr_Robot {
     public void setCubeClawToVertical() throws InterruptedException{
         cubeOrientation.setPosition(CUBE_ORIENTATION_VERTICAL);
         Thread.sleep(100);
+    }
+
+    public boolean isCubeUpperLimitPressed() {
+        return cubeArmUpperLimit.getState();
+    }
+
+    public boolean isCubeLowerLimitPressed() {
+        return cubeArmLowerLimit.getState();
+    }
+
+    // Test methods
+    public void setCubeClawPosition(float position) throws InterruptedException {
+        cubeClaw.setPosition(position);
+    }
+    public float getCubeClawPosition() throws InterruptedException {
+        return (float) cubeClaw.getPosition();
+    }
+
+    public void setCubeOrientation(float position) throws InterruptedException {
+        cubeOrientation.setPosition(position);
+    }
+    public float getCubeOrientation() throws InterruptedException {
+        return (float) cubeOrientation.getPosition();
     }
 
 

@@ -87,10 +87,10 @@ public class rr_TeleLib {
 
         //**** SCORING (GAMEPAD 2) ****//
         // Manual control takes priority
-        if (aOpMode.gamepad2.left_trigger >= TRIGGER_THRESHOLD) {
+        if (aOpMode.gamepad2.left_trigger >= TRIGGER_THRESHOLD && !robot.isCubeUpperLimitPressed()) {
             robot.setCubeArmPower(aOpMode, aOpMode.gamepad2.left_trigger);
-        } else if (aOpMode.gamepad2.right_trigger >= TRIGGER_THRESHOLD) {
-            robot.setCubeArmPower(aOpMode, aOpMode.gamepad2.right_trigger);
+        } else if (aOpMode.gamepad2.right_trigger >= TRIGGER_THRESHOLD && !robot.isCubeLowerLimitPressed()) {
+            robot.setCubeArmPower(aOpMode, -aOpMode.gamepad2.right_trigger);
         } else if (aOpMode.gamepad2.left_bumper) {
             robot.openCubeClawServo();
         } else if (aOpMode.gamepad2.right_stick_button) {
