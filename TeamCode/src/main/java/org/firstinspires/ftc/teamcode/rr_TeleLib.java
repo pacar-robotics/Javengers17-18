@@ -105,16 +105,16 @@ public class rr_TeleLib {
                 robot.moveCubeArmToPositionWithLimits(aOpMode, ONE_CUBE_ROW_1, CUBE_ARM_SCORING_POWER);
                 robot.openCubeClawServo();
             } else if (aOpMode.gamepad2.a) {
-                robot.setCubeClawToVertical();
                 robot.moveCubeArmToPositionWithLimits(aOpMode, ONE_CUBE_ROW_2, CUBE_ARM_SCORING_POWER);
+                robot.setCubeClawToVertical();
                 robot.openCubeClawServo();
             } else if (aOpMode.gamepad2.y) {
-                robot.setCubeClawToVertical();
                 robot.moveCubeArmToPositionWithLimits(aOpMode, ONE_CUBE_ROW_3, CUBE_ARM_SCORING_POWER);
+                robot.setCubeClawToVertical();
                 robot.openCubeClawServo();
             } else if (aOpMode.gamepad2.b) {
-                robot.setCubeClawToVertical();
                 robot.moveCubeArmToPositionWithLimits(aOpMode, ONE_CUBE_ROW_4, CUBE_ARM_SCORING_POWER);
+                robot.setCubeClawToVertical();
                 robot.openCubeClawServo();
             } else if (aOpMode.gamepad2.dpad_up) {  // Set claw to intake position
                 if (robot.getMotorPosition(aOpMode, CUBE_ARM) == ONE_CUBE_ROW_1) {
@@ -170,6 +170,7 @@ public class rr_TeleLib {
             robot.setRelicArmAngleExtend();
         }
     }
+
 
     //************ JOYSTICK INPUT CONVERSION ************//
 
