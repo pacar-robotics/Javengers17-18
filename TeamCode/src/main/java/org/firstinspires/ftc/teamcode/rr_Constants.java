@@ -57,7 +57,7 @@ public class rr_Constants {
     final static int TWO_CUBE_POS_3 = 0; //Highest
     final static float CUBE_ARM_GRAB = 0;
     final static float CUBE_ARM_SCORING_POWER = .5f;
-    final static float CUBE_ARM_POWER_FACTOR = 0.25f;
+    final static float CUBE_ARM_POWER_FACTOR = 0.5f;
     final static float CUBE_CLAW_OPEN = 0.1f;
     final static float CUBE_CLAW_ONE_CLOSED = 0.1f;
     final static float CUBE_CLAW_TWO_CLOSED = 0.1f;
