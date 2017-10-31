@@ -820,6 +820,24 @@ public class rr_Robot {
         Thread.sleep(100);
     }
 
+    public void setJewelArmPosition(float position) throws InterruptedException {
+        jewelArm.setPosition(position);
+        Thread.sleep(250);
+    }
+
+    public float getJewelArmPosition() {
+        return (float) jewelArm.getPosition();
+    }
+
+    public void setJewelKnockerPosition(float position) throws InterruptedException {
+        jewelKnocker.setPosition(position);
+        Thread.sleep(250);
+    }
+
+    public float getJewelKnockerPosition() {
+        return (float) jewelKnocker.getPosition();
+    }
+
 
     //JEWEL COLOR SENSORS
 
