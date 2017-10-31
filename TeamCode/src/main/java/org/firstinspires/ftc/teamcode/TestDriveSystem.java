@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
-public class CalibrateDriveSystem extends rr_OpMode {
+public class TestDriveSystem extends rr_OpMode {
     rr_Robot robot;
 
     @Override

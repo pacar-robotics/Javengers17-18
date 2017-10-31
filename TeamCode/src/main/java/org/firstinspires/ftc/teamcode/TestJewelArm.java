@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
-public class CalibrateJewelArm extends rr_OpMode {
+public class TestJewelArm extends rr_OpMode {
     rr_Robot robot;
 
     float knockerPosition = 0.5f;

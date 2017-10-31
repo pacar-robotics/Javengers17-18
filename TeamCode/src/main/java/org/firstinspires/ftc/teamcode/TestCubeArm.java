@@ -7,7 +7,7 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.TRIGGER_THRESHOLD;
 
 @TeleOp(name = "Calibrate Cube Arm", group = "Test")
 
-public class CalibrateCubeArm extends rr_OpMode {
+public class TestCubeArm extends rr_OpMode {
 
     rr_Robot robot;
     float position = 0.5f;
