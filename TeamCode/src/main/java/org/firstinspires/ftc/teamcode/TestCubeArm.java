@@ -11,6 +11,7 @@ public class TestCubeArm extends rr_OpMode {
 
     rr_Robot robot;
     float position = 0.5f;
+    float orientationPos = .5f;
 
 
     @Override
@@ -36,6 +37,7 @@ public class TestCubeArm extends rr_OpMode {
                 Thread.sleep(250);
             }
 
+            processOrientationClaw();
             moveCubeArmWithoutLimits();
 
             telemetry.addLine("ClawServo: " + robot.getCubeClawPosition());
@@ -45,6 +47,16 @@ public class TestCubeArm extends rr_OpMode {
 
             Thread.sleep(10);
         }
+    }
+
+    private void processOrientationClaw() throws InterruptedException {
+        if (gamepad1.x) {
+            orientationPos += .05f;
+        } else if (gamepad1.y) {
+            orientationPos -= .05f;
+        }
+
+        robot.setCubeOrientation(orientationPos);
     }
 
     private void openClaw() throws InterruptedException {
