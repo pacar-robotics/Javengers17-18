@@ -44,14 +44,14 @@ public class rr_Robot {
     private Servo cubeClaw;
     private Servo cubeOrientation;
     private Servo jewelArm;
-    private Servo jewelKnocker;
+    private Servo jewelPusher;
     private Servo relicClaw;
     private Servo relicClawAngle;
     private Servo relicArmRetract; //Continuous servo
 
     //TODO: Color Sensors
-    private ColorSensor leftJewelColorDistance;
-    private ColorSensor rightJewelColorDistance;
+    private ColorSensor leftJewelColorSensor;
+    private ColorSensor rightJewelColorSensor;
     private ColorSensor floorColorSensor; //TODO: IS THIS A THING?
 
     protected navXPIDController yawPIDController;
@@ -94,14 +94,14 @@ public class rr_Robot {
         cubeClaw = hwMap.get(Servo.class, "servo_cube_claw");
         cubeOrientation = hwMap.get(Servo.class, "servo_cube_orientatoin");
         jewelArm = hwMap.get(Servo.class, "servo_jewel_arm");
-        jewelKnocker = hwMap.get(Servo.class, "servo_jewel_knocker");
+        jewelPusher = hwMap.get(Servo.class, "servo_jewel_pusher");
         relicClaw = hwMap.get(Servo.class, "servo_relic_claw");
         relicClawAngle = hwMap.get(Servo.class, "servo_claw_angle");
         relicArmRetract = hwMap.get(Servo.class, "servo_relic_retract");
 
         //Map Sensors
-        leftJewelColorDistance = hwMap.get(ColorSensor.class, "left_color_distance");
-        rightJewelColorDistance = hwMap.get(ColorSensor.class, "right_color_distance");
+        leftJewelColorSensor = hwMap.get(ColorSensor.class, "left_color_distance");
+        rightJewelColorSensor = hwMap.get(ColorSensor.class, "right_color_distance");
         rangeSensor = hwMap.get(ModernRoboticsI2cRangeSensor.class, "range_sensor");
 
 
@@ -148,7 +148,7 @@ public class rr_Robot {
         //Setting servos to intitial position TODO: CHANGE
         closeCubeClawServoOneCube();
         setCubeClawToHorizontal();
-        setJewelKnockerNeutral();
+        setJewelPusherNeutral();
         setJewelArmIn();
         setRelicClawClosed();
         setRelicArmAngleGrab();
@@ -369,70 +369,6 @@ public class rr_Robot {
 
     }
 
-
-    /**
-     * Runs robot to a specific position while driving forwards or backwards
-     *
-     * @param aOpMode       an object of the rr_OpMode class
-     * @param distance      distance each wheel will go in inches
-     * @param power         desired power of motor
-     * @param isRampedPower ramps power to prevent jerking if true
-     * @throws InterruptedException
-     */
-    public void moveRobotToPositionFB(rr_OpMode aOpMode, float distance,
-                                      float power, boolean isRampedPower)
-            throws InterruptedException {
-        //we need to store the encoder target position
-        int targetPosition;
-        //calculate target position from the input distance in cm
-        targetPosition = (int) ((distance / (Math.PI * MECANUM_WHEEL_DIAMETER)) * ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION);
-        //using the generic method with all powers set to the same value and all positions set to the same position
-        runRobotToPosition(aOpMode, power, power, power, power,
-                targetPosition, targetPosition, targetPosition, targetPosition, isRampedPower);
-    }
-
-    /**
-     * Runs robot to a specific position while driving sideways
-     *
-     * @param aOpMode  an object of the rr_OpMode class
-     * @param distance distance wheels will go in inches
-     * @param power    generic power of the motors (positive = left, negative = right)
-     */
-    public void moveRobotToPositionSideways(rr_OpMode aOpMode, float distance,
-                                            float power, boolean isRampedPower)
-            throws InterruptedException {
-        //we need to
-        //store the encoder target position
-        int targetPosition;
-        //calculate target position from the input distance in cm
-        targetPosition = (int) ((distance / (Math.PI * MECANUM_WHEEL_DIAMETER)) * ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION);
-        //using the generic method with all powers set to the same value and all positions set to the same position
-        runRobotToPosition(aOpMode, power, power, power, power,
-                -targetPosition, targetPosition, targetPosition, -targetPosition, isRampedPower);
-    }
-
-    /**
-     * moveWheels method
-     *
-     * @param aOpMode   - object of vv_OpMode class
-     * @param distance  - in inches
-     * @param power     - float
-     * @param Direction - forward, backward, sideways left, or sideways right
-     * @throws InterruptedException
-     */
-    public void moveWheels(rr_OpMode aOpMode, float distance, float power,
-                           DirectionEnum Direction, boolean isRampedPower)
-            throws InterruptedException {
-        if (Direction == Forward) {
-            moveRobotToPositionFB(aOpMode, distance, power, isRampedPower);
-        } else if (Direction == Backward) {
-            moveRobotToPositionFB(aOpMode, -distance, power, isRampedPower);
-        } else if (Direction == DirectionEnum.SidewaysLeft) {
-            moveRobotToPositionSideways(aOpMode, distance, power, isRampedPower);
-        } else if (Direction == DirectionEnum.SidewaysRight) {
-            moveRobotToPositionSideways(aOpMode, -distance, power, isRampedPower);
-        }
-    }
 
 
     /**
@@ -858,18 +794,18 @@ public class rr_Robot {
     //JEWEL ARM CONTROL
 
 
-    public void setJewelKnockerRight() throws InterruptedException{
-        jewelKnocker.setPosition(JEWEL_KNOCKER_RIGHT);
+    public void pushRightJewel() throws InterruptedException{
+        jewelPusher.setPosition(JEWEL_PUSHER_RIGHT);
         Thread.sleep(100);
     }
 
-    public void setJewelKnockerLeft() throws InterruptedException{
-        jewelKnocker.setPosition(JEWEL_KNOCKER_LEFT);
+    public void pushLeftJewel() throws InterruptedException{
+        jewelPusher.setPosition(JEWEL_PUSHER_LEFT);
         Thread.sleep(100);
     }
 
-    public void setJewelKnockerNeutral() throws InterruptedException{
-        jewelKnocker.setPosition(JEWEL_KNOCKER_NEUTRAL);
+    public void setJewelPusherNeutral() throws InterruptedException{
+        jewelPusher.setPosition(JEWEL_PUSHER_NEUTRAL);
         Thread.sleep(100);
     }
 
@@ -890,12 +826,12 @@ public class rr_Robot {
     public rr_Constants.JewelColorEnum getJewelLeftColor(rr_OpMode aOpMode) throws InterruptedException {
         Thread.sleep(30);
 
-        if ((leftJewelColorDistance.red() > JEWEL_RED_THRESHOLD) &&
-                (leftJewelColorDistance.red() > leftJewelColorDistance.blue())) {
+        if ((leftJewelColorSensor.red() > JEWEL_RED_THRESHOLD) &&
+                (leftJewelColorSensor.red() > leftJewelColorSensor.blue())) {
             return rr_Constants.JewelColorEnum.RED;
         }
-        if ((leftJewelColorDistance.blue() > JEWEL_BLUE_THRESHOLD) &&
-                (leftJewelColorDistance.blue() > leftJewelColorDistance.red())) {
+        if ((leftJewelColorSensor.blue() > JEWEL_BLUE_THRESHOLD) &&
+                (leftJewelColorSensor.blue() > leftJewelColorSensor.red())) {
             return rr_Constants.JewelColorEnum.BLUE;
         }
 
@@ -905,12 +841,12 @@ public class rr_Robot {
     public rr_Constants.JewelColorEnum getJewelRightColor(rr_OpMode aOpMode) throws InterruptedException {
         Thread.sleep(30);
 
-        if ((rightJewelColorDistance.red() > JEWEL_RED_THRESHOLD) &&
-                (rightJewelColorDistance.red() > rightJewelColorDistance.blue())) {
+        if ((rightJewelColorSensor.red() > JEWEL_RED_THRESHOLD) &&
+                (rightJewelColorSensor.red() > rightJewelColorSensor.blue())) {
             return rr_Constants.JewelColorEnum.RED;
         }
-        if ((rightJewelColorDistance.blue() > JEWEL_BLUE_THRESHOLD) &&
-                (rightJewelColorDistance.blue() > rightJewelColorDistance.red())) {
+        if ((rightJewelColorSensor.blue() > JEWEL_BLUE_THRESHOLD) &&
+                (rightJewelColorSensor.blue() > rightJewelColorSensor.red())) {
             return rr_Constants.JewelColorEnum.BLUE;
         }
 

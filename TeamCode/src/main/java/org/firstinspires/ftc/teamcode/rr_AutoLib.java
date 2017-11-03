@@ -2,11 +2,10 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import static org.firstinspires.ftc.teamcode.rr_Constants.*;
+import static org.firstinspires.ftc.teamcode.rr_Constants.ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DirectionEnum.Backward;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DirectionEnum.Forward;
-import static org.firstinspires.ftc.teamcode.rr_Constants.DirectionEnum.SidewaysLeft;
-import static org.firstinspires.ftc.teamcode.rr_Constants.DirectionEnum.SidewaysRight;
+import static org.firstinspires.ftc.teamcode.rr_Constants.MECANUM_WHEEL_DIAMETER;
 
 
 public class rr_AutoLib {
@@ -45,78 +44,140 @@ public class rr_AutoLib {
                 polarVelocity * Math.cos(Math.toRadians(polarAngle)), rotationalVelocity, duration, condition, isPulsed, pulseWidthDuration, pulseRestDuration);
     }
 
-    public void redAllianceJewelPush(rr_OpMode aOpMode) throws InterruptedException {
-        if (robot.getJewelLeftColor(aOpMode) == JewelColorEnum.BLUE && robot.getJewelRightColor(aOpMode) == JewelColorEnum.RED) {
-            robot.setJewelKnockerLeft();
+    // robot starts closer to audience
+    public void blueOneAutonomousCommonAction(rr_OpMode aOpMode) {
+
+        // TODO: create stop condition for line
+        //universalMoveRobot(aOpMode, 0, .25, 0, 5000, condition, false, 0, 0);
+        // Move forward / backward based on Vuforia pattern detected
+
+    }
+
+    // robot starts farther away from audience
+    public void blueTwoAutonomousCommonAction(rr_OpMode aOpMode) {
+
+        // moveWheels - forward
+        // universalMoveRobot - sideways right until blue line is detected
+        // Move sideways left / right based on Vuforia pattern detected
+    }
+
+    // robot starts closer to audience
+    public void redOneAutonomousCommonAction(rr_OpMode aOpMode){
+
+        // universalMoveRobot - backwards until red line is detected
+        // Move forward / backward based on Vuforia pattern detected
+        // rotate counterclockwise 90 degrees
+    }
+
+    // robot starts farther away from audience
+    public void redTwoAutonomousCommonAction(rr_OpMode aOpMode){
+
+        // moveWheels - backward
+        // universalMoveRobot - sideways right until blue line is detected
+        // Move sideways left / right based on Vuforia pattern detected
+        // rotate 180 degrees
+    }
+
+    public void detectColorAndPushJewel(rr_OpMode aOpMode, rr_Constants.AllianceColorEnum teamColor) throws InterruptedException {
+
+        if (teamColor == rr_Constants.AllianceColorEnum.BLUE) {
+            if ((robot.getJewelLeftColor(aOpMode) == rr_Constants.JewelColorEnum.BLUE) ||
+                    (robot.getJewelRightColor(aOpMode) == rr_Constants.JewelColorEnum.RED)) {
+                robot.pushRightJewel();
+                if (robot.getJewelLeftColor(aOpMode) == rr_Constants.JewelColorEnum.RED) {
+                    robot.pushLeftJewel();
+                }
+            } else if ((robot.getJewelLeftColor(aOpMode) == rr_Constants.JewelColorEnum.RED) ||
+                    (robot.getJewelRightColor(aOpMode) == rr_Constants.JewelColorEnum.BLUE)) {
+                robot.pushLeftJewel();
+                if (robot.getJewelRightColor(aOpMode) == rr_Constants.JewelColorEnum.RED) {
+                    robot.pushRightJewel();
+                }
+            }
         }
-        else if(robot.getJewelLeftColor(aOpMode) == JewelColorEnum.RED && robot.getJewelRightColor(aOpMode) == JewelColorEnum.BLUE) {
-            robot.setJewelKnockerRight();
-        }
-        else {
-            aOpMode.telemetryAddData("Jewel", "Color Detection", "Unknown");
-            aOpMode.telemetryUpdate();
+
+        if (teamColor == rr_Constants.AllianceColorEnum.RED) {
+            if ((robot.getJewelLeftColor(aOpMode) == rr_Constants.JewelColorEnum.BLUE) ||
+                    (robot.getJewelRightColor(aOpMode) == rr_Constants.JewelColorEnum.RED)) {
+                robot.pushLeftJewel();
+                if (robot.getJewelRightColor(aOpMode) == rr_Constants.JewelColorEnum.BLUE) {
+                    robot.pushRightJewel();
+                }
+            } else if ((robot.getJewelLeftColor(aOpMode) == rr_Constants.JewelColorEnum.RED) ||
+                    (robot.getJewelRightColor(aOpMode) == rr_Constants.JewelColorEnum.BLUE)) {
+                robot.pushRightJewel();
+                if (robot.getJewelLeftColor(aOpMode) == rr_Constants.JewelColorEnum.BLUE) {
+                    robot.pushLeftJewel();
+                }
+            }
         }
     }
 
-    public void blueAllianceJewelPush(rr_OpMode aOpMode) throws InterruptedException {
-        if (robot.getJewelLeftColor(aOpMode) == JewelColorEnum.BLUE && robot.getJewelRightColor(aOpMode) == JewelColorEnum.RED) {
-            robot.setJewelKnockerRight();
-        }
-        else if(robot.getJewelLeftColor(aOpMode) == JewelColorEnum.RED && robot.getJewelRightColor(aOpMode) == JewelColorEnum.BLUE) {
-            robot.setJewelKnockerLeft();
-        }
-        else {
-            aOpMode.telemetryAddData("Jewel", "Color Detection", "Unknown");
-            aOpMode.telemetryUpdate();
+
+    /**
+     * moveWheels method
+     *
+     * @param aOpMode   - object of vv_OpMode class
+     * @param distance  - in inches
+     * @param power     - float
+     * @param Direction - forward, backward, sideways left, or sideways right
+     * @throws InterruptedException
+     */
+    public void moveWheels(rr_OpMode aOpMode, float distance, float power,
+                           rr_Constants.DirectionEnum Direction, boolean isRampedPower)
+            throws InterruptedException {
+        if (Direction == Forward) {
+            moveRobotToPositionFB(aOpMode, distance, power, isRampedPower);
+        } else if (Direction == Backward) {
+            moveRobotToPositionFB(aOpMode, -distance, power, isRampedPower);
+        } else if (Direction == rr_Constants.DirectionEnum.SidewaysLeft) {
+            moveRobotToPositionSideways(aOpMode, distance, power, isRampedPower);
+        } else if (Direction == rr_Constants.DirectionEnum.SidewaysRight) {
+            moveRobotToPositionSideways(aOpMode, -distance, power, isRampedPower);
         }
     }
 
-    //TODO: Jewel is similar to process below
+    /**
+     * Runs robot to a specific position while driving forwards or backwards
+     *
+     * @param aOpMode       an object of the rr_OpMode class
+     * @param distance      distance each wheel will go in inches
+     * @param power         desired power of motor
+     * @param isRampedPower ramps power to prevent jerking if true
+     * @throws InterruptedException
+     */
 
+    public void moveRobotToPositionFB(rr_OpMode aOpMode, float distance,
+                                      float power, boolean isRampedPower)
+            throws InterruptedException {
+        //we need to store the encoder target position
+        int targetPosition;
+        //calculate target position from the input distance in cm
+        targetPosition = (int) ((distance / (Math.PI * MECANUM_WHEEL_DIAMETER)) * ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION);
+        //using the generic method with all powers set to the same value and all positions set to the same position
+        robot.runRobotToPosition(aOpMode, power, power, power, power,
+                targetPosition, targetPosition, targetPosition, targetPosition, isRampedPower);
+    }
 
-//    public void detectColorAndPressBeacon(vv_OpMode aOpMode,
-//                                          vv_Constants.BeaconColorEnum teamColor) throws
-//            InterruptedException {
-//
-//
-//        if (teamColor == vv_Constants.BeaconColorEnum.BLUE) {
-//            //team blue
-//            if (getBeaconLeftColor(aOpMode) == vv_Constants.BeaconColorEnum.BLUE) {
-//                //found blue
-//                //press left beacon button
-//                extendLeftBeaconButtonPress(aOpMode);
-//            } else if (getBeaconLeftColor(aOpMode) == vv_Constants.BeaconColorEnum.RED) {
-//                //found red
-//                //press right button
-//                extendRightBeaconButtonPress(aOpMode);
-//            }
-//        }
-//        if (teamColor == vv_Constants.BeaconColorEnum.RED) {
-//            //team red
-//            if (getBeaconLeftColor(aOpMode) == vv_Constants.BeaconColorEnum.RED) {
-//                //found red
-//                //press left beacon button
-//                extendLeftBeaconButtonPress(aOpMode);
-//            } else if (getBeaconLeftColor(aOpMode) == vv_Constants.BeaconColorEnum.BLUE) {
-//                //found blue
-//                //press right button
-//                extendRightBeaconButtonPress(aOpMode);
-//            }
-////        }
-//
-//
-//        //move forward to press beacon button.
-//        //lets keep pulsing forward until the color changes or time runs out or proximity limits
-//        //are reached
-//
-//        universalMoveRobot(aOpMode, 90, 0.3, 0.0, 2000, new
-//                RangeSensorProximityOrColorVerifiedCondition(), true, 200, 10);
-//
-//
-//        //now retract both beacon presses
-//        closeLeftBeaconButtonPress(aOpMode);
-//        closeRightBeaconButton(aOpMode);
-//    }
+    /**
+     * Runs robot to a specific position while driving sideways
+     *
+     * @param aOpMode  an object of the rr_OpMode class
+     * @param distance distance wheels will go in inches
+     * @param power    generic power of the motors (positive = left, negative = right)
+     */
+    public void moveRobotToPositionSideways(rr_OpMode aOpMode, float distance,
+                                            float power, boolean isRampedPower)
+            throws InterruptedException {
+        //we need to
+        //store the encoder target position
+        int targetPosition;
+        //calculate target position from the input distance in cm
+        targetPosition = (int) ((distance / (Math.PI * MECANUM_WHEEL_DIAMETER)) * ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION);
+        //using the generic method with all powers set to the same value and all positions set to the same position
+        robot.runRobotToPosition(aOpMode, power, power, power, power,
+                -targetPosition, targetPosition, targetPosition, -targetPosition, isRampedPower);
+    }
 
 
     //TODO: Conditions, we might need these. But we need to incorporate them into
@@ -177,17 +238,8 @@ public class rr_AutoLib {
 //                    < 2 * RANGESENSOR_ULTRASONIC_PROXIMITY_THRESHOLD);
 //        }
 //    }
-//
-//
-//    public class colorPressVerifiedCondition implements vv_OpMode.StopCondition {
-//        public boolean stopCondition(vv_OpMode aOpMode) throws InterruptedException {
-//            //button is pressed because both colors match , not a strong test but a good starting point for
-//            //teleop.
-//            return (getBeaconLeftColor(aOpMode) == getBeaconRightColor(aOpMode));
-//
-//        }
 //    }
 
 
-}
+    }
 
