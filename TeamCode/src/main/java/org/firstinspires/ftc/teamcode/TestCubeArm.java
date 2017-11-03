@@ -19,6 +19,7 @@ public class TestCubeArm extends rr_OpMode {
         robot = new rr_Robot(this, this.hardwareMap);
 
         robot.setCubeClawPosition(position);
+        robot.setCubeOrientation(orientationPos);
 
         telemetry.addLine("Ready");
         telemetryUpdate();
@@ -37,11 +38,27 @@ public class TestCubeArm extends rr_OpMode {
                 Thread.sleep(250);
             }
 
-            processOrientationClaw();
-            moveCubeArmWithoutLimits();
+            if (gamepad1.right_bumper) {
+                robot.setCubeClawPosition(0.445f);
+                position = 0.445f;
+            }
 
-            telemetry.addLine("ClawServo: " + robot.getCubeClawPosition());
-            telemetry.addLine("CubeArm: " + position);
+            if (gamepad1.dpad_right) {
+                robot.setCubeOrientation(0.9f);
+                orientationPos = 1.0f;
+            }
+
+            if (gamepad1.dpad_down) {
+                robot.setCubeOrientation(0.44f);
+                orientationPos = 0.44f;
+            }
+
+            processOrientationClaw();
+            moveCubeArmWithLimits();
+
+            telemetry.addLine("ClawServo: " + position);
+            telemetry.addLine("Cube Orientation: " + orientationPos);
+            telemetry.addLine("Cube Arm Pos" + robot.getMotorPosition(this, CUBE_ARM));
             telemetryTouchSensor();
             telemetryUpdate();
 
@@ -50,13 +67,15 @@ public class TestCubeArm extends rr_OpMode {
     }
 
     private void processOrientationClaw() throws InterruptedException {
-        if (gamepad1.x) {
+        if (gamepad1.x && orientationPos < .9) {
             orientationPos += .05f;
-        } else if (gamepad1.y) {
+            robot.setCubeOrientation(orientationPos);
+            Thread.sleep(250);
+        } else if (gamepad1.y && orientationPos > 0) {
             orientationPos -= .05f;
+            robot.setCubeOrientation(orientationPos);
+            Thread.sleep(250);
         }
-
-        robot.setCubeOrientation(orientationPos);
     }
 
     private void openClaw() throws InterruptedException {
@@ -74,28 +93,32 @@ public class TestCubeArm extends rr_OpMode {
     }
 
     private void moveCubeArmWithLimits() {
-        if (gamepad2.left_trigger >= TRIGGER_THRESHOLD && !robot.isCubeUpperLimitPressed()) {
-            robot.setCubeArmPower(this, gamepad2.left_trigger);
-        } else if (gamepad2.right_trigger >= TRIGGER_THRESHOLD && !robot.isCubeLowerLimitPressed()) {
-            robot.setCubeArmPower(this, -gamepad2.right_trigger);
+        if (gamepad1.left_trigger >= TRIGGER_THRESHOLD && !robot.isCubeLowerLimitPressed()) {
+            robot.setCubeArmPower(this, 0.1f);
+        } else if (gamepad1.right_trigger >= TRIGGER_THRESHOLD && !robot.isCubeUpperLimitPressed()) {
+            robot.setCubeArmPower(this, -0.5f);
+        } else {
+            robot.setCubeArmPower(this, 0.0f);
         }
     }
 
     private void moveCubeArmWithoutLimits() {
-        if (gamepad2.left_trigger >= TRIGGER_THRESHOLD) {
-            robot.setCubeArmPower(this, gamepad2.left_trigger);
-        } else if (gamepad2.right_trigger >= TRIGGER_THRESHOLD) {
-            robot.setCubeArmPower(this, -gamepad2.right_trigger);
+        if (gamepad1.left_trigger >= TRIGGER_THRESHOLD) {
+            robot.setCubeArmPower(this, 0.25f);
+        } else if (gamepad1.right_trigger >= TRIGGER_THRESHOLD) {
+            robot.setCubeArmPower(this, -0.15f);
+        } else {
+            robot.setCubeArmPower(this, 0.0f);
         }
     }
 
     private void telemetryTouchSensor() {
-        if (!robot.isCubeLowerLimitPressed()) {
+        if (robot.isCubeLowerLimitPressed()) {
             telemetry.addLine("Lower Limit Pressed");
         } else {
             telemetry.addLine("Lower Limit Not Pressed");
         }
-        if (!robot.isCubeUpperLimitPressed()) {
+        if (robot.isCubeUpperLimitPressed()) {
             telemetry.addLine("Upper Limit Pressed");
         } else {
             telemetry.addLine("Upper[" +

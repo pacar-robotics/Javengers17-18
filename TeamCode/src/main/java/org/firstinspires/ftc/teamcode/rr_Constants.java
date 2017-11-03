@@ -57,12 +57,12 @@ public class rr_Constants {
     final static int TWO_CUBE_POS_3 = 0; //Highest
     final static float CUBE_ARM_GRAB = 0;
     final static float CUBE_ARM_SCORING_POWER = .5f;
-    final static float CUBE_ARM_POWER_FACTOR = 0.5f;
-    final static float CUBE_CLAW_OPEN = 0.1f;
-    final static float CUBE_CLAW_ONE_CLOSED = 0.1f;
+    final static float CUBE_ARM_POWER_FACTOR = 0.20f;
+    final static float CUBE_CLAW_OPEN = 0.72f;
+    final static float CUBE_CLAW_ONE_CLOSED = 0.445f;
     final static float CUBE_CLAW_TWO_CLOSED = 0.1f;
-    final static float CUBE_ORIENTATION_HORIZONTAL = 0.1f;
-    final static float CUBE_ORIENTATION_VERTICAL = 0.1f;
+    final static float CUBE_ORIENTATION_HORIZONTAL = 0.9f;
+    final static float CUBE_ORIENTATION_VERTICAL = 0.44f;
 
     //Relic Arm Constants TODO: Change
     final static float RELIC_EXTEND_POWER = 1.0f;
