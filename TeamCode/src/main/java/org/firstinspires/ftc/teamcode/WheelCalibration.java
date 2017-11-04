@@ -39,32 +39,45 @@ public class WheelCalibration extends rr_OpMode {
         telemetryAddData("Test", "Move", "Moving Forward 4 inches");
         telemetryUpdate();
 
-        rrAutoLib.moveWheels(this, 4, 0.5f, Forward, true);
-
+        rrAutoLib.moveWheels(this, 30, .4f, Backward, true);
+        Thread.sleep(3000);
+        rrAutoLib.turnUsingEncoders(this, .3f, 90, rr_Constants.TurnDirectionEnum.Counterclockwise);
         Thread.sleep(3000);
 
-        telemetryAddData("Test", "Move", "Moving Backward 4 inches");
-        telemetryUpdate();
-
-        rrAutoLib.moveWheels(this, 4, 0.5f, Backward, true);
-
-        Thread.sleep(3000);
-
-
-        telemetryAddData("Test", "Move", "Moving Sideways Left 4 inches");
-        telemetryUpdate();
-
-        rrAutoLib.moveWheels(this, 4, 0.5f, SidewaysLeft, true);
-
-        Thread.sleep(3000);
-
-
-        telemetryAddData("Test", "Move", "Moving Sideways Right 4 inches");
-        telemetryUpdate();
-
-        rrAutoLib.moveWheels(this, 4, 0.5f, SidewaysRight, true);
-
-        Thread.sleep(3000);
+//        rrAutoLib.turnUsingEncoders(this, .3f, 90, rr_Constants.TurnDirectionEnum.Clockwise);
+//        Thread.sleep(3000);
+//        rrAutoLib.turnUsingEncoders(this, .3f, 90, rr_Constants.TurnDirectionEnum.Clockwise);
+//        Thread.sleep(3000);
+//        rrAutoLib.turnUsingEncoders(this, .3f, 180, rr_Constants.TurnDirectionEnum.Counterclockwise);
+//        Thread.sleep(3000);
+//
+//
+//        rrAutoLib.moveWheels(this, 4, 0.5f, Forward, false);
+//
+//        Thread.sleep(3000);
+//
+//        telemetryAddData("Test", "Move", "Moving Backward 4 inches");
+//        telemetryUpdate();
+//
+//        rrAutoLib.moveWheels(this, 4, 0.5f, Backward, false);
+//
+//        Thread.sleep(3000);
+//
+//
+//        telemetryAddData("Test", "Move", "Moving Sideways Left 4 inches");
+//        telemetryUpdate();
+//
+//        rrAutoLib.moveWheels(this, 4, 0.5f, SidewaysLeft, false);
+//
+//        Thread.sleep(3000);
+//
+//
+//        telemetryAddData("Test", "Move", "Moving Sideways Right 4 inches");
+//        telemetryUpdate();
+//
+//        rrAutoLib.moveWheels(this, 4, 0.5f, SidewaysRight, false);
+//
+//        Thread.sleep(3000);
 
 
     }

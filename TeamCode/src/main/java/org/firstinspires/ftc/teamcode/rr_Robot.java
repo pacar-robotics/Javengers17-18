@@ -52,7 +52,8 @@ public class rr_Robot {
     //TODO: Color Sensors
     private ColorSensor leftJewelColorSensor;
     private ColorSensor rightJewelColorSensor;
-    private ColorSensor floorColorSensor; //TODO: IS THIS A THING?
+    private ColorSensor frontFloorColorSensor;
+    private ColorSensor backFloorColorSensor;
 
     protected navXPIDController yawPIDController;
 
@@ -84,49 +85,51 @@ public class rr_Robot {
         motorArray[FRONT_RIGHT_MOTOR] = hwMap.get(DcMotor.class, "motor_front_right");
         motorArray[BACK_LEFT_MOTOR] = hwMap.get(DcMotor.class, "motor_back_left");
         motorArray[BACK_RIGHT_MOTOR] = hwMap.get(DcMotor.class, "motor_back_right");
-        motorArray[CUBE_ARM] = hwMap.get(DcMotor.class, "motor_cube_arm");
-        motorArray[RELIC_ARM_EXTEND] = hwMap.get(DcMotor.class, "motor_relic_extend");
+//        motorArray[CUBE_ARM] = hwMap.get(DcMotor.class, "motor_cube_arm");
+//        motorArray[RELIC_ARM_EXTEND] = hwMap.get(DcMotor.class, "motor_relic_extend");
 
 
         //TODO: Map Sensors and Servos
 
         //Map Servos
-        cubeClaw = hwMap.get(Servo.class, "servo_cube_claw");
-        cubeOrientation = hwMap.get(Servo.class, "servo_cube_orientatoin");
-        jewelArm = hwMap.get(Servo.class, "servo_jewel_arm");
-        jewelPusher = hwMap.get(Servo.class, "servo_jewel_pusher");
-        relicClaw = hwMap.get(Servo.class, "servo_relic_claw");
-        relicClawAngle = hwMap.get(Servo.class, "servo_claw_angle");
-        relicArmRetract = hwMap.get(Servo.class, "servo_relic_retract");
+//        cubeClaw = hwMap.get(Servo.class, "servo_cube_claw");
+//        cubeOrientation = hwMap.get(Servo.class, "servo_cube_orientatoin");
+//        jewelArm = hwMap.get(Servo.class, "servo_jewel_arm");
+//        jewelPusher = hwMap.get(Servo.class, "servo_jewel_pusher");
+//        relicClaw = hwMap.get(Servo.class, "servo_relic_claw");
+//        relicClawAngle = hwMap.get(Servo.class, "servo_claw_angle");
+//        relicArmRetract = hwMap.get(Servo.class, "servo_relic_retract");
 
         //Map Sensors
-        leftJewelColorSensor = hwMap.get(ColorSensor.class, "left_color_distance");
-        rightJewelColorSensor = hwMap.get(ColorSensor.class, "right_color_distance");
-        rangeSensor = hwMap.get(ModernRoboticsI2cRangeSensor.class, "range_sensor");
+//        leftJewelColorSensor = hwMap.get(ColorSensor.class, "left_color_distance");
+//        rightJewelColorSensor = hwMap.get(ColorSensor.class, "right_color_distance");
+//        frontFloorColorSensor = hwMap.get(ColorSensor.class, "front_floor_color_sensor");
+//        backFloorColorSensor = hwMap.get(ColorSensor.class, "back_floor_color_sensor");
+//        rangeSensor = hwMap.get(ModernRoboticsI2cRangeSensor.class, "range_sensor");
 
 
-        aOpMode.DBG("Begin Gyro Calib");
-        //allocate the mxp gyro sensor.
-        baseMxpGyroSensor = AHRS.getInstance(hwMap.deviceInterfaceModule.get("dim"),
-                NAVX_DIM_I2C_PORT,
-                AHRS.DeviceDataType.kProcessedData);
-
-        while (baseMxpGyroSensor.isCalibrating()) {
-            aOpMode.idle();
-            Thread.sleep(50);
-            aOpMode.telemetryAddData("1 navX-Device", "Status:",
-                    baseMxpGyroSensor.isCalibrating() ?
-                            "CALIBRATING" : "Calibration Complete");
-            aOpMode.telemetryUpdate();
-        }
-
-        aOpMode.DBG("Gyro Calib Complete");
+//        aOpMode.DBG("Begin Gyro Calib");
+//        //allocate the mxp gyro sensor.
+//        baseMxpGyroSensor = AHRS.getInstance(hwMap.deviceInterfaceModule.get("dim"),
+//                NAVX_DIM_I2C_PORT,
+//                AHRS.DeviceDataType.kProcessedData);
+//
+//        while (baseMxpGyroSensor.isCalibrating()) {
+//            aOpMode.idle();
+//            Thread.sleep(50);
+//            aOpMode.telemetryAddData("1 navX-Device", "Status:",
+//                    baseMxpGyroSensor.isCalibrating() ?
+//                            "CALIBRATING" : "Calibration Complete");
+//            aOpMode.telemetryUpdate();
+//        }
+//
+//        aOpMode.DBG("Gyro Calib Complete");
 
 
 
         //zero out the yaw value, so this will be the frame of reference for future calls.
         //do not call this for duration of run after this.
-        baseMxpGyroSensor.zeroYaw();
+        //baseMxpGyroSensor.zeroYaw();
 
         //wait for these servos to reach desired state
         Thread.sleep(100);
@@ -146,12 +149,12 @@ public class rr_Robot {
         aOpMode.DBG("Presetting Servos");
 
         //Setting servos to intitial position TODO: CHANGE
-        closeCubeClawServoOneCube();
-        setCubeClawToHorizontal();
-        setJewelPusherNeutral();
-        setJewelArmIn();
-        setRelicClawClosed();
-        setRelicArmAngleGrab();
+//        closeCubeClawServoOneCube();
+//        setCubeClawToHorizontal();
+//        setJewelPusherNeutral();
+//        setJewelArmIn();
+//        setRelicClawClosed();
+//        setRelicArmAngleGrab();
 
         aOpMode.DBG("Exiting Robot init");
     }
@@ -221,6 +224,14 @@ public class rr_Robot {
 
     protected void setMxpGyroZeroYaw(rr_OpMode aOpMode) {
         baseMxpGyroSensor.zeroYaw();
+    }
+
+    public double getFloorBlueReading() {
+        return frontFloorColorSensor.blue();
+    }
+
+    public double getFloorRedReading() {
+        return backFloorColorSensor.red();
     }
 
 
@@ -924,4 +935,6 @@ public class rr_Robot {
             super(message);
         }
     }
+
+
 }

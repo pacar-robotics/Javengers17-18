@@ -6,14 +6,16 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.ANDYMARK_MOTOR_ENCODER
 import static org.firstinspires.ftc.teamcode.rr_Constants.DirectionEnum.Backward;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DirectionEnum.Forward;
 import static org.firstinspires.ftc.teamcode.rr_Constants.MECANUM_WHEEL_DIAMETER;
+import static org.firstinspires.ftc.teamcode.rr_Constants.ROBOT_TRACK_DISTANCE;
 
 
 public class rr_AutoLib {
 
     //TODO: Declarations of Conditions
 
-//    protected LineDetectCondition lineDetectStop = new LineDetectCondition();
-//    protected FalseCondition falseStop = new FalseCondition();
+    protected blueLineDetectCondition blueLineDetectStop = new blueLineDetectCondition();
+    protected redLineDetectCondition redLineDetectStop = new redLineDetectCondition();
+    protected FalseCondition falseStop = new FalseCondition();
 //    protected EopdProximityCondition eopdProximityStop = new EopdProximityCondition();
 //    protected RangeSensorProximityOrColorVerifiedCondition rangeSensorProximityOrColorVerifiedStop =
 //            new RangeSensorProximityOrColorVerifiedCondition();
@@ -45,16 +47,15 @@ public class rr_AutoLib {
     }
 
     // robot starts closer to audience
-    public void blueOneAutonomousCommonAction(rr_OpMode aOpMode) {
+    public void blueOneAutonomousCommonAction(rr_OpMode aOpMode) throws InterruptedException {
 
-        // TODO: create stop condition for line
-        //universalMoveRobot(aOpMode, 0, .25, 0, 5000, condition, false, 0, 0);
+        universalMoveRobot(aOpMode, 0, .25, 0, 5000, blueLineDetectStop, false, 0, 0);
         // Move forward / backward based on Vuforia pattern detected
 
     }
 
     // robot starts farther away from audience
-    public void blueTwoAutonomousCommonAction(rr_OpMode aOpMode) {
+    public void blueTwoAutonomousCommonAction(rr_OpMode aOpMode) throws InterruptedException {
 
         // moveWheels - forward
         // universalMoveRobot - sideways right until blue line is detected
@@ -62,7 +63,7 @@ public class rr_AutoLib {
     }
 
     // robot starts closer to audience
-    public void redOneAutonomousCommonAction(rr_OpMode aOpMode){
+    public void redOneAutonomousCommonAction(rr_OpMode aOpMode) throws InterruptedException {
 
         // universalMoveRobot - backwards until red line is detected
         // Move forward / backward based on Vuforia pattern detected
@@ -70,7 +71,7 @@ public class rr_AutoLib {
     }
 
     // robot starts farther away from audience
-    public void redTwoAutonomousCommonAction(rr_OpMode aOpMode){
+    public void redTwoAutonomousCommonAction(rr_OpMode aOpMode)throws InterruptedException{
 
         // moveWheels - backward
         // universalMoveRobot - sideways right until blue line is detected
@@ -180,21 +181,27 @@ public class rr_AutoLib {
     }
 
 
-    //TODO: Conditions, we might need these. But we need to incorporate them into
+    public class blueLineDetectCondition implements rr_OpMode.StopCondition {
 
-//    public class LineDetectCondition implements vv_OpMode.StopCondition {
-//
-//        public boolean stopCondition(vv_OpMode aOpMode) throws InterruptedException {
-//            return ((getFloorColorIntensity(aOpMode) >= (floorWhiteThreshold - FLOOR_WHITE_MARGIN)));
-//        }
-//    }
-//
-//    public class FalseCondition implements vv_OpMode.StopCondition {
-//        //can be used as an empty condition, so the robot keeps running in universal movement
-//        public boolean stopCondition(vv_OpMode aOpMode) throws InterruptedException {
-//            return (false);
-//        }
-//    }
+        public boolean stopCondition(rr_OpMode aOpMode) throws InterruptedException {
+            return ((robot.getFloorBlueReading() >= (rr_Constants.FLOOR_BLUE_THRESHOLD)));
+        }
+    }
+
+    public class redLineDetectCondition implements rr_OpMode.StopCondition {
+
+        public boolean stopCondition(rr_OpMode aOpMode) throws InterruptedException {
+            return ((robot.getFloorRedReading() >= (rr_Constants.FLOOR_RED_THRESHOLD)));
+        }
+    }
+
+
+    public class FalseCondition implements rr_OpMode.StopCondition {
+        //can be used as an empty condition, so the robot keeps running in universal movement
+        public boolean stopCondition(rr_OpMode aOpMode) throws InterruptedException {
+            return (false);
+        }
+    }
 //
 //
 //    public class EopdProximityCondition implements vv_OpMode.StopCondition {
@@ -240,6 +247,31 @@ public class rr_AutoLib {
 //    }
 //    }
 
+    public void turnUsingEncoders(rr_OpMode aOpMode, float power, float angle, rr_Constants.TurnDirectionEnum TurnDirection)
+            throws InterruptedException {
 
+        //calculate the turn distance to be used in terms of encoder clicks.
+        //for Andymark encoders.
+
+        int turnDistance = (int) (2 * ((ROBOT_TRACK_DISTANCE) * angle
+                * ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION) /
+                (MECANUM_WHEEL_DIAMETER * 360));
+
+
+        switch (TurnDirection) {
+            case Clockwise:
+                robot.runRobotToPosition(aOpMode, power, power, power, power, turnDistance, -turnDistance, turnDistance, -turnDistance, true);
+                break;
+            case Counterclockwise:
+                robot.runRobotToPosition(aOpMode, power, power, power, power, -turnDistance, turnDistance, -turnDistance, turnDistance, true);
+                break;
+        }
+
+        //wait just a bit for the commands to complete
+        Thread.sleep(50);
     }
+
+
+
+}
 

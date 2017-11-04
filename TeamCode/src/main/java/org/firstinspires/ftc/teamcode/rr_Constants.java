@@ -116,6 +116,10 @@ public class rr_Constants {
     final static float JEWEL_RED_THRESHOLD = 0.5f;
     final static float JEWEL_BLUE_THRESHOLD = 0.5f;
 
+    //TODO: Change these
+    final static float FLOOR_RED_THRESHOLD = 0.5f;
+    final static float FLOOR_BLUE_THRESHOLD = 0.5f;
+
     //the value below for floor color sensor is the fallback value.
     //it needs to be adjusted if the height of the floor color sensor
     //is changed.
