@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+@TeleOp(name = "Test Jewel Arm", group = "Test")
+
 public class TestJewelArm extends rr_OpMode {
     rr_Robot robot;
 

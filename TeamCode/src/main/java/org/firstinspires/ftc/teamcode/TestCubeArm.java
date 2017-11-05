@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRIGGER_THRESHOLD;
 
-@TeleOp(name = "Calibrate Cube Arm", group = "Test")
+@TeleOp(name = "Test Cube Arm", group = "Test")
 
 public class TestCubeArm extends rr_OpMode {
 

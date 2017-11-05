@@ -1,8 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
 import static org.firstinspires.ftc.teamcode.rr_Constants.ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.MECANUM_WHEEL_DIAMETER;
 import static org.firstinspires.ftc.teamcode.rr_Constants.ROBOT_TRACK_DISTANCE;
+
+@TeleOp(name = "Test Auto Drive", group = "Test")
 
 public class TestDriveSystemAuto extends rr_OpMode {
 
