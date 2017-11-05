@@ -98,7 +98,7 @@ public class rr_Robot {
 
         //Map Servos
         cubeClaw = hwMap.get(Servo.class, "servo_cube_claw");
-//        cubeOrientation = hwMap.get(Servo.class, "servo_cube_orientatoin");
+        cubeOrientation = hwMap.get(Servo.class, "servo_cube_orientation");
 //        jewelArm = hwMap.get(Servo.class, "servo_jewel_arm");
 //        jewelKnocker = hwMap.get(Servo.class, "servo_jewel_knocker");
 //        relicClaw = hwMap.get(Servo.class, "servo_relic_claw");
@@ -648,7 +648,7 @@ public class rr_Robot {
 
     //used in TeleOp
     public void setCubeArmPower(rr_OpMode aOpMode, float power) {
-        motorArray[CUBE_ARM].setPower(power * CUBE_ARM_POWER_FACTOR);
+        motorArray[CUBE_ARM].setPower(power);
     }
 
     public void moveCubeArmToPositionWithLimits(rr_OpMode aOpMode, int position, float power) throws InterruptedException {
@@ -660,7 +660,7 @@ public class rr_Robot {
         motorArray[CUBE_ARM].setTargetPosition(position);
 
         //now set the power
-        motorArray[CUBE_ARM].setPower(power);
+        motorArray[CUBE_ARM].setPower(power * CUBE_ARM_POWER_FACTOR);
 
         //reset clock for checking stall
         aOpMode.reset_timer_array(GENERIC_TIMER);
@@ -701,11 +701,11 @@ public class rr_Robot {
     }
 
     public boolean isCubeUpperLimitPressed() {
-        return cubeArmUpperLimit.getState();
+        return !cubeArmUpperLimit.getState();
     }
 
     public boolean isCubeLowerLimitPressed() {
-        return cubeArmLowerLimit.getState();
+        return !cubeArmLowerLimit.getState();
     }
 
     // Test methods
