@@ -80,9 +80,9 @@ public class rr_Constants {
     final static double RELIC_ARM_RETRACT_POWER = 0;
 
     //Jewel Arm Constants TODO: CHANGE
-    final static float JEWEL_KNOCKER_LEFT = 0.1f;
-    final static float JEWEL_KNOCKER_RIGHT = 0.1f;
-    final static float JEWEL_KNOCKER_NEUTRAL = 0.1f;
+    final static float JEWEL_PUSHER_LEFT = 0.1f;
+    final static float JEWEL_PUSHER_RIGHT = 0.1f;
+    final static float JEWEL_PUSHER_NEUTRAL = 0.1f;
     final static float JEWEL_ARM_IN = 0.1f;
     final static float JEWEL_ARM_OUT = 0.1f;
 
@@ -94,7 +94,7 @@ public class rr_Constants {
     final static int CUBE_ARM = 4;
     final static int RELIC_ARM_EXTEND = 5;
 
-    // Mecanum wheel properties
+    //Mecanum wheel properties
     final static float MECANUM_WHEEL_DIAMETER = 4f;   //in inches
     final static float MECANUM_WHEEL_ENCODER_MARGIN = 50;
     final static float MECANUM_WHEEL_SIDE_TRACK_DISTANCE = 13.0f;
@@ -103,6 +103,7 @@ public class rr_Constants {
     //Power Factors
     final static float STANDARD_DRIVE_POWER_FACTOR = 0.7f;
     final static float TURN_POWER_FACTOR = 0.95f;
+    final static float SCORING_DRIVE_POWER_FACTOR = 0.25f;  //TODO: CHANGE LATER
 
     //Gamepad Thresholds
     final static float ANALOG_STICK_THRESHOLD = .25f;
@@ -114,6 +115,10 @@ public class rr_Constants {
     //Sensor Constants TODO: CHANGE
     final static float JEWEL_RED_THRESHOLD = 0.5f;
     final static float JEWEL_BLUE_THRESHOLD = 0.5f;
+
+    //TODO: Change these
+    final static float FLOOR_RED_THRESHOLD = 0.5f;
+    final static float FLOOR_BLUE_THRESHOLD = 0.5f;
 
     //the value below for floor color sensor is the fallback value.
     //it needs to be adjusted if the height of the floor color sensor

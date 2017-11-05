@@ -44,15 +44,16 @@ public class rr_Robot {
     private Servo cubeClaw;
     private Servo cubeOrientation;
     private Servo jewelArm;
-    private Servo jewelKnocker;
+    private Servo jewelPusher;
     private Servo relicClaw;
     private Servo relicClawAngle;
     private Servo relicArmRetract; //Continuous servo
 
     //TODO: Color Sensors
-    private ColorSensor leftJewelColorDistance;
-    private ColorSensor rightJewelColorDistance;
-    private ColorSensor floorColorSensor; //TODO: IS THIS A THING?
+    private ColorSensor leftJewelColorSensor;
+    private ColorSensor rightJewelColorSensor;
+    private ColorSensor frontFloorColorSensor;
+    private ColorSensor backFloorColorSensor;
 
     protected navXPIDController yawPIDController;
 
@@ -68,7 +69,8 @@ public class rr_Robot {
 
     private ElapsedTime period = new ElapsedTime();
 
-    public void init(rr_OpMode aOpMode, HardwareMap ahwMap) throws InterruptedException {
+
+    public rr_Robot(rr_OpMode aOpMode, HardwareMap ahwMap) throws InterruptedException {
         // save reference to HW Map
         aOpMode.DBG("in Robot init");
         hwMap = ahwMap;
@@ -83,49 +85,51 @@ public class rr_Robot {
         motorArray[FRONT_RIGHT_MOTOR] = hwMap.get(DcMotor.class, "motor_front_right");
         motorArray[BACK_LEFT_MOTOR] = hwMap.get(DcMotor.class, "motor_back_left");
         motorArray[BACK_RIGHT_MOTOR] = hwMap.get(DcMotor.class, "motor_back_right");
-        motorArray[CUBE_ARM] = hwMap.get(DcMotor.class, "motor_cube_arm");
-        motorArray[RELIC_ARM_EXTEND] = hwMap.get(DcMotor.class, "motor_relic_extend");
+//        motorArray[CUBE_ARM] = hwMap.get(DcMotor.class, "motor_cube_arm");
+//        motorArray[RELIC_ARM_EXTEND] = hwMap.get(DcMotor.class, "motor_relic_extend");
 
 
         //TODO: Map Sensors and Servos
 
         //Map Servos
-        cubeClaw = hwMap.get(Servo.class, "servo_cube_claw");
-        cubeOrientation = hwMap.get(Servo.class, "servo_cube_orientatoin");
-        jewelArm = hwMap.get(Servo.class, "servo_jewel_arm");
-        jewelKnocker = hwMap.get(Servo.class, "servo_jewel_knocker");
-        relicClaw = hwMap.get(Servo.class, "servo_relic_claw");
-        relicClawAngle = hwMap.get(Servo.class, "servo_claw_angle");
-        relicArmRetract = hwMap.get(Servo.class, "servo_relic_retract");
+//        cubeClaw = hwMap.get(Servo.class, "servo_cube_claw");
+//        cubeOrientation = hwMap.get(Servo.class, "servo_cube_orientatoin");
+//        jewelArm = hwMap.get(Servo.class, "servo_jewel_arm");
+//        jewelPusher = hwMap.get(Servo.class, "servo_jewel_pusher");
+//        relicClaw = hwMap.get(Servo.class, "servo_relic_claw");
+//        relicClawAngle = hwMap.get(Servo.class, "servo_claw_angle");
+//        relicArmRetract = hwMap.get(Servo.class, "servo_relic_retract");
 
         //Map Sensors
-        leftJewelColorDistance = hwMap.get(ColorSensor.class, "left_color_distance");
-        rightJewelColorDistance = hwMap.get(ColorSensor.class, "right_color_distance");
-        rangeSensor = hwMap.get(ModernRoboticsI2cRangeSensor.class, "range_sensor");
+//        leftJewelColorSensor = hwMap.get(ColorSensor.class, "left_color_distance");
+//        rightJewelColorSensor = hwMap.get(ColorSensor.class, "right_color_distance");
+//        frontFloorColorSensor = hwMap.get(ColorSensor.class, "front_floor_color_sensor");
+//        backFloorColorSensor = hwMap.get(ColorSensor.class, "back_floor_color_sensor");
+//        rangeSensor = hwMap.get(ModernRoboticsI2cRangeSensor.class, "range_sensor");
 
 
-        aOpMode.DBG("Begin Gyro Calib");
-        //allocate the mxp gyro sensor.
-        baseMxpGyroSensor = AHRS.getInstance(hwMap.deviceInterfaceModule.get("dim"),
-                NAVX_DIM_I2C_PORT,
-                AHRS.DeviceDataType.kProcessedData);
-
-        while (baseMxpGyroSensor.isCalibrating()) {
-            aOpMode.idle();
-            Thread.sleep(50);
-            aOpMode.telemetryAddData("1 navX-Device", "Status:",
-                    baseMxpGyroSensor.isCalibrating() ?
-                            "CALIBRATING" : "Calibration Complete");
-            aOpMode.telemetryUpdate();
-        }
-
-        aOpMode.DBG("Gyro Calib Complete");
+//        aOpMode.DBG("Begin Gyro Calib");
+//        //allocate the mxp gyro sensor.
+//        baseMxpGyroSensor = AHRS.getInstance(hwMap.deviceInterfaceModule.get("dim"),
+//                NAVX_DIM_I2C_PORT,
+//                AHRS.DeviceDataType.kProcessedData);
+//
+//        while (baseMxpGyroSensor.isCalibrating()) {
+//            aOpMode.idle();
+//            Thread.sleep(50);
+//            aOpMode.telemetryAddData("1 navX-Device", "Status:",
+//                    baseMxpGyroSensor.isCalibrating() ?
+//                            "CALIBRATING" : "Calibration Complete");
+//            aOpMode.telemetryUpdate();
+//        }
+//
+//        aOpMode.DBG("Gyro Calib Complete");
 
 
 
         //zero out the yaw value, so this will be the frame of reference for future calls.
         //do not call this for duration of run after this.
-        baseMxpGyroSensor.zeroYaw();
+        //baseMxpGyroSensor.zeroYaw();
 
         //wait for these servos to reach desired state
         Thread.sleep(100);
@@ -145,15 +149,16 @@ public class rr_Robot {
         aOpMode.DBG("Presetting Servos");
 
         //Setting servos to intitial position TODO: CHANGE
-        closeCubeClawServoOneCube();
-        setCubeClawToHorizontal();
-        setJewelKnockerNeutral();
-        setJewelArmIn();
-        setRelicClawClosed();
-        setRelicArmAngleGrab();
+//        closeCubeClawServoOneCube();
+//        setCubeClawToHorizontal();
+//        setJewelPusherNeutral();
+//        setJewelArmIn();
+//        setRelicClawClosed();
+//        setRelicArmAngleGrab();
 
         aOpMode.DBG("Exiting Robot init");
     }
+
 
 
     //MOTOR METHODS
@@ -219,6 +224,14 @@ public class rr_Robot {
 
     protected void setMxpGyroZeroYaw(rr_OpMode aOpMode) {
         baseMxpGyroSensor.zeroYaw();
+    }
+
+    public double getFloorBlueReading() {
+        return frontFloorColorSensor.blue();
+    }
+
+    public double getFloorRedReading() {
+        return backFloorColorSensor.red();
     }
 
 
@@ -368,70 +381,6 @@ public class rr_Robot {
     }
 
 
-    /**
-     * Runs robot to a specific position while driving forwards or backwards
-     *
-     * @param aOpMode       an object of the rr_OpMode class
-     * @param distance      distance each wheel will go in inches
-     * @param power         desired power of motor
-     * @param isRampedPower ramps power to prevent jerking if true
-     * @throws InterruptedException
-     */
-    public void moveRobotToPositionFB(rr_OpMode aOpMode, float distance,
-                                      float power, boolean isRampedPower)
-            throws InterruptedException {
-        //we need to store the encoder target position
-        int targetPosition;
-        //calculate target position from the input distance in cm
-        targetPosition = (int) ((distance / (Math.PI * MECANUM_WHEEL_DIAMETER)) * ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION);
-        //using the generic method with all powers set to the same value and all positions set to the same position
-        runRobotToPosition(aOpMode, power, power, power, power,
-                targetPosition, targetPosition, targetPosition, targetPosition, isRampedPower);
-    }
-
-    /**
-     * Runs robot to a specific position while driving sideways
-     *
-     * @param aOpMode  an object of the rr_OpMode class
-     * @param distance distance wheels will go in inches
-     * @param power    generic power of the motors (positive = left, negative = right)
-     */
-    public void moveRobotToPositionSideways(rr_OpMode aOpMode, float distance,
-                                            float power, boolean isRampedPower)
-            throws InterruptedException {
-        //we need to
-        //store the encoder target position
-        int targetPosition;
-        //calculate target position from the input distance in cm
-        targetPosition = (int) ((distance / (Math.PI * MECANUM_WHEEL_DIAMETER)) * ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION);
-        //using the generic method with all powers set to the same value and all positions set to the same position
-        runRobotToPosition(aOpMode, power, power, power, power,
-                -targetPosition, targetPosition, targetPosition, -targetPosition, isRampedPower);
-    }
-
-    /**
-     * moveWheels method
-     *
-     * @param aOpMode   - object of vv_OpMode class
-     * @param distance  - in inches
-     * @param power     - float
-     * @param Direction - forward, backward, sideways left, or sideways right
-     * @throws InterruptedException
-     */
-    public void moveWheels(rr_OpMode aOpMode, float distance, float power,
-                           DirectionEnum Direction, boolean isRampedPower)
-            throws InterruptedException {
-        if (Direction == Forward) {
-            moveRobotToPositionFB(aOpMode, distance, power, isRampedPower);
-        } else if (Direction == Backward) {
-            moveRobotToPositionFB(aOpMode, -distance, power, isRampedPower);
-        } else if (Direction == DirectionEnum.SidewaysLeft) {
-            moveRobotToPositionSideways(aOpMode, distance, power, isRampedPower);
-        } else if (Direction == DirectionEnum.SidewaysRight) {
-            moveRobotToPositionSideways(aOpMode, -distance, power, isRampedPower);
-        }
-    }
-
 
     /**
      * Runs motors without a specified duration.
@@ -557,6 +506,112 @@ public class rr_Robot {
         motorArray[FRONT_RIGHT_MOTOR].setPower(fr_velocity * RIGHT_MOTOR_TRIM_FACTOR);
         motorArray[BACK_LEFT_MOTOR].setPower(bl_velocity * LEFT_MOTOR_TRIM_FACTOR);
         motorArray[BACK_RIGHT_MOTOR].setPower(br_velocity * RIGHT_MOTOR_TRIM_FACTOR);
+    }
+
+    public void universalMoveRobotWithCondition(rr_OpMode aOpMode, double xAxisVelocity,
+                                   double yAxisVelocity, double rotationalVelocity,
+                                   long duration, rr_OpMode.StopCondition condition,
+                                   boolean isPulsed, long pulseWidthDuration, long pulseRestDuration)
+            throws InterruptedException {
+        double fl_velocity = 0;
+        double fr_velocity = 0;
+        double bl_velocity = 0;
+        double br_velocity = 0;
+        double trackDistanceAverage = (MECANUM_WHEEL_FRONT_TRACK_DISTANCE +
+                MECANUM_WHEEL_SIDE_TRACK_DISTANCE) / 2.0f;
+
+
+        //calculate velocities at each wheel.
+
+        fl_velocity = yAxisVelocity + xAxisVelocity - rotationalVelocity *
+                trackDistanceAverage;
+
+        fr_velocity = yAxisVelocity - xAxisVelocity + rotationalVelocity *
+                trackDistanceAverage;
+
+        bl_velocity = yAxisVelocity - xAxisVelocity - rotationalVelocity *
+                trackDistanceAverage;
+
+        br_velocity = yAxisVelocity + xAxisVelocity + rotationalVelocity *
+                trackDistanceAverage;
+
+        //reset all encoders.
+
+        motorArray[FRONT_LEFT_MOTOR].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorArray[FRONT_RIGHT_MOTOR].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorArray[BACK_LEFT_MOTOR].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorArray[BACK_RIGHT_MOTOR].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Thread.sleep(50);
+
+        //switch to RUN_WITH_ENCODERS to normalize for speed.
+
+        motorArray[FRONT_LEFT_MOTOR].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorArray[FRONT_RIGHT_MOTOR].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorArray[BACK_LEFT_MOTOR].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorArray[BACK_RIGHT_MOTOR].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
+        //start slow to prevent skid.
+        //may replace with ramp to improve performance.
+
+        motorArray[FRONT_LEFT_MOTOR].setPower(Math.abs(fl_velocity) > MOTOR_LOWER_POWER_THRESHOLD ?
+                Math.signum(fl_velocity) * MOTOR_LOWER_POWER_THRESHOLD : fl_velocity * LEFT_MOTOR_TRIM_FACTOR);
+        motorArray[FRONT_RIGHT_MOTOR].setPower(Math.abs(fr_velocity) > MOTOR_LOWER_POWER_THRESHOLD ?
+                Math.signum(fr_velocity) * MOTOR_LOWER_POWER_THRESHOLD : fr_velocity * RIGHT_MOTOR_TRIM_FACTOR);
+        motorArray[BACK_LEFT_MOTOR].setPower(Math.abs(bl_velocity) > MOTOR_LOWER_POWER_THRESHOLD ?
+                Math.signum(bl_velocity) * MOTOR_LOWER_POWER_THRESHOLD : bl_velocity * LEFT_MOTOR_TRIM_FACTOR);
+        motorArray[BACK_RIGHT_MOTOR].setPower(Math.abs(br_velocity) > MOTOR_LOWER_POWER_THRESHOLD ?
+                Math.signum(br_velocity) * MOTOR_LOWER_POWER_THRESHOLD : br_velocity * RIGHT_MOTOR_TRIM_FACTOR);
+
+        //
+
+        aOpMode.reset_timer_array(GENERIC_TIMER);
+        //stop 100 ms before end
+        while ((aOpMode.time_elapsed_array(GENERIC_TIMER) < (duration - 100)) &&
+                (!condition.stopCondition(aOpMode))) {
+
+            //condition will return true when it reaches state meant to stop movement
+
+            //apply specific powers to motors to get desired movement
+            //wait till duration is complete.
+            motorArray[FRONT_LEFT_MOTOR].setPower(fl_velocity * LEFT_MOTOR_TRIM_FACTOR);
+            motorArray[FRONT_RIGHT_MOTOR].setPower(fr_velocity * RIGHT_MOTOR_TRIM_FACTOR);
+            motorArray[BACK_LEFT_MOTOR].setPower(bl_velocity * LEFT_MOTOR_TRIM_FACTOR);
+            motorArray[BACK_RIGHT_MOTOR].setPower(br_velocity * RIGHT_MOTOR_TRIM_FACTOR);
+
+            if (isPulsed) {
+                //run the motors for the pulseWidthDuration
+                //by sleeping, we let the motors that are running to continue to run
+                Thread.sleep(pulseWidthDuration);
+
+                //stop motors
+                stopBaseMotors(aOpMode);
+                //pause for pulseRestDuration
+                Thread.sleep(pulseRestDuration);
+                //this allows the robot to move slowly and gives the sensor time to read
+            }
+            aOpMode.idle();
+        }
+
+        //end slow
+        motorArray[FRONT_LEFT_MOTOR].setPower(Math.abs(fl_velocity) > MOTOR_LOWER_POWER_THRESHOLD ?
+                Math.signum(fl_velocity) * MOTOR_LOWER_POWER_THRESHOLD : fl_velocity * LEFT_MOTOR_TRIM_FACTOR);
+        motorArray[FRONT_RIGHT_MOTOR].setPower(Math.abs(fr_velocity) > MOTOR_LOWER_POWER_THRESHOLD ?
+                Math.signum(fr_velocity) * MOTOR_LOWER_POWER_THRESHOLD : fr_velocity * RIGHT_MOTOR_TRIM_FACTOR);
+        motorArray[BACK_LEFT_MOTOR].setPower(Math.abs(bl_velocity) > MOTOR_LOWER_POWER_THRESHOLD ?
+                Math.signum(bl_velocity) * MOTOR_LOWER_POWER_THRESHOLD : bl_velocity * LEFT_MOTOR_TRIM_FACTOR);
+        motorArray[BACK_RIGHT_MOTOR].setPower(Math.abs(br_velocity) > MOTOR_LOWER_POWER_THRESHOLD ?
+                Math.signum(br_velocity) * MOTOR_LOWER_POWER_THRESHOLD : br_velocity * RIGHT_MOTOR_TRIM_FACTOR);
+
+        aOpMode.reset_timer_array(GENERIC_TIMER);
+        //stop 100 ms before end
+        while (aOpMode.time_elapsed_array(GENERIC_TIMER) < 100) {
+            aOpMode.idle();
+        }
+
+
+        //stop all motors
+        stopBaseMotors(aOpMode);
     }
 
     public void turnPidMxpAbsoluteDegrees(rr_OpMode aOpMode, float turndegrees, float toleranceDegrees)
@@ -750,18 +805,18 @@ public class rr_Robot {
     //JEWEL ARM CONTROL
 
 
-    public void setJewelKnockerRight() throws InterruptedException{
-        jewelKnocker.setPosition(JEWEL_KNOCKER_RIGHT);
+    public void pushRightJewel() throws InterruptedException{
+        jewelPusher.setPosition(JEWEL_PUSHER_RIGHT);
         Thread.sleep(100);
     }
 
-    public void setJewelKnockerLeft() throws InterruptedException{
-        jewelKnocker.setPosition(JEWEL_KNOCKER_LEFT);
+    public void pushLeftJewel() throws InterruptedException{
+        jewelPusher.setPosition(JEWEL_PUSHER_LEFT);
         Thread.sleep(100);
     }
 
-    public void setJewelKnockerNeutral() throws InterruptedException{
-        jewelKnocker.setPosition(JEWEL_KNOCKER_NEUTRAL);
+    public void setJewelPusherNeutral() throws InterruptedException{
+        jewelPusher.setPosition(JEWEL_PUSHER_NEUTRAL);
         Thread.sleep(100);
     }
 
@@ -782,12 +837,12 @@ public class rr_Robot {
     public rr_Constants.JewelColorEnum getJewelLeftColor(rr_OpMode aOpMode) throws InterruptedException {
         Thread.sleep(30);
 
-        if ((leftJewelColorDistance.red() > JEWEL_RED_THRESHOLD) &&
-                (leftJewelColorDistance.red() > leftJewelColorDistance.blue())) {
+        if ((leftJewelColorSensor.red() > JEWEL_RED_THRESHOLD) &&
+                (leftJewelColorSensor.red() > leftJewelColorSensor.blue())) {
             return rr_Constants.JewelColorEnum.RED;
         }
-        if ((leftJewelColorDistance.blue() > JEWEL_BLUE_THRESHOLD) &&
-                (leftJewelColorDistance.blue() > leftJewelColorDistance.red())) {
+        if ((leftJewelColorSensor.blue() > JEWEL_BLUE_THRESHOLD) &&
+                (leftJewelColorSensor.blue() > leftJewelColorSensor.red())) {
             return rr_Constants.JewelColorEnum.BLUE;
         }
 
@@ -797,12 +852,12 @@ public class rr_Robot {
     public rr_Constants.JewelColorEnum getJewelRightColor(rr_OpMode aOpMode) throws InterruptedException {
         Thread.sleep(30);
 
-        if ((rightJewelColorDistance.red() > JEWEL_RED_THRESHOLD) &&
-                (rightJewelColorDistance.red() > rightJewelColorDistance.blue())) {
+        if ((rightJewelColorSensor.red() > JEWEL_RED_THRESHOLD) &&
+                (rightJewelColorSensor.red() > rightJewelColorSensor.blue())) {
             return rr_Constants.JewelColorEnum.RED;
         }
-        if ((rightJewelColorDistance.blue() > JEWEL_BLUE_THRESHOLD) &&
-                (rightJewelColorDistance.blue() > rightJewelColorDistance.red())) {
+        if ((rightJewelColorSensor.blue() > JEWEL_BLUE_THRESHOLD) &&
+                (rightJewelColorSensor.blue() > rightJewelColorSensor.red())) {
             return rr_Constants.JewelColorEnum.BLUE;
         }
 
@@ -867,122 +922,6 @@ public class rr_Robot {
     }
 
 
-    //TODO: Put this in TeleLib
-    public double getGamePad1RightJoystickPolarMagnitude(rr_OpMode aOpMode) {
-        //returns the magnitude of the polar vector for the rotation calculations
-        //for field oriented drive
-        //inverted y
-        if ((Math.abs(aOpMode.gamepad1.right_stick_x) > ANALOG_STICK_THRESHOLD) ||
-                (Math.abs(aOpMode.gamepad1.right_stick_y) > ANALOG_STICK_THRESHOLD)) {
-            return (Math.sqrt(Math.pow(aOpMode.gamepad1.right_stick_x, 2.0) +
-                    Math.pow(-aOpMode.gamepad1.right_stick_y, 2.0)));
-        } else {
-            return 0;
-        }
-
-    }
-
-    //TODO: Put this in TeleLib
-    public double getGamePad1RightJoystickPolarAngle(rr_OpMode aOpMode) {
-        //returns polar angle in degrees of vector for the rotation calculations
-        //for field oriented drive.
-        //inverted y
-        if ((Math.abs(aOpMode.gamepad1.right_stick_x) > ANALOG_STICK_THRESHOLD) ||
-                (Math.abs(aOpMode.gamepad1.right_stick_y) > ANALOG_STICK_THRESHOLD)) {
-            return (Math.toDegrees(Math.atan2(aOpMode.gamepad1.right_stick_x,
-                    -aOpMode.gamepad1.right_stick_y)));
-        } else {
-            return 0;
-        }
-    }
-
-    //TODO: Put this in TeleLib
-    public double getGamePad1LeftJoystickPolarMagnitude(rr_OpMode aOpMode) {
-        //returns the magnitude of the polar vector for the rotation calculations
-        //for field oriented drive
-        //inverted y
-        if ((Math.abs(aOpMode.gamepad1.left_stick_x) > ANALOG_STICK_THRESHOLD) ||
-                (Math.abs(aOpMode.gamepad1.left_stick_y) > ANALOG_STICK_THRESHOLD)) {
-            return (Math.sqrt(Math.pow(aOpMode.gamepad1.left_stick_x, 2.0) +
-                    Math.pow(-aOpMode.gamepad1.left_stick_y, 2.0)));
-        } else {
-            return 0;
-        }
-    }
-
-    //TODO: Put this in TeleLib
-    public double getGamePad1LeftJoystickPolarAngle(rr_OpMode aOpMode) {
-        //returns polar angle in degrees of vector for the rotation calculations
-        //for field oriented drive.
-        //inverted y
-        if ((Math.abs(aOpMode.gamepad1.left_stick_x) > ANALOG_STICK_THRESHOLD) ||
-                (Math.abs(aOpMode.gamepad1.left_stick_y) > ANALOG_STICK_THRESHOLD)) {
-            return (Math.toDegrees(Math.atan2(aOpMode.gamepad1.left_stick_x,
-                    -aOpMode.gamepad1.left_stick_y)));
-        } else {
-            return 0;
-        }
-    }
-
-
-    //TODO: Put this in TeleLib
-    public double getGamePad2RightJoystickPolarMagnitude(rr_OpMode aOpMode) {
-        //returns the magnitude of the polar vector for the rotation calculations
-        //for field oriented drive
-        //inverted y
-        if ((Math.abs(aOpMode.gamepad2.right_stick_x) > ANALOG_STICK_THRESHOLD) ||
-                (Math.abs(aOpMode.gamepad2.right_stick_y) > ANALOG_STICK_THRESHOLD)) {
-            return (Math.sqrt(Math.pow(aOpMode.gamepad2.right_stick_x, 2.0) +
-                    Math.pow(-aOpMode.gamepad2.right_stick_y, 2.0)));
-        } else {
-            return 0;
-        }
-
-    }
-
-    //TODO: Put this in TeleLib
-    public double getGamePad2RightJoystickPolarAngle(rr_OpMode aOpMode) {
-        //returns polar angle in degrees of vector for the rotation calculations
-        //for field oriented drive.
-        //inverted y
-        if ((Math.abs(aOpMode.gamepad2.right_stick_x) > ANALOG_STICK_THRESHOLD) ||
-                (Math.abs(aOpMode.gamepad2.right_stick_y) > ANALOG_STICK_THRESHOLD)) {
-            return (Math.toDegrees(Math.atan2(aOpMode.gamepad2.right_stick_x,
-                    -aOpMode.gamepad2.right_stick_y)));
-        } else {
-            return 0;
-        }
-    }
-
-    //TODO: Put this in TeleLib
-    public double getGamePad2LeftJoystickPolarMagnitude(rr_OpMode aOpMode) {
-        //returns the magnitude of the polar vector for the rotation calculations
-        //for field oriented drive
-        //inverted y
-        if ((Math.abs(aOpMode.gamepad2.left_stick_x) > ANALOG_STICK_THRESHOLD) ||
-                (Math.abs(aOpMode.gamepad2.left_stick_y) > ANALOG_STICK_THRESHOLD)) {
-            return (Math.sqrt(Math.pow(aOpMode.gamepad2.left_stick_x, 2.0) +
-                    Math.pow(-aOpMode.gamepad2.left_stick_y, 2.0)));
-        } else {
-            return 0;
-        }
-    }
-
-    //TODO: Put this in TeleLib
-    public double getGamePad2LeftJoystickPolarAngle(rr_OpMode aOpMode) {
-        //returns polar angle in degrees of vector for the rotation calculations
-        //for field oriented drive.
-        //inverted y
-        if ((Math.abs(aOpMode.gamepad2.left_stick_x) > ANALOG_STICK_THRESHOLD) ||
-                (Math.abs(aOpMode.gamepad2.left_stick_y) > ANALOG_STICK_THRESHOLD)) {
-            return (Math.toDegrees(Math.atan2(aOpMode.gamepad2.left_stick_x,
-                    -aOpMode.gamepad2.left_stick_y)));
-        } else {
-            return 0;
-        }
-    }
-
-
     class MotorNameNotKnownException extends Exception {
 
         MotorNameNotKnownException(String message) {
@@ -996,4 +935,6 @@ public class rr_Robot {
             super(message);
         }
     }
+
+
 }
