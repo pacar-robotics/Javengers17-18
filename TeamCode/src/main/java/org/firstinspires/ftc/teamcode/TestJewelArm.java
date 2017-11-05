@@ -27,7 +27,7 @@ public class TestJewelArm extends rr_OpMode {
 
             telemetry.addLine("Jewel Arm Position: " + armPosition);
             telemetry.addLine("Jewel Knocker Position: " + knockerPosition);
-
+            telemetryUpdate();
         }
 
     }
