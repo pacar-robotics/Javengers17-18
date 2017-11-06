@@ -15,12 +15,56 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import java.text.DecimalFormat;
-import static org.firstinspires.ftc.teamcode.rr_Constants.*;
-import static org.firstinspires.ftc.teamcode.rr_Constants.DirectionEnum.Backward;
-import static org.firstinspires.ftc.teamcode.rr_Constants.DirectionEnum.Forward;
+
+import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_LEFT_MOTOR;
+import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_RIGHT_MOTOR;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_LOWER_LIMIT;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_MAX_DURATION;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_POWER_FACTOR;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_UPPER_LIMIT;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_CLAW_ONE_CLOSED;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_CLAW_OPEN;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_CLAW_TWO_CLOSED;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ORIENTATION_HORIZONTAL;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ORIENTATION_VERTICAL;
+import static org.firstinspires.ftc.teamcode.rr_Constants.DEBUG;
+import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_LEFT_MOTOR;
+import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_RIGHT_MOTOR;
+import static org.firstinspires.ftc.teamcode.rr_Constants.GENERIC_TIMER;
+import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_ARM_DOWN;
+import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_ARM_UP;
+import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_BLUE_THRESHOLD;
+import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_PUSHER_LEFT;
+import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_PUSHER_NEUTRAL;
+import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_PUSHER_RIGHT;
+import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_RED_THRESHOLD;
+import static org.firstinspires.ftc.teamcode.rr_Constants.LEFT_MOTOR_TRIM_FACTOR;
+import static org.firstinspires.ftc.teamcode.rr_Constants.MAX_MOTOR_LOOP_TIME;
+import static org.firstinspires.ftc.teamcode.rr_Constants.MAX_ROBOT_TURN_MOTOR_VELOCITY;
+import static org.firstinspires.ftc.teamcode.rr_Constants.MECANUM_WHEEL_ENCODER_MARGIN;
+import static org.firstinspires.ftc.teamcode.rr_Constants.MECANUM_WHEEL_FRONT_TRACK_DISTANCE;
+import static org.firstinspires.ftc.teamcode.rr_Constants.MECANUM_WHEEL_SIDE_TRACK_DISTANCE;
+import static org.firstinspires.ftc.teamcode.rr_Constants.MIN_ROBOT_TURN_MOTOR_VELOCITY;
+import static org.firstinspires.ftc.teamcode.rr_Constants.MOTOR_LOWER_POWER_THRESHOLD;
+import static org.firstinspires.ftc.teamcode.rr_Constants.MOTOR_RAMP_FB_POWER_LOWER_LIMIT;
+import static org.firstinspires.ftc.teamcode.rr_Constants.MOTOR_RAMP_FB_POWER_UPPER_LIMIT;
+import static org.firstinspires.ftc.teamcode.rr_Constants.MOTOR_RAMP_SIDEWAYS_POWER_LOWER_LIMIT;
+import static org.firstinspires.ftc.teamcode.rr_Constants.MOTOR_RAMP_SIDEWAYS_POWER_UPPER_LIMIT;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_EXTEND;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_CLAW_ANGLE_EXTEND;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_CLAW_ANGLE_GRAB;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_CLAW_CLOSED;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_CLAW_OPEN;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_LOWER_LIMIT;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_MAX_DURATION;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_UPPER_LIMIT;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RIGHT_MOTOR_TRIM_FACTOR;
+
 
 
 public class rr_Robot {
+
     //NAVX Constants
     private final int NAVX_DIM_I2C_PORT = 2; //TODO: Change
     private final byte NAVX_DEVICE_UPDATE_RATE_HZ = 50;
@@ -69,7 +113,6 @@ public class rr_Robot {
 
     private ElapsedTime period = new ElapsedTime();
 
-
     public rr_Robot(rr_OpMode aOpMode, HardwareMap ahwMap) throws InterruptedException {
         // save reference to HW Map
         aOpMode.DBG("in Robot init");
@@ -94,17 +137,17 @@ public class rr_Robot {
         //Map Servos
 //        cubeClaw = hwMap.get(Servo.class, "servo_cube_claw");
 //        cubeOrientation = hwMap.get(Servo.class, "servo_cube_orientatoin");
-//        jewelArm = hwMap.get(Servo.class, "servo_jewel_arm");
-//        jewelPusher = hwMap.get(Servo.class, "servo_jewel_pusher");
+        jewelArm = hwMap.get(Servo.class, "servo_jewel_arm");
+        jewelPusher = hwMap.get(Servo.class, "servo_jewel_pusher");
 //        relicClaw = hwMap.get(Servo.class, "servo_relic_claw");
 //        relicClawAngle = hwMap.get(Servo.class, "servo_claw_angle");
 //        relicArmRetract = hwMap.get(Servo.class, "servo_relic_retract");
 
         //Map Sensors
-//        leftJewelColorSensor = hwMap.get(ColorSensor.class, "left_color_distance");
-//        rightJewelColorSensor = hwMap.get(ColorSensor.class, "right_color_distance");
-//        frontFloorColorSensor = hwMap.get(ColorSensor.class, "front_floor_color_sensor");
-//        backFloorColorSensor = hwMap.get(ColorSensor.class, "back_floor_color_sensor");
+        leftJewelColorSensor = hwMap.get(ColorSensor.class, "left_jewel_color");
+        rightJewelColorSensor = hwMap.get(ColorSensor.class, "right_jewel_color ");
+        frontFloorColorSensor = hwMap.get(ColorSensor.class, "front_floor_color_sensor");
+        backFloorColorSensor = hwMap.get(ColorSensor.class, "back_floor_color_sensor");
 //        rangeSensor = hwMap.get(ModernRoboticsI2cRangeSensor.class, "range_sensor");
 
 
@@ -126,7 +169,6 @@ public class rr_Robot {
 //        aOpMode.DBG("Gyro Calib Complete");
 
 
-
         //zero out the yaw value, so this will be the frame of reference for future calls.
         //do not call this for duration of run after this.
         //baseMxpGyroSensor.zeroYaw();
@@ -139,9 +181,9 @@ public class rr_Robot {
 
         //Set the Direction of Motors
         motorArray[FRONT_LEFT_MOTOR].setDirection(DcMotorSimple.Direction.FORWARD);
-        motorArray[FRONT_RIGHT_MOTOR].setDirection(DcMotorSimple.Direction.REVERSE);
+        motorArray[FRONT_RIGHT_MOTOR].setDirection(DcMotorSimple.Direction.FORWARD);
         motorArray[BACK_LEFT_MOTOR].setDirection(DcMotorSimple.Direction.FORWARD);
-        motorArray[BACK_RIGHT_MOTOR].setDirection(DcMotorSimple.Direction.REVERSE);
+        motorArray[BACK_RIGHT_MOTOR].setDirection(DcMotorSimple.Direction.FORWARD);
 
         // Set all base motors to zero power
         stopBaseMotors(aOpMode);
@@ -151,14 +193,13 @@ public class rr_Robot {
         //Setting servos to intitial position TODO: CHANGE
 //        closeCubeClawServoOneCube();
 //        setCubeClawToHorizontal();
-//        setJewelPusherNeutral();
-//        setJewelArmIn();
+        setJewelPusherNeutral();
+        setJewelArmUp();
 //        setRelicClawClosed();
 //        setRelicArmAngleGrab();
 
         aOpMode.DBG("Exiting Robot init");
     }
-
 
 
     //MOTOR METHODS
@@ -198,7 +239,6 @@ public class rr_Robot {
     }
 
 
-
     //SENSOR METHODS
 
 
@@ -233,7 +273,6 @@ public class rr_Robot {
     public double getFloorRedReading() {
         return backFloorColorSensor.red();
     }
-
 
 
     //CONTROL OF WHEELS
@@ -381,7 +420,6 @@ public class rr_Robot {
     }
 
 
-
     /**
      * Runs motors without a specified duration.
      * Can be called by a more specific method to move forwards, backwards or sideways.
@@ -441,7 +479,7 @@ public class rr_Robot {
     /**
      * Stops all wheel motors
      *
-     * @param aOpMode   an object of the rr_OpMode class
+     * @param aOpMode an object of the rr_OpMode class
      * @throws InterruptedException
      */
     public void stopBaseMotors(rr_OpMode aOpMode) throws InterruptedException {
@@ -509,9 +547,9 @@ public class rr_Robot {
     }
 
     public void universalMoveRobotWithCondition(rr_OpMode aOpMode, double xAxisVelocity,
-                                   double yAxisVelocity, double rotationalVelocity,
-                                   long duration, rr_OpMode.StopCondition condition,
-                                   boolean isPulsed, long pulseWidthDuration, long pulseRestDuration)
+                                                double yAxisVelocity, double rotationalVelocity,
+                                                long duration, rr_OpMode.StopCondition condition,
+                                                boolean isPulsed, long pulseWidthDuration, long pulseRestDuration)
             throws InterruptedException {
         double fl_velocity = 0;
         double fr_velocity = 0;
@@ -683,9 +721,7 @@ public class rr_Robot {
     }
 
 
-
     //CUBE ARM CONTROL
-
 
 
     //used in TeleOp
@@ -709,35 +745,34 @@ public class rr_Robot {
 
 
         while (motorArray[CUBE_ARM].isBusy() && motorArray[CUBE_ARM].getCurrentPosition() < CUBE_ARM_UPPER_LIMIT &&
-                motorArray[CUBE_ARM].getCurrentPosition() > CUBE_ARM_LOWER_LIMIT && (aOpMode.time_elapsed_array(GENERIC_TIMER) < CUBE_ARM_MAX_DURATION))
-        {
+                motorArray[CUBE_ARM].getCurrentPosition() > CUBE_ARM_LOWER_LIMIT && (aOpMode.time_elapsed_array(GENERIC_TIMER) < CUBE_ARM_MAX_DURATION)) {
             aOpMode.idle();
         }
         //stop the motor
         motorArray[CUBE_ARM].setPower(0.0f);
     }
 
-    public void openCubeClawServo() throws InterruptedException{
+    public void openCubeClawServo() throws InterruptedException {
         cubeClaw.setPosition(CUBE_CLAW_OPEN);
         Thread.sleep(100);
     }
 
-    public void closeCubeClawServoOneCube() throws InterruptedException{
+    public void closeCubeClawServoOneCube() throws InterruptedException {
         cubeClaw.setPosition(CUBE_CLAW_ONE_CLOSED);
         Thread.sleep(100);
     }
 
-    public void closeCubeClawServoTwoCube() throws InterruptedException{
+    public void closeCubeClawServoTwoCube() throws InterruptedException {
         cubeClaw.setPosition(CUBE_CLAW_TWO_CLOSED);
         Thread.sleep(100);
     }
 
-    public void setCubeClawToHorizontal() throws InterruptedException{
+    public void setCubeClawToHorizontal() throws InterruptedException {
         cubeOrientation.setPosition(CUBE_ORIENTATION_HORIZONTAL);
         Thread.sleep(100);
     }
 
-    public void setCubeClawToVertical() throws InterruptedException{
+    public void setCubeClawToVertical() throws InterruptedException {
         cubeOrientation.setPosition(CUBE_ORIENTATION_VERTICAL);
         Thread.sleep(100);
     }
@@ -777,26 +812,27 @@ public class rr_Robot {
     public void setPowerExtendRelicArm(rr_OpMode aOpMode, float power) {
         motorArray[RELIC_ARM_EXTEND].setPower(power);
     }
+
     public void setPowerRetractRelicArm(rr_OpMode aOpMode, float power) {
         relicArmRetract.setPosition(power);
     }
 
-    public void setRelicArmAngleGrab() throws InterruptedException{
+    public void setRelicArmAngleGrab() throws InterruptedException {
         relicClawAngle.setPosition(RELIC_CLAW_ANGLE_GRAB);
         Thread.sleep(100);
     }
 
-    public void setRelicArmAngleExtend() throws InterruptedException{
+    public void setRelicArmAngleExtend() throws InterruptedException {
         relicClawAngle.setPosition(RELIC_CLAW_ANGLE_EXTEND);
         Thread.sleep(100);
     }
 
-    public void setRelicClawClosed() throws InterruptedException{
+    public void setRelicClawClosed() throws InterruptedException {
         relicClaw.setPosition(RELIC_CLAW_CLOSED);
         Thread.sleep(100);
     }
 
-    public void setRelicClawOpen() throws InterruptedException{
+    public void setRelicClawOpen() throws InterruptedException {
         relicClaw.setPosition(RELIC_CLAW_OPEN);
         Thread.sleep(100);
     }
@@ -805,28 +841,28 @@ public class rr_Robot {
     //JEWEL ARM CONTROL
 
 
-    public void pushRightJewel() throws InterruptedException{
+    public void pushRightJewel() throws InterruptedException {
         jewelPusher.setPosition(JEWEL_PUSHER_RIGHT);
         Thread.sleep(100);
     }
 
-    public void pushLeftJewel() throws InterruptedException{
+    public void pushLeftJewel() throws InterruptedException {
         jewelPusher.setPosition(JEWEL_PUSHER_LEFT);
         Thread.sleep(100);
     }
 
-    public void setJewelPusherNeutral() throws InterruptedException{
+    public void setJewelPusherNeutral() throws InterruptedException {
         jewelPusher.setPosition(JEWEL_PUSHER_NEUTRAL);
         Thread.sleep(100);
     }
 
-    public void setJewelArmIn() throws InterruptedException{
-        jewelArm.setPosition(JEWEL_ARM_IN);
+    public void setJewelArmUp() throws InterruptedException {
+        jewelArm.setPosition(JEWEL_ARM_UP);
         Thread.sleep(100);
     }
 
-    public void setJewelArmOut() throws InterruptedException{
-        jewelArm.setPosition(JEWEL_ARM_OUT);
+    public void setJewelArmDown() throws InterruptedException {
+        jewelArm.setPosition(JEWEL_ARM_DOWN);
         Thread.sleep(100);
     }
 

@@ -49,21 +49,25 @@ public class rr_AutoLib {
     // robot starts closer to audience
     public void blueOneAutonomousCommonAction(rr_OpMode aOpMode) throws InterruptedException {
 
-        universalMoveRobot(aOpMode, 0, .25, 0, 5000, blueLineDetectStop, false, 0, 0);
-        // Move forward / backward based on Vuforia pattern detected
+        detectColorAndPushJewel(aOpMode, rr_Constants.AllianceColorEnum.BLUE);
+        moveWheels(aOpMode, 30, .4f, rr_Constants.DirectionEnum.Forward, true);
+        turnUsingEncoders(aOpMode, 90, .3f, rr_Constants.TurnDirectionEnum.Counterclockwise);
+        //universalMoveRobot(aOpMode, 0, .25, 0, 5000, blueLineDetectStop, false, 0, 0);
 
     }
 
     // robot starts farther away from audience
     public void blueTwoAutonomousCommonAction(rr_OpMode aOpMode) throws InterruptedException {
-
-        // moveWheels - forward
-        // universalMoveRobot - sideways right until blue line is detected
-        // Move sideways left / right based on Vuforia pattern detected
+        detectColorAndPushJewel(aOpMode, rr_Constants.AllianceColorEnum.BLUE);
+        moveWheels(aOpMode, 30, .4f, rr_Constants.DirectionEnum.Forward, true);
     }
 
     // robot starts closer to audience
     public void redOneAutonomousCommonAction(rr_OpMode aOpMode) throws InterruptedException {
+
+        detectColorAndPushJewel(aOpMode, rr_Constants.AllianceColorEnum.RED);
+        moveWheels(aOpMode, 30, .4f, rr_Constants.DirectionEnum.Backward, true);
+        turnUsingEncoders(aOpMode, 90, .3f, rr_Constants.TurnDirectionEnum.Counterclockwise);
 
         // universalMoveRobot - backwards until red line is detected
         // Move forward / backward based on Vuforia pattern detected
@@ -72,7 +76,9 @@ public class rr_AutoLib {
 
     // robot starts farther away from audience
     public void redTwoAutonomousCommonAction(rr_OpMode aOpMode)throws InterruptedException{
-
+        detectColorAndPushJewel(aOpMode, rr_Constants.AllianceColorEnum.BLUE);
+        moveWheels(aOpMode, 30, .4f, rr_Constants.DirectionEnum.Backward, true);
+        turnUsingEncoders(aOpMode, 180, .3f, rr_Constants.TurnDirectionEnum.Clockwise);
         // moveWheels - backward
         // universalMoveRobot - sideways right until blue line is detected
         // Move sideways left / right based on Vuforia pattern detected
@@ -80,6 +86,8 @@ public class rr_AutoLib {
     }
 
     public void detectColorAndPushJewel(rr_OpMode aOpMode, rr_Constants.AllianceColorEnum teamColor) throws InterruptedException {
+
+        robot.setJewelArmDown();
 
         if (teamColor == rr_Constants.AllianceColorEnum.BLUE) {
             if ((robot.getJewelLeftColor(aOpMode) == rr_Constants.JewelColorEnum.BLUE) ||
@@ -247,7 +255,7 @@ public class rr_AutoLib {
 //    }
 //    }
 
-    public void turnUsingEncoders(rr_OpMode aOpMode, float power, float angle, rr_Constants.TurnDirectionEnum TurnDirection)
+    public void turnUsingEncoders(rr_OpMode aOpMode, float angle, float power, rr_Constants.TurnDirectionEnum TurnDirection)
             throws InterruptedException {
 
         //calculate the turn distance to be used in terms of encoder clicks.

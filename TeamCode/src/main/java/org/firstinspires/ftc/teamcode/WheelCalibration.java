@@ -41,7 +41,7 @@ public class WheelCalibration extends rr_OpMode {
 
         rrAutoLib.moveWheels(this, 30, .4f, Backward, true);
         Thread.sleep(3000);
-        rrAutoLib.turnUsingEncoders(this, .3f, 90, rr_Constants.TurnDirectionEnum.Counterclockwise);
+        rrAutoLib.turnUsingEncoders(this, 90, .3f, rr_Constants.TurnDirectionEnum.Counterclockwise);
         Thread.sleep(3000);
 
 //        rrAutoLib.turnUsingEncoders(this, .3f, 90, rr_Constants.TurnDirectionEnum.Clockwise);

@@ -80,11 +80,11 @@ public class rr_Constants {
     final static double RELIC_ARM_RETRACT_POWER = 0;
 
     //Jewel Arm Constants TODO: CHANGE
-    final static float JEWEL_PUSHER_LEFT = 0.1f;
-    final static float JEWEL_PUSHER_RIGHT = 0.1f;
-    final static float JEWEL_PUSHER_NEUTRAL = 0.1f;
-    final static float JEWEL_ARM_IN = 0.1f;
-    final static float JEWEL_ARM_OUT = 0.1f;
+    final static float JEWEL_PUSHER_LEFT = 0.75f;
+    final static float JEWEL_PUSHER_RIGHT = 0.7f;
+    final static float JEWEL_PUSHER_NEUTRAL = 0.85f;
+    final static float JEWEL_ARM_UP = 0.95f;
+    final static float JEWEL_ARM_DOWN = 0.4f;
 
     //index of motors
     final static int FRONT_LEFT_MOTOR = 0;
