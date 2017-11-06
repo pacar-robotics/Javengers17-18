@@ -96,6 +96,10 @@ public class rr_Robot {
 
         //TODO: Map Sensors and Servos
 
+        // Color sensors
+        leftJewelColorDistance = hwMap.get(ColorSensor.class, "left_jewel_color");
+        rightJewelColorDistance = hwMap.get(ColorSensor.class, "right_jewel_color");
+
         //Map Servos
         cubeClaw = hwMap.get(Servo.class, "servo_cube_claw");
         cubeOrientation = hwMap.get(Servo.class, "servo_cube_orientation");
