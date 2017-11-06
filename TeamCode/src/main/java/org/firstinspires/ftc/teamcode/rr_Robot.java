@@ -86,10 +86,10 @@ public class rr_Robot {
         motorArray = new DcMotor[10];
 
         //Map Motors
-//        motorArray[FRONT_LEFT_MOTOR] = hwMap.get(DcMotor.class, "motor_front_left");
-//        motorArray[FRONT_RIGHT_MOTOR] = hwMap.get(DcMotor.class, "motor_front_right");
-//        motorArray[BACK_LEFT_MOTOR] = hwMap.get(DcMotor.class, "motor_back_left");
-//        motorArray[BACK_RIGHT_MOTOR] = hwMap.get(DcMotor.class, "motor_back_right");
+        motorArray[FRONT_LEFT_MOTOR] = hwMap.get(DcMotor.class, "motor_front_left");
+        motorArray[FRONT_RIGHT_MOTOR] = hwMap.get(DcMotor.class, "motor_front_right");
+        motorArray[BACK_LEFT_MOTOR] = hwMap.get(DcMotor.class, "motor_back_left");
+        motorArray[BACK_RIGHT_MOTOR] = hwMap.get(DcMotor.class, "motor_back_right");
         motorArray[CUBE_ARM] = hwMap.get(DcMotor.class, "motor_cube_arm");
 //        motorArray[RELIC_ARM_EXTEND] = hwMap.get(DcMotor.class, "motor_relic_extend");
 
@@ -150,13 +150,13 @@ public class rr_Robot {
         aOpMode.DBG("Starting Motor Setups");
 
         //Set the Direction of Motors
-//        motorArray[FRONT_LEFT_MOTOR].setDirection(DcMotorSimple.Direction.FORWARD);
-//        motorArray[FRONT_RIGHT_MOTOR].setDirection(DcMotorSimple.Direction.REVERSE);
-//        motorArray[BACK_LEFT_MOTOR].setDirection(DcMotorSimple.Direction.FORWARD);
-//        motorArray[BACK_RIGHT_MOTOR].setDirection(DcMotorSimple.Direction.REVERSE);
+        motorArray[FRONT_LEFT_MOTOR].setDirection(DcMotorSimple.Direction.REVERSE);
+        motorArray[FRONT_RIGHT_MOTOR].setDirection(DcMotorSimple.Direction.FORWARD);
+        motorArray[BACK_LEFT_MOTOR].setDirection(DcMotorSimple.Direction.REVERSE);
+        motorArray[BACK_RIGHT_MOTOR].setDirection(DcMotorSimple.Direction.FORWARD);
 
         // Set all base motors to zero power
-//        stopBaseMotors(aOpMode);
+        stopBaseMotors(aOpMode);
 
 //        aOpMode.DBG("Presetting Servos");
 
@@ -544,13 +544,13 @@ public class rr_Robot {
 
         //blend with prev velocities to smooth out start
 
-        fl_velocity = ((yAxisVelocity + xAxisVelocity) + prevFLVelocity) / 2;
+        fl_velocity = ((yAxisVelocity - xAxisVelocity) + prevFLVelocity) / 2;
 
-        fr_velocity = ((yAxisVelocity - xAxisVelocity) + prevFRVelocity) / 2;
+        fr_velocity = ((yAxisVelocity + xAxisVelocity) + prevFRVelocity) / 2;
 
-        bl_velocity = ((yAxisVelocity - xAxisVelocity) + prevBLVelocity) / 2;
+        bl_velocity = ((yAxisVelocity + xAxisVelocity) + prevBLVelocity) / 2;
 
-        br_velocity = ((yAxisVelocity + xAxisVelocity) + prevBRVelocity) / 2;
+        br_velocity = ((yAxisVelocity - xAxisVelocity) + prevBRVelocity) / 2;
 
         //save these in variables that are part of vvRobot to be used in next cycle.
 

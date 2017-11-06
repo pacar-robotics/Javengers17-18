@@ -58,7 +58,7 @@ public class TestCubeArm extends rr_OpMode {
 
             telemetry.addLine("ClawServo: " + position);
             telemetry.addLine("Cube Orientation: " + orientationPos);
-            telemetry.addLine("Cube Arm Pos" + robot.getMotorPosition(this, CUBE_ARM));
+            telemetry.addLine("Cube Arm Pos: " + robot.getMotorPosition(this, CUBE_ARM));
             telemetryTouchSensor();
             telemetryUpdate();
 
@@ -96,7 +96,7 @@ public class TestCubeArm extends rr_OpMode {
         if (gamepad1.left_trigger >= TRIGGER_THRESHOLD && !robot.isCubeLowerLimitPressed()) {
             robot.setCubeArmPower(this, 0.1f);
         } else if (gamepad1.right_trigger >= TRIGGER_THRESHOLD && !robot.isCubeUpperLimitPressed()) {
-            robot.setCubeArmPower(this, -0.5f);
+            robot.setCubeArmPower(this, -0.4f);
         } else {
             robot.setCubeArmPower(this, 0.0f);
         }

@@ -58,8 +58,10 @@ public class rr_Constants {
     final static float CUBE_ARM_GRAB = 0;
     final static float CUBE_ARM_SCORING_POWER = .5f;
     final static float CUBE_ARM_POWER_FACTOR = 0.20f;
-    final static float CUBE_CLAW_OPEN = 0.72f;
-    final static float CUBE_CLAW_ONE_CLOSED = 0.445f;
+    final static float CUBE_ARM_RAISE_POWER = -0.4f;
+    final static float CUBE_ARM_LOWER_POWER = 0.1f;
+    final static float CUBE_CLAW_OPEN = 0.6f;
+    final static float CUBE_CLAW_ONE_CLOSED = 0.42f;
     final static float CUBE_CLAW_TWO_CLOSED = 0.1f;
     final static float CUBE_ORIENTATION_HORIZONTAL = 0.9f;
     final static float CUBE_ORIENTATION_VERTICAL = 0.44f;
@@ -105,8 +107,8 @@ public class rr_Constants {
     final static float MECANUM_WHEEL_FRONT_TRACK_DISTANCE = 14.5f;
 
     //Power Factors
-    final static float STANDARD_DRIVE_POWER_FACTOR = 0.7f;
-    final static float TURN_POWER_FACTOR = 0.95f;
+    final static float STANDARD_DRIVE_POWER_FACTOR = 0.6f;
+    final static float TURN_POWER_FACTOR = 0.35f;
     final static float SCORING_DRIVE_POWER_FACTOR = 0.25f;  //TODO: CHANGE LATER
 
     //Gamepad Thresholds
