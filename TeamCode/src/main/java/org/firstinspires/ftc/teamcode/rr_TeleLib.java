@@ -139,7 +139,7 @@ public class rr_TeleLib {
         } else if (aOpMode.gamepad2.right_trigger >= TRIGGER_THRESHOLD && !robot.isCubeLowerLimitPressed()) {
             robot.setCubeArmPower(aOpMode, -aOpMode.gamepad2.right_trigger);
         } else if (aOpMode.gamepad2.left_bumper) {
-            robot.openCubeClawServo();
+            robot.openCubeClawServoOneCube();
         } else if (aOpMode.gamepad2.right_stick_button) {
             robot.setCubeClawToVertical();
         } else if (aOpMode.gamepad2.left_stick_button) {
@@ -150,20 +150,20 @@ public class rr_TeleLib {
             if (aOpMode.gamepad2.x) {
                 robot.setCubeClawToHorizontal();
                 robot.moveCubeArmToPositionWithLimits(aOpMode, ONE_CUBE_ROW_1, CUBE_ARM_SCORING_POWER);
-                robot.openCubeClawServo();
+                robot.openCubeClawServoOneCube();
             } else if (aOpMode.gamepad2.a) {
                 robot.moveCubeArmToPositionWithLimits(aOpMode, ONE_CUBE_ROW_2, CUBE_ARM_SCORING_POWER);
                 robot.setCubeClawToVertical();
-                robot.openCubeClawServo();
+                robot.openCubeClawServoOneCube();
             } else if (aOpMode.gamepad2.y) {
                 robot.moveCubeArmToPositionWithLimits(aOpMode, ONE_CUBE_ROW_3, CUBE_ARM_SCORING_POWER);
                 robot.setCubeClawToVertical();
-                robot.openCubeClawServo();
+                robot.openCubeClawServoOneCube();
             } else if (aOpMode.gamepad2.b) {
                 robot.moveCubeArmToPositionWithLimits(aOpMode, ONE_CUBE_ROW_4, CUBE_ARM_SCORING_POWER);
                 robot.setCubeClawToVertical();
-                robot.openCubeClawServo();
-            } else if (aOpMode.gamepad2.dpad_up) {  // Set claw to intake position
+                robot.openCubeClawServoOneCube();
+            } else if (aOpMode.gamepad2.dpad_up) {  // Set claw to intake cubeClawPos
                 if (robot.getMotorPosition(aOpMode, CUBE_ARM) == ONE_CUBE_ROW_1) {
                     // Claw needs room to rotate
                     robot.moveCubeArmToPositionWithLimits(aOpMode, ONE_CUBE_ROW_3, CUBE_ARM_SCORING_POWER);
@@ -176,7 +176,7 @@ public class rr_TeleLib {
 
         //**** COLLECTING (GAMEPAD 1) ****//
         if (aOpMode.gamepad1.right_bumper) {
-            robot.openCubeClawServo();
+            robot.openCubeClawServoOneCube();
         } else if (aOpMode.gamepad1.left_bumper) {
             robot.closeCubeClawServoOneCube();
         }

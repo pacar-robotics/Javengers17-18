@@ -1,10 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ThreadPool;
 
 import static org.firstinspires.ftc.teamcode.rr_Constants.ANALOG_STICK_THRESHOLD;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_GRAB;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_LOWER_POWER;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_MIDDLE;
 import static org.firstinspires.ftc.teamcode.rr_Constants.SCORING_DRIVE_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.STANDARD_DRIVE_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRIGGER_THRESHOLD;
@@ -17,7 +20,8 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.TURN_POWER_FACTOR;
 @TeleOp(name = "Test Op", group = "Test")
 public class TestOp extends rr_OpMode {
     rr_Robot robot;
-    float position = CUBE_CLAW_OPEN;
+
+    float cubeClawPos = CUBE_CLAW_OPEN;
     float orientationPos = CUBE_ORIENTATION_HORIZONTAL;
 
 
@@ -25,7 +29,7 @@ public class TestOp extends rr_OpMode {
     public void runOpMode() throws InterruptedException {
         robot = new rr_Robot(this, this.hardwareMap);
 
-        robot.setCubeClawPosition(position);
+        robot.setCubeClawPosition(cubeClawPos);
         robot.setCubeOrientation(orientationPos);
 
         telemetry.addLine("Ready");
@@ -36,40 +40,12 @@ public class TestOp extends rr_OpMode {
         telemetry.setAutoClear(true);
 
         while (opModeIsActive()) {
-            if (gamepad1.a) {
-                closeClaw();
-                Thread.sleep(250);
-            }
-            if (gamepad1.b) {
-                openClaw();
-                Thread.sleep(250);
-            }
-
-            if (gamepad1.right_bumper) {
-                robot.setCubeClawPosition(CUBE_CLAW_ONE_CLOSED);
-                position = CUBE_CLAW_ONE_CLOSED;
-            }
-
-            if (gamepad1.left_bumper) {
-                robot.setCubeClawPosition(CUBE_CLAW_OPEN);
-                position = CUBE_CLAW_OPEN;
-            }
-
-            if (gamepad1.dpad_right) {
-                robot.setCubeOrientation(CUBE_ORIENTATION_HORIZONTAL);
-                orientationPos = CUBE_ORIENTATION_HORIZONTAL;
-            }
-
-            if (gamepad1.dpad_up) {
-                robot.setCubeOrientation(CUBE_ORIENTATION_VERTICAL);
-                orientationPos = CUBE_ORIENTATION_VERTICAL;
-            }
-
+            processClaw();
             processOrientationClaw();
-            moveCubeArmWithLimits();
+            processCubeArm();
             processStandardDrive();
 
-            telemetry.addLine("ClawServo: " + position);
+            telemetry.addLine("ClawServo: " + cubeClawPos);
             telemetry.addLine("Cube Orientation: " + orientationPos);
             telemetry.addLine("Cube Arm Pos: " + robot.getMotorPosition(this, CUBE_ARM));
             telemetryTouchSensor();
@@ -80,32 +56,51 @@ public class TestOp extends rr_OpMode {
     }
 
     private void processOrientationClaw() throws InterruptedException {
-        if (gamepad1.x && orientationPos < .9) {
+        if (gamepad1.dpad_up && orientationPos < .9) {
             orientationPos += .05f;
             robot.setCubeOrientation(orientationPos);
             Thread.sleep(250);
-        } else if (gamepad1.y && orientationPos > 0) {
+        } else if (gamepad1.dpad_left && orientationPos > 0) {
             orientationPos -= .05f;
             robot.setCubeOrientation(orientationPos);
             Thread.sleep(250);
         }
-    }
 
-    private void openClaw() throws InterruptedException {
-        if (position < 0.95) {
-            robot.setCubeClawPosition(Math.abs(position + .05f));
-            position = position + .025f;
+        if (gamepad1.left_bumper && orientationPos == CUBE_ORIENTATION_VERTICAL) {
+            robot.setCubeClawToHorizontal();
+            orientationPos = CUBE_ORIENTATION_HORIZONTAL;
+            Thread.sleep(200);
+        }else {
+            robot.setCubeClawToVertical();
+            orientationPos = CUBE_ORIENTATION_VERTICAL;
+            Thread.sleep(200);
         }
     }
 
-    private void closeClaw() throws InterruptedException {
-        if (position > 0.05) {
-            robot.setCubeClawPosition(Math.abs(position - .05f));
-            position = position - .025f;
+    private void processClaw() throws InterruptedException {
+        if (gamepad1.dpad_right && cubeClawPos < .9) {
+            cubeClawPos += .025f;
+            robot.setCubeClawPosition(cubeClawPos);
+            Thread.sleep(250);
+        } else if (gamepad1.dpad_down && cubeClawPos > 0) {
+            cubeClawPos -= .025f;
+            robot.setCubeClawPosition(cubeClawPos);
+            Thread.sleep(250);
+        }
+
+        if (gamepad1.right_bumper && cubeClawPos == CUBE_CLAW_OPEN) {
+            robot.closeCubeClawServoOneCube();
+            cubeClawPos = CUBE_CLAW_ONE_CLOSED;
+            Thread.sleep(200);
+        } else {
+            robot.openCubeClawServoOneCube();
+            cubeClawPos = CUBE_CLAW_OPEN;
+            Thread.sleep(200);
         }
     }
 
-    private void moveCubeArmWithLimits() {
+
+    private void processCubeArm() throws InterruptedException{
         if (gamepad1.left_trigger >= TRIGGER_THRESHOLD && !robot.isCubeLowerLimitPressed()) {
             robot.setCubeArmPower(this, 0.1f);
         } else if (gamepad1.right_trigger >= TRIGGER_THRESHOLD && !robot.isCubeUpperLimitPressed()) {
@@ -113,15 +108,16 @@ public class TestOp extends rr_OpMode {
         } else {
             robot.setCubeArmPower(this, 0.0f);
         }
-    }
 
-    private void moveCubeArmWithoutLimits() {
-        if (gamepad1.left_trigger >= TRIGGER_THRESHOLD) {
-            robot.setCubeArmPower(this, 0.25f);
-        } else if (gamepad1.right_trigger >= TRIGGER_THRESHOLD) {
-            robot.setCubeArmPower(this, -0.15f);
-        } else {
-            robot.setCubeArmPower(this, 0.0f);
+        if (gamepad1.a) {
+            robot.setCubeClawToHorizontal();
+            robot.moveCubeArmToPositionWithTouchLimits(this, CUBE_ARM_GRAB, CUBE_ARM_LOWER_POWER); //TODO: CHANGE CUBE_ARM_GRAB
+            robot.openCubeClawServoOneCube();
+        }
+        if (gamepad1.y) {
+            robot.setCubeClawToHorizontal();
+            robot.closeCubeClawServoOneCube();
+            robot.moveCubeArmToPositionWithTouchLimits(this, CUBE_ARM_MIDDLE, CUBE_ARM_LOWER_POWER); //TODO: CHANGE CUBE_ARM_MIDDLE
         }
     }
 
@@ -155,10 +151,10 @@ public class TestOp extends rr_OpMode {
 
             if (this.gamepad1.right_stick_x > 0) {
                 //turn clockwise to correct magnitude
-                robot.runMotors(this, -turnVelocity, turnVelocity, -turnVelocity, turnVelocity);
+                robot.runRampedMotors(this, -turnVelocity, turnVelocity, -turnVelocity, turnVelocity);
             } else {
                 //turn counter-clockwise
-                robot.runMotors(this, turnVelocity, -turnVelocity, turnVelocity, -turnVelocity);
+                robot.runRampedMotors(this, turnVelocity, -turnVelocity, turnVelocity, -turnVelocity);
             }
         } else if (Math.abs(gamepad1.left_stick_x) > ANALOG_STICK_THRESHOLD ||
                 Math.abs(gamepad1.left_stick_y) > ANALOG_STICK_THRESHOLD) {
@@ -175,10 +171,10 @@ public class TestOp extends rr_OpMode {
 
             if (gamepad1.right_stick_x > 0) {
                 //turn clockwise to correct magnitude
-                robot.runMotors(this, -turnVelocity, turnVelocity, -turnVelocity, turnVelocity);
+                robot.runRampedMotors(this, -turnVelocity, turnVelocity, -turnVelocity, turnVelocity);
             } else {
                 //turn counter-clockwise
-                robot.runMotors(this, turnVelocity, -turnVelocity, turnVelocity, -turnVelocity);
+                robot.runRampedMotors(this, turnVelocity, -turnVelocity, turnVelocity, -turnVelocity);
             }
         } else {
             //both joysticks on both gamepads are at rest, stop the robot.

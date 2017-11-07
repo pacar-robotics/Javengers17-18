@@ -160,7 +160,7 @@ public class rr_Robot {
 
 //        aOpMode.DBG("Presetting Servos");
 
-//        //Setting servos to intitial position TODO: CHANGE
+//        //Setting servos to intitial cubeClawPos TODO: CHANGE
 //        closeCubeClawServoOneCube();
 //        setCubeClawToHorizontal();
 //        setJewelKnockerNeutral();
@@ -244,17 +244,17 @@ public class rr_Robot {
 
 
     /**
-     * Runs robot to a specific position. Can be called by other, more specific methods to move forwards, backwards or sideways.
+     * Runs robot to a specific cubeClawPos. Can be called by other, more specific methods to move forwards, backwards or sideways.
      *
      * @param aOpMode     an object of the rr_OpMode class
      * @param fl_Power    front right motor power
      * @param fr_Power    front left motor power
      * @param bl_Power    back left motor power
      * @param br_Power    back right motor power
-     * @param fl_Position front left motor position
-     * @param fr_Position front left motor position
-     * @param bl_Position back left motor position
-     * @param br_Position back right motor position
+     * @param fl_Position front left motor cubeClawPos
+     * @param fr_Position front left motor cubeClawPos
+     * @param bl_Position back left motor cubeClawPos
+     * @param br_Position back right motor cubeClawPos
      */
     public void runRobotToPosition(rr_OpMode aOpMode, float fl_Power, float fr_Power,
                                    float bl_Power, float br_Power, int fl_Position,
@@ -271,7 +271,7 @@ public class rr_Robot {
         motorArray[BACK_RIGHT_MOTOR].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         Thread.sleep(50);
 
-        //sets all motors to run to a position
+        //sets all motors to run to a cubeClawPos
         motorArray[FRONT_LEFT_MOTOR].setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motorArray[FRONT_RIGHT_MOTOR].setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motorArray[BACK_LEFT_MOTOR].setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -354,7 +354,7 @@ public class rr_Robot {
             //apply the new power values.
             //sets the the power of all motors
 
-            //in this runmode, the power does not control direction but the sign of the target position does.
+            //in this runmode, the power does not control direction but the sign of the target cubeClawPos does.
 
             motorArray[FRONT_LEFT_MOTOR].setPower(rampedPower * LEFT_MOTOR_TRIM_FACTOR);
             motorArray[FRONT_RIGHT_MOTOR].setPower(rampedPower * RIGHT_MOTOR_TRIM_FACTOR);
@@ -386,7 +386,7 @@ public class rr_Robot {
 
 
     /**
-     * Runs robot to a specific position while driving forwards or backwards
+     * Runs robot to a specific cubeClawPos while driving forwards or backwards
      *
      * @param aOpMode       an object of the rr_OpMode class
      * @param distance      distance each wheel will go in inches
@@ -397,17 +397,17 @@ public class rr_Robot {
     public void moveRobotToPositionFB(rr_OpMode aOpMode, float distance,
                                       float power, boolean isRampedPower)
             throws InterruptedException {
-        //we need to store the encoder target position
+        //we need to store the encoder target cubeClawPos
         int targetPosition;
-        //calculate target position from the input distance in cm
+        //calculate target cubeClawPos from the input distance in cm
         targetPosition = (int) ((distance / (Math.PI * MECANUM_WHEEL_DIAMETER)) * ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION);
-        //using the generic method with all powers set to the same value and all positions set to the same position
+        //using the generic method with all powers set to the same value and all positions set to the same cubeClawPos
         runRobotToPosition(aOpMode, power, power, power, power,
                 targetPosition, targetPosition, targetPosition, targetPosition, isRampedPower);
     }
 
     /**
-     * Runs robot to a specific position while driving sideways
+     * Runs robot to a specific cubeClawPos while driving sideways
      *
      * @param aOpMode  an object of the rr_OpMode class
      * @param distance distance wheels will go in inches
@@ -417,11 +417,11 @@ public class rr_Robot {
                                             float power, boolean isRampedPower)
             throws InterruptedException {
         //we need to
-        //store the encoder target position
+        //store the encoder target cubeClawPos
         int targetPosition;
-        //calculate target position from the input distance in cm
+        //calculate target cubeClawPos from the input distance in cm
         targetPosition = (int) ((distance / (Math.PI * MECANUM_WHEEL_DIAMETER)) * ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION);
-        //using the generic method with all powers set to the same value and all positions set to the same position
+        //using the generic method with all powers set to the same value and all positions set to the same cubeClawPos
         runRobotToPosition(aOpMode, power, power, power, power,
                 -targetPosition, targetPosition, targetPosition, -targetPosition, isRampedPower);
     }
@@ -469,6 +469,32 @@ public class rr_Robot {
         motorArray[3].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         Thread.sleep(50);
 
+
+        //sets the the power of all motors
+        setPower(aOpMode, FRONT_LEFT_MOTOR, fl_Power);
+        setPower(aOpMode, FRONT_RIGHT_MOTOR, fr_Power);
+        setPower(aOpMode, BACK_LEFT_MOTOR, bl_Power);
+        setPower(aOpMode, BACK_RIGHT_MOTOR, br_Power);
+    }
+
+    public void runRampedMotors(rr_OpMode aOpMode, float fl_Power, float fr_Power, float bl_Power, float br_Power)
+            throws InterruptedException {
+
+        motorArray[0].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorArray[1].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorArray[2].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorArray[3].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Thread.sleep(50);
+
+        fl_Power = (float) (fl_Power + prevFLVelocity) / 2;
+        fr_Power = (float) (fr_Power + prevFRVelocity) / 2;
+        bl_Power = (float) (bl_Power + prevBLVelocity) / 2;
+        br_Power = (float) (br_Power + prevBRVelocity) / 2;
+
+        prevFLVelocity = fl_Power;
+        prevFRVelocity = fr_Power;
+        prevBLVelocity = bl_Power;
+        prevBRVelocity = br_Power;
 
         //sets the the power of all motors
         setPower(aOpMode, FRONT_LEFT_MOTOR, fl_Power);
@@ -679,7 +705,31 @@ public class rr_Robot {
         motorArray[CUBE_ARM].setPower(0.0f);
     }
 
-    public void openCubeClawServo() throws InterruptedException{
+    public void moveCubeArmToPositionWithTouchLimits(rr_OpMode aOpMode, int position, float power) throws InterruptedException {
+        //set the mode to be RUN_TO_POSITION
+        motorArray[CUBE_ARM].setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        Thread.sleep(50);
+
+        //Now set the target
+        motorArray[CUBE_ARM].setTargetPosition(position);
+
+        //now set the power
+        motorArray[CUBE_ARM].setPower(power * CUBE_ARM_POWER_FACTOR);
+
+        //reset clock for checking stall
+        aOpMode.reset_timer_array(GENERIC_TIMER);
+
+
+        while (motorArray[CUBE_ARM].isBusy() && (position >  motorArray[CUBE_ARM].getCurrentPosition()) ? !isCubeUpperLimitPressed() : !isCubeLowerLimitPressed()
+                && (aOpMode.time_elapsed_array(GENERIC_TIMER) < CUBE_ARM_MAX_DURATION))
+        {
+            aOpMode.idle();
+        }
+        //stop the motor
+        motorArray[CUBE_ARM].setPower(0.0f);
+    }
+
+    public void openCubeClawServoOneCube() throws InterruptedException{
         cubeClaw.setPosition(CUBE_CLAW_OPEN);
         Thread.sleep(100);
     }
