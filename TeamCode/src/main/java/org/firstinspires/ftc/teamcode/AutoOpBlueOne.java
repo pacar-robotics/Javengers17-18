@@ -12,6 +12,7 @@ public class AutoOpBlueOne extends rr_OpMode {
 
         rrAutoLib = new rr_AutoLib(this, this.hardwareMap);
 
+        waitForStart();
         rrAutoLib.blueOneAutonomousCommonAction(this);
 
     }

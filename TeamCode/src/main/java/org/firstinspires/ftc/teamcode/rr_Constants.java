@@ -80,11 +80,11 @@ public class rr_Constants {
     final static double RELIC_ARM_RETRACT_POWER = 0;
 
     //Jewel Arm Constants TODO: CHANGE
-    final static float JEWEL_PUSHER_LEFT = 0.75f;
-    final static float JEWEL_PUSHER_RIGHT = 0.7f;
-    final static float JEWEL_PUSHER_NEUTRAL = 0.85f;
+    final static float JEWEL_PUSHER_LEFT = 0.8f;
+    final static float JEWEL_PUSHER_RIGHT = 0.35f;
+    final static float JEWEL_PUSHER_NEUTRAL = 0.6f;
     final static float JEWEL_ARM_UP = 0.95f;
-    final static float JEWEL_ARM_DOWN = 0.4f;
+    final static float JEWEL_ARM_DOWN = 0.425f;
 
     //index of motors
     final static int FRONT_LEFT_MOTOR = 0;
@@ -113,8 +113,7 @@ public class rr_Constants {
     final static float ROBOT_TRACK_DISTANCE = 13.7f; //adjusted from observation.
 
     //Sensor Constants TODO: CHANGE
-    final static float JEWEL_RED_THRESHOLD = 0.5f;
-    final static float JEWEL_BLUE_THRESHOLD = 0.5f;
+    final static int JEWEL_COLOR_MARGIN = 10;
 
     //TODO: Change these
     final static float FLOOR_RED_THRESHOLD = 0.5f;

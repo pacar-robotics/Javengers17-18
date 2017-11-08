@@ -31,8 +31,9 @@ public class rr_AutoLib {
     rr_OpMode aOpMode;
 
     public rr_AutoLib(rr_OpMode aOpMode, HardwareMap aHwMap) throws InterruptedException {
-        robot = new rr_Robot(aOpMode, aHwMap);
+        robot = new rr_Robot();
         this.aOpMode = aOpMode;
+        robot.init(aOpMode, aOpMode.hardwareMap);
     }
 
     public void universalMoveRobot(rr_OpMode aOpMode, double polarAngle,
@@ -50,8 +51,8 @@ public class rr_AutoLib {
     public void blueOneAutonomousCommonAction(rr_OpMode aOpMode) throws InterruptedException {
 
         detectColorAndPushJewel(aOpMode, rr_Constants.AllianceColorEnum.BLUE);
-        moveWheels(aOpMode, 30, .4f, rr_Constants.DirectionEnum.Forward, true);
-        turnUsingEncoders(aOpMode, 90, .3f, rr_Constants.TurnDirectionEnum.Counterclockwise);
+        //moveWheels(aOpMode, 30, .4f, rr_Constants.DirectionEnum.Forward, true);
+        //turnUsingEncoders(aOpMode, 90, .3f, rr_Constants.TurnDirectionEnum.Counterclockwise);
         //universalMoveRobot(aOpMode, 0, .25, 0, 5000, blueLineDetectStop, false, 0, 0);
 
     }
@@ -89,35 +90,43 @@ public class rr_AutoLib {
 
         robot.setJewelArmDown();
 
+        Thread.sleep(500);
+
         if (teamColor == rr_Constants.AllianceColorEnum.BLUE) {
-            if ((robot.getJewelLeftColor(aOpMode) == rr_Constants.JewelColorEnum.BLUE) ||
+            if ((robot.getJewelLeftColor(aOpMode) == rr_Constants.JewelColorEnum.BLUE) &&
                     (robot.getJewelRightColor(aOpMode) == rr_Constants.JewelColorEnum.RED)) {
                 robot.pushRightJewel();
                 if (robot.getJewelLeftColor(aOpMode) == rr_Constants.JewelColorEnum.RED) {
                     robot.pushLeftJewel();
                 }
-            } else if ((robot.getJewelLeftColor(aOpMode) == rr_Constants.JewelColorEnum.RED) ||
+            } else if ((robot.getJewelLeftColor(aOpMode) == rr_Constants.JewelColorEnum.RED) &&
                     (robot.getJewelRightColor(aOpMode) == rr_Constants.JewelColorEnum.BLUE)) {
                 robot.pushLeftJewel();
                 if (robot.getJewelRightColor(aOpMode) == rr_Constants.JewelColorEnum.RED) {
                     robot.pushRightJewel();
                 }
             }
+            else if(robot.getJewelLeftColor(aOpMode) == rr_Constants.JewelColorEnum.UNKNOWN) {
+                aOpMode.telemetryAddData("Unknown", "Unknown", "No color detected");
+            }
         }
 
         if (teamColor == rr_Constants.AllianceColorEnum.RED) {
-            if ((robot.getJewelLeftColor(aOpMode) == rr_Constants.JewelColorEnum.BLUE) ||
+            if ((robot.getJewelLeftColor(aOpMode) == rr_Constants.JewelColorEnum.BLUE) &&
                     (robot.getJewelRightColor(aOpMode) == rr_Constants.JewelColorEnum.RED)) {
                 robot.pushLeftJewel();
                 if (robot.getJewelRightColor(aOpMode) == rr_Constants.JewelColorEnum.BLUE) {
                     robot.pushRightJewel();
                 }
-            } else if ((robot.getJewelLeftColor(aOpMode) == rr_Constants.JewelColorEnum.RED) ||
+            } else if ((robot.getJewelLeftColor(aOpMode) == rr_Constants.JewelColorEnum.RED) &&
                     (robot.getJewelRightColor(aOpMode) == rr_Constants.JewelColorEnum.BLUE)) {
                 robot.pushRightJewel();
                 if (robot.getJewelLeftColor(aOpMode) == rr_Constants.JewelColorEnum.BLUE) {
                     robot.pushLeftJewel();
                 }
+            }
+            else if(robot.getJewelLeftColor(aOpMode) == rr_Constants.JewelColorEnum.UNKNOWN) {
+                aOpMode.telemetryAddData("Unknown", "Unknown", "No color detected");
             }
         }
     }

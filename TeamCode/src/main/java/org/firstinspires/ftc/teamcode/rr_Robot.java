@@ -34,11 +34,9 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_RIGHT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.GENERIC_TIMER;
 import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_ARM_DOWN;
 import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_ARM_UP;
-import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_BLUE_THRESHOLD;
 import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_PUSHER_LEFT;
 import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_PUSHER_NEUTRAL;
 import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_PUSHER_RIGHT;
-import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_RED_THRESHOLD;
 import static org.firstinspires.ftc.teamcode.rr_Constants.LEFT_MOTOR_TRIM_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.MAX_MOTOR_LOOP_TIME;
 import static org.firstinspires.ftc.teamcode.rr_Constants.MAX_ROBOT_TURN_MOTOR_VELOCITY;
@@ -113,7 +111,7 @@ public class rr_Robot {
 
     private ElapsedTime period = new ElapsedTime();
 
-    public rr_Robot(rr_OpMode aOpMode, HardwareMap ahwMap) throws InterruptedException {
+    public void init(rr_OpMode aOpMode, HardwareMap ahwMap) throws InterruptedException {
         // save reference to HW Map
         aOpMode.DBG("in Robot init");
         hwMap = ahwMap;
@@ -145,9 +143,9 @@ public class rr_Robot {
 
         //Map Sensors
         leftJewelColorSensor = hwMap.get(ColorSensor.class, "left_jewel_color");
-        rightJewelColorSensor = hwMap.get(ColorSensor.class, "right_jewel_color ");
-        frontFloorColorSensor = hwMap.get(ColorSensor.class, "front_floor_color_sensor");
-        backFloorColorSensor = hwMap.get(ColorSensor.class, "back_floor_color_sensor");
+        rightJewelColorSensor = hwMap.get(ColorSensor.class, "right_jewel_color");
+//        frontFloorColorSensor = hwMap.get(ColorSensor.class, "front_floor_color_sensor");
+//        backFloorColorSensor = hwMap.get(ColorSensor.class, "back_floor_color_sensor");
 //        rangeSensor = hwMap.get(ModernRoboticsI2cRangeSensor.class, "range_sensor");
 
 
@@ -174,7 +172,6 @@ public class rr_Robot {
         //baseMxpGyroSensor.zeroYaw();
 
         //wait for these servos to reach desired state
-        Thread.sleep(100);
 
 
         aOpMode.DBG("Starting Motor Setups");
@@ -197,6 +194,7 @@ public class rr_Robot {
         setJewelArmUp();
 //        setRelicClawClosed();
 //        setRelicArmAngleGrab();
+        Thread.sleep(1000);
 
         aOpMode.DBG("Exiting Robot init");
     }
@@ -862,8 +860,10 @@ public class rr_Robot {
     }
 
     public void setJewelArmDown() throws InterruptedException {
-        jewelArm.setPosition(JEWEL_ARM_DOWN);
-        Thread.sleep(100);
+        for(float i = rr_Constants.JEWEL_ARM_UP; i <= rr_Constants.JEWEL_ARM_DOWN; i -= .1f) {
+            jewelArm.setPosition(i);
+            Thread.sleep(100);
+        }
     }
 
 
@@ -871,14 +871,12 @@ public class rr_Robot {
 
 
     public rr_Constants.JewelColorEnum getJewelLeftColor(rr_OpMode aOpMode) throws InterruptedException {
-        Thread.sleep(30);
+        Thread.sleep(500);
 
-        if ((leftJewelColorSensor.red() > JEWEL_RED_THRESHOLD) &&
-                (leftJewelColorSensor.red() > leftJewelColorSensor.blue())) {
+        if((leftJewelColorSensor.red() - leftJewelColorSensor.blue()) > rr_Constants.JEWEL_COLOR_MARGIN) {
             return rr_Constants.JewelColorEnum.RED;
         }
-        if ((leftJewelColorSensor.blue() > JEWEL_BLUE_THRESHOLD) &&
-                (leftJewelColorSensor.blue() > leftJewelColorSensor.red())) {
+        if((leftJewelColorSensor.blue() - leftJewelColorSensor.red()) > rr_Constants.JEWEL_COLOR_MARGIN) {
             return rr_Constants.JewelColorEnum.BLUE;
         }
 
@@ -886,14 +884,12 @@ public class rr_Robot {
     }
 
     public rr_Constants.JewelColorEnum getJewelRightColor(rr_OpMode aOpMode) throws InterruptedException {
-        Thread.sleep(30);
+        Thread.sleep(500);
 
-        if ((rightJewelColorSensor.red() > JEWEL_RED_THRESHOLD) &&
-                (rightJewelColorSensor.red() > rightJewelColorSensor.blue())) {
+        if((leftJewelColorSensor.red() - leftJewelColorSensor.blue()) > rr_Constants.JEWEL_COLOR_MARGIN) {
             return rr_Constants.JewelColorEnum.RED;
         }
-        if ((rightJewelColorSensor.blue() > JEWEL_BLUE_THRESHOLD) &&
-                (rightJewelColorSensor.blue() > rightJewelColorSensor.red())) {
+        if((leftJewelColorSensor.blue() - leftJewelColorSensor.red()) > rr_Constants.JEWEL_COLOR_MARGIN) {
             return rr_Constants.JewelColorEnum.BLUE;
         }
 
