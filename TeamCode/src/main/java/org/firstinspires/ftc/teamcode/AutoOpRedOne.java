@@ -17,9 +17,10 @@ public class AutoOpRedOne extends rr_OpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-rrAutoLib = new rr_AutoLib(this, this.hardwareMap);
+    rrAutoLib = new rr_AutoLib(this, this.hardwareMap);
 
-rrAutoLib.redOneAutonomousCommonAction(this);
+        waitForStart();
+        rrAutoLib.redOneAutonomousCommonAction(this);
     }
 }
 

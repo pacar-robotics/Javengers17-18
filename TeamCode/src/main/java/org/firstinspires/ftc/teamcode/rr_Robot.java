@@ -32,7 +32,7 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.DEBUG;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_RIGHT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.GENERIC_TIMER;
-import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_ARM_DOWN;
+import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_ARM_DOWN_READ;
 import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_ARM_UP;
 import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_PUSHER_LEFT;
 import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_PUSHER_NEUTRAL;
@@ -859,24 +859,55 @@ public class rr_Robot {
         Thread.sleep(100);
     }
 
-    public void setJewelArmDown() throws InterruptedException {
-        for(float i = rr_Constants.JEWEL_ARM_UP; i <= rr_Constants.JEWEL_ARM_DOWN; i -= .1f) {
-            jewelArm.setPosition(i);
-            Thread.sleep(100);
-        }
+    public void moveArmToPushJewel() throws InterruptedException {
+        jewelArm.setPosition(rr_Constants.JEWEL_ARM_DOWN_PUSH);
+        Thread.sleep(100);
     }
 
+    public void setJewelArmDown() throws InterruptedException {
+        //jewelArm.setPosition(rr_Constants.JEWEL_ARM_DOWN);
+        for(float armPosition = rr_Constants.JEWEL_ARM_UP; armPosition >= rr_Constants.JEWEL_ARM_DOWN_READ; armPosition -= .1f) {
+            jewelArm.setPosition(armPosition);
+            Thread.sleep(300);
+        }
+    }
 
     //JEWEL COLOR SENSORS
 
 
+//    public rr_Constants.JewelColorEnum getJewelLeftColor(rr_OpMode aOpMode) throws InterruptedException {
+//        Thread.sleep(500);
+//
+//        if((leftJewelColorSensor.red() - leftJewelColorSensor.blue()) > rr_Constants.JEWEL_COLOR_MARGIN) {
+//            return rr_Constants.JewelColorEnum.RED;
+//        }
+//        if((leftJewelColorSensor.blue() - leftJewelColorSensor.red()) > rr_Constants.JEWEL_COLOR_MARGIN) {
+//            return rr_Constants.JewelColorEnum.BLUE;
+//        }
+//
+//        return rr_Constants.JewelColorEnum.UNKNOWN;
+//    }
+//
+//    public rr_Constants.JewelColorEnum getJewelRightColor(rr_OpMode aOpMode) throws InterruptedException {
+//        Thread.sleep(500);
+//
+//        if((leftJewelColorSensor.red() - leftJewelColorSensor.blue()) > rr_Constants.JEWEL_COLOR_MARGIN) {
+//            return rr_Constants.JewelColorEnum.RED;
+//        }
+//        if((leftJewelColorSensor.blue() - leftJewelColorSensor.red()) > rr_Constants.JEWEL_COLOR_MARGIN) {
+//            return rr_Constants.JewelColorEnum.BLUE;
+//        }
+//
+//        return rr_Constants.JewelColorEnum.UNKNOWN;
+//    }
+
     public rr_Constants.JewelColorEnum getJewelLeftColor(rr_OpMode aOpMode) throws InterruptedException {
         Thread.sleep(500);
 
-        if((leftJewelColorSensor.red() - leftJewelColorSensor.blue()) > rr_Constants.JEWEL_COLOR_MARGIN) {
+        if(leftJewelColorSensor.red() > leftJewelColorSensor.blue()) {
             return rr_Constants.JewelColorEnum.RED;
         }
-        if((leftJewelColorSensor.blue() - leftJewelColorSensor.red()) > rr_Constants.JEWEL_COLOR_MARGIN) {
+        if(leftJewelColorSensor.blue() > leftJewelColorSensor.red()) {
             return rr_Constants.JewelColorEnum.BLUE;
         }
 
@@ -886,15 +917,16 @@ public class rr_Robot {
     public rr_Constants.JewelColorEnum getJewelRightColor(rr_OpMode aOpMode) throws InterruptedException {
         Thread.sleep(500);
 
-        if((leftJewelColorSensor.red() - leftJewelColorSensor.blue()) > rr_Constants.JEWEL_COLOR_MARGIN) {
+        if(leftJewelColorSensor.red() > leftJewelColorSensor.blue()) {
             return rr_Constants.JewelColorEnum.RED;
         }
-        if((leftJewelColorSensor.blue() - leftJewelColorSensor.red()) > rr_Constants.JEWEL_COLOR_MARGIN) {
+        if(leftJewelColorSensor.blue() > leftJewelColorSensor.red()) {
             return rr_Constants.JewelColorEnum.BLUE;
         }
 
         return rr_Constants.JewelColorEnum.UNKNOWN;
     }
+
 
 
     /**
@@ -966,6 +998,24 @@ public class rr_Robot {
         MotorStalledException(String message) {
             super(message);
         }
+    }
+
+    public void setJewelArmPosition(float position) throws InterruptedException {
+        jewelArm.setPosition(position);
+        Thread.sleep(250);
+    }
+
+    public float getJewelArmPosition() {
+        return (float) jewelArm.getPosition();
+    }
+
+    public void setJewelKnockerPosition(float position) throws InterruptedException {
+        jewelPusher.setPosition(position);
+        Thread.sleep(250);
+    }
+
+    public float getJewelKnockerPosition() {
+        return (float) jewelPusher.getPosition();
     }
 
 
