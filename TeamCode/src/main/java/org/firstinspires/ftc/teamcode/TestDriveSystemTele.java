@@ -1,6 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
-public class TestDriveSystem extends rr_OpMode {
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+@TeleOp(name = "Test Tele Drive", group = "Test")
+
+public class TestDriveSystemTele extends rr_OpMode {
     rr_Robot robot;
 
     @Override
