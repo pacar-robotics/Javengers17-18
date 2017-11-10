@@ -8,6 +8,8 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_GRAB;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_LOWER_POWER;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_MIDDLE;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_RAISE_POWER;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_SAFE_POS;
 import static org.firstinspires.ftc.teamcode.rr_Constants.SCORING_DRIVE_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.STANDARD_DRIVE_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRIGGER_THRESHOLD;
@@ -56,25 +58,26 @@ public class TestOp extends rr_OpMode {
     }
 
     private void processOrientationClaw() throws InterruptedException {
-        if (gamepad1.dpad_up && orientationPos < .9) {
-            orientationPos += .05f;
-            robot.setCubeOrientation(orientationPos);
-            Thread.sleep(250);
-        } else if (gamepad1.dpad_left && orientationPos > 0) {
-            orientationPos -= .05f;
-            robot.setCubeOrientation(orientationPos);
-            Thread.sleep(250);
-        }
+            if (gamepad1.dpad_up && orientationPos < .9) {
+                orientationPos += .05f;
+                robot.setCubeOrientation(orientationPos);
+                Thread.sleep(250);
+            } else if (gamepad1.dpad_left && orientationPos > 0) {
+                orientationPos -= .05f;
+                robot.setCubeOrientation(orientationPos);
+                Thread.sleep(250);
+            }
 
-        if (gamepad1.left_bumper && orientationPos == CUBE_ORIENTATION_VERTICAL) {
-            robot.setCubeClawToHorizontal();
-            orientationPos = CUBE_ORIENTATION_HORIZONTAL;
-            Thread.sleep(200);
-        }else {
-            robot.setCubeClawToVertical();
-            orientationPos = CUBE_ORIENTATION_VERTICAL;
-            Thread.sleep(200);
-        }
+
+            if (gamepad1.left_bumper && orientationPos == CUBE_ORIENTATION_HORIZONTAL && robot.getMotorPosition(this, CUBE_ARM) < CUBE_ARM_SAFE_POS) {
+                robot.setCubeClawToVertical();
+                orientationPos = CUBE_ORIENTATION_VERTICAL;
+                Thread.sleep(200);
+            } else if (gamepad1.left_bumper) {
+                robot.setCubeClawToHorizontal();
+                orientationPos = CUBE_ORIENTATION_HORIZONTAL;
+                Thread.sleep(200);
+            }
     }
 
     private void processClaw() throws InterruptedException {
@@ -92,7 +95,7 @@ public class TestOp extends rr_OpMode {
             robot.closeCubeClawServoOneCube();
             cubeClawPos = CUBE_CLAW_ONE_CLOSED;
             Thread.sleep(200);
-        } else {
+        } else if (gamepad1.right_bumper) {
             robot.openCubeClawServoOneCube();
             cubeClawPos = CUBE_CLAW_OPEN;
             Thread.sleep(200);
@@ -111,13 +114,13 @@ public class TestOp extends rr_OpMode {
 
         if (gamepad1.a) {
             robot.setCubeClawToHorizontal();
-            robot.moveCubeArmToPositionWithTouchLimits(this, CUBE_ARM_GRAB, CUBE_ARM_LOWER_POWER); //TODO: CHANGE CUBE_ARM_GRAB
+            robot.moveCubeArmToPositionWithTouchLimits(this, CUBE_ARM_GRAB, CUBE_ARM_RAISE_POWER); //TODO: CHANGE CUBE_ARM_GRAB
             robot.openCubeClawServoOneCube();
         }
         if (gamepad1.y) {
             robot.setCubeClawToHorizontal();
             robot.closeCubeClawServoOneCube();
-            robot.moveCubeArmToPositionWithTouchLimits(this, CUBE_ARM_MIDDLE, CUBE_ARM_LOWER_POWER); //TODO: CHANGE CUBE_ARM_MIDDLE
+            robot.moveCubeArmToPositionWithTouchLimits(this, CUBE_ARM_MIDDLE, CUBE_ARM_RAISE_POWER); //TODO: CHANGE CUBE_ARM_MIDDLE
         }
     }
 

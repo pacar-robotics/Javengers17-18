@@ -20,6 +20,7 @@ public class rr_Constants {
     final static int TETRIX_MOTOR_ENCODER_COUNTS_PER_REVOLUTION = 1440;
     final static int ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION = 1120;
     final static float MATRIX_MOTOR_ENCODER_COUNTS_PER_REVOLUTION = 1478.4f;
+    final static int MOTOR_ENCODER_THRESHOLD = 50;
 
     //Motor constants
     final static float MOTOR_LOWER_POWER_THRESHOLD = 0.20f;
@@ -46,8 +47,8 @@ public class rr_Constants {
 
     //Cube Arm Constants TODO: CHANGE
     final static int CUBE_ARM_MAX_DURATION = 5000;
-    final static float CUBE_ARM_UPPER_LIMIT = 0;
-    final static float CUBE_ARM_LOWER_LIMIT = 10000;
+    final static float CUBE_ARM_UPPER_LIMIT = -2216;
+    final static float CUBE_ARM_LOWER_LIMIT = 0;
     final static int ONE_CUBE_ROW_4 = 0; //Highest
     final static int ONE_CUBE_ROW_3 = 0;
     final static int ONE_CUBE_ROW_2 = 0;
@@ -56,13 +57,14 @@ public class rr_Constants {
     final static int TWO_CUBE_POS_2 = 0;
     final static int TWO_CUBE_POS_3 = 0; //Highest
     final static int CUBE_ARM_GRAB = 0;
-    final static int CUBE_ARM_MIDDLE = 0;
+    final static int CUBE_ARM_MIDDLE = -800;
+    final static int CUBE_ARM_SAFE_POS = -900;
     final static float CUBE_ARM_SCORING_POWER = .5f;
     final static float CUBE_ARM_POWER_FACTOR = 0.20f;
     final static float CUBE_ARM_RAISE_POWER = -0.4f;
     final static float CUBE_ARM_LOWER_POWER = 0.1f;
-    final static float CUBE_CLAW_OPEN = 0.6f;
-    final static float CUBE_CLAW_ONE_CLOSED = 0.42f;
+    final static float CUBE_CLAW_OPEN = 0.625f;
+    final static float CUBE_CLAW_ONE_CLOSED = 0.77f;
     final static float CUBE_CLAW_TWO_CLOSED = 0.1f;
     final static float CUBE_ORIENTATION_HORIZONTAL = 0.9f;
     final static float CUBE_ORIENTATION_VERTICAL = 0.44f;

@@ -97,8 +97,8 @@ public class rr_Robot {
         //TODO: Map Sensors and Servos
 
         // Color sensors
-        leftJewelColorDistance = hwMap.get(ColorSensor.class, "left_jewel_color");
-        rightJewelColorDistance = hwMap.get(ColorSensor.class, "right_jewel_color");
+//        leftJewelColorDistance = hwMap.get(ColorSensor.class, "left_jewel_color");
+//        rightJewelColorDistance = hwMap.get(ColorSensor.class, "right_jewel_color");
 
         //Map Servos
         cubeClaw = hwMap.get(Servo.class, "servo_cube_claw");
@@ -154,6 +154,13 @@ public class rr_Robot {
         motorArray[FRONT_RIGHT_MOTOR].setDirection(DcMotorSimple.Direction.FORWARD);
         motorArray[BACK_LEFT_MOTOR].setDirection(DcMotorSimple.Direction.REVERSE);
         motorArray[BACK_RIGHT_MOTOR].setDirection(DcMotorSimple.Direction.FORWARD);
+
+        motorArray[CUBE_ARM].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        Thread.sleep(250);
+
+        motorArray[CUBE_ARM].setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
 
         // Set all base motors to zero power
         stopBaseMotors(aOpMode);
@@ -714,19 +721,21 @@ public class rr_Robot {
         motorArray[CUBE_ARM].setTargetPosition(position);
 
         //now set the power
-        motorArray[CUBE_ARM].setPower(power * CUBE_ARM_POWER_FACTOR);
+        motorArray[CUBE_ARM].setPower(power);
 
         //reset clock for checking stall
         aOpMode.reset_timer_array(GENERIC_TIMER);
 
 
         while (motorArray[CUBE_ARM].isBusy() && (position >  motorArray[CUBE_ARM].getCurrentPosition()) ? !isCubeUpperLimitPressed() : !isCubeLowerLimitPressed()
-                && (aOpMode.time_elapsed_array(GENERIC_TIMER) < CUBE_ARM_MAX_DURATION))
+                && (aOpMode.time_elapsed_array(GENERIC_TIMER) < CUBE_ARM_MAX_DURATION) && Math.abs(motorArray[CUBE_ARM].getCurrentPosition() - position) > MOTOR_ENCODER_THRESHOLD)
         {
             aOpMode.idle();
         }
         //stop the motor
         motorArray[CUBE_ARM].setPower(0.0f);
+
+        motorArray[CUBE_ARM].setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     public void openCubeClawServoOneCube() throws InterruptedException{
