@@ -4,12 +4,15 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ThreadPool;
 
 import static org.firstinspires.ftc.teamcode.rr_Constants.ANALOG_STICK_THRESHOLD;
+import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_LEFT_MOTOR;
+import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_RIGHT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_GRAB;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_LOWER_POWER;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_MIDDLE;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_RAISE_POWER;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_SAFE_POS;
+import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.SCORING_DRIVE_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.STANDARD_DRIVE_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRIGGER_THRESHOLD;
@@ -51,6 +54,10 @@ public class TestOp extends rr_OpMode {
             telemetry.addLine("Cube Orientation: " + orientationPos);
             telemetry.addLine("Cube Arm Pos: " + robot.getMotorPosition(this, CUBE_ARM));
             telemetryTouchSensor();
+            telemetryAddLine("BRPower" + robot.getMotorPower(this, BACK_RIGHT_MOTOR));
+            telemetryAddLine("FRPower" + robot.getMotorPower(this, FRONT_LEFT_MOTOR));
+            telemetryAddLine("BLPower" + robot.getMotorPower(this, BACK_LEFT_MOTOR));
+            telemetryAddLine("FLPower" + robot.getMotorPower(this, FRONT_LEFT_MOTOR));
             telemetryUpdate();
 
             Thread.sleep(10);
@@ -114,8 +121,8 @@ public class TestOp extends rr_OpMode {
 
         if (gamepad1.a) {
             robot.setCubeClawToHorizontal();
-            robot.moveCubeArmToPositionWithTouchLimits(this, CUBE_ARM_GRAB, CUBE_ARM_RAISE_POWER); //TODO: CHANGE CUBE_ARM_GRAB
             robot.openCubeClawServoOneCube();
+            robot.moveCubeArmToPositionWithTouchLimits(this, CUBE_ARM_GRAB, CUBE_ARM_RAISE_POWER); //TODO: CHANGE CUBE_ARM_GRAB
         }
         if (gamepad1.y) {
             robot.setCubeClawToHorizontal();
@@ -139,7 +146,19 @@ public class TestOp extends rr_OpMode {
     }
 
     public void processStandardDrive()  throws InterruptedException{
-        if (Math.abs(gamepad2.left_stick_x) > ANALOG_STICK_THRESHOLD ||
+        if (Math.abs(gamepad2.right_stick_x) > ANALOG_STICK_THRESHOLD) {
+
+            //we are not in deadzone. Driver is pushing right joystick, sideways
+            float turnVelocity = (float) getGamePad2RightJoystickPolarMagnitude(this) * SCORING_DRIVE_POWER_FACTOR;
+
+            if (this.gamepad1.right_stick_x > 0) {
+                //turn clockwise to correct magnitude
+                robot.runRampedMotors(this, -turnVelocity, turnVelocity, -turnVelocity, turnVelocity);
+            } else {
+                //turn counter-clockwise
+                robot.runRampedMotors(this, turnVelocity, -turnVelocity, turnVelocity, -turnVelocity);
+            }
+        } else if (Math.abs(gamepad2.left_stick_x) > ANALOG_STICK_THRESHOLD ||
                 Math.abs(gamepad2.left_stick_y) > ANALOG_STICK_THRESHOLD) {
             //we are not in deadzone. Driver is pushing left joystick
             //lets make the robot move in chosen angle and magnitude.
@@ -147,12 +166,12 @@ public class TestOp extends rr_OpMode {
                     gamepad2.left_stick_x * SCORING_DRIVE_POWER_FACTOR,
                     gamepad2.left_stick_y * SCORING_DRIVE_POWER_FACTOR);
 
-        } else if (Math.abs(gamepad2.right_stick_x) > ANALOG_STICK_THRESHOLD) {
+        } else if (Math.abs(gamepad1.right_stick_x) > ANALOG_STICK_THRESHOLD) {
 
             //we are not in deadzone. Driver is pushing right joystick, sideways
-            float turnVelocity = (float) getGamePad2RightJoystickPolarMagnitude(this) * SCORING_DRIVE_POWER_FACTOR;
+            float turnVelocity = (float) getGamePad1RightJoystickPolarMagnitude(this) * TURN_POWER_FACTOR;
 
-            if (this.gamepad1.right_stick_x > 0) {
+            if (gamepad1.right_stick_x > 0) {
                 //turn clockwise to correct magnitude
                 robot.runRampedMotors(this, -turnVelocity, turnVelocity, -turnVelocity, turnVelocity);
             } else {
@@ -167,19 +186,7 @@ public class TestOp extends rr_OpMode {
                     gamepad1.left_stick_x * STANDARD_DRIVE_POWER_FACTOR,
                     gamepad1.left_stick_y * STANDARD_DRIVE_POWER_FACTOR);
 
-        } else if (Math.abs(gamepad1.right_stick_x) > ANALOG_STICK_THRESHOLD) {
-
-            //we are not in deadzone. Driver is pushing right joystick, sideways
-            float turnVelocity = (float) getGamePad1RightJoystickPolarMagnitude(this) * TURN_POWER_FACTOR;
-
-            if (gamepad1.right_stick_x > 0) {
-                //turn clockwise to correct magnitude
-                robot.runRampedMotors(this, -turnVelocity, turnVelocity, -turnVelocity, turnVelocity);
-            } else {
-                //turn counter-clockwise
-                robot.runRampedMotors(this, turnVelocity, -turnVelocity, turnVelocity, -turnVelocity);
-            }
-        } else {
+        }  else {
             //both joysticks on both gamepads are at rest, stop the robot.
             robot.stopBaseMotors(this);
         }

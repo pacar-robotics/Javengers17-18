@@ -150,10 +150,10 @@ public class rr_Robot {
         aOpMode.DBG("Starting Motor Setups");
 
         //Set the Direction of Motors
-        motorArray[FRONT_LEFT_MOTOR].setDirection(DcMotorSimple.Direction.REVERSE);
-        motorArray[FRONT_RIGHT_MOTOR].setDirection(DcMotorSimple.Direction.FORWARD);
-        motorArray[BACK_LEFT_MOTOR].setDirection(DcMotorSimple.Direction.REVERSE);
-        motorArray[BACK_RIGHT_MOTOR].setDirection(DcMotorSimple.Direction.FORWARD);
+        motorArray[FRONT_LEFT_MOTOR].setDirection(DcMotorSimple.Direction.FORWARD);
+        motorArray[FRONT_RIGHT_MOTOR].setDirection(DcMotorSimple.Direction.REVERSE);
+        motorArray[BACK_LEFT_MOTOR].setDirection(DcMotorSimple.Direction.FORWARD);
+        motorArray[BACK_RIGHT_MOTOR].setDirection(DcMotorSimple.Direction.REVERSE);
 
         motorArray[CUBE_ARM].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -214,6 +214,10 @@ public class rr_Robot {
 
     public int getMotorPosition(rr_OpMode aOpMode, int MotorNumber) {
         return motorArray[MotorNumber].getCurrentPosition();
+    }
+
+    public double getMotorPower(rr_OpMode aOpMode, int MotorNumber) {
+        return motorArray[MotorNumber].getPower();
     }
 
 
@@ -508,6 +512,7 @@ public class rr_Robot {
         setPower(aOpMode, FRONT_RIGHT_MOTOR, fr_Power);
         setPower(aOpMode, BACK_LEFT_MOTOR, bl_Power);
         setPower(aOpMode, BACK_RIGHT_MOTOR, br_Power);
+
     }
 
 
@@ -727,7 +732,7 @@ public class rr_Robot {
         aOpMode.reset_timer_array(GENERIC_TIMER);
 
 
-        while (motorArray[CUBE_ARM].isBusy() && (position >  motorArray[CUBE_ARM].getCurrentPosition()) ? !isCubeUpperLimitPressed() : !isCubeLowerLimitPressed()
+        while (motorArray[CUBE_ARM].isBusy() && (position <  motorArray[CUBE_ARM].getCurrentPosition()) ? !isCubeUpperLimitPressed() : !isCubeLowerLimitPressed()
                 && (aOpMode.time_elapsed_array(GENERIC_TIMER) < CUBE_ARM_MAX_DURATION) && Math.abs(motorArray[CUBE_ARM].getCurrentPosition() - position) > MOTOR_ENCODER_THRESHOLD)
         {
             aOpMode.idle();

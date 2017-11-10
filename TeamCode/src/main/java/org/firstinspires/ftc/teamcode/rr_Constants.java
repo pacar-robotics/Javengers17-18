@@ -110,8 +110,8 @@ public class rr_Constants {
     final static float MECANUM_WHEEL_FRONT_TRACK_DISTANCE = 14.5f;
 
     //Power Factors
-    final static float STANDARD_DRIVE_POWER_FACTOR = 0.6f;
-    final static float TURN_POWER_FACTOR = 0.35f;
+    final static float STANDARD_DRIVE_POWER_FACTOR = 0.8f;
+    final static float TURN_POWER_FACTOR = 0.5f;
     final static float SCORING_DRIVE_POWER_FACTOR = 0.25f;  //TODO: CHANGE LATER
 
     //Gamepad Thresholds
