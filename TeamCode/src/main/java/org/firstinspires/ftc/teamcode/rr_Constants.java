@@ -101,7 +101,6 @@ public class rr_Constants {
     final static int BACK_LEFT_MOTOR = 2;
     final static int BACK_RIGHT_MOTOR = 3;
     final static int CUBE_ARM = 4;
-    final static int RELIC_ARM_EXTEND = 5;
 
     //Mecanum wheel properties
     final static float MECANUM_WHEEL_DIAMETER = 4f;   //in inches

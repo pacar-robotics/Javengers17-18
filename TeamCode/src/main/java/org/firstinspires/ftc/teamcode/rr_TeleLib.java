@@ -188,9 +188,10 @@ public class rr_TeleLib {
         } else if (aOpMode.gamepad1.b) {
             toggleRelicArmAngle();
         } else if (aOpMode.gamepad1.left_trigger >= TRIGGER_THRESHOLD) {
-            robot.setPowerExtendRelicArm(aOpMode, aOpMode.gamepad1.left_trigger * RELIC_ARM_EXTEND_POWER_FACTOR);
+            // TODO 17-11-10: Changed to servo winch. Apply changes of limits
+//            robot.setPowerExtendRelicArm(aOpMode, aOpMode.gamepad1.left_trigger * RELIC_ARM_EXTEND_POWER_FACTOR);
         } else if (aOpMode.gamepad1.right_trigger >= TRIGGER_THRESHOLD) {
-            robot.setPowerRetractRelicArm(aOpMode, aOpMode.gamepad1.left_trigger * RELIC_ARM_RETRACT_POWER_FACTOR);
+//            robot.setRelicWinchPosition(aOpMode, aOpMode.gamepad1.left_trigger * RELIC_ARM_RETRACT_POWER_FACTOR);
         } else if (aOpMode.gamepad1.right_stick_button) {
             // TODO 17-10-17: Check that lowering and raising methods are not reversed
             robot.setRelicArmAnglePosition(robot.getRelicArmAnglePosition() - 1);
