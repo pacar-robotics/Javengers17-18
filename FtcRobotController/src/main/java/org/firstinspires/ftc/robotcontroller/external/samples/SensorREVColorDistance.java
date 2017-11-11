@@ -52,8 +52,7 @@ import java.util.Locale;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list.
  */
-@Autonomous(name = "Sensor: REVColorDistance", group = "Sensor")
-@Disabled                            // Comment this out to add to the opmode list
+@Autonomous(name = "Sensor: REVColorDistance", group = "Sensor")                            // Comment this out to add to the opmode list
 public class SensorREVColorDistance extends LinearOpMode {
 
     /**
@@ -73,17 +72,20 @@ public class SensorREVColorDistance extends LinearOpMode {
      * to the target object.  Note that the distance sensor saturates at around 2" (5 cm).
      *
      */
-    ColorSensor sensorColor;
-    DistanceSensor sensorDistance;
+    ColorSensor leftJewelColor;
+    ColorSensor rightJewelColor;
+    //DistanceSensor sensorDistance;
 
     @Override
     public void runOpMode() {
 
         // get a reference to the color sensor.
-        sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color_distance");
+        leftJewelColor = hardwareMap.get(ColorSensor.class, "left_jewel_color");
+        rightJewelColor = hardwareMap.get(ColorSensor.class, "right_jewel_color");
+
 
         // get a reference to the distance sensor that shares the same name.
-        sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_color_distance");
+        //sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_color_distance");
 
         // hsvValues is an array that will hold the hue, saturation, and value information.
         float hsvValues[] = {0F, 0F, 0F};
@@ -109,18 +111,24 @@ public class SensorREVColorDistance extends LinearOpMode {
             // convert the RGB values to HSV values.
             // multiply by the SCALE_FACTOR.
             // then cast it back to int (SCALE_FACTOR is a double)
-            Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
-                    (int) (sensorColor.green() * SCALE_FACTOR),
-                    (int) (sensorColor.blue() * SCALE_FACTOR),
-                    hsvValues);
+//            Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
+//                    (int) (sensorColor.green() * SCALE_FACTOR),
+//                    (int) (sensorColor.blue() * SCALE_FACTOR),
+//                    hsvValues);
 
             // send the info back to driver station using telemetry function.
-            telemetry.addData("Distance (cm)",
-                    String.format(Locale.US, "%.02f", sensorDistance.getDistance(DistanceUnit.CM)));
-            telemetry.addData("Alpha", sensorColor.alpha());
-            telemetry.addData("Red  ", sensorColor.red());
-            telemetry.addData("Green", sensorColor.green());
-            telemetry.addData("Blue ", sensorColor.blue());
+            //telemetry.addData("Distance (cm)",
+                    //String.format(Locale.US, "%.02f", sensorDistance.getDistance(DistanceUnit.CM)));
+            telemetry.addData("Alpha", leftJewelColor.alpha());
+            telemetry.addData("Red  ", leftJewelColor.red());
+            telemetry.addData("Green", leftJewelColor.green());
+            telemetry.addData("Blue ", leftJewelColor.blue());
+            telemetry.addData("Hue", hsvValues[0]);
+
+            telemetry.addData("Alpha", rightJewelColor.alpha());
+            telemetry.addData("Red  ", rightJewelColor.red());
+            telemetry.addData("Green", rightJewelColor.green());
+            telemetry.addData("Blue ", rightJewelColor.blue());
             telemetry.addData("Hue", hsvValues[0]);
 
             // change the background color to match the color detected by the RGB sensor.

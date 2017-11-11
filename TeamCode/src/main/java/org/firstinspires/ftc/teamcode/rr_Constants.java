@@ -9,7 +9,7 @@ package org.firstinspires.ftc.teamcode;
 public class rr_Constants {
 
     //Constants for Debugging
-    final static boolean DEBUG = false;
+    final static boolean DEBUG = true;
     final static long DEBUG_MESSAGE_DISPLAY_TIME = 10; //time to flash DEBUG message on telemtry
     final static boolean DEBUG_AUTO_CLEAR = false;  //will the screen refresh after each telemtry
 
@@ -80,12 +80,11 @@ public class rr_Constants {
     final static double RELIC_ARM_RETRACT_POWER = 0;
 
     //Jewel Arm Constants TODO: CHANGE
-    final static float JEWEL_PUSHER_LEFT = 0.65f;
-    final static float JEWEL_PUSHER_RIGHT = 0.25f;
-    final static float JEWEL_PUSHER_NEUTRAL = 0.48f;
+    final static float JEWEL_PUSHER_LEFT = 0.63f;
+    final static float JEWEL_PUSHER_RIGHT = 0.23f;
+    final static float JEWEL_PUSHER_NEUTRAL = 0.43f;
     final static float JEWEL_ARM_UP = 0.95f;
-    final static float JEWEL_ARM_DOWN_READ = 0.45f;
-    final static float JEWEL_ARM_DOWN_PUSH = .4f;
+    final static float JEWEL_ARM_DOWN = .25f;
 
     //index of motors
     final static int FRONT_LEFT_MOTOR = 0;

@@ -50,6 +50,7 @@ public class rr_AutoLib {
     // robot starts closer to audience
     public void blueOneAutonomousCommonAction(rr_OpMode aOpMode) throws InterruptedException {
 
+        aOpMode.DBG("In Blue One Common");
         detectColorAndPushJewel(aOpMode, rr_Constants.AllianceColorEnum.BLUE);
         Thread.sleep(100);
         //moveWheels(aOpMode, 30, .4f, rr_Constants.DirectionEnum.Forward, true);
@@ -90,56 +91,79 @@ public class rr_AutoLib {
 
     public void detectColorAndPushJewel(rr_OpMode aOpMode, rr_Constants.AllianceColorEnum teamColor) throws InterruptedException {
 
-        robot.setJewelArmDown();
+        //robot.setJewelArmDown();
 
-        Thread.sleep(500);
+        //Thread.sleep(5000);
+
+        rr_Constants.JewelColorEnum leftJewelColor = robot.getJewelLeftColor(aOpMode);
+        rr_Constants.JewelColorEnum rightJewelColor = robot.getJewelRightColor(aOpMode);
+
+        aOpMode.DBG("In detectColorAndPushJewel");
 
 
         if (teamColor == rr_Constants.AllianceColorEnum.BLUE) {
-            if ((robot.getJewelLeftColor(aOpMode) == rr_Constants.JewelColorEnum.BLUE) &&
-                    (robot.getJewelRightColor(aOpMode) == rr_Constants.JewelColorEnum.RED)) {
-                robot.moveArmToPushJewel();
+            aOpMode.DBG("In detectColorAndPushJewel Blue Alliance");
+
+            if ((leftJewelColor == rr_Constants.JewelColorEnum.BLUE) &&
+                    (rightJewelColor == rr_Constants.JewelColorEnum.RED)) {
+                aOpMode.telemetryAddData("LEFT IS BLUE","LEFT_BLUE", "Left is Blue");
+                aOpMode.telemetryUpdate();
+
                 robot.pushRightJewel();
-                if (robot.getJewelLeftColor(aOpMode) == rr_Constants.JewelColorEnum.RED) {
-                    robot.moveArmToPushJewel();
+                if (leftJewelColor == rr_Constants.JewelColorEnum.RED) {
                     robot.pushLeftJewel();
                 }
-            } else if ((robot.getJewelLeftColor(aOpMode) == rr_Constants.JewelColorEnum.RED) &&
-                    (robot.getJewelRightColor(aOpMode) == rr_Constants.JewelColorEnum.BLUE)) {
-                robot.moveArmToPushJewel();
+            } else if ((leftJewelColor == rr_Constants.JewelColorEnum.RED) &&
+                    (rightJewelColor == rr_Constants.JewelColorEnum.BLUE)) {
+                 aOpMode.telemetryAddData("RIGHT IS BLUE","RIGHT_BLUE", "RIGHT is Blue");
+                 aOpMode.telemetryUpdate();
                 robot.pushLeftJewel();
-                if (robot.getJewelRightColor(aOpMode) == rr_Constants.JewelColorEnum.RED) {
-                    robot.moveArmToPushJewel();
+                if (rightJewelColor == rr_Constants.JewelColorEnum.RED) {
                     robot.pushRightJewel();
                 }
             }
-            else if(robot.getJewelLeftColor(aOpMode) == rr_Constants.JewelColorEnum.UNKNOWN) {
-                aOpMode.telemetryAddData("Unknown", "Unknown", "No color detected");
+            else if(((leftJewelColor) == rr_Constants.JewelColorEnum.UNKNOWN) ||
+            (rightJewelColor == rr_Constants.JewelColorEnum.UNKNOWN)) {
+                aOpMode.telemetryAddData("Unknown:BlueTeam", "Unknown", "No color detected");
+                aOpMode.telemetryAddData("Left color", "left color", "Left color" + robot.getJewelLeftColor(aOpMode));
+                aOpMode.telemetryAddData("Right color", "Right color", "Right color" + robot.getJewelRightColor(aOpMode));
+                aOpMode.telemetryUpdate();
             }
         }
 
+        aOpMode.DBG("Exiting blue alliance detect color and push");
+
         if (teamColor == rr_Constants.AllianceColorEnum.RED) {
-            if ((robot.getJewelLeftColor(aOpMode) == rr_Constants.JewelColorEnum.BLUE) &&
+            aOpMode.DBG("In detectColorAndPushJewel Red Alliance");
+
+            if ((leftJewelColor == rr_Constants.JewelColorEnum.BLUE) &&
                     (robot.getJewelRightColor(aOpMode) == rr_Constants.JewelColorEnum.RED)) {
-                robot.moveArmToPushJewel();
+                 aOpMode.telemetryAddData("RIGHT IS RED","RIGHT_RED", "Right is RED");
+                aOpMode.telemetryUpdate();
                 robot.pushLeftJewel();
-                if (robot.getJewelRightColor(aOpMode) == rr_Constants.JewelColorEnum.BLUE) {
-                    robot.moveArmToPushJewel();
+                if (rightJewelColor == rr_Constants.JewelColorEnum.BLUE) {
                     robot.pushRightJewel();
                 }
-            } else if ((robot.getJewelLeftColor(aOpMode) == rr_Constants.JewelColorEnum.RED) &&
-                    (robot.getJewelRightColor(aOpMode) == rr_Constants.JewelColorEnum.BLUE)) {
-                robot.moveArmToPushJewel();
+            } else if ((leftJewelColor == rr_Constants.JewelColorEnum.RED) &&
+                    (rightJewelColor== rr_Constants.JewelColorEnum.BLUE)) {
+                 aOpMode.telemetryAddData("LEFT IS RED","LEFT_RED", "Left is RED");
+                aOpMode.telemetryUpdate();
                 robot.pushRightJewel();
-                if (robot.getJewelLeftColor(aOpMode) == rr_Constants.JewelColorEnum.BLUE) {
-                    robot.moveArmToPushJewel();
+                if (leftJewelColor == rr_Constants.JewelColorEnum.BLUE) {
                     robot.pushLeftJewel();
                 }
             }
-            else if(robot.getJewelLeftColor(aOpMode) == rr_Constants.JewelColorEnum.UNKNOWN) {
-                aOpMode.telemetryAddData("Unknown", "Unknown", "No color detected");
+            else if((leftJewelColor == rr_Constants.JewelColorEnum.UNKNOWN) ||
+                    ((rightJewelColor) == rr_Constants.JewelColorEnum.UNKNOWN)) {
+                aOpMode.telemetryAddData("Unknown: RedTeam", "Unknown", "No color detected");
+                aOpMode.telemetryAddData("Left color", "left color", "Left color" + robot.getJewelLeftColor(aOpMode));
+                aOpMode.telemetryAddData("Right color", "Right color", "Right color" + robot.getJewelRightColor(aOpMode));
+                aOpMode.telemetryUpdate();
             }
         }
+
+        aOpMode.DBG("Exiting detect color and push");
+
     }
 
 

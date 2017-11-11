@@ -14,6 +14,7 @@ public class AutoOpBlueOne extends rr_OpMode {
 
         waitForStart();
         rrAutoLib.blueOneAutonomousCommonAction(this);
+        Thread.sleep(6000);
 
     }
 

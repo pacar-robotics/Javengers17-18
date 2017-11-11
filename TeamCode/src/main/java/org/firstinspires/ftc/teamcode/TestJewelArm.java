@@ -6,8 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 public class TestJewelArm extends rr_OpMode {
     rr_Robot robot;
 
-    float knockerPosition = 0.5f;
-    float armPosition = 0.5f;
+    float knockerPosition = rr_Constants.JEWEL_PUSHER_NEUTRAL;
+    float armPosition = rr_Constants.JEWEL_ARM_UP;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -15,8 +15,8 @@ public class TestJewelArm extends rr_OpMode {
 
         robot.init(this, this.hardwareMap);
 
-        robot.setJewelArmPosition(armPosition);
-        robot.setJewelKnockerPosition(knockerPosition);
+        //robot.setJewelArmPosition(armPosition);
+        //robot.setJewelKnockerPosition(knockerPosition);
 
         waitForStart();
 

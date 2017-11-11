@@ -32,7 +32,6 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.DEBUG;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_RIGHT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.GENERIC_TIMER;
-import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_ARM_DOWN_READ;
 import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_ARM_UP;
 import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_PUSHER_LEFT;
 import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_PUSHER_NEUTRAL;
@@ -859,17 +858,21 @@ public class rr_Robot {
         Thread.sleep(100);
     }
 
-    public void moveArmToPushJewel() throws InterruptedException {
-        jewelArm.setPosition(rr_Constants.JEWEL_ARM_DOWN_PUSH);
-        Thread.sleep(100);
-    }
-
     public void setJewelArmDown() throws InterruptedException {
-        //jewelArm.setPosition(rr_Constants.JEWEL_ARM_DOWN);
-        for(float armPosition = rr_Constants.JEWEL_ARM_UP; armPosition >= rr_Constants.JEWEL_ARM_DOWN_READ; armPosition -= .1f) {
-            jewelArm.setPosition(armPosition);
-            Thread.sleep(300);
-        }
+        jewelArm.setPosition(rr_Constants.JEWEL_ARM_UP - (rr_Constants.JEWEL_ARM_DOWN * (.2f)));
+        Thread.sleep(250);
+        jewelArm.setPosition(rr_Constants.JEWEL_ARM_UP - (rr_Constants.JEWEL_ARM_DOWN * (.4f)));
+        Thread.sleep(250);
+        jewelArm.setPosition(rr_Constants.JEWEL_ARM_UP - (rr_Constants.JEWEL_ARM_DOWN * (.6f)));
+        Thread.sleep(250);
+        jewelArm.setPosition(rr_Constants.JEWEL_ARM_UP - (rr_Constants.JEWEL_ARM_DOWN * (.8f)));
+        Thread.sleep(250);
+        jewelArm.setPosition(rr_Constants.JEWEL_ARM_DOWN);
+        Thread.sleep(250);
+//        for(float armPosition = rr_Constants.JEWEL_ARM_UP; armPosition >= rr_Constants.JEWEL_ARM_DOWN; armPosition -= .05f) {
+//            jewelArm.setPosition(armPosition);
+//            Thread.sleep(300);
+//        }
     }
 
     //JEWEL COLOR SENSORS
@@ -905,25 +908,39 @@ public class rr_Robot {
         Thread.sleep(500);
 
         if(leftJewelColorSensor.red() > leftJewelColorSensor.blue()) {
+
+            aOpMode.telemetryAddData("Color", "Red", "Left Red Detected");
+            aOpMode.telemetryUpdate();
             return rr_Constants.JewelColorEnum.RED;
         }
         if(leftJewelColorSensor.blue() > leftJewelColorSensor.red()) {
+            aOpMode.telemetryAddData("Color", "Blue", "Left Blue Detected");
+            aOpMode.telemetryUpdate();
             return rr_Constants.JewelColorEnum.BLUE;
         }
 
+        aOpMode.telemetryAddData("Color", "Unknown", "No Color Detected");
+        aOpMode.telemetryUpdate();
         return rr_Constants.JewelColorEnum.UNKNOWN;
     }
 
     public rr_Constants.JewelColorEnum getJewelRightColor(rr_OpMode aOpMode) throws InterruptedException {
         Thread.sleep(500);
 
-        if(leftJewelColorSensor.red() > leftJewelColorSensor.blue()) {
+        if(rightJewelColorSensor.red() > rightJewelColorSensor.blue()) {
+            aOpMode.telemetryAddData("Color", "Red", "Right Red Detected");
+            aOpMode.telemetryUpdate();
             return rr_Constants.JewelColorEnum.RED;
         }
-        if(leftJewelColorSensor.blue() > leftJewelColorSensor.red()) {
+        if(rightJewelColorSensor.blue() > rightJewelColorSensor.red()) {
+            aOpMode.telemetryAddData("Color", "Blue", "Right Blue Detected");
+            aOpMode.telemetryUpdate();
+
             return rr_Constants.JewelColorEnum.BLUE;
         }
 
+        aOpMode.telemetryAddData("Color", "Unknown", "No Color Detected");
+        aOpMode.telemetryUpdate();
         return rr_Constants.JewelColorEnum.UNKNOWN;
     }
 
