@@ -71,7 +71,7 @@ public class rr_AutoLib {
 
         detectColorAndPushJewel(aOpMode, rr_Constants.AllianceColorEnum.RED);
         moveWheels(aOpMode, 30, .4f, rr_Constants.DirectionEnum.Backward, true);
-        turnUsingEncoders(aOpMode, 90, .3f, rr_Constants.TurnDirectionEnum.Counterclockwise);
+        robot.turnUsingEncoders(aOpMode, 90, .3f, rr_Constants.TurnDirectionEnum.Counterclockwise);
 
         // universalMoveRobot - backwards until red line is detected
         // Move forward / backward based on Vuforia pattern detected
@@ -82,7 +82,7 @@ public class rr_AutoLib {
     public void redTwoAutonomousCommonAction(rr_OpMode aOpMode)throws InterruptedException{
         detectColorAndPushJewel(aOpMode, rr_Constants.AllianceColorEnum.BLUE);
         moveWheels(aOpMode, 30, .4f, rr_Constants.DirectionEnum.Backward, true);
-        turnUsingEncoders(aOpMode, 180, .3f, rr_Constants.TurnDirectionEnum.Clockwise);
+        robot.turnUsingEncoders(aOpMode, 180, .3f, rr_Constants.TurnDirectionEnum.Clockwise);
         // moveWheels - backward
         // universalMoveRobot - sideways right until blue line is detected
         // Move sideways left / right based on Vuforia pattern detected
@@ -299,29 +299,7 @@ public class rr_AutoLib {
 //    }
 //    }
 
-    public void turnUsingEncoders(rr_OpMode aOpMode, float angle, float power, rr_Constants.TurnDirectionEnum TurnDirection)
-            throws InterruptedException {
 
-        //calculate the turn distance to be used in terms of encoder clicks.
-        //for Andymark encoders.
-
-        int turnDistance = (int) (2 * ((ROBOT_TRACK_DISTANCE) * angle
-                * ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION) /
-                (MECANUM_WHEEL_DIAMETER * 360));
-
-
-        switch (TurnDirection) {
-            case Clockwise:
-                robot.runRobotToPosition(aOpMode, power, power, power, power, turnDistance, -turnDistance, turnDistance, -turnDistance, true);
-                break;
-            case Counterclockwise:
-                robot.runRobotToPosition(aOpMode, power, power, power, power, -turnDistance, turnDistance, -turnDistance, turnDistance, true);
-                break;
-        }
-
-        //wait just a bit for the commands to complete
-        Thread.sleep(50);
-    }
 
 
 

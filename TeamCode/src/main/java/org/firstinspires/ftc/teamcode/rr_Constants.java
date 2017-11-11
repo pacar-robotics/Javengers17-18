@@ -10,6 +10,7 @@ public class rr_Constants {
 
     //Constants for Debugging
     final static boolean DEBUG = true;
+    final static int DEBUG_LEVEL=0;
     final static long DEBUG_MESSAGE_DISPLAY_TIME = 10; //time to flash DEBUG message on telemtry
     final static boolean DEBUG_AUTO_CLEAR = false;  //will the screen refresh after each telemtry
 
@@ -110,7 +111,7 @@ public class rr_Constants {
     final static float TRIGGER_THRESHOLD = .10f;
 
     //distance between wheels left to right of the Robot in inches.
-    final static float ROBOT_TRACK_DISTANCE = 13.7f; //adjusted from observation.
+    final static float ROBOT_TRACK_DISTANCE = 12.25f; //adjusted from observation.
 
     //Sensor Constants TODO: CHANGE
     final static int JEWEL_COLOR_MARGIN = 10;

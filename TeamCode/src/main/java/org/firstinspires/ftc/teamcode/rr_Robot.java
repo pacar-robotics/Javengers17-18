@@ -2,8 +2,10 @@ package org.firstinspires.ftc.teamcode;
 
 import android.util.Log;
 
-import com.kauailabs.navx.ftc.AHRS;
-import com.kauailabs.navx.ftc.navXPIDController;
+
+import com.qualcomm.hardware.adafruit.AdafruitBNO055IMU;
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -12,10 +14,19 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
+import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 import java.text.DecimalFormat;
+import java.util.Locale;
 
+import static org.firstinspires.ftc.teamcode.rr_Constants.ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_RIGHT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM;
@@ -29,6 +40,7 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_CLAW_TWO_CLOSED;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ORIENTATION_HORIZONTAL;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ORIENTATION_VERTICAL;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DEBUG;
+import static org.firstinspires.ftc.teamcode.rr_Constants.DEBUG_LEVEL;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_RIGHT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.GENERIC_TIMER;
@@ -39,6 +51,7 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_PUSHER_RIGHT;
 import static org.firstinspires.ftc.teamcode.rr_Constants.LEFT_MOTOR_TRIM_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.MAX_MOTOR_LOOP_TIME;
 import static org.firstinspires.ftc.teamcode.rr_Constants.MAX_ROBOT_TURN_MOTOR_VELOCITY;
+import static org.firstinspires.ftc.teamcode.rr_Constants.MECANUM_WHEEL_DIAMETER;
 import static org.firstinspires.ftc.teamcode.rr_Constants.MECANUM_WHEEL_ENCODER_MARGIN;
 import static org.firstinspires.ftc.teamcode.rr_Constants.MECANUM_WHEEL_FRONT_TRACK_DISTANCE;
 import static org.firstinspires.ftc.teamcode.rr_Constants.MECANUM_WHEEL_SIDE_TRACK_DISTANCE;
@@ -57,7 +70,8 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_LOWER_LIMIT;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_MAX_DURATION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_UPPER_LIMIT;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RIGHT_MOTOR_TRIM_FACTOR;
-
+import static org.firstinspires.ftc.teamcode.rr_Constants.ROBOT_TRACK_DISTANCE;
+import static org.firstinspires.ftc.teamcode.rr_Constants.TURN_POWER_FACTOR;
 
 
 public class rr_Robot {
@@ -75,6 +89,8 @@ public class rr_Robot {
     private final double MAX_MOTOR_OUTPUT_VALUE = 1.0;
 
     private final int DEVICE_TIMEOUT_MS = 500;
+
+
 
     HardwareMap hwMap = null;
 
@@ -96,11 +112,11 @@ public class rr_Robot {
     private ColorSensor frontFloorColorSensor;
     private ColorSensor backFloorColorSensor;
 
-    protected navXPIDController yawPIDController;
-
-    //Sensors
-    private AHRS baseMxpGyroSensor; //NavX MXP gyro
     private ModernRoboticsI2cRangeSensor rangeSensor;
+
+    private BNO055IMU imu; //bosch imu embedded in the Rev Expansion Hub.
+    Orientation angles; //part of IMU processing state
+    Acceleration gravity; //part of IMU processing state
 
     //Variables for Ramped Power
     private double prevFLVelocity = 0.0f;
@@ -147,38 +163,32 @@ public class rr_Robot {
 //        backFloorColorSensor = hwMap.get(ColorSensor.class, "back_floor_color_sensor");
 //        rangeSensor = hwMap.get(ModernRoboticsI2cRangeSensor.class, "range_sensor");
 
+        // Set up the parameters with which we will use our IMU. Note that integration
+        // algorithm here just reports accelerations to the logcat log; it doesn't actually
+        // provide positional information.
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled      = true;
+        parameters.loggingTag          = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
-//        aOpMode.DBG("Begin Gyro Calib");
-//        //allocate the mxp gyro sensor.
-//        baseMxpGyroSensor = AHRS.getInstance(hwMap.deviceInterfaceModule.get("dim"),
-//                NAVX_DIM_I2C_PORT,
-//                AHRS.DeviceDataType.kProcessedData);
-//
-//        while (baseMxpGyroSensor.isCalibrating()) {
-//            aOpMode.idle();
-//            Thread.sleep(50);
-//            aOpMode.telemetryAddData("1 navX-Device", "Status:",
-//                    baseMxpGyroSensor.isCalibrating() ?
-//                            "CALIBRATING" : "Calibration Complete");
-//            aOpMode.telemetryUpdate();
-//        }
-//
-//        aOpMode.DBG("Gyro Calib Complete");
-
-
-        //zero out the yaw value, so this will be the frame of reference for future calls.
-        //do not call this for duration of run after this.
-        //baseMxpGyroSensor.zeroYaw();
-
-        //wait for these servos to reach desired state
-
+        // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
+        // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
+        // and named "imu".
+        imu = hwMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
+        // Start the logging of measured acceleration
+        imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
 
         aOpMode.DBG("Starting Motor Setups");
 
         //Set the Direction of Motors
-        motorArray[FRONT_LEFT_MOTOR].setDirection(DcMotorSimple.Direction.FORWARD);
+
+        motorArray[FRONT_LEFT_MOTOR].setDirection(DcMotorSimple.Direction.REVERSE);
         motorArray[FRONT_RIGHT_MOTOR].setDirection(DcMotorSimple.Direction.FORWARD);
-        motorArray[BACK_LEFT_MOTOR].setDirection(DcMotorSimple.Direction.FORWARD);
+        motorArray[BACK_LEFT_MOTOR].setDirection(DcMotorSimple.Direction.REVERSE);
         motorArray[BACK_RIGHT_MOTOR].setDirection(DcMotorSimple.Direction.FORWARD);
 
         // Set all base motors to zero power
@@ -255,12 +265,32 @@ public class rr_Robot {
         return rangeSensor.cmOptical();
     }
 
-    public float getMxpGyroSensorHeading(rr_OpMode aOpMode) {
-        return baseMxpGyroSensor.getYaw();
+
+
+    public float getBoschGyroSensorHeading(rr_OpMode aOpMode) throws InterruptedException{
+        //grab the current heading from the IMU.
+        angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        //reverse sense of the heading to match legacy code
+        aOpMode.DBG("Heading:"+ -angles.firstAngle);
+        return -angles.firstAngle;
+
     }
 
-    protected void setMxpGyroZeroYaw(rr_OpMode aOpMode) {
-        baseMxpGyroSensor.zeroYaw();
+
+
+    protected void setBoschGyroZeroYaw(rr_OpMode aOpMode) throws InterruptedException {
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled      = true;
+        parameters.loggingTag          = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
+        imu.initialize(parameters);
+        // Start the logging of measured acceleration
+        imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+       Thread.sleep(1000);
     }
 
     public double getFloorBlueReading() {
@@ -393,7 +423,7 @@ public class rr_Robot {
             motorArray[BACK_LEFT_MOTOR].setPower(rampedPower * LEFT_MOTOR_TRIM_FACTOR);
             motorArray[BACK_RIGHT_MOTOR].setPower(rampedPower * RIGHT_MOTOR_TRIM_FACTOR);
 
-            if (DEBUG) {
+            if (DEBUG_LEVEL>1) {
                 aOpMode.telemetryAddData("Motor FL", "Values", ":" + motorArray[FRONT_LEFT_MOTOR].getCurrentPosition());
                 aOpMode.telemetryAddData("Motor FR", "Values", ":" + motorArray[FRONT_RIGHT_MOTOR].getCurrentPosition());
                 aOpMode.telemetryAddData("Motor BL", "Values", ":" + motorArray[BACK_LEFT_MOTOR].getCurrentPosition());
@@ -649,74 +679,59 @@ public class rr_Robot {
         stopBaseMotors(aOpMode);
     }
 
-    public void turnPidMxpAbsoluteDegrees(rr_OpMode aOpMode, float turndegrees, float toleranceDegrees)
-            throws InterruptedException {
-         /* Create a PID Controller which uses the Yaw Angle as input. */
-        //by default the PIDController is disabled. turn it on.
+    public void turnAbsoluteBoschGyroDegrees(rr_OpMode aOpMode, float fieldReferenceDegrees) throws InterruptedException {
+        //clockwise is represented by clockwise numbers.
+        //counterclockwise by negative angle numbers in degrees.
+        //the fieldReferenceDegrees parameters measures degrees off the initial reference frame when the robot is started and the gyro is
+        //calibrated.
+        // >> IMPORTANT: This depends on the zIntegratedHeading not being altered by relative turns !!!
 
-        // the mxp gyro sensor classes include a built in
-        // proportional Integrated Derivative (PID) adjusted control loop function
-        //lets set that up for reading the YAW value (rotation around the z axis for the robot).
+        //first take the absolute degrees and modulus down to 0 and 359.
 
-        yawPIDController = new navXPIDController(baseMxpGyroSensor,
-                navXPIDController.navXTimestampedDataSource.YAW);
+        float targetDegrees = fieldReferenceDegrees % 360;
 
-        //Configure the PID controller for the turn degrees we want
-        yawPIDController.setSetpoint(turndegrees);
-        yawPIDController.setContinuous(true);
+        //compare to the current gyro zIntegrated heading and store the result.
+        //the Integrated zValue returned is positive for clockwise turns
+        //read the heading and store it.
 
-        //limits of motor values (-1.0 to 1.0)
-        yawPIDController.setOutputRange(MIN_MOTOR_OUTPUT_VALUE, MAX_MOTOR_OUTPUT_VALUE);
-        //tolerance degrees is defined to prevent oscillation at high accuracy levels.
-        yawPIDController.setTolerance(navXPIDController.ToleranceType.ABSOLUTE, toleranceDegrees);
-        //PID initial parameters, usually found by trial and error.
+        float startingHeading = getBoschGyroSensorHeading(aOpMode);
+        float turnDegrees = targetDegrees - startingHeading;
 
-        yawPIDController.setPID(YAW_PID_P, YAW_PID_I, YAW_PID_D);
+        //make the turn using encoders
 
-        yawPIDController.enable(true);
+        if (DEBUG) {
+            aOpMode.telemetryAddData("targetDegrees", "Value",
+                    ":" + targetDegrees);
+            aOpMode.telemetryAddData("Starting Z", "Value",
+                    ":" + startingHeading);
+            aOpMode.telemetryAddData("Turn Degrees", "Value",
+                    ":" + turnDegrees);
 
+            aOpMode.telemetryUpdate();
+        }
 
-        /* Wait for new Yaw PID output values, then update the motors
-           with the new PID value with each new output value.
-         */
+        //optimize the turn, so that direction of turn results in smallest turn needed.
 
-        navXPIDController.PIDResult yawPIDResult = new navXPIDController.PIDResult();
+        if (Math.abs(turnDegrees) > 180) {
+            turnDegrees = Math.signum(turnDegrees) * -1 * (360 - Math.abs(turnDegrees));
+        }
 
-        DecimalFormat df = new DecimalFormat("#.##");
+        turnUsingEncoders(aOpMode,  Math.abs(turnDegrees),TURN_POWER_FACTOR,
+                turnDegrees > 0 ? rr_Constants.TurnDirectionEnum.Clockwise :
+                        rr_Constants.TurnDirectionEnum.Counterclockwise);
 
-        aOpMode.reset_timer_array(GENERIC_TIMER);
+        float finalDegrees = getBoschGyroSensorHeading(aOpMode);
+        Thread.sleep(50); //cooling off after gyro read to prevent error in next run.
 
-        while ((aOpMode.time_elapsed_array(GENERIC_TIMER) < MAX_MOTOR_LOOP_TIME) &&
-                !Thread.currentThread().isInterrupted()) {
-            if (yawPIDController.waitForNewUpdate(yawPIDResult, DEVICE_TIMEOUT_MS)) {
-                if (yawPIDResult.isOnTarget()) {
-                    //we have reached turn target within tolerance requested.
-                    //stop
-                    aOpMode.telemetryAddData("On Target", ":Value:",
-                            df.format(getMxpGyroSensorHeading(aOpMode)));
-                    aOpMode.telemetryUpdate();
-                    break;
-                } else {
-                    //get the new adjustment for direction from the PID Controller
-                    float output = (float) yawPIDResult.getOutput();
-                    //apply it to the motors, using one of our functions.
-                    //if output was positive, the method below would turn the robot clockwise
-                    runMotorsUsingEncoders(aOpMode, output, -output, output, -output);
-                    aOpMode.telemetryAddData("PIDOutput", ":Value:", df.format(output) + ", " +
-                            df.format(-output));
-                    aOpMode.telemetryUpdate();
-                }
-            } else {
-                /* A timeout occurred */
-                Log.w("navXRotateOp", "Yaw PID waitForNewUpdate() TIMEOUT.");
-            }
-            aOpMode.idle();
-            aOpMode.telemetryAddData("Yaw", ":Value:", df.format(getMxpGyroSensorHeading(aOpMode)));
-            aOpMode.idle();
+        if (DEBUG) {
+            aOpMode.telemetryAddData("New Bearing Degrees", "Value:",
+                    ":" + finalDegrees);
+            aOpMode.telemetryAddData("Turn Error Degrees", "Value:",
+                    ":" + (targetDegrees - finalDegrees));
+            aOpMode.telemetryUpdate();
         }
 
     }
-
 
     //CUBE ARM CONTROL
 
@@ -1034,6 +1049,39 @@ public class rr_Robot {
     public float getJewelKnockerPosition() {
         return (float) jewelPusher.getPosition();
     }
+    //----------------------------------------------------------------------------------------------
+    // Formatting angles and degrees for imu
+    //----------------------------------------------------------------------------------------------
 
+    String formatAngle(AngleUnit angleUnit, double angle) {
+        return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
+    }
+
+    String formatDegrees(double degrees){
+        return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
+    }
+
+    public void turnUsingEncoders(rr_OpMode aOpMode, float angle, float power, rr_Constants.TurnDirectionEnum TurnDirection)
+            throws InterruptedException {
+
+        //calculate the turn distance to be used in terms of encoder clicks.
+        //for Andymark encoders.
+
+        int turnDistance = (int) (2 * ((ROBOT_TRACK_DISTANCE) * angle
+                * ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION) /
+                (MECANUM_WHEEL_DIAMETER * 360));
+
+        switch (TurnDirection) {
+            case Clockwise:
+                runRobotToPosition(aOpMode, power, power, power, power, turnDistance, -turnDistance, turnDistance, -turnDistance, true);
+                break;
+            case Counterclockwise:
+                runRobotToPosition(aOpMode, power, power, power, power, -turnDistance, turnDistance, -turnDistance, turnDistance, true);
+                break;
+        }
+
+        //wait just a bit for the commands to complete
+        Thread.sleep(50);
+    }
 
 }
