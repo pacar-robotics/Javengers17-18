@@ -287,6 +287,9 @@ public class rr_Robot {
         parameters.loggingTag          = "IMU";
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
+        imu = hwMap.get(BNO055IMU.class, "imu"); //get a new reference
+        // to the IMU class. This should cause garbage collection of the old object.
+        // Also should set the system up for the new calibrated values.
         imu.initialize(parameters);
         // Start the logging of measured acceleration
         imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
