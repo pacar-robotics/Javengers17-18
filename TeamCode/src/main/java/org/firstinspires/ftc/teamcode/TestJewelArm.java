@@ -54,6 +54,5 @@ public class TestJewelArm extends rr_OpMode {
 
         robot.setJewelKnockerPosition(knockerPosition);
     }
-
-
 }
+

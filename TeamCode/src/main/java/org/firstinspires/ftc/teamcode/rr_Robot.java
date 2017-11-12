@@ -7,11 +7,14 @@ import com.qualcomm.hardware.adafruit.AdafruitBNO055IMU;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsTouchSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
@@ -113,6 +116,9 @@ public class rr_Robot {
     private ColorSensor frontFloorColorSensor;
     private ColorSensor backFloorColorSensor;
 
+    private DigitalChannel cubeArmUpperLimit;
+    private DigitalChannel cubeArmLowerLimit;
+
     private ModernRoboticsI2cRangeSensor rangeSensor;
 
     private BNO055IMU imu; //bosch imu embedded in the Rev Expansion Hub.
@@ -142,27 +148,26 @@ public class rr_Robot {
         motorArray[FRONT_RIGHT_MOTOR] = hwMap.get(DcMotor.class, "motor_front_right");
         motorArray[BACK_LEFT_MOTOR] = hwMap.get(DcMotor.class, "motor_back_left");
         motorArray[BACK_RIGHT_MOTOR] = hwMap.get(DcMotor.class, "motor_back_right");
-//        motorArray[CUBE_ARM] = hwMap.get(DcMotor.class, "motor_cube_arm");
+
+        motorArray[CUBE_ARM] = hwMap.get(DcMotor.class, "motor_cube_arm");
 //        motorArray[RELIC_ARM_EXTEND] = hwMap.get(DcMotor.class, "motor_relic_extend");
 
 
         //TODO: Map Sensors and Servos
 
+        // Color sensors
+//        leftJewelColorDistance = hwMap.get(ColorSensor.class, "left_jewel_color");
+//        rightJewelColorDistance = hwMap.get(ColorSensor.class, "right_jewel_color");
+
         //Map Servos
-//        cubeClaw = hwMap.get(Servo.class, "servo_cube_claw");
-//        cubeOrientation = hwMap.get(Servo.class, "servo_cube_orientatoin");
-        jewelArm = hwMap.get(Servo.class, "servo_jewel_arm");
-        jewelPusher = hwMap.get(Servo.class, "servo_jewel_pusher");
+
+        cubeClaw = hwMap.get(Servo.class, "servo_cube_claw");
+        cubeOrientation = hwMap.get(Servo.class, "servo_cube_orientation");
+//        jewelArm = hwMap.get(Servo.class, "servo_jewel_arm");
+//        jewelKnocker = hwMap.get(Servo.class, "servo_jewel_knocker");
 //        relicClaw = hwMap.get(Servo.class, "servo_relic_claw");
 //        relicClawAngle = hwMap.get(Servo.class, "servo_claw_angle");
 //        relicArmRetract = hwMap.get(Servo.class, "servo_relic_retract");
-
-        //Map Sensors
-        leftJewelColorSensor = hwMap.get(ColorSensor.class, "left_jewel_color");
-        rightJewelColorSensor = hwMap.get(ColorSensor.class, "right_jewel_color");
-//        frontFloorColorSensor = hwMap.get(ColorSensor.class, "front_floor_color_sensor");
-//        backFloorColorSensor = hwMap.get(ColorSensor.class, "back_floor_color_sensor");
-//        rangeSensor = hwMap.get(ModernRoboticsI2cRangeSensor.class, "range_sensor");
 
         // Set up the parameters with which we will use our IMU. Note that integration
         // algorithm here just reports accelerations to the logcat log; it doesn't actually
@@ -182,6 +187,17 @@ public class rr_Robot {
         imu.initialize(parameters);
         // Start the logging of measured acceleration
         imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+      
+//        //Map Sensors
+//        leftJewelColorDistance = hwMap.get(ColorSensor.class, "left_color_distance");
+//        rightJewelColorDistance = hwMap.get(ColorSensor.class, "right_color_distance");
+//        rangeSensor = hwMap.get(ModernRoboticsI2cRangeSensor.class, "range_sensor");
+        cubeArmUpperLimit = hwMap.get(DigitalChannel.class, "cube_arm_upper_limit");
+        cubeArmLowerLimit = hwMap.get(DigitalChannel.class, "cube_arm_lower_limit");
+
+        cubeArmUpperLimit.setMode(DigitalChannel.Mode.INPUT);
+        cubeArmLowerLimit.setMode(DigitalChannel.Mode.INPUT);
+
 
         aOpMode.DBG("Starting Motor Setups");
 
@@ -192,19 +208,26 @@ public class rr_Robot {
         motorArray[BACK_LEFT_MOTOR].setDirection(DcMotorSimple.Direction.REVERSE);
         motorArray[BACK_RIGHT_MOTOR].setDirection(DcMotorSimple.Direction.FORWARD);
 
+        motorArray[CUBE_ARM].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        Thread.sleep(250);
+
+        motorArray[CUBE_ARM].setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+
         // Set all base motors to zero power
         stopBaseMotors(aOpMode);
 
-        aOpMode.DBG("Presetting Servos");
+//        aOpMode.DBG("Presetting Servos");
 
-        //Setting servos to intitial position TODO: CHANGE
+
+//        //Setting servos to intitial cubeClawPos TODO: CHANGE
 //        closeCubeClawServoOneCube();
 //        setCubeClawToHorizontal();
-        setJewelPusherNeutral();
-        setJewelArmUp();
+//        setJewelKnockerNeutral();
+//        setJewelArmIn();
 //        setRelicClawClosed();
 //        setRelicArmAngleGrab();
-        Thread.sleep(1000);
 
         aOpMode.DBG("Exiting Robot init");
     }
@@ -244,6 +267,10 @@ public class rr_Robot {
 
     public int getMotorPosition(rr_OpMode aOpMode, int MotorNumber) {
         return motorArray[MotorNumber].getCurrentPosition();
+    }
+
+    public double getMotorPower(rr_OpMode aOpMode, int MotorNumber) {
+        return motorArray[MotorNumber].getPower();
     }
 
 
@@ -310,17 +337,17 @@ public class rr_Robot {
 
 
     /**
-     * Runs robot to a specific position. Can be called by other, more specific methods to move forwards, backwards or sideways.
+     * Runs robot to a specific cubeClawPos. Can be called by other, more specific methods to move forwards, backwards or sideways.
      *
      * @param aOpMode     an object of the rr_OpMode class
      * @param fl_Power    front right motor power
      * @param fr_Power    front left motor power
      * @param bl_Power    back left motor power
      * @param br_Power    back right motor power
-     * @param fl_Position front left motor position
-     * @param fr_Position front left motor position
-     * @param bl_Position back left motor position
-     * @param br_Position back right motor position
+     * @param fl_Position front left motor cubeClawPos
+     * @param fr_Position front left motor cubeClawPos
+     * @param bl_Position back left motor cubeClawPos
+     * @param br_Position back right motor cubeClawPos
      */
     public void runRobotToPosition(rr_OpMode aOpMode, float fl_Power, float fr_Power,
                                    float bl_Power, float br_Power, int fl_Position,
@@ -337,7 +364,7 @@ public class rr_Robot {
         motorArray[BACK_RIGHT_MOTOR].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         Thread.sleep(50);
 
-        //sets all motors to run to a position
+        //sets all motors to run to a cubeClawPos
         motorArray[FRONT_LEFT_MOTOR].setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motorArray[FRONT_RIGHT_MOTOR].setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motorArray[BACK_LEFT_MOTOR].setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -420,7 +447,7 @@ public class rr_Robot {
             //apply the new power values.
             //sets the the power of all motors
 
-            //in this runmode, the power does not control direction but the sign of the target position does.
+            //in this runmode, the power does not control direction but the sign of the target cubeClawPos does.
 
             motorArray[FRONT_LEFT_MOTOR].setPower(rampedPower * LEFT_MOTOR_TRIM_FACTOR);
             motorArray[FRONT_RIGHT_MOTOR].setPower(rampedPower * RIGHT_MOTOR_TRIM_FACTOR);
@@ -452,6 +479,72 @@ public class rr_Robot {
 
 
     /**
+
+     * Runs robot to a specific cubeClawPos while driving forwards or backwards
+     *
+     * @param aOpMode       an object of the rr_OpMode class
+     * @param distance      distance each wheel will go in inches
+     * @param power         desired power of motor
+     * @param isRampedPower ramps power to prevent jerking if true
+     * @throws InterruptedException
+     */
+    public void moveRobotToPositionFB(rr_OpMode aOpMode, float distance,
+                                      float power, boolean isRampedPower)
+            throws InterruptedException {
+        //we need to store the encoder target cubeClawPos
+        int targetPosition;
+        //calculate target cubeClawPos from the input distance in cm
+        targetPosition = (int) ((distance / (Math.PI * MECANUM_WHEEL_DIAMETER)) * ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION);
+        //using the generic method with all powers set to the same value and all positions set to the same cubeClawPos
+        runRobotToPosition(aOpMode, power, power, power, power,
+                targetPosition, targetPosition, targetPosition, targetPosition, isRampedPower);
+    }
+
+    /**
+     * Runs robot to a specific cubeClawPos while driving sideways
+     *
+     * @param aOpMode  an object of the rr_OpMode class
+     * @param distance distance wheels will go in inches
+     * @param power    generic power of the motors (positive = left, negative = right)
+     */
+    public void moveRobotToPositionSideways(rr_OpMode aOpMode, float distance,
+                                            float power, boolean isRampedPower)
+            throws InterruptedException {
+        //we need to
+        //store the encoder target cubeClawPos
+        int targetPosition;
+        //calculate target cubeClawPos from the input distance in cm
+        targetPosition = (int) ((distance / (Math.PI * MECANUM_WHEEL_DIAMETER)) * ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION);
+        //using the generic method with all powers set to the same value and all positions set to the same cubeClawPos
+        runRobotToPosition(aOpMode, power, power, power, power,
+                -targetPosition, targetPosition, targetPosition, -targetPosition, isRampedPower);
+    }
+
+    /**
+     * moveWheels method
+     *
+     * @param aOpMode   - object of vv_OpMode class
+     * @param distance  - in inches
+     * @param power     - float
+     * @param Direction - forward, backward, sideways left, or sideways right
+     * @throws InterruptedException
+     */
+    public void moveWheels(rr_OpMode aOpMode, float distance, float power,
+                           DirectionEnum Direction, boolean isRampedPower)
+            throws InterruptedException {
+        if (Direction == Forward) {
+            moveRobotToPositionFB(aOpMode, distance, power, isRampedPower);
+        } else if (Direction == Backward) {
+            moveRobotToPositionFB(aOpMode, -distance, power, isRampedPower);
+        } else if (Direction == DirectionEnum.SidewaysLeft) {
+            moveRobotToPositionSideways(aOpMode, distance, power, isRampedPower);
+        } else if (Direction == DirectionEnum.SidewaysRight) {
+            moveRobotToPositionSideways(aOpMode, -distance, power, isRampedPower);
+        }
+    }
+
+
+    /**
      * Runs motors without a specified duration.
      * Can be called by a more specific method to move forwards, backwards or sideways.
      *
@@ -476,6 +569,33 @@ public class rr_Robot {
         setPower(aOpMode, FRONT_RIGHT_MOTOR, fr_Power);
         setPower(aOpMode, BACK_LEFT_MOTOR, bl_Power);
         setPower(aOpMode, BACK_RIGHT_MOTOR, br_Power);
+    }
+
+    public void runRampedMotors(rr_OpMode aOpMode, float fl_Power, float fr_Power, float bl_Power, float br_Power)
+            throws InterruptedException {
+
+        motorArray[0].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorArray[1].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorArray[2].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorArray[3].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Thread.sleep(50);
+
+        fl_Power = (float) (fl_Power + prevFLVelocity) / 2;
+        fr_Power = (float) (fr_Power + prevFRVelocity) / 2;
+        bl_Power = (float) (bl_Power + prevBLVelocity) / 2;
+        br_Power = (float) (br_Power + prevBRVelocity) / 2;
+
+        prevFLVelocity = fl_Power;
+        prevFRVelocity = fr_Power;
+        prevBLVelocity = bl_Power;
+        prevBRVelocity = br_Power;
+
+        //sets the the power of all motors
+        setPower(aOpMode, FRONT_LEFT_MOTOR, fl_Power);
+        setPower(aOpMode, FRONT_RIGHT_MOTOR, fr_Power);
+        setPower(aOpMode, BACK_LEFT_MOTOR, bl_Power);
+        setPower(aOpMode, BACK_RIGHT_MOTOR, br_Power);
+
     }
 
 
@@ -545,13 +665,13 @@ public class rr_Robot {
 
         //blend with prev velocities to smooth out start
 
-        fl_velocity = ((yAxisVelocity + xAxisVelocity) + prevFLVelocity) / 2;
+        fl_velocity = ((yAxisVelocity - xAxisVelocity) + prevFLVelocity) / 2;
 
-        fr_velocity = ((yAxisVelocity - xAxisVelocity) + prevFRVelocity) / 2;
+        fr_velocity = ((yAxisVelocity + xAxisVelocity) + prevFRVelocity) / 2;
 
-        bl_velocity = ((yAxisVelocity - xAxisVelocity) + prevBLVelocity) / 2;
+        bl_velocity = ((yAxisVelocity + xAxisVelocity) + prevBLVelocity) / 2;
 
-        br_velocity = ((yAxisVelocity + xAxisVelocity) + prevBRVelocity) / 2;
+        br_velocity = ((yAxisVelocity - xAxisVelocity) + prevBRVelocity) / 2;
 
         //save these in variables that are part of vvRobot to be used in next cycle.
 
@@ -742,10 +862,34 @@ public class rr_Robot {
 
     //used in TeleOp
     public void setCubeArmPower(rr_OpMode aOpMode, float power) {
-        motorArray[CUBE_ARM].setPower(power * CUBE_ARM_POWER_FACTOR);
+        motorArray[CUBE_ARM].setPower(power);
     }
 
     public void moveCubeArmToPositionWithLimits(rr_OpMode aOpMode, int position, float power) throws InterruptedException {
+        //set the mode to be RUN_TO_POSITION
+        motorArray[CUBE_ARM].setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        Thread.sleep(50);
+
+        //Now set the target
+        motorArray[CUBE_ARM].setTargetPosition(position);
+
+        //now set the power
+        motorArray[CUBE_ARM].setPower(power * CUBE_ARM_POWER_FACTOR);
+
+        //reset clock for checking stall
+        aOpMode.reset_timer_array(GENERIC_TIMER);
+
+
+        while (motorArray[CUBE_ARM].isBusy() && motorArray[CUBE_ARM].getCurrentPosition() < CUBE_ARM_UPPER_LIMIT &&
+                motorArray[CUBE_ARM].getCurrentPosition() > CUBE_ARM_LOWER_LIMIT && (aOpMode.time_elapsed_array(GENERIC_TIMER) < CUBE_ARM_MAX_DURATION)) {
+            aOpMode.idle();
+        }
+        //stop the motor
+        motorArray[CUBE_ARM].setPower(0.0f);
+    }
+
+
+    public void moveCubeArmToPositionWithTouchLimits(rr_OpMode aOpMode, int position, float power) throws InterruptedException {
         //set the mode to be RUN_TO_POSITION
         motorArray[CUBE_ARM].setMode(DcMotor.RunMode.RUN_TO_POSITION);
         Thread.sleep(50);
@@ -760,15 +904,18 @@ public class rr_Robot {
         aOpMode.reset_timer_array(GENERIC_TIMER);
 
 
-        while (motorArray[CUBE_ARM].isBusy() && motorArray[CUBE_ARM].getCurrentPosition() < CUBE_ARM_UPPER_LIMIT &&
-                motorArray[CUBE_ARM].getCurrentPosition() > CUBE_ARM_LOWER_LIMIT && (aOpMode.time_elapsed_array(GENERIC_TIMER) < CUBE_ARM_MAX_DURATION)) {
+        while (motorArray[CUBE_ARM].isBusy() && (position <  motorArray[CUBE_ARM].getCurrentPosition()) ? !isCubeUpperLimitPressed() : !isCubeLowerLimitPressed()
+                && (aOpMode.time_elapsed_array(GENERIC_TIMER) < CUBE_ARM_MAX_DURATION) && Math.abs(motorArray[CUBE_ARM].getCurrentPosition() - position) > MOTOR_ENCODER_THRESHOLD)
+        {
             aOpMode.idle();
         }
         //stop the motor
         motorArray[CUBE_ARM].setPower(0.0f);
+
+        motorArray[CUBE_ARM].setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
-    public void openCubeClawServo() throws InterruptedException {
+    public void openCubeClawServoOneCube() throws InterruptedException{
         cubeClaw.setPosition(CUBE_CLAW_OPEN);
         Thread.sleep(100);
     }
@@ -791,6 +938,29 @@ public class rr_Robot {
     public void setCubeClawToVertical() throws InterruptedException {
         cubeOrientation.setPosition(CUBE_ORIENTATION_VERTICAL);
         Thread.sleep(100);
+    }
+
+    public boolean isCubeUpperLimitPressed() {
+        return !cubeArmUpperLimit.getState();
+    }
+
+    public boolean isCubeLowerLimitPressed() {
+        return !cubeArmLowerLimit.getState();
+    }
+
+    // Test methods
+    public void setCubeClawPosition(float position) throws InterruptedException {
+        cubeClaw.setPosition(position);
+    }
+    public float getCubeClawPosition() throws InterruptedException {
+        return (float) cubeClaw.getPosition();
+    }
+
+    public void setCubeOrientation(float position) throws InterruptedException {
+        cubeOrientation.setPosition(position);
+    }
+    public float getCubeOrientation() throws InterruptedException {
+        return (float) cubeOrientation.getPosition();
     }
 
 
@@ -839,8 +1009,17 @@ public class rr_Robot {
     }
 
     public void setRelicArmAngleExtend() throws InterruptedException {
+
         relicClawAngle.setPosition(RELIC_CLAW_ANGLE_EXTEND);
         Thread.sleep(100);
+    }
+    public void setRelicArmAnglePosition(float position) {
+        if (position < RELIC_CLAW_ANGLE_MAX && position < RELIC_CLAW_ANGLE_MIN) {
+            relicClawAngle.setPosition(position);
+        }
+    }
+    public float getRelicArmAnglePosition() {
+        return (float) relicClawAngle.getPosition();
     }
 
     public void setRelicClawClosed() throws InterruptedException {
@@ -849,8 +1028,12 @@ public class rr_Robot {
     }
 
     public void setRelicClawOpen() throws InterruptedException {
+
         relicClaw.setPosition(RELIC_CLAW_OPEN);
         Thread.sleep(100);
+    }
+    public float getRelicClawPosition() throws InterruptedException {
+        return (float) relicClaw.getPosition();
     }
 
 
@@ -882,22 +1065,25 @@ public class rr_Robot {
         Thread.sleep(250);
     }
 
-    public void setJewelArmDownRead() throws InterruptedException {
-//        jewelArm.setPosition(rr_Constants.JEWEL_ARM_UP - (rr_Constants.JEWEL_ARM_DOWN * (.2f)));
-//        Thread.sleep(250);
-//        jewelArm.setPosition(rr_Constants.JEWEL_ARM_UP - (rr_Constants.JEWEL_ARM_DOWN * (.4f)));
-//        Thread.sleep(250);
-//        jewelArm.setPosition(rr_Constants.JEWEL_ARM_UP - (rr_Constants.JEWEL_ARM_DOWN * (.6f)));
-//        Thread.sleep(250);
-//        jewelArm.setPosition(rr_Constants.JEWEL_ARM_UP - (rr_Constants.JEWEL_ARM_DOWN * (.8f)));
-//        Thread.sleep(250);
-        jewelArm.setPosition(rr_Constants.JEWEL_ARM_DOWN_READ);
+
+    public void setJewelArmPosition(float position) throws InterruptedException {
+        jewelArm.setPosition(position);
         Thread.sleep(250);
-//        for(float armPosition = rr_Constants.JEWEL_ARM_UP; armPosition >= rr_Constants.JEWEL_ARM_DOWN; armPosition -= .05f) {
-//            jewelArm.setPosition(armPosition);
-//            Thread.sleep(300);
-//        }
     }
+
+    public float getJewelArmPosition() {
+        return (float) jewelArm.getPosition();
+    }
+
+    public void setJewelKnockerPosition(float position) throws InterruptedException {
+        jewelKnocker.setPosition(position);
+        Thread.sleep(250);
+    }
+
+    public float getJewelKnockerPosition() {
+        return (float) jewelKnocker.getPosition();
+    }
+
 
     //JEWEL COLOR SENSORS
 
