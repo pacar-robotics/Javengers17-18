@@ -46,7 +46,7 @@ public class rr_Robot {
     private Servo cubeOrientation;
     private Servo jewelArm;
     private Servo jewelKnocker;
-    private Servo relicHand;
+    private Servo relicClaw;
     private Servo relicArm;
     private Servo relicWinch; //Continuous servo
 
@@ -102,7 +102,7 @@ public class rr_Robot {
 //        cubeOrientation = hwMap.get(Servo.class, "servo_cube_orientation");
 //        jewelArm = hwMap.get(Servo.class, "servo_jewel_arm");
 //        jewelKnocker = hwMap.get(Servo.class, "servo_jewel_knocker");
-        relicHand = hwMap.get(Servo.class, "servo_relic_hand");
+        relicClaw = hwMap.get(Servo.class, "servo_relic_claw");
         relicArm = hwMap.get(Servo.class, "servo_relic_arm");
         relicWinch = hwMap.get(Servo.class, "servo_relic_winch");
 
@@ -169,7 +169,7 @@ public class rr_Robot {
 //        setCubeClawToHorizontal();
 //        setJewelKnockerNeutral();
 //        setJewelArmIn();
-//        setRelicHandClosed();
+//        setRelicClawClosed();
 //        setRelicArmGrab();
 
         aOpMode.DBG("Exiting Robot init");
@@ -811,19 +811,19 @@ public class rr_Robot {
         return (float) relicArm.getPosition();
     }
 
-    public void setRelicHandClosed() throws InterruptedException{
-        relicHand.setPosition(RELIC_CLAW_CLOSED);
+    public void setRelicClawClosed() throws InterruptedException{
+        relicClaw.setPosition(RELIC_CLAW_CLOSED);
         Thread.sleep(100);
     }
-    public void setRelicHandOpen() throws InterruptedException{
-        relicHand.setPosition(RELIC_CLAW_OPEN);
+    public void setRelicClawOpen() throws InterruptedException{
+        relicClaw.setPosition(RELIC_CLAW_OPEN);
         Thread.sleep(100);
     }
-    public void setRelicHandPosition(float position) throws InterruptedException {
-        relicHand.setPosition(position);
+    public void setRelicClawPosition(float position) throws InterruptedException {
+        relicClaw.setPosition(position);
     }
-    public float getRelicHandPosition() throws InterruptedException {
-        return (float) relicHand.getPosition();
+    public float getRelicClawPosition() throws InterruptedException {
+        return (float) relicClaw.getPosition();
     }
 
 

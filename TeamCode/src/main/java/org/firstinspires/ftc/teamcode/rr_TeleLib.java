@@ -202,10 +202,10 @@ public class rr_TeleLib {
     //************ PROCESS HELPER METHODS ************//
 
     public void toggleRelicArm() throws InterruptedException {
-        if (robot.getRelicHandPosition() == RELIC_CLAW_OPEN) {
-            robot.setRelicHandClosed();
+        if (robot.getRelicClawPosition() == RELIC_CLAW_OPEN) {
+            robot.setRelicClawClosed();
         } else {
-            robot.setRelicHandOpen();
+            robot.setRelicClawOpen();
         }
     }
 

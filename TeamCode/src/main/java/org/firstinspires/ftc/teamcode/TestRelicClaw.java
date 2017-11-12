@@ -2,11 +2,11 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@TeleOp(name = "Test Relic Hand", group = "Test")
-public class TestRelicHand extends rr_OpMode {
+@TeleOp(name = "Test Relic Claw", group = "Test")
+public class TestRelicClaw extends rr_OpMode {
     rr_Robot robot;
 
-    float handPosition = .5f;
+    float clawPosition = .5f;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -16,26 +16,26 @@ public class TestRelicHand extends rr_OpMode {
         telemetry.setAutoClear(true);
 
         while (opModeIsActive()) {
-            processHandTest();
+            processClawTest();
 
-            telemetry.addLine("Hand pos: " + handPosition);
+            telemetry.addLine("Claw pos: " + clawPosition);
             telemetry.update();
         }
     }
 
     private void initialize() throws InterruptedException {
         robot = new rr_Robot(this, this.hardwareMap);
-        robot.setRelicHandPosition(handPosition);
+        robot.setRelicClawPosition(clawPosition);
     }
 
-    private void processHandTest() throws InterruptedException {
+    private void processClawTest() throws InterruptedException {
         if (gamepad1.a) {
-            handPosition += .05f;
+            clawPosition += .05f;
         } else if (gamepad1.b) {
-            handPosition -= .05f;
+            clawPosition -= .05f;
         }
 
-        robot.setRelicHandPosition(handPosition);
+        robot.setRelicClawPosition(clawPosition);
         Thread.sleep(200);  // Give time for servo to move
     }
 }

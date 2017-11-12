@@ -85,8 +85,8 @@ public class rr_Constants {
     final static double RELIC_WINCH_RETRACT_POWER = 0;
     final static float RELIC_WINCH_EXTEND_POWER_FACTOR = .8f;
     final static float RELIC_WINCH_RETRACT_POWER_FACTOR = .8f;
-    final static float RELIC_HAND_ANGLE_MAX = .1f;
-    final static float RELIC_HAND_ANGLE_MIN = .1f;
+    final static float RELIC_CLAW_ANGLE_MAX = .1f;
+    final static float RELIC_CLAW_ANGLE_MIN = .1f;
 
     //Jewel Arm Constants TODO: CHANGE
     final static float JEWEL_KNOCKER_LEFT = 0.1f;
