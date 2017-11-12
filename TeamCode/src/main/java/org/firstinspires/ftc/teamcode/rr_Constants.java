@@ -8,7 +8,8 @@ package org.firstinspires.ftc.teamcode;
 public class rr_Constants {
 
     //Constants for Debugging
-    final static boolean DEBUG = false;
+    final static boolean DEBUG = true;
+    final static int DEBUG_LEVEL=0;
     final static long DEBUG_MESSAGE_DISPLAY_TIME = 10; //time to flash DEBUG message on telemtry
     final static boolean DEBUG_AUTO_CLEAR = false;  //will the screen refresh after each telemtry
 
@@ -89,11 +90,13 @@ public class rr_Constants {
     final static float RELIC_CLAW_ANGLE_MIN = .1f;
 
     //Jewel Arm Constants TODO: CHANGE
-    final static float JEWEL_KNOCKER_LEFT = 0.1f;
-    final static float JEWEL_KNOCKER_RIGHT = 0.1f;
-    final static float JEWEL_KNOCKER_NEUTRAL = 0.1f;
-    final static float JEWEL_ARM_IN = 0.1f;
-    final static float JEWEL_ARM_OUT = 0.1f;
+    final static float JEWEL_PUSHER_LEFT = 0.63f;
+    final static float JEWEL_PUSHER_RIGHT = 0.28f;
+    final static float JEWEL_PUSHER_NEUTRAL = 0.48f;
+    final static float JEWEL_ARM_UP = 0.95f;
+    final static float JEWEL_ARM_DOWN_READ = .23f;
+    final static float JEWEL_ARM_DOWN_PUSH = .18f;
+
 
     //index of motors
     final static int FRONT_LEFT_MOTOR = 0;
@@ -119,11 +122,14 @@ public class rr_Constants {
     final static float TRIGGER_THRESHOLD = .10f;
 
     //distance between wheels left to right of the Robot in inches.
-    final static float ROBOT_TRACK_DISTANCE = 13.7f; //adjusted from observation.
+    final static float ROBOT_TRACK_DISTANCE = 12.25f; //adjusted from observation.
 
     //Sensor Constants TODO: CHANGE
-    final static float JEWEL_RED_THRESHOLD = 0.5f;
-    final static float JEWEL_BLUE_THRESHOLD = 0.5f;
+    final static int JEWEL_COLOR_MARGIN = 10;
+
+    //TODO: Change these
+    final static float FLOOR_RED_THRESHOLD = 0.5f;
+    final static float FLOOR_BLUE_THRESHOLD = 0.5f;
 
     //the value below for floor color sensor is the fallback value.
     //it needs to be adjusted if the height of the floor color sensor

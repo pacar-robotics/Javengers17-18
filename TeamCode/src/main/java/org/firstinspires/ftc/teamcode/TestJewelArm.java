@@ -2,20 +2,21 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@TeleOp(name = "Test Jewel Arm", group = "Test")
-
+@TeleOp(name = "TestJewelArm", group = "TeleOp")
 public class TestJewelArm extends rr_OpMode {
     rr_Robot robot;
 
-    float knockerPosition = 0.5f;
-    float armPosition = 0.5f;
+    float knockerPosition = rr_Constants.JEWEL_PUSHER_NEUTRAL;
+    float armPosition = rr_Constants.JEWEL_ARM_UP;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        robot = new rr_Robot(this, this.hardwareMap);
+        robot = new rr_Robot();
 
-        robot.setJewelArmPosition(armPosition);
-        robot.setJewelKnockerPosition(knockerPosition);
+        robot.init(this, this.hardwareMap);
+
+        //robot.setJewelArmPosition(armPosition);
+        //robot.setJewelKnockerPosition(knockerPosition);
 
         waitForStart();
 
@@ -27,7 +28,9 @@ public class TestJewelArm extends rr_OpMode {
 
             telemetry.addLine("Jewel Arm Position: " + armPosition);
             telemetry.addLine("Jewel Knocker Position: " + knockerPosition);
-            telemetryUpdate();
+
+            telemetry.update();
+
         }
 
     }
@@ -52,3 +55,4 @@ public class TestJewelArm extends rr_OpMode {
         robot.setJewelKnockerPosition(knockerPosition);
     }
 }
+

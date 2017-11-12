@@ -2,8 +2,10 @@ package org.firstinspires.ftc.teamcode;
 
 import android.util.Log;
 
-import com.kauailabs.navx.ftc.AHRS;
-import com.kauailabs.navx.ftc.navXPIDController;
+
+import com.qualcomm.hardware.adafruit.AdafruitBNO055IMU;
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsTouchSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -15,15 +17,69 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
+import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 import java.text.DecimalFormat;
-import static org.firstinspires.ftc.teamcode.rr_Constants.*;
-import static org.firstinspires.ftc.teamcode.rr_Constants.DirectionEnum.Backward;
-import static org.firstinspires.ftc.teamcode.rr_Constants.DirectionEnum.Forward;
+import java.util.Locale;
+
+import static org.firstinspires.ftc.teamcode.rr_Constants.ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION;
+import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_LEFT_MOTOR;
+import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_RIGHT_MOTOR;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_LOWER_LIMIT;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_MAX_DURATION;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_POWER_FACTOR;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_UPPER_LIMIT;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_CLAW_ONE_CLOSED;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_CLAW_OPEN;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_CLAW_TWO_CLOSED;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ORIENTATION_HORIZONTAL;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ORIENTATION_VERTICAL;
+import static org.firstinspires.ftc.teamcode.rr_Constants.DEBUG;
+import static org.firstinspires.ftc.teamcode.rr_Constants.DEBUG_LEVEL;
+import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_LEFT_MOTOR;
+import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_RIGHT_MOTOR;
+import static org.firstinspires.ftc.teamcode.rr_Constants.GENERIC_TIMER;
+import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_ARM_DOWN_PUSH;
+import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_ARM_UP;
+import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_PUSHER_LEFT;
+import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_PUSHER_NEUTRAL;
+import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_PUSHER_RIGHT;
+import static org.firstinspires.ftc.teamcode.rr_Constants.LEFT_MOTOR_TRIM_FACTOR;
+import static org.firstinspires.ftc.teamcode.rr_Constants.MAX_MOTOR_LOOP_TIME;
+import static org.firstinspires.ftc.teamcode.rr_Constants.MAX_ROBOT_TURN_MOTOR_VELOCITY;
+import static org.firstinspires.ftc.teamcode.rr_Constants.MECANUM_WHEEL_DIAMETER;
+import static org.firstinspires.ftc.teamcode.rr_Constants.MECANUM_WHEEL_ENCODER_MARGIN;
+import static org.firstinspires.ftc.teamcode.rr_Constants.MECANUM_WHEEL_FRONT_TRACK_DISTANCE;
+import static org.firstinspires.ftc.teamcode.rr_Constants.MECANUM_WHEEL_SIDE_TRACK_DISTANCE;
+import static org.firstinspires.ftc.teamcode.rr_Constants.MIN_ROBOT_TURN_MOTOR_VELOCITY;
+import static org.firstinspires.ftc.teamcode.rr_Constants.MOTOR_LOWER_POWER_THRESHOLD;
+import static org.firstinspires.ftc.teamcode.rr_Constants.MOTOR_RAMP_FB_POWER_LOWER_LIMIT;
+import static org.firstinspires.ftc.teamcode.rr_Constants.MOTOR_RAMP_FB_POWER_UPPER_LIMIT;
+import static org.firstinspires.ftc.teamcode.rr_Constants.MOTOR_RAMP_SIDEWAYS_POWER_LOWER_LIMIT;
+import static org.firstinspires.ftc.teamcode.rr_Constants.MOTOR_RAMP_SIDEWAYS_POWER_UPPER_LIMIT;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_EXTEND;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_CLAW_ANGLE_EXTEND;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_CLAW_ANGLE_GRAB;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_CLAW_CLOSED;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_CLAW_OPEN;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_LOWER_LIMIT;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_MAX_DURATION;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_UPPER_LIMIT;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RIGHT_MOTOR_TRIM_FACTOR;
+import static org.firstinspires.ftc.teamcode.rr_Constants.ROBOT_TRACK_DISTANCE;
+import static org.firstinspires.ftc.teamcode.rr_Constants.TURN_POWER_FACTOR;
 
 
 public class rr_Robot {
+
     //NAVX Constants
     private final int NAVX_DIM_I2C_PORT = 2; //TODO: Change
     private final byte NAVX_DEVICE_UPDATE_RATE_HZ = 50;
@@ -38,6 +94,8 @@ public class rr_Robot {
 
     private final int DEVICE_TIMEOUT_MS = 500;
 
+
+
     HardwareMap hwMap = null;
 
     //Motors
@@ -47,24 +105,25 @@ public class rr_Robot {
     private Servo cubeClaw;
     private Servo cubeOrientation;
     private Servo jewelArm;
-    private Servo jewelKnocker;
+    private Servo jewelPusher;
     private Servo relicClaw;
     private Servo relicClawAngle;
     private Servo relicArmRetract; //Continuous servo
 
     //TODO: Color Sensors
-    private ColorSensor leftJewelColorDistance;
-    private ColorSensor rightJewelColorDistance;
-    private ColorSensor floorColorSensor; //TODO: IS THIS A THING?
+    private ColorSensor leftJewelColorSensor;
+    private ColorSensor rightJewelColorSensor;
+    private ColorSensor frontFloorColorSensor;
+    private ColorSensor backFloorColorSensor;
 
     private DigitalChannel cubeArmUpperLimit;
     private DigitalChannel cubeArmLowerLimit;
 
-    protected navXPIDController yawPIDController;
-
-    //Sensors
-    private AHRS baseMxpGyroSensor; //NavX MXP gyro
     private ModernRoboticsI2cRangeSensor rangeSensor;
+
+    private BNO055IMU imu; //bosch imu embedded in the Rev Expansion Hub.
+    Orientation angles; //part of IMU processing state
+    Acceleration gravity; //part of IMU processing state
 
     //Variables for Ramped Power
     private double prevFLVelocity = 0.0f;
@@ -74,8 +133,7 @@ public class rr_Robot {
 
     private ElapsedTime period = new ElapsedTime();
 
-
-    public rr_Robot(rr_OpMode aOpMode, HardwareMap ahwMap) throws InterruptedException {
+    public void init(rr_OpMode aOpMode, HardwareMap ahwMap) throws InterruptedException {
         // save reference to HW Map
         aOpMode.DBG("in Robot init");
         hwMap = ahwMap;
@@ -90,6 +148,7 @@ public class rr_Robot {
         motorArray[FRONT_RIGHT_MOTOR] = hwMap.get(DcMotor.class, "motor_front_right");
         motorArray[BACK_LEFT_MOTOR] = hwMap.get(DcMotor.class, "motor_back_left");
         motorArray[BACK_RIGHT_MOTOR] = hwMap.get(DcMotor.class, "motor_back_right");
+
         motorArray[CUBE_ARM] = hwMap.get(DcMotor.class, "motor_cube_arm");
 //        motorArray[RELIC_ARM_EXTEND] = hwMap.get(DcMotor.class, "motor_relic_extend");
 
@@ -101,6 +160,7 @@ public class rr_Robot {
 //        rightJewelColorDistance = hwMap.get(ColorSensor.class, "right_jewel_color");
 
         //Map Servos
+
         cubeClaw = hwMap.get(Servo.class, "servo_cube_claw");
         cubeOrientation = hwMap.get(Servo.class, "servo_cube_orientation");
 //        jewelArm = hwMap.get(Servo.class, "servo_jewel_arm");
@@ -109,6 +169,25 @@ public class rr_Robot {
 //        relicClawAngle = hwMap.get(Servo.class, "servo_claw_angle");
 //        relicArmRetract = hwMap.get(Servo.class, "servo_relic_retract");
 
+        // Set up the parameters with which we will use our IMU. Note that integration
+        // algorithm here just reports accelerations to the logcat log; it doesn't actually
+        // provide positional information.
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled      = true;
+        parameters.loggingTag          = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
+        // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
+        // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
+        // and named "imu".
+        imu = hwMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
+        // Start the logging of measured acceleration
+        imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+      
 //        //Map Sensors
 //        leftJewelColorDistance = hwMap.get(ColorSensor.class, "left_color_distance");
 //        rightJewelColorDistance = hwMap.get(ColorSensor.class, "right_color_distance");
@@ -117,43 +196,17 @@ public class rr_Robot {
         cubeArmLowerLimit = hwMap.get(DigitalChannel.class, "cube_arm_lower_limit");
 
         cubeArmUpperLimit.setMode(DigitalChannel.Mode.INPUT);
-        cubeArmLowerLimit.setMode(DigitalChannel.
-                Mode.INPUT);
+        cubeArmLowerLimit.setMode(DigitalChannel.Mode.INPUT);
 
-//        aOpMode.DBG("Begin Gyro Calib");
-//        //allocate the mxp gyro sensor.
-//        baseMxpGyroSensor = AHRS.getInstance(hwMap.deviceInterfaceModule.get("dim"),
-//                NAVX_DIM_I2C_PORT,
-//                AHRS.DeviceDataType.kProcessedData);
-//
-//        while (baseMxpGyroSensor.isCalibrating()) {
-//            aOpMode.idle();
-//            Thread.sleep(50);
-//            aOpMode.telemetryAddData("1 navX-Device", "Status:",
-//                    baseMxpGyroSensor.isCalibrating() ?
-//                            "CALIBRATING" : "Calibration Complete");
-//            aOpMode.telemetryUpdate();
-//        }
-//
-//        aOpMode.DBG("Gyro Calib Complete");
-//
-//
-//
-//        //zero out the yaw value, so this will be the frame of reference for future calls.
-//        //do not call this for duration of run after this.
-//        baseMxpGyroSensor.zeroYaw();
-//
-//        //wait for these servos to reach desired state
-//        Thread.sleep(100);
-//
 
         aOpMode.DBG("Starting Motor Setups");
 
         //Set the Direction of Motors
-        motorArray[FRONT_LEFT_MOTOR].setDirection(DcMotorSimple.Direction.FORWARD);
-        motorArray[FRONT_RIGHT_MOTOR].setDirection(DcMotorSimple.Direction.REVERSE);
-        motorArray[BACK_LEFT_MOTOR].setDirection(DcMotorSimple.Direction.FORWARD);
-        motorArray[BACK_RIGHT_MOTOR].setDirection(DcMotorSimple.Direction.REVERSE);
+
+        motorArray[FRONT_LEFT_MOTOR].setDirection(DcMotorSimple.Direction.REVERSE);
+        motorArray[FRONT_RIGHT_MOTOR].setDirection(DcMotorSimple.Direction.FORWARD);
+        motorArray[BACK_LEFT_MOTOR].setDirection(DcMotorSimple.Direction.REVERSE);
+        motorArray[BACK_RIGHT_MOTOR].setDirection(DcMotorSimple.Direction.FORWARD);
 
         motorArray[CUBE_ARM].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -167,6 +220,7 @@ public class rr_Robot {
 
 //        aOpMode.DBG("Presetting Servos");
 
+
 //        //Setting servos to intitial cubeClawPos TODO: CHANGE
 //        closeCubeClawServoOneCube();
 //        setCubeClawToHorizontal();
@@ -177,7 +231,6 @@ public class rr_Robot {
 
         aOpMode.DBG("Exiting Robot init");
     }
-
 
 
     //MOTOR METHODS
@@ -221,7 +274,6 @@ public class rr_Robot {
     }
 
 
-
     //SENSOR METHODS
 
 
@@ -241,14 +293,44 @@ public class rr_Robot {
         return rangeSensor.cmOptical();
     }
 
-    public float getMxpGyroSensorHeading(rr_OpMode aOpMode) {
-        return baseMxpGyroSensor.getYaw();
+
+
+    public float getBoschGyroSensorHeading(rr_OpMode aOpMode) throws InterruptedException{
+        //grab the current heading from the IMU.
+        angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        //reverse sense of the heading to match legacy code
+        aOpMode.DBG("Heading:"+ -angles.firstAngle);
+        return -angles.firstAngle;
+
     }
 
-    protected void setMxpGyroZeroYaw(rr_OpMode aOpMode) {
-        baseMxpGyroSensor.zeroYaw();
+
+
+    protected void setBoschGyroZeroYaw(rr_OpMode aOpMode) throws InterruptedException {
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled      = true;
+        parameters.loggingTag          = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
+        imu = hwMap.get(BNO055IMU.class, "imu"); //get a new reference
+        // to the IMU class. This should cause garbage collection of the old object.
+        // Also should set the system up for the new calibrated values.
+        imu.initialize(parameters);
+        // Start the logging of measured acceleration
+        imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+       Thread.sleep(1000);
     }
 
+    public double getFloorBlueReading() {
+        return frontFloorColorSensor.blue();
+    }
+
+    public double getFloorRedReading() {
+        return backFloorColorSensor.red();
+    }
 
 
     //CONTROL OF WHEELS
@@ -372,7 +454,7 @@ public class rr_Robot {
             motorArray[BACK_LEFT_MOTOR].setPower(rampedPower * LEFT_MOTOR_TRIM_FACTOR);
             motorArray[BACK_RIGHT_MOTOR].setPower(rampedPower * RIGHT_MOTOR_TRIM_FACTOR);
 
-            if (DEBUG) {
+            if (DEBUG_LEVEL>1) {
                 aOpMode.telemetryAddData("Motor FL", "Values", ":" + motorArray[FRONT_LEFT_MOTOR].getCurrentPosition());
                 aOpMode.telemetryAddData("Motor FR", "Values", ":" + motorArray[FRONT_RIGHT_MOTOR].getCurrentPosition());
                 aOpMode.telemetryAddData("Motor BL", "Values", ":" + motorArray[BACK_LEFT_MOTOR].getCurrentPosition());
@@ -397,6 +479,7 @@ public class rr_Robot {
 
 
     /**
+
      * Runs robot to a specific cubeClawPos while driving forwards or backwards
      *
      * @param aOpMode       an object of the rr_OpMode class
@@ -547,7 +630,7 @@ public class rr_Robot {
     /**
      * Stops all wheel motors
      *
-     * @param aOpMode   an object of the rr_OpMode class
+     * @param aOpMode an object of the rr_OpMode class
      * @throws InterruptedException
      */
     public void stopBaseMotors(rr_OpMode aOpMode) throws InterruptedException {
@@ -614,78 +697,167 @@ public class rr_Robot {
         motorArray[BACK_RIGHT_MOTOR].setPower(br_velocity * RIGHT_MOTOR_TRIM_FACTOR);
     }
 
-    public void turnPidMxpAbsoluteDegrees(rr_OpMode aOpMode, float turndegrees, float toleranceDegrees)
+    public void universalMoveRobotWithCondition(rr_OpMode aOpMode, double xAxisVelocity,
+                                                double yAxisVelocity, double rotationalVelocity,
+                                                long duration, rr_OpMode.StopCondition condition,
+                                                boolean isPulsed, long pulseWidthDuration, long pulseRestDuration)
             throws InterruptedException {
-         /* Create a PID Controller which uses the Yaw Angle as input. */
-        //by default the PIDController is disabled. turn it on.
-
-        // the mxp gyro sensor classes include a built in
-        // proportional Integrated Derivative (PID) adjusted control loop function
-        //lets set that up for reading the YAW value (rotation around the z axis for the robot).
-
-        yawPIDController = new navXPIDController(baseMxpGyroSensor,
-                navXPIDController.navXTimestampedDataSource.YAW);
-
-        //Configure the PID controller for the turn degrees we want
-        yawPIDController.setSetpoint(turndegrees);
-        yawPIDController.setContinuous(true);
-
-        //limits of motor values (-1.0 to 1.0)
-        yawPIDController.setOutputRange(MIN_MOTOR_OUTPUT_VALUE, MAX_MOTOR_OUTPUT_VALUE);
-        //tolerance degrees is defined to prevent oscillation at high accuracy levels.
-        yawPIDController.setTolerance(navXPIDController.ToleranceType.ABSOLUTE, toleranceDegrees);
-        //PID initial parameters, usually found by trial and error.
-
-        yawPIDController.setPID(YAW_PID_P, YAW_PID_I, YAW_PID_D);
-
-        yawPIDController.enable(true);
+        double fl_velocity = 0;
+        double fr_velocity = 0;
+        double bl_velocity = 0;
+        double br_velocity = 0;
+        double trackDistanceAverage = (MECANUM_WHEEL_FRONT_TRACK_DISTANCE +
+                MECANUM_WHEEL_SIDE_TRACK_DISTANCE) / 2.0f;
 
 
-        /* Wait for new Yaw PID output values, then update the motors
-           with the new PID value with each new output value.
-         */
+        //calculate velocities at each wheel.
 
-        navXPIDController.PIDResult yawPIDResult = new navXPIDController.PIDResult();
+        fl_velocity = yAxisVelocity + xAxisVelocity - rotationalVelocity *
+                trackDistanceAverage;
 
-        DecimalFormat df = new DecimalFormat("#.##");
+        fr_velocity = yAxisVelocity - xAxisVelocity + rotationalVelocity *
+                trackDistanceAverage;
+
+        bl_velocity = yAxisVelocity - xAxisVelocity - rotationalVelocity *
+                trackDistanceAverage;
+
+        br_velocity = yAxisVelocity + xAxisVelocity + rotationalVelocity *
+                trackDistanceAverage;
+
+        //reset all encoders.
+
+        motorArray[FRONT_LEFT_MOTOR].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorArray[FRONT_RIGHT_MOTOR].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorArray[BACK_LEFT_MOTOR].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorArray[BACK_RIGHT_MOTOR].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Thread.sleep(50);
+
+        //switch to RUN_WITH_ENCODERS to normalize for speed.
+
+        motorArray[FRONT_LEFT_MOTOR].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorArray[FRONT_RIGHT_MOTOR].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorArray[BACK_LEFT_MOTOR].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorArray[BACK_RIGHT_MOTOR].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
+        //start slow to prevent skid.
+        //may replace with ramp to improve performance.
+
+        motorArray[FRONT_LEFT_MOTOR].setPower(Math.abs(fl_velocity) > MOTOR_LOWER_POWER_THRESHOLD ?
+                Math.signum(fl_velocity) * MOTOR_LOWER_POWER_THRESHOLD : fl_velocity * LEFT_MOTOR_TRIM_FACTOR);
+        motorArray[FRONT_RIGHT_MOTOR].setPower(Math.abs(fr_velocity) > MOTOR_LOWER_POWER_THRESHOLD ?
+                Math.signum(fr_velocity) * MOTOR_LOWER_POWER_THRESHOLD : fr_velocity * RIGHT_MOTOR_TRIM_FACTOR);
+        motorArray[BACK_LEFT_MOTOR].setPower(Math.abs(bl_velocity) > MOTOR_LOWER_POWER_THRESHOLD ?
+                Math.signum(bl_velocity) * MOTOR_LOWER_POWER_THRESHOLD : bl_velocity * LEFT_MOTOR_TRIM_FACTOR);
+        motorArray[BACK_RIGHT_MOTOR].setPower(Math.abs(br_velocity) > MOTOR_LOWER_POWER_THRESHOLD ?
+                Math.signum(br_velocity) * MOTOR_LOWER_POWER_THRESHOLD : br_velocity * RIGHT_MOTOR_TRIM_FACTOR);
+
+        //
 
         aOpMode.reset_timer_array(GENERIC_TIMER);
+        //stop 100 ms before end
+        while ((aOpMode.time_elapsed_array(GENERIC_TIMER) < (duration - 100)) &&
+                (!condition.stopCondition(aOpMode))) {
 
-        while ((aOpMode.time_elapsed_array(GENERIC_TIMER) < MAX_MOTOR_LOOP_TIME) &&
-                !Thread.currentThread().isInterrupted()) {
-            if (yawPIDController.waitForNewUpdate(yawPIDResult, DEVICE_TIMEOUT_MS)) {
-                if (yawPIDResult.isOnTarget()) {
-                    //we have reached turn target within tolerance requested.
-                    //stop
-                    aOpMode.telemetryAddData("On Target", ":Value:",
-                            df.format(getMxpGyroSensorHeading(aOpMode)));
-                    aOpMode.telemetryUpdate();
-                    break;
-                } else {
-                    //get the new adjustment for direction from the PID Controller
-                    float output = (float) yawPIDResult.getOutput();
-                    //apply it to the motors, using one of our functions.
-                    //if output was positive, the method below would turn the robot clockwise
-                    runMotorsUsingEncoders(aOpMode, output, -output, output, -output);
-                    aOpMode.telemetryAddData("PIDOutput", ":Value:", df.format(output) + ", " +
-                            df.format(-output));
-                    aOpMode.telemetryUpdate();
-                }
-            } else {
-                /* A timeout occurred */
-                Log.w("navXRotateOp", "Yaw PID waitForNewUpdate() TIMEOUT.");
+            //condition will return true when it reaches state meant to stop movement
+
+            //apply specific powers to motors to get desired movement
+            //wait till duration is complete.
+            motorArray[FRONT_LEFT_MOTOR].setPower(fl_velocity * LEFT_MOTOR_TRIM_FACTOR);
+            motorArray[FRONT_RIGHT_MOTOR].setPower(fr_velocity * RIGHT_MOTOR_TRIM_FACTOR);
+            motorArray[BACK_LEFT_MOTOR].setPower(bl_velocity * LEFT_MOTOR_TRIM_FACTOR);
+            motorArray[BACK_RIGHT_MOTOR].setPower(br_velocity * RIGHT_MOTOR_TRIM_FACTOR);
+
+            if (isPulsed) {
+                //run the motors for the pulseWidthDuration
+                //by sleeping, we let the motors that are running to continue to run
+                Thread.sleep(pulseWidthDuration);
+
+                //stop motors
+                stopBaseMotors(aOpMode);
+                //pause for pulseRestDuration
+                Thread.sleep(pulseRestDuration);
+                //this allows the robot to move slowly and gives the sensor time to read
             }
             aOpMode.idle();
-            aOpMode.telemetryAddData("Yaw", ":Value:", df.format(getMxpGyroSensorHeading(aOpMode)));
+        }
+
+        //end slow
+        motorArray[FRONT_LEFT_MOTOR].setPower(Math.abs(fl_velocity) > MOTOR_LOWER_POWER_THRESHOLD ?
+                Math.signum(fl_velocity) * MOTOR_LOWER_POWER_THRESHOLD : fl_velocity * LEFT_MOTOR_TRIM_FACTOR);
+        motorArray[FRONT_RIGHT_MOTOR].setPower(Math.abs(fr_velocity) > MOTOR_LOWER_POWER_THRESHOLD ?
+                Math.signum(fr_velocity) * MOTOR_LOWER_POWER_THRESHOLD : fr_velocity * RIGHT_MOTOR_TRIM_FACTOR);
+        motorArray[BACK_LEFT_MOTOR].setPower(Math.abs(bl_velocity) > MOTOR_LOWER_POWER_THRESHOLD ?
+                Math.signum(bl_velocity) * MOTOR_LOWER_POWER_THRESHOLD : bl_velocity * LEFT_MOTOR_TRIM_FACTOR);
+        motorArray[BACK_RIGHT_MOTOR].setPower(Math.abs(br_velocity) > MOTOR_LOWER_POWER_THRESHOLD ?
+                Math.signum(br_velocity) * MOTOR_LOWER_POWER_THRESHOLD : br_velocity * RIGHT_MOTOR_TRIM_FACTOR);
+
+        aOpMode.reset_timer_array(GENERIC_TIMER);
+        //stop 100 ms before end
+        while (aOpMode.time_elapsed_array(GENERIC_TIMER) < 100) {
             aOpMode.idle();
+        }
+
+
+        //stop all motors
+        stopBaseMotors(aOpMode);
+    }
+
+    public void turnAbsoluteBoschGyroDegrees(rr_OpMode aOpMode, float fieldReferenceDegrees) throws InterruptedException {
+        //clockwise is represented by clockwise numbers.
+        //counterclockwise by negative angle numbers in degrees.
+        //the fieldReferenceDegrees parameters measures degrees off the initial reference frame when the robot is started and the gyro is
+        //calibrated.
+        // >> IMPORTANT: This depends on the zIntegratedHeading not being altered by relative turns !!!
+
+        //first take the absolute degrees and modulus down to 0 and 359.
+
+        float targetDegrees = fieldReferenceDegrees % 360;
+
+        //compare to the current gyro zIntegrated heading and store the result.
+        //the Integrated zValue returned is positive for clockwise turns
+        //read the heading and store it.
+
+        float startingHeading = getBoschGyroSensorHeading(aOpMode);
+        float turnDegrees = targetDegrees - startingHeading;
+
+        //make the turn using encoders
+
+        if (DEBUG) {
+            aOpMode.telemetryAddData("targetDegrees", "Value",
+                    ":" + targetDegrees);
+            aOpMode.telemetryAddData("Starting Z", "Value",
+                    ":" + startingHeading);
+            aOpMode.telemetryAddData("Turn Degrees", "Value",
+                    ":" + turnDegrees);
+
+            aOpMode.telemetryUpdate();
+        }
+
+        //optimize the turn, so that direction of turn results in smallest turn needed.
+
+        if (Math.abs(turnDegrees) > 180) {
+            turnDegrees = Math.signum(turnDegrees) * -1 * (360 - Math.abs(turnDegrees));
+        }
+
+        turnUsingEncoders(aOpMode,  Math.abs(turnDegrees),TURN_POWER_FACTOR,
+                turnDegrees > 0 ? rr_Constants.TurnDirectionEnum.Clockwise :
+                        rr_Constants.TurnDirectionEnum.Counterclockwise);
+
+        float finalDegrees = getBoschGyroSensorHeading(aOpMode);
+        Thread.sleep(50); //cooling off after gyro read to prevent error in next run.
+
+        if (DEBUG) {
+            aOpMode.telemetryAddData("New Bearing Degrees", "Value:",
+                    ":" + finalDegrees);
+            aOpMode.telemetryAddData("Turn Error Degrees", "Value:",
+                    ":" + (targetDegrees - finalDegrees));
+            aOpMode.telemetryUpdate();
         }
 
     }
 
-
-
     //CUBE ARM CONTROL
-
 
 
     //used in TeleOp
@@ -709,13 +881,13 @@ public class rr_Robot {
 
 
         while (motorArray[CUBE_ARM].isBusy() && motorArray[CUBE_ARM].getCurrentPosition() < CUBE_ARM_UPPER_LIMIT &&
-                motorArray[CUBE_ARM].getCurrentPosition() > CUBE_ARM_LOWER_LIMIT && (aOpMode.time_elapsed_array(GENERIC_TIMER) < CUBE_ARM_MAX_DURATION))
-        {
+                motorArray[CUBE_ARM].getCurrentPosition() > CUBE_ARM_LOWER_LIMIT && (aOpMode.time_elapsed_array(GENERIC_TIMER) < CUBE_ARM_MAX_DURATION)) {
             aOpMode.idle();
         }
         //stop the motor
         motorArray[CUBE_ARM].setPower(0.0f);
     }
+
 
     public void moveCubeArmToPositionWithTouchLimits(rr_OpMode aOpMode, int position, float power) throws InterruptedException {
         //set the mode to be RUN_TO_POSITION
@@ -748,22 +920,22 @@ public class rr_Robot {
         Thread.sleep(100);
     }
 
-    public void closeCubeClawServoOneCube() throws InterruptedException{
+    public void closeCubeClawServoOneCube() throws InterruptedException {
         cubeClaw.setPosition(CUBE_CLAW_ONE_CLOSED);
         Thread.sleep(100);
     }
 
-    public void closeCubeClawServoTwoCube() throws InterruptedException{
+    public void closeCubeClawServoTwoCube() throws InterruptedException {
         cubeClaw.setPosition(CUBE_CLAW_TWO_CLOSED);
         Thread.sleep(100);
     }
 
-    public void setCubeClawToHorizontal() throws InterruptedException{
+    public void setCubeClawToHorizontal() throws InterruptedException {
         cubeOrientation.setPosition(CUBE_ORIENTATION_HORIZONTAL);
         Thread.sleep(100);
     }
 
-    public void setCubeClawToVertical() throws InterruptedException{
+    public void setCubeClawToVertical() throws InterruptedException {
         cubeOrientation.setPosition(CUBE_ORIENTATION_VERTICAL);
         Thread.sleep(100);
     }
@@ -826,15 +998,18 @@ public class rr_Robot {
     public void setPowerExtendRelicArm(rr_OpMode aOpMode, float power) {
         motorArray[RELIC_ARM_EXTEND].setPower(power);
     }
+
     public void setPowerRetractRelicArm(rr_OpMode aOpMode, float power) {
         relicArmRetract.setPosition(power);
     }
 
-    public void setRelicArmAngleGrab() throws InterruptedException{
+    public void setRelicArmAngleGrab() throws InterruptedException {
         relicClawAngle.setPosition(RELIC_CLAW_ANGLE_GRAB);
         Thread.sleep(100);
     }
-    public void setRelicArmAngleExtend() throws InterruptedException{
+
+    public void setRelicArmAngleExtend() throws InterruptedException {
+
         relicClawAngle.setPosition(RELIC_CLAW_ANGLE_EXTEND);
         Thread.sleep(100);
     }
@@ -847,11 +1022,13 @@ public class rr_Robot {
         return (float) relicClawAngle.getPosition();
     }
 
-    public void setRelicClawClosed() throws InterruptedException{
+    public void setRelicClawClosed() throws InterruptedException {
         relicClaw.setPosition(RELIC_CLAW_CLOSED);
         Thread.sleep(100);
     }
-    public void setRelicClawOpen() throws InterruptedException{
+
+    public void setRelicClawOpen() throws InterruptedException {
+
         relicClaw.setPosition(RELIC_CLAW_OPEN);
         Thread.sleep(100);
     }
@@ -863,30 +1040,31 @@ public class rr_Robot {
     //JEWEL ARM CONTROL
 
 
-    public void setJewelKnockerRight() throws InterruptedException{
-        jewelKnocker.setPosition(JEWEL_KNOCKER_RIGHT);
+    public void pushRightJewel() throws InterruptedException {
+        jewelPusher.setPosition(JEWEL_PUSHER_RIGHT);
+        Thread.sleep(250);
+    }
+
+    public void pushLeftJewel() throws InterruptedException {
+        jewelPusher.setPosition(JEWEL_PUSHER_LEFT);
+        Thread.sleep(250);
+    }
+
+    public void setJewelPusherNeutral() throws InterruptedException {
+        jewelPusher.setPosition(JEWEL_PUSHER_NEUTRAL);
         Thread.sleep(100);
     }
 
-    public void setJewelKnockerLeft() throws InterruptedException{
-        jewelKnocker.setPosition(JEWEL_KNOCKER_LEFT);
+    public void setJewelArmUp() throws InterruptedException {
+        jewelArm.setPosition(JEWEL_ARM_UP);
         Thread.sleep(100);
     }
 
-    public void setJewelKnockerNeutral() throws InterruptedException{
-        jewelKnocker.setPosition(JEWEL_KNOCKER_NEUTRAL);
-        Thread.sleep(100);
+    public void setJewelArmDownPush() throws InterruptedException {
+        jewelArm.setPosition(JEWEL_ARM_DOWN_PUSH);
+        Thread.sleep(250);
     }
 
-    public void setJewelArmIn() throws InterruptedException{
-        jewelArm.setPosition(JEWEL_ARM_IN);
-        Thread.sleep(100);
-    }
-
-    public void setJewelArmOut() throws InterruptedException{
-        jewelArm.setPosition(JEWEL_ARM_OUT);
-        Thread.sleep(100);
-    }
 
     public void setJewelArmPosition(float position) throws InterruptedException {
         jewelArm.setPosition(position);
@@ -910,35 +1088,72 @@ public class rr_Robot {
     //JEWEL COLOR SENSORS
 
 
-    public rr_Constants.JewelColorEnum getJewelLeftColor(rr_OpMode aOpMode) throws InterruptedException {
-        Thread.sleep(30);
+//    public rr_Constants.JewelColorEnum getJewelLeftColor(rr_OpMode aOpMode) throws InterruptedException {
+//        Thread.sleep(500);
+//
+//        if((leftJewelColorSensor.red() - leftJewelColorSensor.blue()) > rr_Constants.JEWEL_COLOR_MARGIN) {
+//            return rr_Constants.JewelColorEnum.RED;
+//        }
+//        if((leftJewelColorSensor.blue() - leftJewelColorSensor.red()) > rr_Constants.JEWEL_COLOR_MARGIN) {
+//            return rr_Constants.JewelColorEnum.BLUE;
+//        }
+//
+//        return rr_Constants.JewelColorEnum.UNKNOWN;
+//    }
+//
+//    public rr_Constants.JewelColorEnum getJewelRightColor(rr_OpMode aOpMode) throws InterruptedException {
+//        Thread.sleep(500);
+//
+//        if((leftJewelColorSensor.red() - leftJewelColorSensor.blue()) > rr_Constants.JEWEL_COLOR_MARGIN) {
+//            return rr_Constants.JewelColorEnum.RED;
+//        }
+//        if((leftJewelColorSensor.blue() - leftJewelColorSensor.red()) > rr_Constants.JEWEL_COLOR_MARGIN) {
+//            return rr_Constants.JewelColorEnum.BLUE;
+//        }
+//
+//        return rr_Constants.JewelColorEnum.UNKNOWN;
+//    }
 
-        if ((leftJewelColorDistance.red() > JEWEL_RED_THRESHOLD) &&
-                (leftJewelColorDistance.red() > leftJewelColorDistance.blue())) {
+    public rr_Constants.JewelColorEnum getJewelLeftColor(rr_OpMode aOpMode) throws InterruptedException {
+        Thread.sleep(500);
+
+        if(leftJewelColorSensor.red() > leftJewelColorSensor.blue()) {
+
+            aOpMode.telemetryAddData("Color", "Red", "Left Red Detected");
+            aOpMode.telemetryUpdate();
             return rr_Constants.JewelColorEnum.RED;
         }
-        if ((leftJewelColorDistance.blue() > JEWEL_BLUE_THRESHOLD) &&
-                (leftJewelColorDistance.blue() > leftJewelColorDistance.red())) {
+        if(leftJewelColorSensor.blue() > leftJewelColorSensor.red()) {
+            aOpMode.telemetryAddData("Color", "Blue", "Left Blue Detected");
+            aOpMode.telemetryUpdate();
             return rr_Constants.JewelColorEnum.BLUE;
         }
 
+        aOpMode.telemetryAddData("Color", "Unknown", "No Color Detected");
+        aOpMode.telemetryUpdate();
         return rr_Constants.JewelColorEnum.UNKNOWN;
     }
 
     public rr_Constants.JewelColorEnum getJewelRightColor(rr_OpMode aOpMode) throws InterruptedException {
-        Thread.sleep(30);
+        Thread.sleep(500);
 
-        if ((rightJewelColorDistance.red() > JEWEL_RED_THRESHOLD) &&
-                (rightJewelColorDistance.red() > rightJewelColorDistance.blue())) {
+        if(rightJewelColorSensor.red() > rightJewelColorSensor.blue()) {
+            aOpMode.telemetryAddData("Color", "Red", "Right Red Detected");
+            aOpMode.telemetryUpdate();
             return rr_Constants.JewelColorEnum.RED;
         }
-        if ((rightJewelColorDistance.blue() > JEWEL_BLUE_THRESHOLD) &&
-                (rightJewelColorDistance.blue() > rightJewelColorDistance.red())) {
+        if(rightJewelColorSensor.blue() > rightJewelColorSensor.red()) {
+            aOpMode.telemetryAddData("Color", "Blue", "Right Blue Detected");
+            aOpMode.telemetryUpdate();
+
             return rr_Constants.JewelColorEnum.BLUE;
         }
 
+        aOpMode.telemetryAddData("Color", "Unknown", "No Color Detected");
+        aOpMode.telemetryUpdate();
         return rr_Constants.JewelColorEnum.UNKNOWN;
     }
+
 
 
     /**
@@ -1011,4 +1226,57 @@ public class rr_Robot {
             super(message);
         }
     }
+
+    public void setJewelArmPosition(float position) throws InterruptedException {
+        jewelArm.setPosition(position);
+        Thread.sleep(250);
+    }
+
+    public float getJewelArmPosition() {
+        return (float) jewelArm.getPosition();
+    }
+
+    public void setJewelKnockerPosition(float position) throws InterruptedException {
+        jewelPusher.setPosition(position);
+        Thread.sleep(250);
+    }
+
+    public float getJewelKnockerPosition() {
+        return (float) jewelPusher.getPosition();
+    }
+    //----------------------------------------------------------------------------------------------
+    // Formatting angles and degrees for imu
+    //----------------------------------------------------------------------------------------------
+
+    String formatAngle(AngleUnit angleUnit, double angle) {
+        return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
+    }
+
+    String formatDegrees(double degrees){
+        return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
+    }
+
+    public void turnUsingEncoders(rr_OpMode aOpMode, float angle, float power, rr_Constants.TurnDirectionEnum TurnDirection)
+            throws InterruptedException {
+
+        //calculate the turn distance to be used in terms of encoder clicks.
+        //for Andymark encoders.
+
+        int turnDistance = (int) (2 * ((ROBOT_TRACK_DISTANCE) * angle
+                * ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION) /
+                (MECANUM_WHEEL_DIAMETER * 360));
+
+        switch (TurnDirection) {
+            case Clockwise:
+                runRobotToPosition(aOpMode, power, power, power, power, turnDistance, -turnDistance, turnDistance, -turnDistance, true);
+                break;
+            case Counterclockwise:
+                runRobotToPosition(aOpMode, power, power, power, power, -turnDistance, turnDistance, -turnDistance, turnDistance, true);
+                break;
+        }
+
+        //wait just a bit for the commands to complete
+        Thread.sleep(50);
+    }
+
 }
