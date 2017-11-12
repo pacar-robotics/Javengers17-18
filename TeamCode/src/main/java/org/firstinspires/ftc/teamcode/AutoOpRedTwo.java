@@ -18,7 +18,7 @@ public class AutoOpRedTwo extends rr_OpMode {
     public void runOpMode() throws InterruptedException {
 
         rrAutoLib = new rr_AutoLib(this, this.hardwareMap);
-
+        waitForStart();
         rrAutoLib.redTwoAutonomousCommonAction(this);
     }
 }
