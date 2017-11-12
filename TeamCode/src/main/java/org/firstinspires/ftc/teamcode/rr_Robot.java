@@ -44,6 +44,7 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.DEBUG_LEVEL;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_RIGHT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.GENERIC_TIMER;
+import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_ARM_DOWN_PUSH;
 import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_ARM_UP;
 import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_PUSHER_LEFT;
 import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_PUSHER_NEUTRAL;
@@ -858,12 +859,12 @@ public class rr_Robot {
 
     public void pushRightJewel() throws InterruptedException {
         jewelPusher.setPosition(JEWEL_PUSHER_RIGHT);
-        Thread.sleep(100);
+        Thread.sleep(250);
     }
 
     public void pushLeftJewel() throws InterruptedException {
         jewelPusher.setPosition(JEWEL_PUSHER_LEFT);
-        Thread.sleep(100);
+        Thread.sleep(250);
     }
 
     public void setJewelPusherNeutral() throws InterruptedException {
@@ -876,16 +877,21 @@ public class rr_Robot {
         Thread.sleep(100);
     }
 
-    public void setJewelArmDown() throws InterruptedException {
-        jewelArm.setPosition(rr_Constants.JEWEL_ARM_UP - (rr_Constants.JEWEL_ARM_DOWN * (.2f)));
+    public void setJewelArmDownPush() throws InterruptedException {
+        jewelArm.setPosition(JEWEL_ARM_DOWN_PUSH);
         Thread.sleep(250);
-        jewelArm.setPosition(rr_Constants.JEWEL_ARM_UP - (rr_Constants.JEWEL_ARM_DOWN * (.4f)));
-        Thread.sleep(250);
-        jewelArm.setPosition(rr_Constants.JEWEL_ARM_UP - (rr_Constants.JEWEL_ARM_DOWN * (.6f)));
-        Thread.sleep(250);
-        jewelArm.setPosition(rr_Constants.JEWEL_ARM_UP - (rr_Constants.JEWEL_ARM_DOWN * (.8f)));
-        Thread.sleep(250);
-        jewelArm.setPosition(rr_Constants.JEWEL_ARM_DOWN);
+    }
+
+    public void setJewelArmDownRead() throws InterruptedException {
+//        jewelArm.setPosition(rr_Constants.JEWEL_ARM_UP - (rr_Constants.JEWEL_ARM_DOWN * (.2f)));
+//        Thread.sleep(250);
+//        jewelArm.setPosition(rr_Constants.JEWEL_ARM_UP - (rr_Constants.JEWEL_ARM_DOWN * (.4f)));
+//        Thread.sleep(250);
+//        jewelArm.setPosition(rr_Constants.JEWEL_ARM_UP - (rr_Constants.JEWEL_ARM_DOWN * (.6f)));
+//        Thread.sleep(250);
+//        jewelArm.setPosition(rr_Constants.JEWEL_ARM_UP - (rr_Constants.JEWEL_ARM_DOWN * (.8f)));
+//        Thread.sleep(250);
+        jewelArm.setPosition(rr_Constants.JEWEL_ARM_DOWN_READ);
         Thread.sleep(250);
 //        for(float armPosition = rr_Constants.JEWEL_ARM_UP; armPosition >= rr_Constants.JEWEL_ARM_DOWN; armPosition -= .05f) {
 //            jewelArm.setPosition(armPosition);

@@ -52,10 +52,15 @@ public class rr_AutoLib {
 
         aOpMode.DBG("In Blue One Common");
         detectColorAndPushJewel(aOpMode, rr_Constants.AllianceColorEnum.BLUE);
-        Thread.sleep(100);
-        //moveWheels(aOpMode, 30, .4f, rr_Constants.DirectionEnum.Forward, true);
-        //Thread.sleep(30);
-        //turnUsingEncoders(aOpMode, 90, .3f, rr_Constants.TurnDirectionEnum.Counterclockwise);
+        Thread.sleep(300);
+        moveWheels(aOpMode, 35, .4f, rr_Constants.DirectionEnum.Forward, true);
+        Thread.sleep(300);
+        moveWheels(aOpMode, 6, .4f, rr_Constants.DirectionEnum.SidewaysRight, true);
+        Thread.sleep(300);
+        robot.turnAbsoluteBoschGyroDegrees(aOpMode, -90);
+        Thread.sleep(300);
+        robot.turnAbsoluteBoschGyroDegrees(aOpMode, -90);
+        Thread.sleep(300);
         //universalMoveRobot(aOpMode, 0, .25, 0, 5000, blueLineDetectStop, false, 0, 0);
 
     }
@@ -63,15 +68,32 @@ public class rr_AutoLib {
     // robot starts farther away from audience
     public void blueTwoAutonomousCommonAction(rr_OpMode aOpMode) throws InterruptedException {
         detectColorAndPushJewel(aOpMode, rr_Constants.AllianceColorEnum.BLUE);
-        moveWheels(aOpMode, 30, .4f, rr_Constants.DirectionEnum.Forward, true);
+        Thread.sleep(300);
+        moveWheels(aOpMode, 23, .4f, rr_Constants.DirectionEnum.Forward, true);
+        Thread.sleep(300);
+        moveWheels(aOpMode, 18, .4f, rr_Constants.DirectionEnum.SidewaysRight, true);
+        Thread.sleep(300);
     }
 
     // robot starts closer to audience
     public void redOneAutonomousCommonAction(rr_OpMode aOpMode) throws InterruptedException {
 
+        aOpMode.DBG("In Red One Common");
         detectColorAndPushJewel(aOpMode, rr_Constants.AllianceColorEnum.RED);
-        moveWheels(aOpMode, 30, .4f, rr_Constants.DirectionEnum.Backward, true);
-        robot.turnUsingEncoders(aOpMode, 90, .3f, rr_Constants.TurnDirectionEnum.Counterclockwise);
+        Thread.sleep(300);
+        moveWheels(aOpMode, 32, .4f, rr_Constants.DirectionEnum.Backward, true);
+        Thread.sleep(300);
+        moveWheels(aOpMode, 6, .4f, rr_Constants.DirectionEnum.SidewaysRight, true);
+        Thread.sleep(300);
+        robot.turnAbsoluteBoschGyroDegrees(aOpMode, -90);
+        Thread.sleep(300);
+        robot.turnAbsoluteBoschGyroDegrees(aOpMode, -90);
+        Thread.sleep(300);
+        robot.turnAbsoluteBoschGyroDegrees(aOpMode, -110);
+        Thread.sleep(300);
+        universalMoveRobot(aOpMode, 20, .3f, 0, 1500, falseStop , false, 0, 0);
+        Thread.sleep(300);
+
 
         // universalMoveRobot - backwards until red line is detected
         // Move forward / backward based on Vuforia pattern detected
@@ -80,9 +102,23 @@ public class rr_AutoLib {
 
     // robot starts farther away from audience
     public void redTwoAutonomousCommonAction(rr_OpMode aOpMode)throws InterruptedException{
-        detectColorAndPushJewel(aOpMode, rr_Constants.AllianceColorEnum.BLUE);
-        moveWheels(aOpMode, 30, .4f, rr_Constants.DirectionEnum.Backward, true);
+
+        detectColorAndPushJewel(aOpMode, rr_Constants.AllianceColorEnum.RED);
+        Thread.sleep(300);
+        moveWheels(aOpMode, 26, .4f, rr_Constants.DirectionEnum.SidewaysRight, true);
+        Thread.sleep(300);
+        moveWheels(aOpMode, 15, .4f, rr_Constants.DirectionEnum.Backward, true);
+        Thread.sleep(300);
         robot.turnUsingEncoders(aOpMode, 180, .3f, rr_Constants.TurnDirectionEnum.Clockwise);
+        Thread.sleep(300);
+        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 180);
+        Thread.sleep(300);
+        moveWheels(aOpMode, 12, .4f, rr_Constants.DirectionEnum.Forward, true);
+        Thread.sleep(300);
+        moveWheels(aOpMode, 10, .4f, rr_Constants.DirectionEnum.SidewaysRight, true);
+        Thread.sleep(300);
+        // TODO: Add universal move at angle
+
         // moveWheels - backward
         // universalMoveRobot - sideways right until blue line is detected
         // Move sideways left / right based on Vuforia pattern detected
@@ -91,9 +127,9 @@ public class rr_AutoLib {
 
     public void detectColorAndPushJewel(rr_OpMode aOpMode, rr_Constants.AllianceColorEnum teamColor) throws InterruptedException {
 
-        //robot.setJewelArmDown();
+        robot.setJewelArmDownRead();
 
-        //Thread.sleep(5000);
+        Thread.sleep(500);
 
         rr_Constants.JewelColorEnum leftJewelColor = robot.getJewelLeftColor(aOpMode);
         rr_Constants.JewelColorEnum rightJewelColor = robot.getJewelRightColor(aOpMode);
@@ -108,7 +144,7 @@ public class rr_AutoLib {
                     (rightJewelColor == rr_Constants.JewelColorEnum.RED)) {
                 aOpMode.telemetryAddData("LEFT IS BLUE","LEFT_BLUE", "Left is Blue");
                 aOpMode.telemetryUpdate();
-
+                robot.setJewelArmDownPush();
                 robot.pushRightJewel();
                 if (leftJewelColor == rr_Constants.JewelColorEnum.RED) {
                     robot.pushLeftJewel();
@@ -117,6 +153,7 @@ public class rr_AutoLib {
                     (rightJewelColor == rr_Constants.JewelColorEnum.BLUE)) {
                  aOpMode.telemetryAddData("RIGHT IS BLUE","RIGHT_BLUE", "RIGHT is Blue");
                  aOpMode.telemetryUpdate();
+                robot.setJewelArmDownPush();
                 robot.pushLeftJewel();
                 if (rightJewelColor == rr_Constants.JewelColorEnum.RED) {
                     robot.pushRightJewel();
@@ -140,6 +177,7 @@ public class rr_AutoLib {
                     (robot.getJewelRightColor(aOpMode) == rr_Constants.JewelColorEnum.RED)) {
                  aOpMode.telemetryAddData("RIGHT IS RED","RIGHT_RED", "Right is RED");
                 aOpMode.telemetryUpdate();
+                robot.setJewelArmDownPush();
                 robot.pushLeftJewel();
                 if (rightJewelColor == rr_Constants.JewelColorEnum.BLUE) {
                     robot.pushRightJewel();
@@ -148,6 +186,7 @@ public class rr_AutoLib {
                     (rightJewelColor== rr_Constants.JewelColorEnum.BLUE)) {
                  aOpMode.telemetryAddData("LEFT IS RED","LEFT_RED", "Left is RED");
                 aOpMode.telemetryUpdate();
+                robot.setJewelArmDownPush();
                 robot.pushRightJewel();
                 if (leftJewelColor == rr_Constants.JewelColorEnum.BLUE) {
                     robot.pushLeftJewel();
@@ -162,6 +201,7 @@ public class rr_AutoLib {
             }
         }
 
+        robot.setJewelArmUp();
         aOpMode.DBG("Exiting detect color and push");
 
     }

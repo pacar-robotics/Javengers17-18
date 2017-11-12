@@ -82,10 +82,12 @@ public class rr_Constants {
 
     //Jewel Arm Constants TODO: CHANGE
     final static float JEWEL_PUSHER_LEFT = 0.63f;
-    final static float JEWEL_PUSHER_RIGHT = 0.23f;
-    final static float JEWEL_PUSHER_NEUTRAL = 0.43f;
+    final static float JEWEL_PUSHER_RIGHT = 0.28f;
+    final static float JEWEL_PUSHER_NEUTRAL = 0.48f;
     final static float JEWEL_ARM_UP = 0.95f;
-    final static float JEWEL_ARM_DOWN = .25f;
+    final static float JEWEL_ARM_DOWN_READ = .23f;
+    final static float JEWEL_ARM_DOWN_PUSH = .18f;
+
 
     //index of motors
     final static int FRONT_LEFT_MOTOR = 0;
