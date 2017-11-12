@@ -69,24 +69,24 @@ public class rr_Constants {
     final static float CUBE_ORIENTATION_HORIZONTAL = 0.9f;
     final static float CUBE_ORIENTATION_VERTICAL = 0.44f;
 
-    //Relic Arm Constants TODO: Change
-    final static float RELIC_EXTEND_POWER = 1.0f;
-    final static float RELIC_RETRACT_POWER = 1.0f;
-    final static int RELIC_UPPER_LIMIT = 1000;
-    final static int RELIC_LOWER_LIMIT = 1000;
-    final static int RELIC_ZONE_1 = 1000;
-    final static int RELIC_ZONE_2 = 1000;
-    final static int RELIC_ZONE_3 = 1000;
-    final static int RELIC_MAX_DURATION = 5000;
-    final static float RELIC_ARM_GRAB = 0.1f;
-    final static float RELIC_ARM_EXTEND = 0.1f;
-    final static float RELIC_CLAW_OPEN = 0.1f;
-    final static float RELIC_CLAW_CLOSED = 0.1f;
-    final static double RELIC_WINCH_RETRACT_POWER = 0;
-    final static float RELIC_WINCH_EXTEND_POWER_FACTOR = .8f;
-    final static float RELIC_WINCH_RETRACT_POWER_FACTOR = .8f;
-    final static float RELIC_CLAW_ANGLE_MAX = .1f;
-    final static float RELIC_CLAW_ANGLE_MIN = .1f;
+    //Relic Arm Constants
+    final static float RELIC_EXTEND_POWER = 1.0f;               // TODO: Change
+    final static float RELIC_RETRACT_POWER = 1.0f;              // TODO: Change
+    final static int RELIC_UPPER_LIMIT = 1000;                  // TODO: Change
+    final static int RELIC_LOWER_LIMIT = 1000;                  // TODO: Change
+    final static int RELIC_ZONE_1 = 1000;                       // TODO: Change
+    final static int RELIC_ZONE_2 = 1000;                       // TODO: Change
+    final static int RELIC_ZONE_3 = 1000;                       // TODO: Change
+    final static int RELIC_MAX_DURATION = 5000;                 // TODO: Change
+    final static float RELIC_ARM_GRAB = 0.15f;
+    final static float RELIC_ARM_EXTEND = 0.35f;
+    final static float RELIC_CLAW_OPEN = 0.4f;
+    final static float RELIC_CLAW_CLOSED = 0.21f;
+    final static double RELIC_WINCH_RETRACT_POWER = 0;          // TODO: Change
+    final static float RELIC_WINCH_EXTEND_POWER_FACTOR = .8f;   // TODO: Change
+    final static float RELIC_WINCH_RETRACT_POWER_FACTOR = .8f;  // TODO: Change
+    final static float RELIC_CLAW_ANGLE_MAX = .1f;              // TODO: Change
+    final static float RELIC_CLAW_ANGLE_MIN = .1f;              // TODO: Change
 
     //Jewel Arm Constants TODO: CHANGE
     final static float JEWEL_KNOCKER_LEFT = 0.1f;
