@@ -46,9 +46,9 @@ public class rr_Robot {
     private Servo cubeOrientation;
     private Servo jewelArm;
     private Servo jewelKnocker;
-    private Servo relicClaw;
-    private Servo relicClawAngle;
-    private Servo relicArmWinch; //Continuous servo
+    private Servo relicHand;
+    private Servo relicArm;
+    private Servo relicWinch; //Continuous servo
 
     //TODO: Color Sensors
     private ColorSensor leftJewelColorDistance;
@@ -102,9 +102,9 @@ public class rr_Robot {
 //        cubeOrientation = hwMap.get(Servo.class, "servo_cube_orientation");
 //        jewelArm = hwMap.get(Servo.class, "servo_jewel_arm");
 //        jewelKnocker = hwMap.get(Servo.class, "servo_jewel_knocker");
-        relicClaw = hwMap.get(Servo.class, "servo_relic_claw");
-        relicClawAngle = hwMap.get(Servo.class, "servo_claw_angle");
-        relicArmWinch = hwMap.get(Servo.class, "servo_relic_winch");
+        relicHand = hwMap.get(Servo.class, "servo_relic_hand");
+        relicArm = hwMap.get(Servo.class, "servo_relic_arm");
+        relicWinch = hwMap.get(Servo.class, "servo_relic_winch");
 
 //        //Map Sensors
 //        leftJewelColorDistance = hwMap.get(ColorSensor.class, "left_color_distance");
@@ -169,8 +169,8 @@ public class rr_Robot {
 //        setCubeClawToHorizontal();
 //        setJewelKnockerNeutral();
 //        setJewelArmIn();
-//        setRelicClawClosed();
-//        setRelicArmAngleGrab();
+//        setRelicHandClosed();
+//        setRelicArmGrab();
 
         aOpMode.DBG("Exiting Robot init");
     }
@@ -793,37 +793,37 @@ public class rr_Robot {
 
 
     public void setRelicWinchPosition(float position) {
-        relicArmWinch.setPosition(position);
+        relicWinch.setPosition(position);
     }
 
-    public void setRelicArmAngleGrab() throws InterruptedException{
-        relicClawAngle.setPosition(RELIC_CLAW_ANGLE_GRAB);
+    public void setRelicArmGrab() throws InterruptedException{
+        relicArm.setPosition(RELIC_ARM_GRAB);
         Thread.sleep(100);
     }
-    public void setRelicArmAngleExtend() throws InterruptedException{
-        relicClawAngle.setPosition(RELIC_CLAW_ANGLE_EXTEND);
+    public void setRelicArmExtend() throws InterruptedException{
+        relicArm.setPosition(RELIC_ARM_EXTEND);
         Thread.sleep(100);
     }
-    public void setRelicArmAnglePosition(float position) {
-        relicClawAngle.setPosition(position);
+    public void setRelicArmPosition(float position) {
+        relicArm.setPosition(position);
     }
-    public float getRelicArmAnglePosition() {
-        return (float) relicClawAngle.getPosition();
+    public float getRelicArmPosition() {
+        return (float) relicArm.getPosition();
     }
 
-    public void setRelicClawClosed() throws InterruptedException{
-        relicClaw.setPosition(RELIC_CLAW_CLOSED);
+    public void setRelicHandClosed() throws InterruptedException{
+        relicHand.setPosition(RELIC_CLAW_CLOSED);
         Thread.sleep(100);
     }
-    public void setRelicClawOpen() throws InterruptedException{
-        relicClaw.setPosition(RELIC_CLAW_OPEN);
+    public void setRelicHandOpen() throws InterruptedException{
+        relicHand.setPosition(RELIC_CLAW_OPEN);
         Thread.sleep(100);
     }
-    public void setRelicClawPosition(float position) throws InterruptedException {
-        relicClaw.setPosition(position);
+    public void setRelicHandPosition(float position) throws InterruptedException {
+        relicHand.setPosition(position);
     }
-    public float getRelicClawPosition() throws InterruptedException {
-        return (float) relicClaw.getPosition();
+    public float getRelicHandPosition() throws InterruptedException {
+        return (float) relicHand.getPosition();
     }
 
 

@@ -22,7 +22,7 @@ public class TestRelicArm extends rr_OpMode {
 
     private void initialize() throws InterruptedException {
         robot = new rr_Robot(this, this.hardwareMap);
-        robot.setRelicArmAnglePosition(armPosition);
+        robot.setRelicArmPosition(armPosition);
     }
 
     private void processArmTest() {
@@ -32,6 +32,6 @@ public class TestRelicArm extends rr_OpMode {
             armPosition -= .05f;
         }
 
-        robot.setRelicArmAnglePosition(armPosition);
+        robot.setRelicArmPosition(armPosition);
     }
 }

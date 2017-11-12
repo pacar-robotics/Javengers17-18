@@ -78,15 +78,15 @@ public class rr_Constants {
     final static int RELIC_ZONE_2 = 1000;
     final static int RELIC_ZONE_3 = 1000;
     final static int RELIC_MAX_DURATION = 5000;
-    final static float RELIC_CLAW_ANGLE_GRAB = 0.1f;
-    final static float RELIC_CLAW_ANGLE_EXTEND = 0.1f;
+    final static float RELIC_ARM_GRAB = 0.1f;
+    final static float RELIC_ARM_EXTEND = 0.1f;
     final static float RELIC_CLAW_OPEN = 0.1f;
     final static float RELIC_CLAW_CLOSED = 0.1f;
-    final static double RELIC_ARM_RETRACT_POWER = 0;
-    final static float RELIC_ARM_EXTEND_POWER_FACTOR = .8f;
-    final static float RELIC_ARM_RETRACT_POWER_FACTOR = .8f;
-    final static float RELIC_CLAW_ANGLE_MAX = .1f;
-    final static float RELIC_CLAW_ANGLE_MIN = .1f;
+    final static double RELIC_WINCH_RETRACT_POWER = 0;
+    final static float RELIC_WINCH_EXTEND_POWER_FACTOR = .8f;
+    final static float RELIC_WINCH_RETRACT_POWER_FACTOR = .8f;
+    final static float RELIC_HAND_ANGLE_MAX = .1f;
+    final static float RELIC_HAND_ANGLE_MIN = .1f;
 
     //Jewel Arm Constants TODO: CHANGE
     final static float JEWEL_KNOCKER_LEFT = 0.1f;
