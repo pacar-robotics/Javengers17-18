@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@TeleOp(name = "Test Relic Claw", group = "Test")
+@TeleOp(name = "Test Relic Hand", group = "Test")
 public class TestRelicHand extends rr_OpMode {
     rr_Robot robot;
 
@@ -35,7 +35,7 @@ public class TestRelicHand extends rr_OpMode {
             handPosition -= .05f;
         }
 
-        robot.setRelicWinchPosition(handPosition);
+        robot.setRelicHandPosition(handPosition);
         Thread.sleep(200);  // Give time for servo to move
     }
 }
