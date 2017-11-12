@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 public class TestRelicClaw extends rr_OpMode {
     rr_Robot robot;
 
-    float clawPosition = .5f;
+    float clawPosition = 0.15f;
 
     @Override
     public void runOpMode() throws InterruptedException {

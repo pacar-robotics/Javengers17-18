@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 public class TestRelicWinch extends rr_OpMode {
     rr_Robot robot;
 
-    float winchPosition = .5f;
+    float winchPosition = 0f;
 
     @Override
     public void runOpMode() throws InterruptedException {
