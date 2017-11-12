@@ -24,7 +24,7 @@ public class rr_TeleLib {
     rr_OpMode aOpMode;
 
     public rr_TeleLib(rr_OpMode aOpMode, HardwareMap aHwMap) throws InterruptedException {
-        robot = new rr_Robot(aOpMode, aHwMap);
+        robot = new rr_Robot();
         this.aOpMode = aOpMode;
     }
 
@@ -42,7 +42,7 @@ public class rr_TeleLib {
                     getGamePad2LeftJoystickPolarMagnitude(aOpMode) * SCORING_DRIVE_POWER_FACTOR,
                     getGamePad2LeftJoystickPolarAngle(aOpMode)
                             + 90 - //for rotated orientation of robot at start of game.
-                            robot.getMxpGyroSensorHeading(aOpMode)); //for yaw on field.
+                            robot.getBoschGyroSensorHeading(aOpMode)); //for yaw on field.
 
         } else if (Math.abs(aOpMode.gamepad2.right_stick_x) > ANALOG_STICK_THRESHOLD) {
 
@@ -64,7 +64,7 @@ public class rr_TeleLib {
                     getGamePad1LeftJoystickPolarMagnitude(aOpMode) * STANDARD_DRIVE_POWER_FACTOR,
                     getGamePad1LeftJoystickPolarAngle(aOpMode)
                             + 90 - //for rotated orientation of robot at start of game.
-                            robot.getMxpGyroSensorHeading(aOpMode)); //for yaw on field.
+                            robot.getBoschGyroSensorHeading(aOpMode)); //for yaw on field.
 
         } else if (Math.abs(aOpMode.gamepad1.right_stick_x) > ANALOG_STICK_THRESHOLD) {
 
