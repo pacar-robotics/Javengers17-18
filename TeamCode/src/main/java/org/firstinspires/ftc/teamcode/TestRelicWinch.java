@@ -17,6 +17,9 @@ public class TestRelicWinch extends rr_OpMode {
 
         while (opModeIsActive()) {
             processWinchTest();
+
+            telemetry.addLine("Winch pos: " + winchPosition);
+            telemetry.update();
         }
     }
 
@@ -25,7 +28,7 @@ public class TestRelicWinch extends rr_OpMode {
         robot.setRelicWinchPosition(winchPosition);
     }
 
-    private void processWinchTest() {
+    private void processWinchTest() throws InterruptedException {
         if (gamepad1.a) {
             winchPosition += .05f;
         } else if (gamepad1.b) {
@@ -33,5 +36,6 @@ public class TestRelicWinch extends rr_OpMode {
         }
 
         robot.setRelicWinchPosition(winchPosition);
+        Thread.sleep(200);  // Give time for servo to move
     }
 }

@@ -17,6 +17,9 @@ public class TestRelicArm extends rr_OpMode {
 
         while (opModeIsActive()) {
             processArmTest();
+
+            telemetry.addLine("Arm pos: " + armPosition);
+            telemetry.update();
         }
     }
 
@@ -25,7 +28,7 @@ public class TestRelicArm extends rr_OpMode {
         robot.setRelicArmPosition(armPosition);
     }
 
-    private void processArmTest() {
+    private void processArmTest() throws InterruptedException {
         if (gamepad1.a) {
             armPosition += .05f;
         } else if (gamepad1.b) {
@@ -33,5 +36,6 @@ public class TestRelicArm extends rr_OpMode {
         }
 
         robot.setRelicArmPosition(armPosition);
+        Thread.sleep(200);  // Give time for servo to move
     }
 }

@@ -17,6 +17,9 @@ public class TestRelicHand extends rr_OpMode {
 
         while (opModeIsActive()) {
             processHandTest();
+
+            telemetry.addLine("Hand pos: " + handPosition);
+            telemetry.update();
         }
     }
 
@@ -25,7 +28,7 @@ public class TestRelicHand extends rr_OpMode {
         robot.setRelicHandPosition(handPosition);
     }
 
-    private void processHandTest() {
+    private void processHandTest() throws InterruptedException {
         if (gamepad1.a) {
             handPosition += .05f;
         } else if (gamepad1.b) {
@@ -33,5 +36,6 @@ public class TestRelicHand extends rr_OpMode {
         }
 
         robot.setRelicWinchPosition(handPosition);
+        Thread.sleep(200);  // Give time for servo to move
     }
 }
