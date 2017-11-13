@@ -12,6 +12,7 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_LOWER_POWER;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_MIDDLE;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_RAISE_POWER;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_SAFE_POS;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_CLAW_TWO_CLOSED;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.SCORING_DRIVE_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.STANDARD_DRIVE_POWER_FACTOR;
@@ -129,6 +130,12 @@ public class TestOp extends rr_OpMode {
             robot.setCubeClawToHorizontal();
             robot.closeCubeClawServoOneCube();
             robot.moveCubeArmToPositionWithTouchLimits(this, CUBE_ARM_MIDDLE, CUBE_ARM_RAISE_POWER); //TODO: CHANGE CUBE_ARM_MIDDLE
+        }
+        if (gamepad1.b) {
+            robot.setCubeClawPosition(0.765f);
+            robot.moveRobotToPositionFB(this, 6, 0.25f, false);
+            robot.closeCubeClawServoTwoCube();
+            cubeClawPos = CUBE_CLAW_TWO_CLOSED;
         }
     }
 
