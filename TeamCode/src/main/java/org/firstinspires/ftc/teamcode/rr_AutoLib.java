@@ -127,7 +127,7 @@ public class rr_AutoLib {
 
     public void detectColorAndPushJewel(rr_OpMode aOpMode, rr_Constants.AllianceColorEnum teamColor) throws InterruptedException {
 
-        robot.setJewelArmDownRead();
+        //robot.setJewelArmDownRead();
 
         Thread.sleep(500);
 

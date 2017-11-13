@@ -22,7 +22,7 @@ public class TestDriveSystemAuto extends rr_OpMode {
     }
 
     private void initialize() throws InterruptedException {
-        robot = new rr_Robot(this, this.hardwareMap);
+        robot = new rr_Robot();
     }
 
     /**
