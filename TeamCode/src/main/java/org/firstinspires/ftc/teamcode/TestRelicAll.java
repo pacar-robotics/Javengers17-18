@@ -22,6 +22,8 @@ public class TestRelicAll extends rr_OpMode {
             processArmTest();
             processClawTest();
             printPositions();
+
+            Thread.sleep(50);  // Give time for servo to move
         }
     }
 
@@ -40,7 +42,6 @@ public class TestRelicAll extends rr_OpMode {
         }
 
         robot.setRelicWinchPosition(winchPosition);
-        Thread.sleep(200);  // Give time for servo to move
     }
 
     private void processArmTest() throws InterruptedException {
@@ -51,7 +52,6 @@ public class TestRelicAll extends rr_OpMode {
         }
 
         robot.setRelicArmPosition(armPosition);
-        Thread.sleep(200);  // Give time for servo to move
     }
 
     private void processClawTest() throws InterruptedException {
@@ -62,7 +62,6 @@ public class TestRelicAll extends rr_OpMode {
         }
 
         robot.setRelicClawPosition(clawPosition);
-        Thread.sleep(200);  // Give time for servo to move
     }
 
     private void printPositions() {
