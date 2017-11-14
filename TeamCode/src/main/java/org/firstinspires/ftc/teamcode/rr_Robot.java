@@ -193,6 +193,7 @@ public class rr_Robot {
         // Color sensors
 //        leftJewelColorDistance = hwMap.get(ColorSensor.class, "left_jewel_color");
 //        rightJewelColorDistance = hwMap.get(ColorSensor.class, "right_jewel_color");
+        
 
         //Map Servos
 
@@ -254,7 +255,6 @@ public class rr_Robot {
         stopBaseMotors(aOpMode);
 
 //        aOpMode.DBG("Presetting Servos");
-
 
 //        //Setting servos to intitial cubeClawPos TODO: CHANGE
 //        closeCubeClawServoOneCube();
@@ -554,6 +554,19 @@ public class rr_Robot {
     }
 
     /**
+<<<<<<< HEAD
+=======
+     * moveWheels method
+     *
+     * @param aOpMode   - object of vv_OpMode class
+     * @param distance  - in inches
+     * @param power     - float
+     * @param Direction - forward, backward, sideways left, or sideways right
+     * @throws InterruptedException
+     */
+
+    /**
+>>>>>>> origin/autonomous
      * Runs motors without a specified duration.
      * Can be called by a more specific method to move forwards, backwards or sideways.
      *
@@ -1074,12 +1087,6 @@ public class rr_Robot {
         Thread.sleep(250);
     }
 
-    public void setJewelArmDownRead() throws InterruptedException {
-        jewelArm.setPosition(JEWEL_ARM_DOWN_READ);
-        Thread.sleep(250);
-    }
-
-
     //JEWEL COLOR SENSORS
 
 
@@ -1221,23 +1228,6 @@ public class rr_Robot {
         }
     }
 
-    public void setJewelArmPosition(float position) throws InterruptedException {
-        jewelArm.setPosition(position);
-        Thread.sleep(250);
-    }
-
-    public float getJewelArmPosition() {
-        return (float) jewelArm.getPosition();
-    }
-
-    public void setJewelKnockerPosition(float position) throws InterruptedException {
-        jewelPusher.setPosition(position);
-        Thread.sleep(250);
-    }
-
-    public float getJewelKnockerPosition() {
-        return (float) jewelPusher.getPosition();
-    }
     //----------------------------------------------------------------------------------------------
     // Formatting angles and degrees for imu
     //----------------------------------------------------------------------------------------------
