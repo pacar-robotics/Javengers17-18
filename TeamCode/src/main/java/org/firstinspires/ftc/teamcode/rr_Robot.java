@@ -144,25 +144,25 @@ public class rr_Robot {
         motorArray[BACK_LEFT_MOTOR] = hwMap.get(DcMotor.class, "motor_back_left");
         motorArray[BACK_RIGHT_MOTOR] = hwMap.get(DcMotor.class, "motor_back_right");
 
-        motorArray[CUBE_ARM] = hwMap.get(DcMotor.class, "motor_cube_arm");
-        motorArray[RELIC_WINCH] = hwMap.get(DcMotor.class, "motor_relic_slide");
+//        motorArray[CUBE_ARM] = hwMap.get(DcMotor.class, "motor_cube_arm");
+//        motorArray[RELIC_WINCH] = hwMap.get(DcMotor.class, "motor_relic_slide");
 
 
         //TODO: Map Sensors and Servos
 
         // Color sensors
-//        leftJewelColorDistance = hwMap.get(ColorSensor.class, "left_jewel_color");
-//        rightJewelColorDistance = hwMap.get(ColorSensor.class, "right_jewel_color");
+        leftJewelColorSensor = hwMap.get(ColorSensor.class, "left_jewel_color");
+        rightJewelColorSensor = hwMap.get(ColorSensor.class, "right_jewel_color");
 
 
         //Map Servos
 
-        cubeClaw = hwMap.get(Servo.class, "servo_cube_claw");
-        cubeOrientation = hwMap.get(Servo.class, "servo_cube_orientation");
-//        jewelArm = hwMap.get(Servo.class, "servo_jewel_arm");
-//        jewelKnocker = hwMap.get(Servo.class, "servo_jewel_knocker");
-        relicClaw = hwMap.get(Servo.class, "servo_relic_claw");
-        relicArm = hwMap.get(Servo.class, "servo_relic_arm");
+//        cubeClaw = hwMap.get(Servo.class, "servo_cube_claw");
+//        cubeOrientation = hwMap.get(Servo.class, "servo_cube_orientation");
+        jewelArm = hwMap.get(Servo.class, "servo_jewel_arm");
+        jewelPusher = hwMap.get(Servo.class, "servo_jewel_pusher");
+//        relicClaw = hwMap.get(Servo.class, "servo_relic_claw");
+//        relicArm = hwMap.get(Servo.class, "servo_relic_arm");
 
         // Set up the parameters with which we will use our IMU. Note that integration
         // algorithm here just reports accelerations to the logcat log; it doesn't actually
@@ -187,11 +187,11 @@ public class rr_Robot {
 //        leftJewelColorDistance = hwMap.get(ColorSensor.class, "left_color_distance");
 //        rightJewelColorDistance = hwMap.get(ColorSensor.class, "right_color_distance");
 //        rangeSensor = hwMap.get(ModernRoboticsI2cRangeSensor.class, "range_sensor");
-        cubeArmUpperLimit = hwMap.get(DigitalChannel.class, "cube_arm_upper_limit");
-        cubeArmLowerLimit = hwMap.get(DigitalChannel.class, "cube_arm_lower_limit");
-
-        cubeArmUpperLimit.setMode(DigitalChannel.Mode.INPUT);
-        cubeArmLowerLimit.setMode(DigitalChannel.Mode.INPUT);
+//        cubeArmUpperLimit = hwMap.get(DigitalChannel.class, "cube_arm_upper_limit");
+//        cubeArmLowerLimit = hwMap.get(DigitalChannel.class, "cube_arm_lower_limit");
+//
+//        cubeArmUpperLimit.setMode(DigitalChannel.Mode.INPUT);
+//        cubeArmLowerLimit.setMode(DigitalChannel.Mode.INPUT);
 
 
         aOpMode.DBG("Starting Motor Setups");
@@ -203,11 +203,11 @@ public class rr_Robot {
         motorArray[BACK_LEFT_MOTOR].setDirection(DcMotorSimple.Direction.REVERSE);
         motorArray[BACK_RIGHT_MOTOR].setDirection(DcMotorSimple.Direction.FORWARD);
 
-        motorArray[CUBE_ARM].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //motorArray[CUBE_ARM].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         Thread.sleep(250);
 
-        motorArray[CUBE_ARM].setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //motorArray[CUBE_ARM].setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
         // Set all base motors to zero power
@@ -1036,6 +1036,12 @@ public class rr_Robot {
         Thread.sleep(250);
     }
 
+    public void setJewelArmDownRead() throws InterruptedException {
+        jewelArm.setPosition(JEWEL_ARM_DOWN_READ);
+        Thread.sleep(250);
+    }
+
+
 
     //JEWEL COLOR SENSORS
 
@@ -1231,7 +1237,7 @@ public class rr_Robot {
 
         relicTrackables.activate();
 
-        while (true) {
+        for (int i = 0; i < 25; i++) {
 
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
 
@@ -1250,11 +1256,13 @@ public class rr_Robot {
             } else {
                 aOpMode.telemetryAddData("VuMark", "Unknown", "No VuMark Detected");
                 aOpMode.telemetryUpdate();
-                return vuMark;
             }
 
+            Thread.sleep(100);
             //aOpMode.telemetryUpdate();
         }
+
+        return RelicRecoveryVuMark.UNKNOWN;
 
     }
 
