@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+
 import static org.firstinspires.ftc.teamcode.rr_Constants.ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DirectionEnum.Backward;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DirectionEnum.Forward;
@@ -50,17 +52,34 @@ public class rr_AutoLib {
     // robot starts closer to audience
     public void blueOneAutonomousCommonAction(rr_OpMode aOpMode) throws InterruptedException {
 
-        aOpMode.DBG("In Blue One Common");
-        detectColorAndPushJewel(aOpMode, rr_Constants.AllianceColorEnum.BLUE);
-        Thread.sleep(300);
-        moveWheels(aOpMode, 35, .4f, rr_Constants.DirectionEnum.Forward, true);
-        Thread.sleep(300);
-        moveWheels(aOpMode, 6, .4f, rr_Constants.DirectionEnum.SidewaysRight, true);
-        Thread.sleep(300);
-        robot.turnAbsoluteBoschGyroDegrees(aOpMode, -90);
-        Thread.sleep(300);
-        robot.turnAbsoluteBoschGyroDegrees(aOpMode, -90);
-        Thread.sleep(300);
+        robot.getPictograph(aOpMode);
+
+        if(robot.getPictograph(aOpMode) == RelicRecoveryVuMark.LEFT) {
+            aOpMode.telemetryAddData("VuMark", "Left", "Left Pictograph");
+            aOpMode.telemetryUpdate();
+        }
+
+        else if(robot.getPictograph(aOpMode) == RelicRecoveryVuMark.CENTER) {
+            aOpMode.telemetryAddData("VuMark", "Center", "Center Pictograph");
+            aOpMode.telemetryUpdate();
+        }
+
+        else if(robot.getPictograph(aOpMode) == RelicRecoveryVuMark.RIGHT) {
+            aOpMode.telemetryAddData("VuMark", "Right", "Right Pictograph");
+            aOpMode.telemetryUpdate();
+        }
+
+//        aOpMode.DBG("In Blue One Common");
+//        detectColorAndPushJewel(aOpMode, rr_Constants.AllianceColorEnum.BLUE);
+//        Thread.sleep(300);
+//        moveWheels(aOpMode, 35, .4f, rr_Constants.DirectionEnum.Forward, true);
+//        Thread.sleep(300);
+//        moveWheels(aOpMode, 6, .4f, rr_Constants.DirectionEnum.SidewaysRight, true);
+//        Thread.sleep(300);
+//        robot.turnAbsoluteBoschGyroDegrees(aOpMode, -90);
+//        Thread.sleep(300);
+//        robot.turnAbsoluteBoschGyroDegrees(aOpMode, -90);
+//        Thread.sleep(300);
         //universalMoveRobot(aOpMode, 0, .25, 0, 5000, blueLineDetectStop, false, 0, 0);
 
     }

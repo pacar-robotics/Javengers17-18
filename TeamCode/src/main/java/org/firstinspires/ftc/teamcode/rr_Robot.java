@@ -15,6 +15,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -22,7 +23,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
+import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+
 
 import java.text.DecimalFormat;
 import java.util.Locale;
@@ -48,6 +55,7 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_RIGHT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.GENERIC_TIMER;
 import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_ARM_DOWN_PUSH;
+import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_ARM_DOWN_READ;
 import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_ARM_UP;
 import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_PUSHER_LEFT;
 import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_PUSHER_NEUTRAL;
@@ -77,6 +85,10 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WINCH;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RIGHT_MOTOR_TRIM_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.ROBOT_TRACK_DISTANCE;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TURN_POWER_FACTOR;
+//import static org.firstinspires.ftc.teamcode.rr_Constants.BLUE_ONE_SCORING_DISTANCE;
+//import static org.firstinspires.ftc.teamcode.rr_Constants.BLUE_TWO_SCORING_DISTANCE;
+//import static org.firstinspires.ftc.teamcode.rr_Constants.RED_ONE_SCORING_DISTANCE;
+//import static org.firstinspires.ftc.teamcode.rr_Constants.RED_TWO_SCORING_DISTANCE;
 
 
 public class rr_Robot {
@@ -94,7 +106,6 @@ public class rr_Robot {
     private final double MAX_MOTOR_OUTPUT_VALUE = 1.0;
 
     private final int DEVICE_TIMEOUT_MS = 500;
-
 
 
     HardwareMap hwMap = null;
@@ -133,6 +144,10 @@ public class rr_Robot {
 
     private ElapsedTime period = new ElapsedTime();
 
+    // Vuforia
+    public static final String TAG = "Vuforia VuMark Sample";
+    VuforiaLocalizer vuforia;
+
     public void init(rr_OpMode aOpMode, HardwareMap ahwMap) throws InterruptedException {
         // save reference to HW Map
         aOpMode.DBG("in Robot init");
@@ -158,6 +173,7 @@ public class rr_Robot {
         // Color sensors
 //        leftJewelColorDistance = hwMap.get(ColorSensor.class, "left_jewel_color");
 //        rightJewelColorDistance = hwMap.get(ColorSensor.class, "right_jewel_color");
+        
 
         //Map Servos
 
@@ -172,11 +188,11 @@ public class rr_Robot {
         // algorithm here just reports accelerations to the logcat log; it doesn't actually
         // provide positional information.
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled      = true;
-        parameters.loggingTag          = "IMU";
+        parameters.loggingEnabled = true;
+        parameters.loggingTag = "IMU";
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
         // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
@@ -218,7 +234,6 @@ public class rr_Robot {
         stopBaseMotors(aOpMode);
 
 //        aOpMode.DBG("Presetting Servos");
-
 
 //        //Setting servos to intitial cubeClawPos TODO: CHANGE
 //        closeCubeClawServoOneCube();
@@ -293,25 +308,23 @@ public class rr_Robot {
     }
 
 
-
-    public float getBoschGyroSensorHeading(rr_OpMode aOpMode) throws InterruptedException{
+    public float getBoschGyroSensorHeading(rr_OpMode aOpMode) throws InterruptedException {
         //grab the current heading from the IMU.
-        angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         //reverse sense of the heading to match legacy code
-        aOpMode.DBG("Heading:"+ -angles.firstAngle);
+        aOpMode.DBG("Heading:" + -angles.firstAngle);
         return -angles.firstAngle;
 
     }
 
 
-
     protected void setBoschGyroZeroYaw(rr_OpMode aOpMode) throws InterruptedException {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled      = true;
-        parameters.loggingTag          = "IMU";
+        parameters.loggingEnabled = true;
+        parameters.loggingTag = "IMU";
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
         imu = hwMap.get(BNO055IMU.class, "imu"); //get a new reference
@@ -320,7 +333,7 @@ public class rr_Robot {
         imu.initialize(parameters);
         // Start the logging of measured acceleration
         imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
-       Thread.sleep(1000);
+        Thread.sleep(1000);
     }
 
     public double getFloorBlueReading() {
@@ -453,7 +466,7 @@ public class rr_Robot {
             motorArray[BACK_LEFT_MOTOR].setPower(rampedPower * LEFT_MOTOR_TRIM_FACTOR);
             motorArray[BACK_RIGHT_MOTOR].setPower(rampedPower * RIGHT_MOTOR_TRIM_FACTOR);
 
-            if (DEBUG_LEVEL>1) {
+            if (DEBUG_LEVEL > 1) {
                 aOpMode.telemetryAddData("Motor FL", "Values", ":" + motorArray[FRONT_LEFT_MOTOR].getCurrentPosition());
                 aOpMode.telemetryAddData("Motor FR", "Values", ":" + motorArray[FRONT_RIGHT_MOTOR].getCurrentPosition());
                 aOpMode.telemetryAddData("Motor BL", "Values", ":" + motorArray[BACK_LEFT_MOTOR].getCurrentPosition());
@@ -518,30 +531,6 @@ public class rr_Robot {
         runRobotToPosition(aOpMode, power, power, power, power,
                 -targetPosition, targetPosition, targetPosition, -targetPosition, isRampedPower);
     }
-
-    /**
-     * moveWheels method
-     *
-     * @param aOpMode   - object of vv_OpMode class
-     * @param distance  - in inches
-     * @param power     - float
-     * @param Direction - forward, backward, sideways left, or sideways right
-     * @throws InterruptedException
-     */
-    public void moveWheels(rr_OpMode aOpMode, float distance, float power,
-                           rr_Constants.DirectionEnum Direction, boolean isRampedPower)
-            throws InterruptedException {
-        if (Direction == Forward) {
-            moveRobotToPositionFB(aOpMode, distance, power, isRampedPower);
-        } else if (Direction == Backward) {
-            moveRobotToPositionFB(aOpMode, -distance, power, isRampedPower);
-        } else if (Direction == rr_Constants.DirectionEnum.SidewaysLeft) {
-            moveRobotToPositionSideways(aOpMode, distance, power, isRampedPower);
-        } else if (Direction == rr_Constants.DirectionEnum.SidewaysRight) {
-            moveRobotToPositionSideways(aOpMode, -distance, power, isRampedPower);
-        }
-    }
-
 
     /**
      * Runs motors without a specified duration.
@@ -839,7 +828,7 @@ public class rr_Robot {
             turnDegrees = Math.signum(turnDegrees) * -1 * (360 - Math.abs(turnDegrees));
         }
 
-        turnUsingEncoders(aOpMode,  Math.abs(turnDegrees),TURN_POWER_FACTOR,
+        turnUsingEncoders(aOpMode, Math.abs(turnDegrees), TURN_POWER_FACTOR,
                 turnDegrees > 0 ? rr_Constants.TurnDirectionEnum.Clockwise :
                         rr_Constants.TurnDirectionEnum.Counterclockwise);
 
@@ -904,7 +893,7 @@ public class rr_Robot {
 
 
         while (motorArray[CUBE_ARM].isBusy() && (position <  motorArray[CUBE_ARM].getCurrentPosition()) ? !isCubeUpperLimitPressed() : !isCubeLowerLimitPressed()
-                && (aOpMode.time_elapsed_array(GENERIC_TIMER) < CUBE_ARM_MAX_DURATION) && Math.abs(motorArray[CUBE_ARM].getCurrentPosition() - position) > MOTOR_ENCODER_THRESHOLD)
+                && (aOpMode.time_elapsed_array(GENERIC_TIMER) < CUBE_ARM_MAX_DURATION) && Math.abs(motorArray[CUBE_ARM].getCurrentPosition() - position) > rr_Constants.MOTOR_ENCODER_THRESHOLD)
         {
             aOpMode.idle();
         }
@@ -1007,6 +996,7 @@ public class rr_Robot {
         relicArm.setPosition(RELIC_ARM_EXTEND);
         Thread.sleep(100);
     }
+
     public void setRelicArmPosition(float position) {
         relicArm.setPosition(position);
     }
@@ -1061,16 +1051,6 @@ public class rr_Robot {
     }
 
 
-    public void setJewelArmPosition(float position) throws InterruptedException {
-        jewelArm.setPosition(position);
-        Thread.sleep(250);
-    }
-
-    public float getJewelArmPosition() {
-        return (float) jewelArm.getPosition();
-    }
-
-
     //JEWEL COLOR SENSORS
 
 
@@ -1103,13 +1083,13 @@ public class rr_Robot {
     public rr_Constants.JewelColorEnum getJewelLeftColor(rr_OpMode aOpMode) throws InterruptedException {
         Thread.sleep(500);
 
-        if(leftJewelColorSensor.red() > leftJewelColorSensor.blue()) {
+        if (leftJewelColorSensor.red() > leftJewelColorSensor.blue()) {
 
             aOpMode.telemetryAddData("Color", "Red", "Left Red Detected");
             aOpMode.telemetryUpdate();
             return rr_Constants.JewelColorEnum.RED;
         }
-        if(leftJewelColorSensor.blue() > leftJewelColorSensor.red()) {
+        if (leftJewelColorSensor.blue() > leftJewelColorSensor.red()) {
             aOpMode.telemetryAddData("Color", "Blue", "Left Blue Detected");
             aOpMode.telemetryUpdate();
             return rr_Constants.JewelColorEnum.BLUE;
@@ -1123,12 +1103,12 @@ public class rr_Robot {
     public rr_Constants.JewelColorEnum getJewelRightColor(rr_OpMode aOpMode) throws InterruptedException {
         Thread.sleep(500);
 
-        if(rightJewelColorSensor.red() > rightJewelColorSensor.blue()) {
+        if (rightJewelColorSensor.red() > rightJewelColorSensor.blue()) {
             aOpMode.telemetryAddData("Color", "Red", "Right Red Detected");
             aOpMode.telemetryUpdate();
             return rr_Constants.JewelColorEnum.RED;
         }
-        if(rightJewelColorSensor.blue() > rightJewelColorSensor.red()) {
+        if (rightJewelColorSensor.blue() > rightJewelColorSensor.red()) {
             aOpMode.telemetryAddData("Color", "Blue", "Right Blue Detected");
             aOpMode.telemetryUpdate();
 
@@ -1139,7 +1119,6 @@ public class rr_Robot {
         aOpMode.telemetryUpdate();
         return rr_Constants.JewelColorEnum.UNKNOWN;
     }
-
 
 
     /**
@@ -1222,7 +1201,7 @@ public class rr_Robot {
         return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
     }
 
-    String formatDegrees(double degrees){
+    String formatDegrees(double degrees) {
         return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
     }
 
@@ -1248,5 +1227,51 @@ public class rr_Robot {
         //wait just a bit for the commands to complete
         Thread.sleep(50);
     }
+
+
+    public RelicRecoveryVuMark getPictograph(rr_OpMode aOpMode) throws InterruptedException {
+
+        int cameraMonitorViewId = aOpMode.hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", aOpMode.hardwareMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+
+        parameters.vuforiaLicenseKey = "AevlBL3/////AAAAGZ3T16bk1EepnUsSLPkQW/sFqYxxQLGZ0w6paGMug92slctEFAuXjXeMqrzDuCLvLZmY1sWjvn4kb5WKPKH4RdCZB7ccft3XGKh8rVn0r+TxhcJUmZwsdciAzCBYVe5FLnGtldKTV1eVbNFcN6FpDfZstRXXBdjqyMBg5XzJmhJp5rcG5TIi0qMcjaoHFqaBdnMyYBAeERylDVGBbDbIAX0dLDiQ5bjxA/lAphyHjDDyetpVjGlEwziUzcYbdvZK3zjGpR7WH62RqM6QzO1s7PcTppQMgRi3FxhisqKKZdWWF5pFGBPMP6bpsOzHTd8TDxPjwXiYIZxt3MwkhQ+1JpyAG9CVo+I0T/b/oNT0/ulZ";
+
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+
+        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        VuforiaTrackable relicTemplate = relicTrackables.get(0);
+        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
+
+        relicTrackables.activate();
+
+        while (true) {
+
+            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+
+            if (vuMark == RelicRecoveryVuMark.LEFT) {
+                aOpMode.telemetryAddData("VuMark", "VuMark Left", "%s visible" + vuMark);
+                aOpMode.telemetryUpdate();
+                return vuMark;
+            } else if (vuMark == RelicRecoveryVuMark.CENTER) {
+                aOpMode.telemetryAddData("VuMark", "VuMark Center", "%s visible" + vuMark);
+                aOpMode.telemetryUpdate();
+                return vuMark;
+            } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
+                aOpMode.telemetryAddData("VuMark", "VuMark Right", "%s visible" + vuMark);
+                aOpMode.telemetryUpdate();
+                return vuMark;
+            } else {
+                aOpMode.telemetryAddData("VuMark", "Unknown", "No VuMark Detected");
+                aOpMode.telemetryUpdate();
+                return vuMark;
+            }
+
+            //aOpMode.telemetryUpdate();
+        }
+
+    }
+
+
 
 }

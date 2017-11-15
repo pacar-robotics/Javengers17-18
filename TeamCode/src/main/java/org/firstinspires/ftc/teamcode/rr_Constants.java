@@ -8,10 +8,17 @@ package org.firstinspires.ftc.teamcode;
 public class rr_Constants {
 
     //Constants for Debugging
-    final static boolean DEBUG = true;
+    final static boolean DEBUG = false;
     final static int DEBUG_LEVEL=0;
-    final static long DEBUG_MESSAGE_DISPLAY_TIME = 10; //time to flash DEBUG message on telemtry
-    final static boolean DEBUG_AUTO_CLEAR = false;  //will the screen refresh after each telemtry
+    final static long DEBUG_MESSAGE_DISPLAY_TIME = 10; //time to flash DEBUG message on telemetry
+    // setting DEBUG_AUTO_CLEAR to false interferes with Vuforia code
+    final static boolean DEBUG_AUTO_CLEAR = true;  //will the screen refresh after each telemetry
+
+    // Glyph scoring adjustment constants
+    final static float BLUE_ONE_SCORING_DISTANCE = 35;
+    final static float BLUE_TWO_SCORING_DISTANCE = 18;
+    final static float RED_ONE_SCORING_DISTANCE = 32;
+    final static float RED_TWO_SCORING_DISTANCE = 10;
 
     //Constants for Diagnostics
     final static int MAX_ROBOT_DIAGNOSTIC_TESTS = 20;
