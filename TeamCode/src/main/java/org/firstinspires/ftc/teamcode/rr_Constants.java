@@ -66,14 +66,15 @@ public class rr_Constants {
     final static int TWO_CUBE_POS_3 = 0; //Highest
     final static int CUBE_ARM_GRAB = 0;
     final static int CUBE_ARM_MIDDLE = -800;
-    final static int CUBE_ARM_SAFE_POS = -900;
+    final static int CUBE_ARM_TOP = -1500;
+    final static int CUBE_ARM_SAFE_POS = -700;
     final static float CUBE_ARM_SCORING_POWER = .5f;
     final static float CUBE_ARM_POWER_FACTOR = 0.20f;
     final static float CUBE_ARM_RAISE_POWER = -0.4f;
     final static float CUBE_ARM_LOWER_POWER = 0.1f;
     final static float CUBE_CLAW_OPEN = 0.625f;
     final static float CUBE_CLAW_ONE_CLOSED = 0.84f;
-    final static float CUBE_CLAW_ONE_RELEASE = 0.65f;
+    final static float CUBE_CLAW_ONE_RELEASE = 0.625f;
     final static float CUBE_CLAW_TWO_CLOSED = 0.77f;
     final static float CUBE_ORIENTATION_HORIZONTAL = 0.9f;
     final static float CUBE_ORIENTATION_VERTICAL = 0.44f;

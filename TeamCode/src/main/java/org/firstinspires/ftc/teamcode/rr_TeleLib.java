@@ -34,8 +34,8 @@ public class rr_TeleLib {
     rr_Robot robot;
     rr_OpMode aOpMode;
 
-    float cubeClawPos = CUBE_CLAW_OPEN;
-    float orientationPos = CUBE_ORIENTATION_HORIZONTAL;
+    public float cubeClawPos = CUBE_CLAW_OPEN;
+    public float orientationPos = CUBE_ORIENTATION_HORIZONTAL;
 
     public rr_TeleLib(rr_OpMode aOpMode, HardwareMap aHwMap) throws InterruptedException {
         robot = new rr_Robot(aOpMode, aHwMap);
@@ -52,16 +52,17 @@ public class rr_TeleLib {
                 Math.abs(aOpMode.gamepad2.left_stick_y) > ANALOG_STICK_THRESHOLD) {
             //we are not in deadzone. Driver is pushing left joystick
             //lets make the robot move in chosen angle and magnitude.
-            robot.universalMoveRobot(aOpMode,
-                    getGamePad2LeftJoystickPolarMagnitude(aOpMode) * SCORING_DRIVE_POWER_FACTOR,
-                    getGamePad2LeftJoystickPolarAngle(aOpMode)
-                            + 90 - //for rotated orientation of robot at start of game.
-                            robot.getBoschGyroSensorHeading(aOpMode)); //for yaw on field.
+
+
+            robot.universalMoveRobot(aOpMode, getXVelocity(getGamePad2LeftJoystickPolarMagnitude(aOpMode) * STANDARD_DRIVE_POWER_FACTOR,
+                    getGamePad2LeftJoystickPolarAngle(aOpMode)+ 90 - robot.getBoschGyroSensorHeading(aOpMode)),
+                    getYVelocity(getGamePad2LeftJoystickPolarMagnitude(aOpMode) * STANDARD_DRIVE_POWER_FACTOR,
+                            getGamePad2LeftJoystickPolarAngle(aOpMode)+ 90 - robot.getBoschGyroSensorHeading(aOpMode)));
 
         } else if (Math.abs(aOpMode.gamepad2.right_stick_x) > ANALOG_STICK_THRESHOLD) {
 
             //we are not in deadzone. Driver is pushing right joystick, sideways
-            float turnVelocity = (float) getGamePad2RightJoystickPolarMagnitude(aOpMode) * SCORING_DRIVE_POWER_FACTOR;
+            float turnVelocity = (float) getGamePad2RightJoystickPolarMagnitude(aOpMode) * STANDARD_DRIVE_POWER_FACTOR;
 
             if (aOpMode.gamepad1.right_stick_x > 0) {
                 //turn clockwise to correct magnitude
@@ -74,11 +75,10 @@ public class rr_TeleLib {
                 Math.abs(aOpMode.gamepad1.left_stick_y) > ANALOG_STICK_THRESHOLD) {
             //we are not in deadzone. Driver is pushing left joystick
             //lets make the robot move in chosen angle and magnitude.
-            robot.universalMoveRobot(aOpMode,
-                    getGamePad1LeftJoystickPolarMagnitude(aOpMode) * STANDARD_DRIVE_POWER_FACTOR,
-                    getGamePad1LeftJoystickPolarAngle(aOpMode)
-                            + 90 - //for rotated orientation of robot at start of game.
-                            robot.getBoschGyroSensorHeading(aOpMode)); //for yaw on field.
+            robot.universalMoveRobot(aOpMode, getXVelocity(getGamePad1LeftJoystickPolarMagnitude(aOpMode) * STANDARD_DRIVE_POWER_FACTOR,
+                    getGamePad1LeftJoystickPolarAngle(aOpMode) - robot.getBoschGyroSensorHeading(aOpMode)),
+                    getYVelocity(getGamePad1LeftJoystickPolarMagnitude(aOpMode) * STANDARD_DRIVE_POWER_FACTOR,
+                            getGamePad1LeftJoystickPolarAngle(aOpMode) - robot.getBoschGyroSensorHeading(aOpMode)));
 
         } else if (Math.abs(aOpMode.gamepad1.right_stick_x) > ANALOG_STICK_THRESHOLD) {
 
@@ -95,6 +95,24 @@ public class rr_TeleLib {
         } else {
             //both joysticks on both gamepads are at rest, stop the robot.
             robot.stopBaseMotors(aOpMode);
+        }
+
+        if ((aOpMode.gamepad1.left_stick_button && aOpMode.gamepad1.left_stick_button) ||
+                (aOpMode.gamepad2.left_stick_button && aOpMode.gamepad2.left_stick_button)) {
+            robot.setBoschGyroZeroYaw(aOpMode);
+        }
+
+        if(aOpMode.gamepad1.dpad_up) {
+            robot.turnAbsoluteBoschGyroDegrees(aOpMode, 0);
+        }
+        if(aOpMode.gamepad1.dpad_right) {
+            robot.turnAbsoluteBoschGyroDegrees(aOpMode, 90);
+        }
+        if(aOpMode.gamepad1.dpad_down) {
+            robot.turnAbsoluteBoschGyroDegrees(aOpMode, 180);
+        }
+        if(aOpMode.gamepad1.dpad_left) {
+            robot.turnAbsoluteBoschGyroDegrees(aOpMode, -90);
         }
     }
 
@@ -146,17 +164,6 @@ public class rr_TeleLib {
     }
 
     public void processOrientationClaw() throws InterruptedException {
-        if (aOpMode.gamepad1.dpad_up && orientationPos < .9) {
-            orientationPos += .05f;
-            robot.setCubeOrientation(orientationPos);
-            Thread.sleep(250);
-        } else if (aOpMode.gamepad1.dpad_left && orientationPos > 0) {
-            orientationPos -= .05f;
-            robot.setCubeOrientation(orientationPos);
-            Thread.sleep(250);
-        }
-
-
         if (aOpMode.gamepad1.left_bumper && orientationPos == CUBE_ORIENTATION_HORIZONTAL && robot.getMotorPosition(aOpMode, CUBE_ARM) < CUBE_ARM_SAFE_POS) {
             robot.setCubeClawToVertical();
             orientationPos = CUBE_ORIENTATION_VERTICAL;
@@ -180,12 +187,17 @@ public class rr_TeleLib {
         if (aOpMode.gamepad1.a) {
             robot.setCubeClawToHorizontal();
             robot.openCubeClawServoOneCube();
-            robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_GRAB, CUBE_ARM_RAISE_POWER); //TODO: CHANGE CUBE_ARM_GRAB
+            robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_GRAB, CUBE_ARM_RAISE_POWER);
+        }
+        if (aOpMode.gamepad1.x) {
+            robot.setCubeClawToHorizontal();
+            robot.closeCubeClawServoOneCube();
+            robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_MIDDLE, CUBE_ARM_RAISE_POWER);
         }
         if (aOpMode.gamepad1.y) {
             robot.setCubeClawToHorizontal();
             robot.closeCubeClawServoOneCube();
-            robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_MIDDLE, CUBE_ARM_RAISE_POWER); //TODO: CHANGE CUBE_ARM_MIDDLE
+            robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_MIDDLE, CUBE_ARM_RAISE_POWER);
         }
         if (aOpMode.gamepad1.b) {
             robot.setCubeClawPosition(CUBE_CLAW_ONE_RELEASE);
@@ -196,17 +208,7 @@ public class rr_TeleLib {
     }
 
     public void processClaw() throws InterruptedException {
-        if (aOpMode.gamepad1.dpad_right && cubeClawPos < .9) {
-            cubeClawPos += .025f;
-            robot.setCubeClawPosition(cubeClawPos);
-            Thread.sleep(250);
-        } else if (aOpMode.gamepad1.dpad_down && cubeClawPos > 0) {
-            cubeClawPos -= .025f;
-            robot.setCubeClawPosition(cubeClawPos);
-            Thread.sleep(250);
-        }
-
-        if (aOpMode.gamepad1.right_bumper && cubeClawPos == CUBE_CLAW_OPEN) {
+       if (aOpMode.gamepad1.right_bumper && cubeClawPos == CUBE_CLAW_OPEN) {
             robot.closeCubeClawServoOneCube();
             cubeClawPos = CUBE_CLAW_ONE_CLOSED;
             Thread.sleep(200);
@@ -382,5 +384,13 @@ public class rr_TeleLib {
         } else {
             return 0;
         }
+    }
+
+    public double getXVelocity(double polarMagnitude, double polarAngle) {
+        return  polarMagnitude * Math.sin(Math.toRadians(polarAngle));
+    }
+
+    public double getYVelocity(double polarMagnitude, double polarAngle) {
+        return  polarMagnitude * Math.cos(Math.toRadians(polarAngle));
     }
 }

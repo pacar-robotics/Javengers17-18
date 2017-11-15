@@ -22,7 +22,7 @@ public class RelicRecoveryTeleOp extends rr_OpMode {
             lib.processClaw();
             lib.processOrientationClaw();
             lib.processCubeArm();
-            lib.processStandardDrive();
+            lib.processFieldOrientedDrive();
             lib.printTelemetry();
 
             Thread.sleep(10);

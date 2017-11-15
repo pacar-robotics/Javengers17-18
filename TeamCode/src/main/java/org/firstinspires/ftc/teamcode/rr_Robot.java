@@ -216,8 +216,8 @@ public class rr_Robot {
 //        aOpMode.DBG("Presetting Servos");
 
 //        //Setting servos to intitial cubeClawPos TODO: CHANGE
-//        closeCubeClawServoOneCube();
-//        setCubeClawToHorizontal();
+        openCubeClawServoOneCube();
+        setCubeClawToHorizontal();
 //        setJewelKnockerNeutral();
 //        setJewelArmIn();
 //        setRelicClawClosed();
@@ -633,13 +633,13 @@ public class rr_Robot {
 
         //blend with prev velocities to smooth out start
 
-        fl_velocity = ((yAxisVelocity - xAxisVelocity) + prevFLVelocity) / 2;
+        fl_velocity = ((yAxisVelocity + xAxisVelocity) + prevFLVelocity) / 2;
 
-        fr_velocity = ((yAxisVelocity + xAxisVelocity) + prevFRVelocity) / 2;
+        fr_velocity = ((yAxisVelocity - xAxisVelocity) + prevFRVelocity) / 2;
 
-        bl_velocity = ((yAxisVelocity + xAxisVelocity) + prevBLVelocity) / 2;
+        bl_velocity = ((yAxisVelocity - xAxisVelocity) + prevBLVelocity) / 2;
 
-        br_velocity = ((yAxisVelocity - xAxisVelocity) + prevBRVelocity) / 2;
+        br_velocity = ((yAxisVelocity + xAxisVelocity) + prevBRVelocity) / 2;
 
         //save these in variables that are part of vvRobot to be used in next cycle.
 
@@ -872,7 +872,8 @@ public class rr_Robot {
         aOpMode.reset_timer_array(GENERIC_TIMER);
 
 
-        while (motorArray[CUBE_ARM].isBusy() && (position <  motorArray[CUBE_ARM].getCurrentPosition()) ? !isCubeUpperLimitPressed() : !isCubeLowerLimitPressed()
+        while (motorArray[CUBE_ARM].isBusy() &&
+                (position <  motorArray[CUBE_ARM].getCurrentPosition()) ? !isCubeUpperLimitPressed() : !isCubeLowerLimitPressed()
                 && (aOpMode.time_elapsed_array(GENERIC_TIMER) < CUBE_ARM_MAX_DURATION) && Math.abs(motorArray[CUBE_ARM].getCurrentPosition() - position) > rr_Constants.MOTOR_ENCODER_THRESHOLD)
         {
             aOpMode.idle();
