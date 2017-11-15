@@ -11,9 +11,7 @@ public class TestJewelArm extends rr_OpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        robot = new rr_Robot();
-
-        robot.init(this, this.hardwareMap);
+        robot = new rr_Robot(this, this.hardwareMap);
 
         //robot.setJewelArmPosition(armPosition);
         //robot.setJewelKnockerPosition(knockerPosition);

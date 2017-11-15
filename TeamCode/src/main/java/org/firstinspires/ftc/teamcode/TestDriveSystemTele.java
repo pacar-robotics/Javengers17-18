@@ -9,7 +9,7 @@ public class TestDriveSystemTele extends rr_OpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        robot = new rr_Robot();
+        robot = new rr_Robot(this, this.hardwareMap);
 
         waitForStart();
 

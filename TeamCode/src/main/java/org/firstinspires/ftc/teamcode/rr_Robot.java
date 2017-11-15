@@ -85,28 +85,9 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WINCH;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RIGHT_MOTOR_TRIM_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.ROBOT_TRACK_DISTANCE;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TURN_POWER_FACTOR;
-//import static org.firstinspires.ftc.teamcode.rr_Constants.BLUE_ONE_SCORING_DISTANCE;
-//import static org.firstinspires.ftc.teamcode.rr_Constants.BLUE_TWO_SCORING_DISTANCE;
-//import static org.firstinspires.ftc.teamcode.rr_Constants.RED_ONE_SCORING_DISTANCE;
-//import static org.firstinspires.ftc.teamcode.rr_Constants.RED_TWO_SCORING_DISTANCE;
 
 
 public class rr_Robot {
-
-    //NAVX Constants
-    private final int NAVX_DIM_I2C_PORT = 2; //TODO: Change
-    private final byte NAVX_DEVICE_UPDATE_RATE_HZ = 50;
-    private final double YAW_PID_P = 0.005;
-    private final double YAW_PID_I = 0.0;
-    private final double YAW_PID_D = 0.0;
-
-    private final double TARGET_ANGLE_DEGREES = 90.0;
-
-    private final double MIN_MOTOR_OUTPUT_VALUE = -1.0;
-    private final double MAX_MOTOR_OUTPUT_VALUE = 1.0;
-
-    private final int DEVICE_TIMEOUT_MS = 500;
-
 
     HardwareMap hwMap = null;
 
@@ -121,7 +102,6 @@ public class rr_Robot {
     private Servo relicClaw;
     private Servo relicArm;
 
-    //TODO: Color Sensors
     private ColorSensor leftJewelColorSensor;
     private ColorSensor rightJewelColorSensor;
     private ColorSensor frontFloorColorSensor;
@@ -148,7 +128,7 @@ public class rr_Robot {
     public static final String TAG = "Vuforia VuMark Sample";
     VuforiaLocalizer vuforia;
 
-    public void init(rr_OpMode aOpMode, HardwareMap ahwMap) throws InterruptedException {
+    public rr_Robot(rr_OpMode aOpMode, HardwareMap ahwMap) throws InterruptedException {
         // save reference to HW Map
         aOpMode.DBG("in Robot init");
         hwMap = ahwMap;
@@ -173,7 +153,7 @@ public class rr_Robot {
         // Color sensors
 //        leftJewelColorDistance = hwMap.get(ColorSensor.class, "left_jewel_color");
 //        rightJewelColorDistance = hwMap.get(ColorSensor.class, "right_jewel_color");
-        
+
 
         //Map Servos
 
@@ -202,7 +182,7 @@ public class rr_Robot {
         imu.initialize(parameters);
         // Start the logging of measured acceleration
         imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
-      
+
 //        //Map Sensors
 //        leftJewelColorDistance = hwMap.get(ColorSensor.class, "left_color_distance");
 //        rightJewelColorDistance = hwMap.get(ColorSensor.class, "right_color_distance");
@@ -1024,6 +1004,11 @@ public class rr_Robot {
 
     //JEWEL ARM CONTROL
 
+
+    public void setJewelArmPosition(float armPosition) throws InterruptedException {
+        jewelArm.setPosition(armPosition);
+        Thread.sleep(250);
+    }
 
     public void pushRightJewel() throws InterruptedException {
         jewelPusher.setPosition(JEWEL_PUSHER_RIGHT);

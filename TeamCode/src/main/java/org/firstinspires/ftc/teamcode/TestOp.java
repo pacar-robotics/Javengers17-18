@@ -34,8 +34,7 @@ public class TestOp extends rr_OpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        robot = new rr_Robot();
-        robot.init(this, this.hardwareMap);
+        robot = new rr_Robot(this, this.hardwareMap);
 
         robot.setCubeClawPosition(cubeClawPos);
         robot.setCubeOrientation(orientationPos);

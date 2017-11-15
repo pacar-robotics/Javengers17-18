@@ -22,7 +22,7 @@ public class rr_TeleLib {
     rr_OpMode aOpMode;
 
     public rr_TeleLib(rr_OpMode aOpMode, HardwareMap aHwMap) throws InterruptedException {
-        robot = new rr_Robot();
+        robot = new rr_Robot(aOpMode, aHwMap);
         this.aOpMode = aOpMode;
     }
 

@@ -33,9 +33,8 @@ public class rr_AutoLib {
     rr_OpMode aOpMode;
 
     public rr_AutoLib(rr_OpMode aOpMode, HardwareMap aHwMap) throws InterruptedException {
-        robot = new rr_Robot();
+        robot = new rr_Robot(aOpMode, aHwMap);
         this.aOpMode = aOpMode;
-        robot.init(aOpMode, aOpMode.hardwareMap);
     }
 
     public void universalMoveRobot(rr_OpMode aOpMode, double polarAngle,
