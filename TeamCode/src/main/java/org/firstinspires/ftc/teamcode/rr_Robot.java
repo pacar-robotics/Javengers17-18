@@ -7,14 +7,12 @@ import com.qualcomm.hardware.adafruit.AdafruitBNO055IMU;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsTouchSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
@@ -69,15 +67,13 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.MOTOR_RAMP_FB_POWER_UP
 import static org.firstinspires.ftc.teamcode.rr_Constants.MOTOR_RAMP_SIDEWAYS_POWER_LOWER_LIMIT;
 import static org.firstinspires.ftc.teamcode.rr_Constants.MOTOR_RAMP_SIDEWAYS_POWER_UPPER_LIMIT;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_EXTEND;
-import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_CLAW_ANGLE_EXTEND;
-import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_CLAW_ANGLE_GRAB;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_GRAB;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_CLAW_ANGLE_MAX;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_CLAW_ANGLE_MIN;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_CLAW_CLOSED;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_CLAW_OPEN;
-import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_LOWER_LIMIT;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_MAX_DURATION;
-import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_UPPER_LIMIT;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WINCH;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RIGHT_MOTOR_TRIM_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.ROBOT_TRACK_DISTANCE;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TURN_POWER_FACTOR;
@@ -112,8 +108,7 @@ public class rr_Robot {
     private Servo jewelArm;
     private Servo jewelPusher;
     private Servo relicClaw;
-    private Servo relicClawAngle;
-    private Servo relicArmRetract; //Continuous servo
+    private Servo relicArm;
 
     //TODO: Color Sensors
     private ColorSensor leftJewelColorSensor;
@@ -155,7 +150,7 @@ public class rr_Robot {
         motorArray[BACK_RIGHT_MOTOR] = hwMap.get(DcMotor.class, "motor_back_right");
 
         motorArray[CUBE_ARM] = hwMap.get(DcMotor.class, "motor_cube_arm");
-//        motorArray[RELIC_ARM_EXTEND] = hwMap.get(DcMotor.class, "motor_relic_extend");
+        motorArray[RELIC_WINCH] = hwMap.get(DcMotor.class, "motor_relic_slide");
 
 
         //TODO: Map Sensors and Servos
@@ -170,9 +165,8 @@ public class rr_Robot {
         cubeOrientation = hwMap.get(Servo.class, "servo_cube_orientation");
 //        jewelArm = hwMap.get(Servo.class, "servo_jewel_arm");
 //        jewelKnocker = hwMap.get(Servo.class, "servo_jewel_knocker");
-//        relicClaw = hwMap.get(Servo.class, "servo_relic_claw");
-//        relicClawAngle = hwMap.get(Servo.class, "servo_claw_angle");
-//        relicArmRetract = hwMap.get(Servo.class, "servo_relic_retract");
+        relicClaw = hwMap.get(Servo.class, "servo_relic_claw");
+        relicArm = hwMap.get(Servo.class, "servo_relic_arm");
 
         // Set up the parameters with which we will use our IMU. Note that integration
         // algorithm here just reports accelerations to the logcat log; it doesn't actually
@@ -232,7 +226,7 @@ public class rr_Robot {
 //        setJewelKnockerNeutral();
 //        setJewelArmIn();
 //        setRelicClawClosed();
-//        setRelicArmAngleGrab();
+//        setRelicArmGrab();
 
         aOpMode.DBG("Exiting Robot init");
     }
@@ -972,59 +966,52 @@ public class rr_Robot {
     //RELIC ARM CONTROL
 
 
-    public void extendRelicArmToPositionWithLimits(rr_OpMode aOpMode, int position, float power) throws InterruptedException {
-        if (motorArray[RELIC_ARM_EXTEND].getCurrentPosition() < position) {
+    public void setRelicWinchPosition(rr_OpMode aOpMode, int position, float power) throws InterruptedException {
+        //set the mode to be RUN_TO_POSITION
+        motorArray[RELIC_WINCH].setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        Thread.sleep(50);
 
-            //set the mode to be RUN_TO_POSITION
-            motorArray[RELIC_ARM_EXTEND].setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            Thread.sleep(50);
+        //Now set the target
+        motorArray[RELIC_WINCH].setTargetPosition(position);
 
-            //Now set the target
-            motorArray[RELIC_ARM_EXTEND].setTargetPosition(position);
+        //now set the power
+        motorArray[RELIC_WINCH].setPower(power);
 
-            //now set the power
-            motorArray[RELIC_ARM_EXTEND].setPower(power);
-
-            //reset clock for stall
-            aOpMode.reset_timer_array(GENERIC_TIMER);
+        //reset clock for checking stall
+        aOpMode.reset_timer_array(GENERIC_TIMER);
 
 
-            while (motorArray[RELIC_ARM_EXTEND].isBusy() && motorArray[RELIC_ARM_EXTEND].getCurrentPosition() < RELIC_UPPER_LIMIT &&
-                    motorArray[RELIC_ARM_EXTEND].getCurrentPosition() > RELIC_LOWER_LIMIT && (aOpMode.time_elapsed_array(GENERIC_TIMER) < RELIC_MAX_DURATION)) {
-                aOpMode.idle();
-            }
-            //stop the motor
-            motorArray[CUBE_ARM].setPower(0.0f);
-        } else {
-            aOpMode.telemetryAddData("Error", "Relic Arm", "Asked to be retracted in extend method");
+        while (motorArray[RELIC_WINCH].isBusy())
+        {
+            aOpMode.idle();
         }
+        //stop the motor
+        motorArray[RELIC_WINCH].setPower(0.0f);
+
+        motorArray[RELIC_WINCH].setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
-    public void setPowerExtendRelicArm(rr_OpMode aOpMode, float power) {
-        motorArray[RELIC_ARM_EXTEND].setPower(power);
+    public void setRelicWinchPower(float power) {
+        motorArray[RELIC_WINCH].setPower(power);
     }
 
-    public void setPowerRetractRelicArm(rr_OpMode aOpMode, float power) {
-        relicArmRetract.setPosition(power);
+    public int getRelicWinchPosition() {
+        return motorArray[RELIC_WINCH].getCurrentPosition();
     }
 
-    public void setRelicArmAngleGrab() throws InterruptedException {
-        relicClawAngle.setPosition(RELIC_CLAW_ANGLE_GRAB);
+    public void setRelicArmGrab() throws InterruptedException{
+        relicArm.setPosition(RELIC_ARM_GRAB);
         Thread.sleep(100);
     }
-
-    public void setRelicArmAngleExtend() throws InterruptedException {
-
-        relicClawAngle.setPosition(RELIC_CLAW_ANGLE_EXTEND);
+    public void setRelicArmExtend() throws InterruptedException{
+        relicArm.setPosition(RELIC_ARM_EXTEND);
         Thread.sleep(100);
     }
-    public void setRelicArmAnglePosition(float position) {
-        if (position < RELIC_CLAW_ANGLE_MAX && position < RELIC_CLAW_ANGLE_MIN) {
-            relicClawAngle.setPosition(position);
-        }
+    public void setRelicArmPosition(float position) {
+        relicArm.setPosition(position);
     }
-    public float getRelicArmAnglePosition() {
-        return (float) relicClawAngle.getPosition();
+    public float getRelicArmPosition() {
+        return (float) relicArm.getPosition();
     }
 
     public void setRelicClawClosed() throws InterruptedException {
@@ -1036,6 +1023,9 @@ public class rr_Robot {
 
         relicClaw.setPosition(RELIC_CLAW_OPEN);
         Thread.sleep(100);
+    }
+    public void setRelicClawPosition(float position) throws InterruptedException {
+        relicClaw.setPosition(position);
     }
     public float getRelicClawPosition() throws InterruptedException {
         return (float) relicClaw.getPosition();
