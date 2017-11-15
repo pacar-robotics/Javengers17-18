@@ -48,7 +48,6 @@ public class rr_Robot {
     private Servo jewelKnocker;
     private Servo relicClaw;
     private Servo relicArm;
-    private Servo relicWinch; //Continuous servo
 
     //TODO: Color Sensors
     private ColorSensor leftJewelColorDistance;
@@ -89,6 +88,7 @@ public class rr_Robot {
         motorArray[BACK_LEFT_MOTOR] = hwMap.get(DcMotor.class, "motor_back_left");
         motorArray[BACK_RIGHT_MOTOR] = hwMap.get(DcMotor.class, "motor_back_right");
         motorArray[CUBE_ARM] = hwMap.get(DcMotor.class, "motor_cube_arm");
+        motorArray[RELIC_WINCH] = hwMap.get(DcMotor.class, "motor_relic_slide");
 
 
         //TODO: Map Sensors and Servos
@@ -104,7 +104,6 @@ public class rr_Robot {
 //        jewelKnocker = hwMap.get(Servo.class, "servo_jewel_knocker");
         relicClaw = hwMap.get(Servo.class, "servo_relic_claw");
         relicArm = hwMap.get(Servo.class, "servo_relic_arm");
-        relicWinch = hwMap.get(Servo.class, "servo_relic_winch");
 
 //        //Map Sensors
 //        leftJewelColorDistance = hwMap.get(ColorSensor.class, "left_color_distance");
@@ -792,8 +791,37 @@ public class rr_Robot {
     //RELIC ARM CONTROL
 
 
-    public void setRelicWinchPosition(float position) {
-        relicWinch.setPosition(position);
+    public void setRelicWinchPosition(rr_OpMode aOpMode, int position, float power) throws InterruptedException {
+        //set the mode to be RUN_TO_POSITION
+        motorArray[RELIC_WINCH].setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        Thread.sleep(50);
+
+        //Now set the target
+        motorArray[RELIC_WINCH].setTargetPosition(position);
+
+        //now set the power
+        motorArray[RELIC_WINCH].setPower(power);
+
+        //reset clock for checking stall
+        aOpMode.reset_timer_array(GENERIC_TIMER);
+
+
+        while (motorArray[RELIC_WINCH].isBusy())
+        {
+            aOpMode.idle();
+        }
+        //stop the motor
+        motorArray[RELIC_WINCH].setPower(0.0f);
+
+        motorArray[RELIC_WINCH].setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
+    public void setRelicWinchPower(float power) {
+        motorArray[RELIC_WINCH].setPower(power);
+    }
+
+    public int getRelicWinchPosition() {
+        return motorArray[RELIC_WINCH].getCurrentPosition();
     }
 
     public void setRelicArmGrab() throws InterruptedException{

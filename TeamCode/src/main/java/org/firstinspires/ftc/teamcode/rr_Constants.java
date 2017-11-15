@@ -70,21 +70,19 @@ public class rr_Constants {
     final static float CUBE_ORIENTATION_VERTICAL = 0.44f;
 
     //Relic Arm Constants
-    final static float RELIC_EXTEND_POWER = 1.0f;               // TODO: Change
-    final static float RELIC_RETRACT_POWER = 1.0f;              // TODO: Change
-    final static int RELIC_UPPER_LIMIT = 1000;                  // TODO: Change
-    final static int RELIC_LOWER_LIMIT = 1000;                  // TODO: Change
-    final static int RELIC_ZONE_1 = 1000;                       // TODO: Change
-    final static int RELIC_ZONE_2 = 1000;                       // TODO: Change
-    final static int RELIC_ZONE_3 = 1000;                       // TODO: Change
-    final static int RELIC_MAX_DURATION = 5000;                 // TODO: Change
+    final static int WINCH_RELIC_ZONE_1 = 1000;                 // TODO: Change
+    final static int WINCH_RELIC_ZONE_2 = 1000;                 // TODO: Change
+    final static int WINCH_RELIC_ZONE_3 = 1000;                 // TODO: Change
+    final static double RELIC_WINCH_RETRACT_POWER = 0;          // TODO: Change
+    final static float RELIC_WINCH_EXTEND_POWER_FACTOR = .8f;   // TODO: Change
+    final static float RELIC_WINCH_RETRACT_POWER_FACTOR = .8f;  // TODO: Change
+    final static int RELIC_WINCH_REST = -220;
+    final static int RELIC_WINCH_UPPER_LIMIT = 11000;
+    final static int RELIC_MAX_DURATION = 50000;                 // TODO: Change
     final static float RELIC_ARM_GRAB = 0.15f;
     final static float RELIC_ARM_EXTEND = 0.35f;
     final static float RELIC_CLAW_OPEN = 0.4f;
     final static float RELIC_CLAW_CLOSED = 0.21f;
-    final static double RELIC_WINCH_RETRACT_POWER = 0;          // TODO: Change
-    final static float RELIC_WINCH_EXTEND_POWER_FACTOR = .8f;   // TODO: Change
-    final static float RELIC_WINCH_RETRACT_POWER_FACTOR = .8f;  // TODO: Change
     final static float RELIC_CLAW_ANGLE_MAX = .1f;              // TODO: Change
     final static float RELIC_CLAW_ANGLE_MIN = .1f;              // TODO: Change
 
@@ -101,6 +99,7 @@ public class rr_Constants {
     final static int BACK_LEFT_MOTOR = 2;
     final static int BACK_RIGHT_MOTOR = 3;
     final static int CUBE_ARM = 4;
+    final static int RELIC_WINCH = 5;
 
     //Mecanum wheel properties
     final static float MECANUM_WHEEL_DIAMETER = 4f;   //in inches

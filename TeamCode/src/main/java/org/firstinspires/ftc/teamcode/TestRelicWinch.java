@@ -25,7 +25,7 @@ public class TestRelicWinch extends rr_OpMode {
 
     private void initialize() throws InterruptedException {
         robot = new rr_Robot(this, this.hardwareMap);
-        robot.setRelicWinchPosition(winchPosition);
+//        robot.setRelicWinchPosition(winchPosition);
     }
 
     private void processWinchTest() throws InterruptedException {
@@ -35,7 +35,7 @@ public class TestRelicWinch extends rr_OpMode {
             winchPosition -= .05f;
         }
 
-        robot.setRelicWinchPosition(winchPosition);
+//        robot.setRelicWinchPosition(winchPosition);
         Thread.sleep(200);  // Give time for servo to move
     }
 }
