@@ -84,11 +84,13 @@ public class rr_Constants {
     final static float RELIC_WINCH_RETRACT_POWER_FACTOR = .8f;  // TODO: Change
     final static int RELIC_WINCH_REST = -220;                   // TODO: Change
     final static int RELIC_WINCH_UPPER_LIMIT = 11000;           // TODO: Change
-    final static float RELIC_ARM_GRAB = 0.15f;
-    final static float RELIC_ARM_EXTEND = 0.35f;
+    final static float RELIC_ARM_GRAB = 0.3f;
+    final static float RELIC_ARM_EXTEND_UP = 0.75f;//feet of robot pointing up
+    final static float RELIC_ARM_EXTEND_IN = 0.0f; //feet of relic toward the robot
     final static float RELIC_ARM_MAX = 1f;              // TODO: Change
     final static float RELIC_ARM_MIN = .1f;              // TODO: Change
-    final static float RELIC_CLAW_OPEN = 0.4f;
+    final static float RELIC_CLAW_OPEN = 0.8f;
+    final static float RELIC_CLAW_OPEN_STABILIZED=0.4f;
     final static float RELIC_CLAW_CLOSED = 0.21f;
 
 

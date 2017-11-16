@@ -15,6 +15,10 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_SAFE_POS;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_CLAW_ONE_RELEASE;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_CLAW_TWO_CLOSED;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_LEFT_MOTOR;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_EXTEND_IN;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_EXTEND_UP;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_GRAB;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_MAX;
 import static org.firstinspires.ftc.teamcode.rr_Constants.SCORING_DRIVE_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.STANDARD_DRIVE_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRIGGER_THRESHOLD;
@@ -51,16 +55,10 @@ public class TestOp extends rr_OpMode {
             processOrientationClaw();
             processCubeArm();
             processStandardDrive();
-
-            telemetry.addLine("ClawServo: " + cubeClawPos);
-            telemetry.addLine("Cube Orientation: " + orientationPos);
-            telemetry.addLine("Cube Arm Pos: " + robot.getMotorPosition(this, CUBE_ARM));
-            telemetryTouchSensor();
-            telemetryAddLine("BRPower" + robot.getMotorPower(this, BACK_RIGHT_MOTOR));
-            telemetryAddLine("FRPower" + robot.getMotorPower(this, FRONT_LEFT_MOTOR));
-            telemetryAddLine("BLPower" + robot.getMotorPower(this, BACK_LEFT_MOTOR));
-            telemetryAddLine("FLPower" + robot.getMotorPower(this, FRONT_LEFT_MOTOR));
             telemetryUpdate();
+            processRelicSlide();
+            processRelicClaw();
+            processRelicHand();
 
             Thread.sleep(10);
         }
@@ -227,4 +225,38 @@ public class TestOp extends rr_OpMode {
         }
 
     }
+
+    public void processRelicSlide(){
+        if(Math.abs(gamepad2.right_trigger)>TRIGGER_THRESHOLD){
+            robot.setRelicWinchPower(0.25f);
+        }else if(Math.abs(gamepad2.left_trigger)>TRIGGER_THRESHOLD){
+            robot.setRelicWinchPower(-0.25f);
+        }else{
+            //the triggers are in dead zone.
+            //stop the relic slide
+            robot.setRelicWinchPower(0);
+        }
+    }
+
+    public void processRelicClaw() throws InterruptedException{
+        if(gamepad2.x){
+            robot.setRelicClawClosed();
+        }
+        if(gamepad2.b){
+            robot.setRelicClawOpen();
+        }
+    }
+    public void processRelicHand() throws InterruptedException{
+        if(gamepad2.a){
+            robot.setRelicArmPosition(RELIC_ARM_GRAB);
+        }
+        if(gamepad2.left_bumper){
+            robot.setRelicArmPosition(RELIC_ARM_EXTEND_IN);
+        }
+        if(gamepad2.right_bumper) {
+            robot.setRelicArmPosition(RELIC_ARM_EXTEND_UP);
+        }
+
+    }
+
 }
