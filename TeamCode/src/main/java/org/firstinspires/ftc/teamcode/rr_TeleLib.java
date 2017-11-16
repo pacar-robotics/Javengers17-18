@@ -12,19 +12,16 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_GRAB;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_MIDDLE;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_RAISE_POWER;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_SAFE_POS;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_SCORING_POWER;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_CLAW_ONE_CLOSED;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_CLAW_ONE_RELEASE;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_CLAW_OPEN;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ORIENTATION_HORIZONTAL;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ORIENTATION_VERTICAL;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_LEFT_MOTOR;
-import static org.firstinspires.ftc.teamcode.rr_Constants.ONE_CUBE_ROW_1;
-import static org.firstinspires.ftc.teamcode.rr_Constants.ONE_CUBE_ROW_2;
-import static org.firstinspires.ftc.teamcode.rr_Constants.ONE_CUBE_ROW_3;
-import static org.firstinspires.ftc.teamcode.rr_Constants.ONE_CUBE_ROW_4;
-import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_EXTEND;
-import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_CLAW_OPEN;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_MAX;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_MIN;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WINCH_EXTEND_POWER_FACTOR;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WINCH_RETRACT_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.SCORING_DRIVE_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.STANDARD_DRIVE_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRIGGER_THRESHOLD;
@@ -56,9 +53,9 @@ public class rr_TeleLib {
 
 
             robot.universalMoveRobot(aOpMode, getXVelocity(getGamePad2LeftJoystickPolarMagnitude(aOpMode) * STANDARD_DRIVE_POWER_FACTOR,
-                    getGamePad2LeftJoystickPolarAngle(aOpMode)+ 90 - robot.getBoschGyroSensorHeading(aOpMode)),
+                    getGamePad2LeftJoystickPolarAngle(aOpMode) + 90 - robot.getBoschGyroSensorHeading(aOpMode)),
                     getYVelocity(getGamePad2LeftJoystickPolarMagnitude(aOpMode) * STANDARD_DRIVE_POWER_FACTOR,
-                            getGamePad2LeftJoystickPolarAngle(aOpMode)+ 90 - robot.getBoschGyroSensorHeading(aOpMode)));
+                            getGamePad2LeftJoystickPolarAngle(aOpMode) + 90 - robot.getBoschGyroSensorHeading(aOpMode)));
 
         } else if (Math.abs(aOpMode.gamepad2.right_stick_x) > ANALOG_STICK_THRESHOLD) {
 
@@ -103,21 +100,21 @@ public class rr_TeleLib {
             robot.setBoschGyroZeroYaw(aOpMode);
         }
 
-        if(aOpMode.gamepad1.dpad_up) {
+        if (aOpMode.gamepad1.dpad_up) {
             robot.turnAbsoluteBoschGyroDegrees(aOpMode, 0);
         }
-        if(aOpMode.gamepad1.dpad_right) {
+        if (aOpMode.gamepad1.dpad_right) {
             robot.turnAbsoluteBoschGyroDegrees(aOpMode, 90);
         }
-        if(aOpMode.gamepad1.dpad_down) {
+        if (aOpMode.gamepad1.dpad_down) {
             robot.turnAbsoluteBoschGyroDegrees(aOpMode, 180);
         }
-        if(aOpMode.gamepad1.dpad_left) {
+        if (aOpMode.gamepad1.dpad_left) {
             robot.turnAbsoluteBoschGyroDegrees(aOpMode, -90);
         }
     }
 
-    public void processStandardDrive()  throws InterruptedException{
+    public void processStandardDrive() throws InterruptedException {
         if (Math.abs(aOpMode.gamepad2.right_stick_x) > ANALOG_STICK_THRESHOLD) {
 
             //we are not in deadzone. Driver is pushing right joystick, sideways
@@ -158,7 +155,7 @@ public class rr_TeleLib {
                     aOpMode.gamepad1.left_stick_x * STANDARD_DRIVE_POWER_FACTOR,
                     aOpMode.gamepad1.left_stick_y * STANDARD_DRIVE_POWER_FACTOR);
 
-        }  else {
+        } else {
             //both joysticks on both gamepads are at rest, stop the robot.
             robot.stopBaseMotors(aOpMode);
         }
@@ -176,7 +173,7 @@ public class rr_TeleLib {
         }
     }
 
-    public void processCubeArm() throws InterruptedException{
+    public void processCubeArm() throws InterruptedException {
         if (aOpMode.gamepad1.left_trigger >= TRIGGER_THRESHOLD && !robot.isCubeLowerLimitPressed()) {
             robot.setCubeArmPower(aOpMode, 0.1f);
         } else if (aOpMode.gamepad1.right_trigger >= TRIGGER_THRESHOLD && !robot.isCubeUpperLimitPressed()) {
@@ -226,19 +223,22 @@ public class rr_TeleLib {
     }
 
     public void processRelicArm() throws InterruptedException {
-        if (aOpMode.gamepad1.x) {
-            toggleRelicArm();
-        } else if (aOpMode.gamepad1.b) {
-            toggleRelicArmAngle();
-        } else if (aOpMode.gamepad1.left_trigger >= TRIGGER_THRESHOLD) {
-            // TODO 17-11-10: Changed to servo winch. Apply changes of limits
-//            robot.setPowerExtendRelicArm(aOpMode, aOpMode.gamepad1.left_trigger * RELIC_ARM_EXTEND_POWER_FACTOR);
-        } else if (aOpMode.gamepad1.right_trigger >= TRIGGER_THRESHOLD) {
-//            robot.setRelicWinchPosition(aOpMode, aOpMode.gamepad1.left_trigger * RELIC_ARM_RETRACT_POWER_FACTOR);
-        } else if (aOpMode.gamepad1.right_stick_button) {
+        if (aOpMode.gamepad2.a) {
+            robot.setRelicArmGrab();
+        } else if (aOpMode.gamepad2.b) {
+            robot.setRelicClawClosed();
+        } else if (aOpMode.gamepad2.x) {
+            robot.setRelicClawOpen();
+        } else if (aOpMode.gamepad2.y) {
+            robot.setRelicArmExtend();
+        } else if (aOpMode.gamepad2.left_trigger >= TRIGGER_THRESHOLD) {
+            robot.setRelicWinchPower(-aOpMode.gamepad1.left_trigger * RELIC_WINCH_RETRACT_POWER_FACTOR);
+        } else if (aOpMode.gamepad2.right_trigger >= TRIGGER_THRESHOLD) {
+            robot.setRelicWinchPower(aOpMode.gamepad1.right_trigger * RELIC_WINCH_EXTEND_POWER_FACTOR);
+        } else if (aOpMode.gamepad2.left_bumper && robot.getRelicArmPosition() > RELIC_ARM_MIN) {
             // TODO 17-10-17: Check that lowering and raising methods are not reversed
             robot.setRelicArmPosition(robot.getRelicArmPosition() - 1);
-        } else if (aOpMode.gamepad1.left_stick_button) {
+        } else if (aOpMode.gamepad2.right_bumper && robot.getRelicArmPosition() < RELIC_ARM_MAX) {
             robot.setRelicArmPosition(robot.getRelicArmPosition() + 1);
         }
     }
@@ -262,25 +262,6 @@ public class rr_TeleLib {
             aOpMode.telemetry.addLine("Upper" + " Limit Not Pressed");
         }
         aOpMode.telemetryUpdate();
-    }
-
-
-    //************ PROCESS HELPER METHODS ************//
-
-    public void toggleRelicArm() throws InterruptedException {
-        if (robot.getRelicClawPosition() == RELIC_CLAW_OPEN) {
-            robot.setRelicClawClosed();
-        } else {
-            robot.setRelicClawOpen();
-        }
-    }
-
-    public void toggleRelicArmAngle() throws InterruptedException {
-        if (robot.getRelicArmPosition() == RELIC_ARM_EXTEND) {
-            robot.setRelicArmGrab();
-        } else {
-            robot.setRelicArmExtend();
-        }
     }
 
 
@@ -393,10 +374,10 @@ public class rr_TeleLib {
     }
 
     public double getXVelocity(double polarMagnitude, double polarAngle) {
-        return  polarMagnitude * Math.sin(Math.toRadians(polarAngle));
+        return polarMagnitude * Math.sin(Math.toRadians(polarAngle));
     }
 
     public double getYVelocity(double polarMagnitude, double polarAngle) {
-        return  polarMagnitude * Math.cos(Math.toRadians(polarAngle));
+        return polarMagnitude * Math.cos(Math.toRadians(polarAngle));
     }
 }

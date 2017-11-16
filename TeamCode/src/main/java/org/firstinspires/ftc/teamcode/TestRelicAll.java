@@ -2,9 +2,10 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WINCH_EXTEND_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WINCH_REST;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WINCH_RETRACT_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WINCH_UPPER_LIMIT;
-import static org.firstinspires.ftc.teamcode.rr_Constants.TRIGGER_THRESHOLD;
 
 @TeleOp(name = "Test Relic All", group = "Test")
 public class TestRelicAll extends rr_OpMode {
@@ -38,9 +39,9 @@ public class TestRelicAll extends rr_OpMode {
 
     private void processWinchTest() throws InterruptedException {
         if (gamepad1.right_trigger >= .05f) {
-            robot.setRelicWinchPower(gamepad1.right_trigger);
+            robot.setRelicWinchPower(gamepad1.right_trigger * RELIC_WINCH_EXTEND_POWER_FACTOR);
         } else if (gamepad1.left_trigger >= .05f) {
-            robot.setRelicWinchPower(-gamepad1.left_trigger);
+            robot.setRelicWinchPower(-gamepad1.left_trigger * RELIC_WINCH_RETRACT_POWER_FACTOR);
         } else {
             robot.setRelicWinchPower(0);
         }
