@@ -76,11 +76,8 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.MOTOR_RAMP_SIDEWAYS_PO
 import static org.firstinspires.ftc.teamcode.rr_Constants.MOTOR_RAMP_SIDEWAYS_POWER_UPPER_LIMIT;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_EXTEND;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_GRAB;
-import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_CLAW_ANGLE_MAX;
-import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_CLAW_ANGLE_MIN;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_CLAW_CLOSED;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_CLAW_OPEN;
-import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_MAX_DURATION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WINCH;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RIGHT_MOTOR_TRIM_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.ROBOT_TRACK_DISTANCE;
@@ -960,11 +957,9 @@ public class rr_Robot {
 
         motorArray[RELIC_WINCH].setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
-
     public void setRelicWinchPower(float power) {
         motorArray[RELIC_WINCH].setPower(power);
     }
-
     public int getRelicWinchPosition() {
         return motorArray[RELIC_WINCH].getCurrentPosition();
     }
@@ -977,7 +972,6 @@ public class rr_Robot {
         relicArm.setPosition(RELIC_ARM_EXTEND);
         Thread.sleep(100);
     }
-
     public void setRelicArmPosition(float position) {
         relicArm.setPosition(position);
     }
@@ -989,9 +983,7 @@ public class rr_Robot {
         relicClaw.setPosition(RELIC_CLAW_CLOSED);
         Thread.sleep(100);
     }
-
     public void setRelicClawOpen() throws InterruptedException {
-
         relicClaw.setPosition(RELIC_CLAW_OPEN);
         Thread.sleep(100);
     }
