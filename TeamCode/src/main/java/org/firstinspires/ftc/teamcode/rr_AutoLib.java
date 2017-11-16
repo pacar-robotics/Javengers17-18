@@ -55,19 +55,16 @@ public class rr_AutoLib {
 
         float columnDistance;
 
-        detectColorAndPushJewel(aOpMode, rr_Constants.AllianceColorEnum.RED);
+        detectColorAndPushJewel(aOpMode, rr_Constants.AllianceColorEnum.BLUE);
         Thread.sleep(300);
 
         switch(robot.getPictograph(aOpMode)) {
-            case RIGHT: columnDistance = 35 + 7; break; // 7 inches between cube columns
-            case CENTER: columnDistance = 35; break; // 7 inches between cube columns
-            case LEFT: columnDistance = 35 - 7; break; // 7 inches between cube columns
-            default: columnDistance = 35; break;
+            case RIGHT: columnDistance = 35; break; // 7 inches between cube columns
+            case CENTER: columnDistance = 35 - 7; break; // 7 inches between cube columns
+            case LEFT: columnDistance = 35 - 14; break; // 7 inches between cube columns
+            default: columnDistance = 35 - 7; break;
         }
 
-
-        detectColorAndPushJewel(aOpMode, rr_Constants.AllianceColorEnum.BLUE);
-        Thread.sleep(300);
         moveWheels(aOpMode, columnDistance, .4f, rr_Constants.DirectionEnum.Forward, true);
         Thread.sleep(300);
         moveWheels(aOpMode, 6, .4f, rr_Constants.DirectionEnum.SidewaysRight, true);
@@ -78,7 +75,7 @@ public class rr_AutoLib {
         Thread.sleep(300);
         robot.turnAbsoluteBoschGyroDegrees(aOpMode, -70);
         Thread.sleep(300);
-        universalMoveRobot(aOpMode, 0, 20, 0, 1500, falseStop, false, 0, 0);
+        universalMoveRobot(aOpMode, 20, .3f, 0, 1500, falseStop, false, 0, 0);
         Thread.sleep(300);
 
     }
@@ -89,26 +86,26 @@ public class rr_AutoLib {
         aOpMode.DBG("In Blue Two Common");
 
         float columnDistance;
+        rr_Constants.DirectionEnum moveDirection;
 
-        detectColorAndPushJewel(aOpMode, rr_Constants.AllianceColorEnum.RED);
-        Thread.sleep(300);
-        
-        switch(robot.getPictograph(aOpMode)) {
-            case RIGHT: columnDistance = 18 + 7; break; // 7 inches between cube columns
-            case CENTER: columnDistance = 18; break; // 7 inches between cube columns
-            case LEFT: columnDistance = 18 - 7; break; // 7 inches between cube columns
-            default: columnDistance = 18; break;
-        }
 
         detectColorAndPushJewel(aOpMode, rr_Constants.AllianceColorEnum.BLUE);
         Thread.sleep(300);
+
+        switch(robot.getPictograph(aOpMode)) {
+            case RIGHT: columnDistance = 5 + 7; moveDirection = rr_Constants.DirectionEnum.SidewaysRight; break; // 7 inches between cube columns
+            case CENTER: columnDistance = 5; moveDirection = rr_Constants.DirectionEnum.SidewaysRight; break; // 7 inches between cube columns
+            case LEFT: columnDistance = 2; moveDirection = rr_Constants.DirectionEnum.SidewaysLeft; break; // 7 inches between cube columns
+            default: columnDistance = 5; moveDirection = rr_Constants.DirectionEnum.SidewaysRight; break;
+        }
+
         moveWheels(aOpMode, 23, .4f, rr_Constants.DirectionEnum.Forward, true);
         Thread.sleep(300);
-        moveWheels(aOpMode, columnDistance, .4f, rr_Constants.DirectionEnum.SidewaysRight, true);
+        moveWheels(aOpMode, columnDistance, .4f, moveDirection, true);
         Thread.sleep(300);
         robot.turnAbsoluteBoschGyroDegrees(aOpMode, 20);
         Thread.sleep(300);
-        universalMoveRobot(aOpMode, 0, 20, 0, 1500, falseStop, false, 0, 0);
+        universalMoveRobot(aOpMode, 20, .3f, 0, 1500, falseStop, false, 0, 0);
         Thread.sleep(300);
 
     }
@@ -117,6 +114,7 @@ public class rr_AutoLib {
     public void redOneAutonomousCommonAction(rr_OpMode aOpMode) throws InterruptedException {
 
         float columnDistance;
+
 
         aOpMode.DBG("In Red One Common");
         detectColorAndPushJewel(aOpMode, rr_Constants.AllianceColorEnum.RED);
@@ -129,7 +127,7 @@ public class rr_AutoLib {
             default: columnDistance = 32; break;
         }
 
-        moveWheels(aOpMode, 32, .4f, rr_Constants.DirectionEnum.Backward, true);
+        moveWheels(aOpMode, columnDistance, .4f, rr_Constants.DirectionEnum.Backward, true);
         Thread.sleep(300);
         moveWheels(aOpMode, 6, .4f, rr_Constants.DirectionEnum.SidewaysRight, true);
         Thread.sleep(300);
@@ -152,18 +150,19 @@ public class rr_AutoLib {
     public void redTwoAutonomousCommonAction(rr_OpMode aOpMode)throws InterruptedException{
 
         float columnDistance;
+        rr_Constants.DirectionEnum moveDirection;
 
         detectColorAndPushJewel(aOpMode, rr_Constants.AllianceColorEnum.RED);
 
         switch(robot.getPictograph(aOpMode)) {
-            case RIGHT: columnDistance = 10; break; // 7 inches between cube columns
-            case CENTER: columnDistance = 10; break; // 7 inches between cube columns
-            case LEFT: columnDistance = 10 + 7; break; // 7 inches between cube columns
-            default: columnDistance = 10; break;
+            case RIGHT: columnDistance = 10; moveDirection = rr_Constants.DirectionEnum.SidewaysRight; break; // 7 inches between cube columns
+            case CENTER: columnDistance = 10 - 7; moveDirection = rr_Constants.DirectionEnum.SidewaysRight; break; // 7 inches between cube columns
+            case LEFT: columnDistance = 4; moveDirection = rr_Constants.DirectionEnum.SidewaysLeft; break; // 7 inches between cube columns
+            default: columnDistance = 10; moveDirection = rr_Constants.DirectionEnum.SidewaysRight; break;
         }
 
         Thread.sleep(300);
-        moveWheels(aOpMode, 26, .4f, rr_Constants.DirectionEnum.SidewaysRight, true);
+        moveWheels(aOpMode, 26, .3f, rr_Constants.DirectionEnum.SidewaysRight, true);
         Thread.sleep(300);
         moveWheels(aOpMode, 15, .4f, rr_Constants.DirectionEnum.Backward, true);
         Thread.sleep(300);
@@ -173,7 +172,7 @@ public class rr_AutoLib {
         Thread.sleep(300);
         moveWheels(aOpMode, 12, .4f, rr_Constants.DirectionEnum.Forward, true);
         Thread.sleep(300);
-        moveWheels(aOpMode, columnDistance, .4f, rr_Constants.DirectionEnum.SidewaysRight, true);
+        moveWheels(aOpMode, columnDistance, .4f, moveDirection, true);
         Thread.sleep(300);
         robot.turnAbsoluteBoschGyroDegrees(aOpMode, 200);
         Thread.sleep(300);

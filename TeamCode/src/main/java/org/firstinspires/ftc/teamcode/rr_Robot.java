@@ -204,10 +204,10 @@ public class rr_Robot {
 //        aOpMode.DBG("Presetting Servos");
 
 //        //Setting servos to intitial cubeClawPos TODO: CHANGE
-        openCubeClawServoOneCube();
-        setCubeClawToHorizontal();
-//        setJewelKnockerNeutral();
-//        setJewelArmIn();
+//        openCubeClawServoOneCube();
+//        setCubeClawToHorizontal();
+        setJewelPusherNeutral();
+        setJewelArmUp();
 //        setRelicClawClosed();
 //        setRelicArmGrab();
 
