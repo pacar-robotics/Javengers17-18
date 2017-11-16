@@ -219,9 +219,9 @@ public class rr_TeleLib {
         if (aOpMode.gamepad2.a) {
             robot.setRelicArmGrab();
         } else if (aOpMode.gamepad2.b) {
-            robot.setRelicClawOpen();
-        } else if (aOpMode.gamepad2.x) {
             robot.setRelicClawClosed();
+        } else if (aOpMode.gamepad2.x) {
+            robot.setRelicClawOpen();
         } else if (aOpMode.gamepad2.y) {
             robot.setRelicArmExtend();
         } else if (aOpMode.gamepad2.left_trigger >= TRIGGER_THRESHOLD) {
