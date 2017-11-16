@@ -43,6 +43,7 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_MAX_DURATION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_UPPER_LIMIT;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_CLAW_ONE_CLOSED;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_CLAW_ONE_RELEASE;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_CLAW_OPEN;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_CLAW_TWO_CLOSED;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ORIENTATION_HORIZONTAL;
@@ -885,7 +886,7 @@ public class rr_Robot {
     }
 
     public void openCubeClawServoOneCube() throws InterruptedException{
-        cubeClaw.setPosition(CUBE_CLAW_OPEN);
+        cubeClaw.setPosition(CUBE_CLAW_ONE_RELEASE);
         Thread.sleep(100);
     }
 

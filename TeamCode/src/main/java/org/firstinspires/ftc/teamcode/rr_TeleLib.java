@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -34,7 +35,7 @@ public class rr_TeleLib {
     rr_Robot robot;
     rr_OpMode aOpMode;
 
-    public float cubeClawPos = CUBE_CLAW_OPEN;
+    public float cubeClawPos = CUBE_CLAW_ONE_RELEASE;
     public float orientationPos = CUBE_ORIENTATION_HORIZONTAL;
 
     public rr_TeleLib(rr_OpMode aOpMode, HardwareMap aHwMap) throws InterruptedException {
@@ -184,11 +185,7 @@ public class rr_TeleLib {
             robot.setCubeArmPower(aOpMode, 0.0f);
         }
 
-        if (aOpMode.gamepad1.a) {
-            robot.setCubeClawToHorizontal();
-            robot.openCubeClawServoOneCube();
-            robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_GRAB, CUBE_ARM_RAISE_POWER);
-        }
+
         if (aOpMode.gamepad1.x) {
             robot.setCubeClawToHorizontal();
             robot.closeCubeClawServoOneCube();
@@ -205,16 +202,25 @@ public class rr_TeleLib {
             robot.closeCubeClawServoOneCube();
             cubeClawPos = CUBE_CLAW_ONE_CLOSED;
         }
+        if (aOpMode.gamepad1.left_trigger > TRIGGER_THRESHOLD && aOpMode.gamepad1.a) {
+            robot.setMotorMode(aOpMode, CUBE_ARM, DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            Thread.sleep(250);
+            robot.setMotorMode(aOpMode, CUBE_ARM, DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        } else if (aOpMode.gamepad1.a) {
+            robot.setCubeClawToHorizontal();
+            robot.openCubeClawServoOneCube();
+            robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_GRAB, CUBE_ARM_RAISE_POWER);
+        }
     }
 
     public void processClaw() throws InterruptedException {
-       if (aOpMode.gamepad1.right_bumper && cubeClawPos == CUBE_CLAW_OPEN) {
+       if (aOpMode.gamepad1.right_bumper && cubeClawPos == CUBE_CLAW_ONE_RELEASE) {
             robot.closeCubeClawServoOneCube();
             cubeClawPos = CUBE_CLAW_ONE_CLOSED;
             Thread.sleep(200);
         } else if (aOpMode.gamepad1.right_bumper) {
             robot.openCubeClawServoOneCube();
-            cubeClawPos = CUBE_CLAW_OPEN;
+            cubeClawPos = CUBE_CLAW_ONE_RELEASE;
             Thread.sleep(200);
         }
     }
