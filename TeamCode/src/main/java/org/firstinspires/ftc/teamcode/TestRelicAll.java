@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WINCH_REST;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WINCH_UPPER_LIMIT;
-import static org.firstinspires.ftc.teamcode.rr_Constants.TRIGGER_THRESHOLD;
 
 @TeleOp(name = "Test Relic All", group = "Test")
 public class TestRelicAll extends rr_OpMode {

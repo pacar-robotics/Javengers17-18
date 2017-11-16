@@ -16,10 +16,8 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_CLAW_OPEN;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ORIENTATION_HORIZONTAL;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ORIENTATION_VERTICAL;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_LEFT_MOTOR;
-import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_EXTEND;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_MAX;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_MIN;
-import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_CLAW_OPEN;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WINCH_EXTEND_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WINCH_RETRACT_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.SCORING_DRIVE_POWER_FACTOR;
@@ -53,9 +51,9 @@ public class rr_TeleLib {
 
 
             robot.universalMoveRobot(aOpMode, getXVelocity(getGamePad2LeftJoystickPolarMagnitude(aOpMode) * STANDARD_DRIVE_POWER_FACTOR,
-                    getGamePad2LeftJoystickPolarAngle(aOpMode)+ 90 - robot.getBoschGyroSensorHeading(aOpMode)),
+                    getGamePad2LeftJoystickPolarAngle(aOpMode) + 90 - robot.getBoschGyroSensorHeading(aOpMode)),
                     getYVelocity(getGamePad2LeftJoystickPolarMagnitude(aOpMode) * STANDARD_DRIVE_POWER_FACTOR,
-                            getGamePad2LeftJoystickPolarAngle(aOpMode)+ 90 - robot.getBoschGyroSensorHeading(aOpMode)));
+                            getGamePad2LeftJoystickPolarAngle(aOpMode) + 90 - robot.getBoschGyroSensorHeading(aOpMode)));
 
         } else if (Math.abs(aOpMode.gamepad2.right_stick_x) > ANALOG_STICK_THRESHOLD) {
 
@@ -100,21 +98,21 @@ public class rr_TeleLib {
             robot.setBoschGyroZeroYaw(aOpMode);
         }
 
-        if(aOpMode.gamepad1.dpad_up) {
+        if (aOpMode.gamepad1.dpad_up) {
             robot.turnAbsoluteBoschGyroDegrees(aOpMode, 0);
         }
-        if(aOpMode.gamepad1.dpad_right) {
+        if (aOpMode.gamepad1.dpad_right) {
             robot.turnAbsoluteBoschGyroDegrees(aOpMode, 90);
         }
-        if(aOpMode.gamepad1.dpad_down) {
+        if (aOpMode.gamepad1.dpad_down) {
             robot.turnAbsoluteBoschGyroDegrees(aOpMode, 180);
         }
-        if(aOpMode.gamepad1.dpad_left) {
+        if (aOpMode.gamepad1.dpad_left) {
             robot.turnAbsoluteBoschGyroDegrees(aOpMode, -90);
         }
     }
 
-    public void processStandardDrive()  throws InterruptedException{
+    public void processStandardDrive() throws InterruptedException {
         if (Math.abs(aOpMode.gamepad2.right_stick_x) > ANALOG_STICK_THRESHOLD) {
 
             //we are not in deadzone. Driver is pushing right joystick, sideways
@@ -155,7 +153,7 @@ public class rr_TeleLib {
                     aOpMode.gamepad1.left_stick_x * STANDARD_DRIVE_POWER_FACTOR,
                     aOpMode.gamepad1.left_stick_y * STANDARD_DRIVE_POWER_FACTOR);
 
-        }  else {
+        } else {
             //both joysticks on both gamepads are at rest, stop the robot.
             robot.stopBaseMotors(aOpMode);
         }
@@ -173,7 +171,7 @@ public class rr_TeleLib {
         }
     }
 
-    public void processCubeArm() throws InterruptedException{
+    public void processCubeArm() throws InterruptedException {
         if (aOpMode.gamepad1.left_trigger >= TRIGGER_THRESHOLD && !robot.isCubeLowerLimitPressed()) {
             robot.setCubeArmPower(aOpMode, 0.1f);
         } else if (aOpMode.gamepad1.right_trigger >= TRIGGER_THRESHOLD && !robot.isCubeUpperLimitPressed()) {
@@ -206,7 +204,7 @@ public class rr_TeleLib {
     }
 
     public void processClaw() throws InterruptedException {
-       if (aOpMode.gamepad1.right_bumper && cubeClawPos == CUBE_CLAW_OPEN) {
+        if (aOpMode.gamepad1.right_bumper && cubeClawPos == CUBE_CLAW_OPEN) {
             robot.closeCubeClawServoOneCube();
             cubeClawPos = CUBE_CLAW_ONE_CLOSED;
             Thread.sleep(200);
@@ -369,10 +367,10 @@ public class rr_TeleLib {
     }
 
     public double getXVelocity(double polarMagnitude, double polarAngle) {
-        return  polarMagnitude * Math.sin(Math.toRadians(polarAngle));
+        return polarMagnitude * Math.sin(Math.toRadians(polarAngle));
     }
 
     public double getYVelocity(double polarMagnitude, double polarAngle) {
-        return  polarMagnitude * Math.cos(Math.toRadians(polarAngle));
+        return polarMagnitude * Math.cos(Math.toRadians(polarAngle));
     }
 }

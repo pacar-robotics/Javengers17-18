@@ -1,9 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.util.Log;
 
-
-import com.qualcomm.hardware.adafruit.AdafruitBNO055IMU;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
@@ -25,13 +22,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
-import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-
-import java.text.DecimalFormat;
 import java.util.Locale;
 
 import static org.firstinspires.ftc.teamcode.rr_Constants.ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION;
@@ -49,8 +43,6 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ORIENTATION_HORIZ
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ORIENTATION_VERTICAL;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DEBUG;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DEBUG_LEVEL;
-import static org.firstinspires.ftc.teamcode.rr_Constants.DirectionEnum.Backward;
-import static org.firstinspires.ftc.teamcode.rr_Constants.DirectionEnum.Forward;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_RIGHT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.GENERIC_TIMER;
@@ -68,7 +60,6 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.MECANUM_WHEEL_ENCODER_
 import static org.firstinspires.ftc.teamcode.rr_Constants.MECANUM_WHEEL_FRONT_TRACK_DISTANCE;
 import static org.firstinspires.ftc.teamcode.rr_Constants.MECANUM_WHEEL_SIDE_TRACK_DISTANCE;
 import static org.firstinspires.ftc.teamcode.rr_Constants.MIN_ROBOT_TURN_MOTOR_VELOCITY;
-import static org.firstinspires.ftc.teamcode.rr_Constants.MOTOR_ENCODER_THRESHOLD;
 import static org.firstinspires.ftc.teamcode.rr_Constants.MOTOR_LOWER_POWER_THRESHOLD;
 import static org.firstinspires.ftc.teamcode.rr_Constants.MOTOR_RAMP_FB_POWER_LOWER_LIMIT;
 import static org.firstinspires.ftc.teamcode.rr_Constants.MOTOR_RAMP_FB_POWER_UPPER_LIMIT;
@@ -468,7 +459,6 @@ public class rr_Robot {
 
 
     /**
-
      * Runs robot to a specific cubeClawPos while driving forwards or backwards
      *
      * @param aOpMode       an object of the rr_OpMode class
@@ -870,9 +860,8 @@ public class rr_Robot {
 
 
         while (motorArray[CUBE_ARM].isBusy() &&
-                (position <  motorArray[CUBE_ARM].getCurrentPosition()) ? !isCubeUpperLimitPressed() : !isCubeLowerLimitPressed()
-                && (aOpMode.time_elapsed_array(GENERIC_TIMER) < CUBE_ARM_MAX_DURATION) && Math.abs(motorArray[CUBE_ARM].getCurrentPosition() - position) > rr_Constants.MOTOR_ENCODER_THRESHOLD)
-        {
+                (position < motorArray[CUBE_ARM].getCurrentPosition()) ? !isCubeUpperLimitPressed() : !isCubeLowerLimitPressed()
+                && (aOpMode.time_elapsed_array(GENERIC_TIMER) < CUBE_ARM_MAX_DURATION) && Math.abs(motorArray[CUBE_ARM].getCurrentPosition() - position) > rr_Constants.MOTOR_ENCODER_THRESHOLD) {
             aOpMode.idle();
         }
         //stop the motor
@@ -881,7 +870,7 @@ public class rr_Robot {
         motorArray[CUBE_ARM].setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
-    public void openCubeClawServoOneCube() throws InterruptedException{
+    public void openCubeClawServoOneCube() throws InterruptedException {
         cubeClaw.setPosition(CUBE_CLAW_OPEN);
         Thread.sleep(100);
     }
@@ -948,8 +937,7 @@ public class rr_Robot {
         aOpMode.reset_timer_array(GENERIC_TIMER);
 
 
-        while (motorArray[RELIC_WINCH].isBusy())
-        {
+        while (motorArray[RELIC_WINCH].isBusy()) {
             aOpMode.idle();
         }
         //stop the motor
@@ -964,11 +952,11 @@ public class rr_Robot {
         return motorArray[RELIC_WINCH].getCurrentPosition();
     }
 
-    public void setRelicArmGrab() throws InterruptedException{
+    public void setRelicArmGrab() throws InterruptedException {
         relicArm.setPosition(RELIC_ARM_GRAB);
         Thread.sleep(100);
     }
-    public void setRelicArmExtend() throws InterruptedException{
+    public void setRelicArmExtend() throws InterruptedException {
         relicArm.setPosition(RELIC_ARM_EXTEND);
         Thread.sleep(100);
     }
@@ -1032,7 +1020,6 @@ public class rr_Robot {
         jewelArm.setPosition(JEWEL_ARM_DOWN_READ);
         Thread.sleep(250);
     }
-
 
 
     //JEWEL COLOR SENSORS
@@ -1257,7 +1244,4 @@ public class rr_Robot {
         return RelicRecoveryVuMark.UNKNOWN;
 
     }
-
-
-
 }

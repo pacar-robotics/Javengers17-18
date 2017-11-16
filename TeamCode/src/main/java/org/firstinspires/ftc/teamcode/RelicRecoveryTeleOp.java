@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.util.ThreadPool;
 
 @TeleOp(name = "TeleOp", group = "TeleOp")
 public class RelicRecoveryTeleOp extends rr_OpMode {
