@@ -154,6 +154,8 @@ public class rr_Robot {
         relicClaw = hwMap.get(Servo.class, "servo_relic_claw");
         relicArm = hwMap.get(Servo.class, "servo_relic_arm");
 
+        aOpMode.DBG("Starting Initialize Bosch Gyro");
+
         // Set up the parameters with which we will use our IMU. Note that integration
         // algorithm here just reports accelerations to the logcat log; it doesn't actually
         // provide positional information.
@@ -172,6 +174,8 @@ public class rr_Robot {
         imu.initialize(parameters);
         // Start the logging of measured acceleration
         imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+
+        aOpMode.DBG("End Initialize Bosch Gyro");
 
 //        //Map Sensors
 //        rangeSensor = hwMap.get(ModernRoboticsI2cRangeSensor.class, "range_sensor");
@@ -201,7 +205,7 @@ public class rr_Robot {
         // Set all base motors to zero power
         stopBaseMotors(aOpMode);
 
-//        aOpMode.DBG("Presetting Servos");
+        aOpMode.DBG("Presetting Servos");
 
 //        //Setting servos to intitial cubeClawPos TODO: CHANGE
         openCubeClawServoOneCube();
@@ -287,6 +291,8 @@ public class rr_Robot {
 
 
     protected void setBoschGyroZeroYaw(rr_OpMode aOpMode) throws InterruptedException {
+        aOpMode.DBG("Starting Initialize Bosch Gyro");
+        Thread.sleep(1000);
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
@@ -302,6 +308,7 @@ public class rr_Robot {
         // Start the logging of measured acceleration
         imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
         Thread.sleep(1000);
+        aOpMode.DBG("End Initialize Bosch Gyro");
     }
 
     public double getFloorBlueReading() {
@@ -990,6 +997,11 @@ public class rr_Robot {
 
     public void setJewelArmPosition(float armPosition) throws InterruptedException {
         jewelArm.setPosition(armPosition);
+        Thread.sleep(250);
+    }
+
+    public void setJewelPusherPosition(float armPosition) throws InterruptedException {
+        jewelPusher.setPosition(armPosition);
         Thread.sleep(250);
     }
 

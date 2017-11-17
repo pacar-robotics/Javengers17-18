@@ -8,7 +8,7 @@ package org.firstinspires.ftc.teamcode;
 public class rr_Constants {
 
     //Constants for Debugging
-    final static boolean DEBUG = false;
+    final static boolean DEBUG = true;
     final static int DEBUG_LEVEL = 0;
     final static long DEBUG_MESSAGE_DISPLAY_TIME = 10; //time to flash DEBUG message on telemetry
     // setting DEBUG_AUTO_CLEAR to false interferes with Vuforia code
@@ -73,8 +73,8 @@ public class rr_Constants {
     final static float CUBE_ARM_RAISE_POWER = -0.4f;
     final static float CUBE_ARM_LOWER_POWER = 0.1f;
     final static float CUBE_CLAW_OPEN = 0.625f;
-    final static float CUBE_CLAW_ONE_CLOSED = 0.34f;
-    final static float CUBE_CLAW_ONE_RELEASE = 0.19f;
+    final static float CUBE_CLAW_ONE_CLOSED = 0.35f;
+    final static float CUBE_CLAW_ONE_RELEASE = 0.2f;
     final static float CUBE_CLAW_TWO_CLOSED = 0.77f;
     final static float CUBE_ORIENTATION_HORIZONTAL = 0.15f;
     final static float CUBE_ORIENTATION_VERTICAL = 0.44f;
@@ -98,9 +98,9 @@ public class rr_Constants {
     final static float JEWEL_PUSHER_LEFT = 0.63f;
     final static float JEWEL_PUSHER_RIGHT = 0.28f;
     final static float JEWEL_PUSHER_NEUTRAL = 0.48f;
-    final static float JEWEL_ARM_UP = 0.95f;
-    final static float JEWEL_ARM_DOWN_READ = .23f;
-    final static float JEWEL_ARM_DOWN_PUSH = .18f;
+    final static float JEWEL_ARM_UP = 0.55f;
+    final static float JEWEL_ARM_DOWN_READ = .95f;
+    final static float JEWEL_ARM_DOWN_PUSH = .98f;
 
 
     //index of motors
