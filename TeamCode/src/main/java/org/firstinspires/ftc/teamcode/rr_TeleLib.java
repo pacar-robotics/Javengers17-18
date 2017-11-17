@@ -37,6 +37,7 @@ public class rr_TeleLib {
 
     public float cubeClawPos = CUBE_CLAW_ONE_RELEASE;
     public float orientationPos = CUBE_ORIENTATION_HORIZONTAL;
+    public float gamepad2PowerFactor = STANDARD_DRIVE_POWER_FACTOR;
 
     public rr_TeleLib(rr_OpMode aOpMode, HardwareMap aHwMap) throws InterruptedException {
         robot = new rr_Robot(aOpMode, aHwMap);
@@ -55,17 +56,17 @@ public class rr_TeleLib {
             //lets make the robot move in chosen angle and magnitude.
 
 
-            robot.universalMoveRobot(aOpMode, getXVelocity(getGamePad2LeftJoystickPolarMagnitude(aOpMode) * STANDARD_DRIVE_POWER_FACTOR,
+            robot.universalMoveRobot(aOpMode, getXVelocity(getGamePad2LeftJoystickPolarMagnitude(aOpMode) * gamepad2PowerFactor,
                     getGamePad2LeftJoystickPolarAngle(aOpMode) + 90 - robot.getBoschGyroSensorHeading(aOpMode)),
-                    getYVelocity(getGamePad2LeftJoystickPolarMagnitude(aOpMode) * STANDARD_DRIVE_POWER_FACTOR,
+                    getYVelocity(getGamePad2LeftJoystickPolarMagnitude(aOpMode) * gamepad2PowerFactor,
                             getGamePad2LeftJoystickPolarAngle(aOpMode) + 90 - robot.getBoschGyroSensorHeading(aOpMode)));
 
         } else if (Math.abs(aOpMode.gamepad2.right_stick_x) > ANALOG_STICK_THRESHOLD) {
 
             //we are not in deadzone. Driver is pushing right joystick, sideways
-            float turnVelocity = (float) getGamePad2RightJoystickPolarMagnitude(aOpMode) * STANDARD_DRIVE_POWER_FACTOR;
+            float turnVelocity = (float) getGamePad2RightJoystickPolarMagnitude(aOpMode) * gamepad2PowerFactor;
 
-            if (aOpMode.gamepad1.right_stick_x > 0) {
+            if (aOpMode.gamepad2.right_stick_x > 0) {
                 //turn clockwise to correct magnitude
                 robot.runMotors(aOpMode, turnVelocity, -turnVelocity, turnVelocity, -turnVelocity);
             } else {
@@ -255,6 +256,13 @@ public class rr_TeleLib {
             robot.setRelicArmPosition(RELIC_ARM_EXTEND_UP);
         }
 
+    }
+
+    public void processBalance() throws InterruptedException {
+        if (aOpMode.gamepad2.y) {
+            robot.moveRobotToPositionFB(aOpMode, 30, 1.0f, false);
+            gamepad2PowerFactor =  0.35f;
+        }
     }
 
     public void printTelemetry() throws InterruptedException {

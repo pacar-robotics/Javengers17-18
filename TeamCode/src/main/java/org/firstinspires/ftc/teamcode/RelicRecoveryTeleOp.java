@@ -25,6 +25,7 @@ public class RelicRecoveryTeleOp extends rr_OpMode {
             lib.processRelicSlide();
             lib.processRelicClaw();
             lib.processRelicHand();
+            lib.processBalance();
             lib.printTelemetry();
 
             Thread.sleep(10);

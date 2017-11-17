@@ -24,7 +24,7 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ORIENTATION_HORIZ
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ORIENTATION_VERTICAL;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TURN_POWER_FACTOR;
 
-@TeleOp(name = "Test Op", group = "Test")
+//@TeleOp(name = "Test Op", group = "Test")
 public class TestOp extends rr_OpMode {
     rr_Robot robot;
 
@@ -51,6 +51,7 @@ public class TestOp extends rr_OpMode {
             processOrientationClaw();
             processCubeArm();
             processStandardDrive();
+
 
             telemetry.addLine("ClawServo: " + cubeClawPos);
             telemetry.addLine("Cube Orientation: " + orientationPos);
