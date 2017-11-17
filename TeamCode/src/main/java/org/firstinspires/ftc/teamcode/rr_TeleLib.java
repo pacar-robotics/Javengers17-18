@@ -262,7 +262,7 @@ public class rr_TeleLib {
 
     public void processBalance() throws InterruptedException {
         if (aOpMode.gamepad2.y) {
-            robot.moveRobotToPositionFB(aOpMode, 26, 1.0f, true);
+            robot.moveRobotToPositionFB(aOpMode, -20.5f, 1.0f, true);
             gamepad2PowerFactor =  0.35f;
         }
     }
