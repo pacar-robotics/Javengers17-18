@@ -5,6 +5,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
 import static org.firstinspires.ftc.teamcode.rr_Constants.ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_GRAB;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_LOWER_POWER;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_RAISE_POWER;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_SAFE_POS;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DirectionEnum.Backward;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DirectionEnum.Forward;
 import static org.firstinspires.ftc.teamcode.rr_Constants.MECANUM_WHEEL_DIAMETER;
@@ -55,6 +59,9 @@ public class rr_AutoLib {
 
         float columnDistance;
 
+        robot.closeCubeClawServoOneCube();
+        robot.moveCubeArmToPositionWithTouchLimits(aOpMode, rr_Constants.CUBE_ARM_MIDDLE, CUBE_ARM_RAISE_POWER);
+
         detectColorAndPushJewel(aOpMode, rr_Constants.AllianceColorEnum.BLUE);
         Thread.sleep(300);
 
@@ -66,28 +73,32 @@ public class rr_AutoLib {
         }
 
         moveWheels(aOpMode, columnDistance, .4f, rr_Constants.DirectionEnum.Forward, true);
-        Thread.sleep(300);
+        Thread.sleep(250);
         moveWheels(aOpMode, 6, .4f, rr_Constants.DirectionEnum.SidewaysRight, true);
-        Thread.sleep(300);
+        Thread.sleep(250);
         robot.turnAbsoluteBoschGyroDegrees(aOpMode, -90);
-        Thread.sleep(300);
+        Thread.sleep(250);
         robot.turnAbsoluteBoschGyroDegrees(aOpMode, -90);
-        Thread.sleep(300);
+        Thread.sleep(250);
         robot.turnAbsoluteBoschGyroDegrees(aOpMode, -70);
-        Thread.sleep(300);
+        Thread.sleep(250);
+        robot.moveCubeArmToPositionWithLimits(aOpMode, CUBE_ARM_GRAB, CUBE_ARM_LOWER_POWER);
         universalMoveRobot(aOpMode, 20, .3f, 0, 1500, falseStop, false, 0, 0);
-        Thread.sleep(300);
+        Thread.sleep(250);
 
     }
 
     // robot starts farther away from audience
     public void blueTwoAutonomousCommonAction(rr_OpMode aOpMode) throws InterruptedException {
 
+
         aOpMode.DBG("In Blue Two Common");
 
         float columnDistance;
         rr_Constants.DirectionEnum moveDirection;
 
+        robot.closeCubeClawServoOneCube();
+        robot.moveCubeArmToPositionWithTouchLimits(aOpMode, rr_Constants.CUBE_ARM_MIDDLE - 200, CUBE_ARM_RAISE_POWER);
 
         detectColorAndPushJewel(aOpMode, rr_Constants.AllianceColorEnum.BLUE);
         Thread.sleep(300);
@@ -105,6 +116,7 @@ public class rr_AutoLib {
         Thread.sleep(300);
         robot.turnAbsoluteBoschGyroDegrees(aOpMode, 20);
         Thread.sleep(300);
+        robot.moveCubeArmToPositionWithLimits(aOpMode, CUBE_ARM_GRAB, CUBE_ARM_LOWER_POWER);
         universalMoveRobot(aOpMode, 20, .3f, 0, 1500, falseStop, false, 0, 0);
         Thread.sleep(300);
 
@@ -115,6 +127,8 @@ public class rr_AutoLib {
 
         float columnDistance;
 
+        robot.closeCubeClawServoOneCube();
+        robot.moveCubeArmToPositionWithTouchLimits(aOpMode, rr_Constants.CUBE_ARM_MIDDLE, CUBE_ARM_RAISE_POWER);
 
         aOpMode.DBG("In Red One Common");
         detectColorAndPushJewel(aOpMode, rr_Constants.AllianceColorEnum.RED);
@@ -137,6 +151,7 @@ public class rr_AutoLib {
         Thread.sleep(300);
         robot.turnAbsoluteBoschGyroDegrees(aOpMode, -110);
         Thread.sleep(300);
+        robot.moveCubeArmToPositionWithLimits(aOpMode, CUBE_ARM_GRAB, CUBE_ARM_LOWER_POWER);
         universalMoveRobot(aOpMode, 20, .3f, 0, 1500, falseStop , false, 0, 0);
         Thread.sleep(300);
 
@@ -151,6 +166,10 @@ public class rr_AutoLib {
 
         float columnDistance;
         rr_Constants.DirectionEnum moveDirection;
+
+
+        robot.closeCubeClawServoOneCube();
+        robot.moveCubeArmToPositionWithTouchLimits(aOpMode, rr_Constants.CUBE_ARM_MIDDLE, CUBE_ARM_RAISE_POWER);
 
         detectColorAndPushJewel(aOpMode, rr_Constants.AllianceColorEnum.RED);
 
@@ -176,6 +195,7 @@ public class rr_AutoLib {
         Thread.sleep(300);
         robot.turnAbsoluteBoschGyroDegrees(aOpMode, 200);
         Thread.sleep(300);
+        robot.moveCubeArmToPositionWithLimits(aOpMode, CUBE_ARM_GRAB, CUBE_ARM_LOWER_POWER);
         universalMoveRobot(aOpMode, 20, .3f, 0, 1500, falseStop , false, 0, 0);
         Thread.sleep(300);
 
