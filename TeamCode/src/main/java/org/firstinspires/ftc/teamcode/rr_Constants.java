@@ -76,7 +76,7 @@ public class rr_Constants {
     final static float CUBE_CLAW_ONE_CLOSED = 0.34f;
     final static float CUBE_CLAW_ONE_RELEASE = 0.19f;
     final static float CUBE_CLAW_TWO_CLOSED = 0.77f;
-    final static float CUBE_ORIENTATION_HORIZONTAL = 0.15f;
+    final static float CUBE_ORIENTATION_HORIZONTAL = 0.9f;
     final static float CUBE_ORIENTATION_VERTICAL = 0.44f;
 
     //Relic Arm Constants
@@ -84,13 +84,11 @@ public class rr_Constants {
     final static float RELIC_WINCH_RETRACT_POWER_FACTOR = .8f;  // TODO: Change
     final static int RELIC_WINCH_REST = -220;                   // TODO: Change
     final static int RELIC_WINCH_UPPER_LIMIT = 11000;           // TODO: Change
-    final static float RELIC_ARM_GRAB = 0.3f;
-    final static float RELIC_ARM_EXTEND_UP = 0.75f;//feet of robot pointing up
-    final static float RELIC_ARM_EXTEND_IN = 0.0f; //feet of relic toward the robot
+    final static float RELIC_ARM_GRAB = 0.15f;
+    final static float RELIC_ARM_EXTEND = 0.35f;
     final static float RELIC_ARM_MAX = 1f;              // TODO: Change
     final static float RELIC_ARM_MIN = .1f;              // TODO: Change
-    final static float RELIC_CLAW_OPEN = 0.8f;
-    final static float RELIC_CLAW_OPEN_STABILIZED=0.4f;
+    final static float RELIC_CLAW_OPEN = 0.4f;
     final static float RELIC_CLAW_CLOSED = 0.21f;
 
 

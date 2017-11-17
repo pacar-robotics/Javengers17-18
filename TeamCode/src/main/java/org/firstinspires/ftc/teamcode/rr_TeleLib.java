@@ -18,9 +18,6 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_CLAW_OPEN;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ORIENTATION_HORIZONTAL;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ORIENTATION_VERTICAL;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_LEFT_MOTOR;
-import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_EXTEND_IN;
-import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_EXTEND_UP;
-import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_GRAB;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_MAX;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_MIN;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WINCH_EXTEND_POWER_FACTOR;
@@ -98,7 +95,8 @@ public class rr_TeleLib {
             robot.stopBaseMotors(aOpMode);
         }
 
-        if (aOpMode.gamepad1.back || aOpMode.gamepad2.back) {
+        if ((aOpMode.gamepad1.left_stick_button && aOpMode.gamepad1.left_stick_button) ||
+                (aOpMode.gamepad2.left_stick_button && aOpMode.gamepad2.left_stick_button)) {
             robot.setBoschGyroZeroYaw(aOpMode);
         }
 
@@ -224,37 +222,25 @@ public class rr_TeleLib {
         }
     }
 
-    public void processRelicSlide(){
-        if(Math.abs(aOpMode.gamepad2.right_trigger)>TRIGGER_THRESHOLD){
-            robot.setRelicWinchPower(0.25f);
-        }else if(Math.abs(aOpMode.gamepad2.left_trigger)>TRIGGER_THRESHOLD){
-            robot.setRelicWinchPower(-0.25f);
-        }else{
-            //the triggers are in dead zone.
-            //stop the relic slide
-            robot.setRelicWinchPower(0);
-        }
-    }
-
-    public void processRelicClaw() throws InterruptedException{
-        if(aOpMode.gamepad2.x){
+    public void processRelicArm() throws InterruptedException {
+        if (aOpMode.gamepad2.a) {
+            robot.setRelicArmGrab();
+        } else if (aOpMode.gamepad2.b) {
             robot.setRelicClawClosed();
-        }
-        if(aOpMode.gamepad2.b){
+        } else if (aOpMode.gamepad2.x) {
             robot.setRelicClawOpen();
+        } else if (aOpMode.gamepad2.y) {
+            robot.setRelicArmExtend();
+        } else if (aOpMode.gamepad2.left_trigger >= TRIGGER_THRESHOLD) {
+            robot.setRelicWinchPower(-aOpMode.gamepad1.left_trigger * RELIC_WINCH_RETRACT_POWER_FACTOR);
+        } else if (aOpMode.gamepad2.right_trigger >= TRIGGER_THRESHOLD) {
+            robot.setRelicWinchPower(aOpMode.gamepad1.right_trigger * RELIC_WINCH_EXTEND_POWER_FACTOR);
+        } else if (aOpMode.gamepad2.left_bumper && robot.getRelicArmPosition() > RELIC_ARM_MIN) {
+            // TODO 17-10-17: Check that lowering and raising methods are not reversed
+            robot.setRelicArmPosition(robot.getRelicArmPosition() - 1);
+        } else if (aOpMode.gamepad2.right_bumper && robot.getRelicArmPosition() < RELIC_ARM_MAX) {
+            robot.setRelicArmPosition(robot.getRelicArmPosition() + 1);
         }
-    }
-    public void processRelicHand() throws InterruptedException{
-        if(aOpMode.gamepad2.a){
-            robot.setRelicArmPosition(RELIC_ARM_GRAB);
-        }
-        if(aOpMode.gamepad2.left_bumper){
-            robot.setRelicArmPosition(RELIC_ARM_EXTEND_IN);
-        }
-        if(aOpMode.gamepad2.right_bumper) {
-            robot.setRelicArmPosition(RELIC_ARM_EXTEND_UP);
-        }
-
     }
 
     public void printTelemetry() throws InterruptedException {
