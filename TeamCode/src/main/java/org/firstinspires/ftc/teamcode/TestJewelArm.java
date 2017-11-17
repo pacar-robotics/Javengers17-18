@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp(name = "TestJewelArm", group = "TeleOp")
-public class TestJewelArm extends rr_OpMode {
+public class  TestJewelArm extends rr_OpMode {
     rr_Robot robot;
 
     float knockerPosition = rr_Constants.JEWEL_PUSHER_NEUTRAL;
