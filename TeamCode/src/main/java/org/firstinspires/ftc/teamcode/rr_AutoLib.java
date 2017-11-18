@@ -64,12 +64,14 @@ public class rr_AutoLib {
         detectColorAndPushJewel(aOpMode, rr_Constants.AllianceColorEnum.BLUE);
         Thread.sleep(300);
 
+        aOpMode.telemetry.setAutoClear(true); //neccessary for using Vuforia
         switch(robot.getPictograph(aOpMode)) {
             case RIGHT: columnDistance = 35; break; // 7 inches between cube columns
             case CENTER: columnDistance = 35 - 7; break; // 7 inches between cube columns
             case LEFT: columnDistance = 35 - 14; break; // 7 inches between cube columns
             default: columnDistance = 35 - 7; break;
         }
+        aOpMode.telemetry.setAutoClear(false); //turning off the auto clear afterward
 
         moveWheels(aOpMode, columnDistance, .4f, rr_Constants.DirectionEnum.Forward, true);
         Thread.sleep(250);
@@ -102,12 +104,15 @@ public class rr_AutoLib {
         detectColorAndPushJewel(aOpMode, rr_Constants.AllianceColorEnum.BLUE);
         Thread.sleep(300);
 
+        aOpMode.telemetry.setAutoClear(true); //neccessary for using Vuforia
         switch(robot.getPictograph(aOpMode)) {
             case RIGHT: columnDistance = 5 + 7; moveDirection = rr_Constants.DirectionEnum.SidewaysRight; break; // 7 inches between cube columns
             case CENTER: columnDistance = 5; moveDirection = rr_Constants.DirectionEnum.SidewaysRight; break; // 7 inches between cube columns
             case LEFT: columnDistance = 2; moveDirection = rr_Constants.DirectionEnum.SidewaysLeft; break; // 7 inches between cube columns
             default: columnDistance = 5; moveDirection = rr_Constants.DirectionEnum.SidewaysRight; break;
         }
+        aOpMode.telemetry.setAutoClear(false); //turning off the auto clear afterward
+
 
         moveWheels(aOpMode, 23, .4f, rr_Constants.DirectionEnum.Forward, true);
         Thread.sleep(300);
@@ -134,13 +139,15 @@ public class rr_AutoLib {
         aOpMode.DBG("In Red One Common");
         detectColorAndPushJewel(aOpMode, rr_Constants.AllianceColorEnum.RED);
         Thread.sleep(300);
-
+        aOpMode.telemetry.setAutoClear(true); //neccessary for using Vuforia
         switch(robot.getPictograph(aOpMode)) {
             case RIGHT: columnDistance = 32 - 7; break; // 7 inches between cube columns
             case CENTER: columnDistance = 32; break; // 7 inches between cube columns
             case LEFT: columnDistance = 32 + 7; break; // 7 inches between cube columns
             default: columnDistance = 32; break;
         }
+        aOpMode.telemetry.setAutoClear(false); //turning off the auto clear afterward
+
 
         moveWheels(aOpMode, columnDistance, .4f, rr_Constants.DirectionEnum.Backward, true);
         Thread.sleep(300);
@@ -173,13 +180,15 @@ public class rr_AutoLib {
         robot.moveCubeArmToPositionWithTouchLimits(aOpMode, rr_Constants.CUBE_ARM_MIDDLE, CUBE_ARM_RAISE_POWER);
 
         detectColorAndPushJewel(aOpMode, rr_Constants.AllianceColorEnum.RED);
-
+        aOpMode.telemetry.setAutoClear(true); //neccessary for using Vuforia
         switch(robot.getPictograph(aOpMode)) {
             case RIGHT: columnDistance = 10; moveDirection = rr_Constants.DirectionEnum.SidewaysRight; break; // 7 inches between cube columns
             case CENTER: columnDistance = 10 - 7; moveDirection = rr_Constants.DirectionEnum.SidewaysRight; break; // 7 inches between cube columns
             case LEFT: columnDistance = 4; moveDirection = rr_Constants.DirectionEnum.SidewaysLeft; break; // 7 inches between cube columns
             default: columnDistance = 10; moveDirection = rr_Constants.DirectionEnum.SidewaysRight; break;
         }
+        aOpMode.telemetry.setAutoClear(false); //turning off the auto clear afterward
+
 
         Thread.sleep(300);
         moveWheels(aOpMode, 26, .3f, rr_Constants.DirectionEnum.SidewaysRight, true);

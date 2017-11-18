@@ -72,12 +72,12 @@ public class rr_Constants {
     final static float CUBE_ARM_POWER_FACTOR = 0.20f;
     final static float CUBE_ARM_RAISE_POWER = -0.4f;
     final static float CUBE_ARM_LOWER_POWER = 0.1f;
-    final static float CUBE_CLAW_OPEN = 0.625f;
-    final static float CUBE_CLAW_ONE_CLOSED = 0.35f;
-    final static float CUBE_CLAW_ONE_RELEASE = 0.2f;
-    final static float CUBE_CLAW_TWO_CLOSED = 0.77f;
-    final static float CUBE_ORIENTATION_HORIZONTAL = 0.15f;
-    final static float CUBE_ORIENTATION_VERTICAL = 0.44f;
+    final static float CUBE_CLAW_OPEN = 0.7f;
+    final static float CUBE_CLAW_ONE_CLOSED = 0.925f;
+    final static float CUBE_CLAW_ONE_RELEASE = 0.7f;
+    final static float CUBE_CLAW_TWO_CLOSED = 0.925f;
+    final static float CUBE_ORIENTATION_HORIZONTAL = 0.225f;
+    final static float CUBE_ORIENTATION_VERTICAL = 0.75f;
 
     //Relic Arm Constants
     final static float RELIC_WINCH_EXTEND_POWER_FACTOR = .8f;   // TODO: Change

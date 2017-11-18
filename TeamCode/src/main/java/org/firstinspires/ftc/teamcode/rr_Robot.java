@@ -120,6 +120,10 @@ public class rr_Robot {
 
     public rr_Robot(rr_OpMode aOpMode, HardwareMap ahwMap) throws InterruptedException {
         // save reference to HW Map
+
+        aOpMode.telemetry.setAutoClear(false); //useful to see the debug values stay on screen
+        //this value gets reset inside Vuforia calls in order for it to work.
+
         aOpMode.DBG("in Robot init");
         hwMap = ahwMap;
 
@@ -163,9 +167,9 @@ public class rr_Robot {
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled = true;
-        parameters.loggingTag = "IMU";
-        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+        parameters.loggingEnabled = false;
+        //parameters.loggingTag = "IMU";
+       // parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
         // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
         // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
@@ -173,7 +177,7 @@ public class rr_Robot {
         imu = hwMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
         // Start the logging of measured acceleration
-        imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+        //imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
 
         aOpMode.DBG("End Initialize Bosch Gyro");
 
@@ -297,16 +301,16 @@ public class rr_Robot {
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled = true;
-        parameters.loggingTag = "IMU";
-        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+        parameters.loggingEnabled = false;
+        //parameters.loggingTag = "IMU";
+        //parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
         imu = hwMap.get(BNO055IMU.class, "imu"); //get a new reference
         // to the IMU class. This should cause garbage collection of the old object.
         // Also should set the system up for the new calibrated values.
         imu.initialize(parameters);
         // Start the logging of measured acceleration
-        imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+        //imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
         Thread.sleep(1000);
         aOpMode.DBG("End Initialize Bosch Gyro");
     }
@@ -1215,7 +1219,7 @@ public class rr_Robot {
 
 
     public RelicRecoveryVuMark getPictograph(rr_OpMode aOpMode) throws InterruptedException {
-
+        aOpMode.telemetry.setAutoClear(true); //neccessary for using Vuforia
         int cameraMonitorViewId = aOpMode.hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", aOpMode.hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
 
@@ -1254,6 +1258,7 @@ public class rr_Robot {
             Thread.sleep(100);
             //aOpMode.telemetryUpdate();
         }
+
 
         return RelicRecoveryVuMark.UNKNOWN;
 
