@@ -191,10 +191,10 @@ public class rr_AutoLib {
         detectColorAndPushJewel(aOpMode, rr_Constants.AllianceColorEnum.RED);
         aOpMode.telemetry.setAutoClear(true); //neccessary for using Vuforia
         switch(robot.getPictograph(aOpMode)) {
-            case RIGHT: columnDistance = 9 - 7; moveDirection = rr_Constants.DirectionEnum.SidewaysLeft; break; // 7 inches between cube columns
-            case CENTER: columnDistance = 9; moveDirection = rr_Constants.DirectionEnum.SidewaysLeft; break; // 7 inches between cube columns
-            case LEFT: columnDistance = 9 + 7; moveDirection = rr_Constants.DirectionEnum.SidewaysLeft; break; // 7 inches between cube columns
-            default: columnDistance = 9; moveDirection = rr_Constants.DirectionEnum.SidewaysLeft; break;
+            case RIGHT: columnDistance = 12 - 7; moveDirection = rr_Constants.DirectionEnum.SidewaysLeft; break; // 7 inches between cube columns
+            case CENTER: columnDistance = 12; moveDirection = rr_Constants.DirectionEnum.SidewaysLeft; break; // 7 inches between cube columns
+            case LEFT: columnDistance = 12 + 7; moveDirection = rr_Constants.DirectionEnum.SidewaysLeft; break; // 7 inches between cube columns
+            default: columnDistance = 12; moveDirection = rr_Constants.DirectionEnum.SidewaysLeft; break;
         }
         aOpMode.telemetry.setAutoClear(false); //turning off the auto clear afterward
 
@@ -221,19 +221,21 @@ public class rr_AutoLib {
 //        Thread.sleep(300);
 
         Thread.sleep(300);
-        moveWheels(aOpMode, 23 , .3f, rr_Constants.DirectionEnum.Backward, true);
+        moveWheels(aOpMode, 21 , .3f, rr_Constants.DirectionEnum.Backward, true);
         Thread.sleep(300);
         robot.moveCubeArmToPositionWithLimits(aOpMode, CUBE_ARM_GRAB, CUBE_ARM_LOWER_POWER);
         Thread.sleep(300);
-        robot.turnUsingEncoders(aOpMode, 180, .3f, rr_Constants.TurnDirectionEnum.Clockwise);
+        robot.turnUsingEncoders(aOpMode, 120, .3f, rr_Constants.TurnDirectionEnum.Clockwise);
+        Thread.sleep(300);
+        moveWheels(aOpMode, 2 , .3f, rr_Constants.DirectionEnum.Backward, true);
         Thread.sleep(300);
         robot.turnAbsoluteBoschGyroDegrees(aOpMode, 180);
         Thread.sleep(300);
         moveWheels(aOpMode, columnDistance, .4f, moveDirection, true);
         Thread.sleep(300);
-        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 200);
+        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 160);
         Thread.sleep(300);
-        universalMoveRobot(aOpMode, 20, .3f, 0, 1500, falseStop , false, 0, 0);
+        universalMoveRobot(aOpMode, 20, .3f, 0, 900, falseStop , false, 0, 0);
         Thread.sleep(300);
         robot.openCubeClawServoOneCube();
         Thread.sleep(300);
