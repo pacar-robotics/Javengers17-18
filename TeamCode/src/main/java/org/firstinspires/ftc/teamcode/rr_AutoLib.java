@@ -133,7 +133,7 @@ public class rr_AutoLib {
         float columnDistance;
 
         robot.closeCubeClawServoOneCube();
-        robot.moveCubeArmToPositionWithTouchLimits(aOpMode, rr_Constants.CUBE_ARM_MIDDLE, CUBE_ARM_RAISE_POWER);
+        robot.moveCubeArmToPositionWithTouchLimits(aOpMode, rr_Constants.CUBE_ARM_AUTONOMOUS_CARRY, CUBE_ARM_RAISE_POWER);
 
 
         aOpMode.DBG("In Red One Common");
@@ -141,10 +141,10 @@ public class rr_AutoLib {
         Thread.sleep(300);
         aOpMode.telemetry.setAutoClear(true); //neccessary for using Vuforia
         switch(robot.getPictograph(aOpMode)) {
-            case RIGHT: columnDistance = 32 - 7; break; // 7 inches between cube columns
-            case CENTER: columnDistance = 32; break; // 7 inches between cube columns
-            case LEFT: columnDistance = 32 + 7; break; // 7 inches between cube columns
-            default: columnDistance = 32; break;
+            case RIGHT: columnDistance = 30 - 7; break; // 7 inches between cube columns
+            case CENTER: columnDistance = 30; break; // 7 inches between cube columns
+            case LEFT: columnDistance = 30 + 7; break; // 7 inches between cube columns
+            default: columnDistance = 30; break;
         }
         aOpMode.telemetry.setAutoClear(false); //turning off the auto clear afterward
 

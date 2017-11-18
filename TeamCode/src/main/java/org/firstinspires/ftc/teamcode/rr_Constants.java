@@ -65,6 +65,7 @@ public class rr_Constants {
     final static int TWO_CUBE_POS_2 = 0;
     final static int TWO_CUBE_POS_3 = 0; //Highest
     final static int CUBE_ARM_GRAB = 0;
+    final static int CUBE_ARM_AUTONOMOUS_CARRY=-350;
     final static int CUBE_ARM_MIDDLE = -500;
     final static int CUBE_ARM_TOP = -1500;
     final static int CUBE_ARM_SAFE_POS = -700;

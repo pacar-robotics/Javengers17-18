@@ -64,6 +64,8 @@ public class CalibrateCubeArm extends rr_OpMode {
 
             DBG("Claw Pos:"+cubeClawPosition);
             DBG("Orientation Pos:"+cubeOrientationPosition);
+            DBG("Cube Arm Pos:"+robot.getMotorPosition(this, CUBE_ARM));
+
 
             telemetryUpdate();
 
