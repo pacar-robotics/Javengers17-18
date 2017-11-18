@@ -159,26 +159,8 @@ public class rr_Robot {
         relicArm = hwMap.get(Servo.class, "servo_relic_arm");
 
         aOpMode.DBG("Starting Initialize Bosch Gyro");
-
-        // Set up the parameters with which we will use our IMU. Note that integration
-        // algorithm here just reports accelerations to the logcat log; it doesn't actually
-        // provide positional information.
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled = false;
-        //parameters.loggingTag = "IMU";
-       // parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-
-        // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
-        // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
-        // and named "imu".
-        imu = hwMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
-        // Start the logging of measured acceleration
-        //imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
-
+        initializeBoschIMU(aOpMode); //use shared method for initialization of bosch gyro
+        //and setZeroYaw();
         aOpMode.DBG("End Initialize Bosch Gyro");
 
 //        //Map Sensors
@@ -295,6 +277,10 @@ public class rr_Robot {
 
 
     protected void setBoschGyroZeroYaw(rr_OpMode aOpMode) throws InterruptedException {
+      initializeBoschIMU(aOpMode);
+    }
+
+    protected void initializeBoschIMU(rr_OpMode aOpMode) throws InterruptedException {
         aOpMode.DBG("Starting Initialize Bosch Gyro");
         Thread.sleep(1000);
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -314,6 +300,7 @@ public class rr_Robot {
         Thread.sleep(1000);
         aOpMode.DBG("End Initialize Bosch Gyro");
     }
+
 
     public double getFloorBlueReading() {
         return frontFloorColorSensor.blue();
