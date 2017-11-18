@@ -79,6 +79,15 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.TURN_POWER_FACTOR;
 
 public class rr_Robot {
 
+    enum pictographType {
+        LEFT,
+        RIGHT,
+        CENTER,
+        UNKNOWN,
+    }
+
+    pictographType detectedPictograph = pictographType.UNKNOWN;
+
     HardwareMap hwMap = null;
 
     //Motors
@@ -1226,20 +1235,25 @@ public class rr_Robot {
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
 
             if (vuMark == RelicRecoveryVuMark.LEFT) {
-                aOpMode.telemetryAddData("VuMark", "VuMark Left", "%s visible" + vuMark);
+                aOpMode.telemetryAddData("VuMark", "VuMark Left", "%s visible" );
                 aOpMode.telemetryUpdate();
+                detectedPictograph = pictographType.LEFT;
                 return vuMark;
             } else if (vuMark == RelicRecoveryVuMark.CENTER) {
-                aOpMode.telemetryAddData("VuMark", "VuMark Center", "%s visible" + vuMark);
+                aOpMode.telemetryAddData("VuMark", "VuMark Center", "%s visible" + detectedPictograph);
                 aOpMode.telemetryUpdate();
+                detectedPictograph = pictographType.CENTER;
                 return vuMark;
             } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
-                aOpMode.telemetryAddData("VuMark", "VuMark Right", "%s visible" + vuMark);
+                aOpMode.telemetryAddData("VuMark", "VuMark Right", "%s visible" + detectedPictograph);
                 aOpMode.telemetryUpdate();
+                detectedPictograph = pictographType.RIGHT;
+
                 return vuMark;
             } else {
                 aOpMode.telemetryAddData("VuMark", "Unknown", "No VuMark Detected");
                 aOpMode.telemetryUpdate();
+                detectedPictograph = pictographType.UNKNOWN;
             }
 
             Thread.sleep(100);
