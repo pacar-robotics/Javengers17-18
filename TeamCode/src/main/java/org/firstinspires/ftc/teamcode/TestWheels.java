@@ -8,8 +8,8 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.DirectionEnum.Sideways
 import static org.firstinspires.ftc.teamcode.rr_Constants.DirectionEnum.SidewaysRight;
 
 
-@TeleOp(name = "WheelCalibrationOp", group = "Calibrations")
-public class WheelCalibration extends rr_OpMode {
+@TeleOp(name = "Test Wheels", group = "Test")
+public class TestWheels extends rr_OpMode {
 
     /* Declare OpMode members. */
     rr_AutoLib rrAutoLib;

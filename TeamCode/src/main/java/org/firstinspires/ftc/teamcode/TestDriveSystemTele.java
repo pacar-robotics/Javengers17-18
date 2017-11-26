@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@TeleOp(name = "Test Tele Drive", group = "Test")
+@TeleOp(name = "Test Joystick Driving", group = "Test")
 
 public class TestDriveSystemTele extends rr_OpMode {
     rr_Robot robot;

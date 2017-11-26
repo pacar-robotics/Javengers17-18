@@ -4,8 +4,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import static org.firstinspires.ftc.teamcode.rr_Constants.TURN_POWER_FACTOR;
 
-@Autonomous(name = "Turn by Encoder Calibration Op", group = "Calibrations")
-public class TurnByEncoderCalibOp extends rr_OpMode {
+
+//TODO: WILL MAKE THIS CALIBRATION OP
+@Autonomous(name = "Calibrate Encoder Turning", group = "Calibration")
+public class CalibEncoderTurn extends rr_OpMode {
 
     rr_AutoLib rrAutoLib;
 
@@ -24,9 +26,6 @@ public class TurnByEncoderCalibOp extends rr_OpMode {
         DBG("Turning 90 degrees anti-clockwise");
         rrAutoLib.robot.turnUsingEncoders(this, 90,TURN_POWER_FACTOR, rr_Constants.TurnDirectionEnum.Counterclockwise );
         Thread.sleep(5000);
-
-
-
     }
 
 }

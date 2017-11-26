@@ -4,8 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import static org.firstinspires.ftc.teamcode.rr_Constants.TURN_POWER_FACTOR;
 
-@Autonomous(name = "Move by Encoder Calibration Op", group = "Calibrations")
-public class MoveCalibOp extends rr_OpMode {
+@Autonomous(name = "Test Wheel Encoders", group = "Calibrations")
+public class TestWheelEncoders extends rr_OpMode {
 
     rr_AutoLib rrAutoLib;
 

@@ -24,8 +24,8 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ORIENTATION_HORIZ
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ORIENTATION_VERTICAL;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TURN_POWER_FACTOR;
 
-//@TeleOp(name = "Test Op", group = "Test")
-public class TestOp extends rr_OpMode {
+//@TeleOp(name = "Test Robot Op", group = "Test")
+public class TestRobotOp extends rr_OpMode {
     rr_Robot robot;
 
     float cubeClawPos = CUBE_CLAW_OPEN;
