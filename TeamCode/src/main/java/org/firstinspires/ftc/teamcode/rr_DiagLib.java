@@ -58,4 +58,25 @@ public class rr_DiagLib {
     public boolean testRelicWinchMotor() throws InterruptedException {
         return genericMotorTest(RELIC_WINCH);
     }
+
+
+    //***************** PLATFORM TESTS *****************//
+
+    public boolean testForward() throws InterruptedException {
+        int motorPosition = robot.getMotorPosition(aOpMode, FRONT_LEFT_MOTOR); // Representative motor
+        float startingAngle = robot.getBoschGyroSensorHeading(aOpMode); // Save starting angle.
+        robot.universalMoveRobot(aOpMode, 0.5f, 0.0f);
+        int newMotorPosition = robot.getMotorPosition(aOpMode, FRONT_LEFT_MOTOR);
+        float endingAngle = robot.getBoschGyroSensorHeading(aOpMode);
+        return !((Math.abs(newMotorPosition - motorPosition) < MECCANUM_WHEEL_ENCODER_MARGIN) || (Math.abs(startingAngle - endingAngle) > 3));
+    }
+
+    public boolean testLeft() throws InterruptedException {
+        int motorPosition = robot.getMotorPosition(aOpMode, FRONT_LEFT_MOTOR); // Representative motor
+        float startingAngle = robot.getBoschGyroSensorHeading(aOpMode); // Save starting angle.
+        robot.universalMoveRobot(aOpMode, 0.0f, 0.5f);
+        int newMotorPosition = robot.getMotorPosition(aOpMode, FRONT_LEFT_MOTOR);
+        float endingAngle = robot.getBoschGyroSensorHeading(aOpMode);
+        return !((Math.abs(newMotorPosition - motorPosition) < MECCANUM_WHEEL_ENCODER_MARGIN) || (Math.abs(startingAngle - endingAngle) > 3));
+    }
 }
