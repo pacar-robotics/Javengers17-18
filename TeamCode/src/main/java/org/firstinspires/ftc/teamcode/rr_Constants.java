@@ -73,7 +73,7 @@ public class rr_Constants {
     final static float CUBE_ARM_POWER_FACTOR = 0.20f;
     final static float CUBE_ARM_RAISE_POWER = -0.4f;
     final static float CUBE_ARM_LOWER_POWER = 0.1f;
-    final static float CUBE_CLAW_OPEN = 0.65f;
+    final static float CUBE_CLAW_OPEN = 0.7f;
     final static float CUBE_CLAW_ONE_CLOSED = 0.925f;
     final static float CUBE_CLAW_ONE_RELEASE = 0.7f;
     final static float CUBE_CLAW_TWO_CLOSED = 0.925f;
@@ -81,12 +81,12 @@ public class rr_Constants {
     final static float CUBE_ORIENTATION_VERTICAL = 0.75f;
 
     //Relic Arm Constants
-    final static float RELIC_WINCH_EXTEND_POWER_FACTOR = 1.0f;   // TODO: Change
-    final static float RELIC_WINCH_RETRACT_POWER_FACTOR = 0.9f;  // TODO: Change
+    final static float RELIC_WINCH_EXTEND_POWER_FACTOR = .8f;   // TODO: Change
+    final static float RELIC_WINCH_RETRACT_POWER_FACTOR = .8f;  // TODO: Change
     final static int RELIC_WINCH_REST = -220;                   // TODO: Change
     final static int RELIC_WINCH_UPPER_LIMIT = 11000;           // TODO: Change
     final static float RELIC_ARM_GRAB = 0.3f;
-    final static float RELIC_ARM_EXTEND_UP = 0.90f;//feet of relic pointing up
+    final static float RELIC_ARM_EXTEND_UP = 0.75f;//feet of robot pointing up
     final static float RELIC_ARM_EXTEND_IN = 0.0f; //feet of relic toward the robot
     final static float RELIC_ARM_MAX = 1f;              // TODO: Change
     final static float RELIC_ARM_MIN = .1f;              // TODO: Change
@@ -96,8 +96,10 @@ public class rr_Constants {
 
 
     //Jewel Arm Constants TODO: CHANGE
-    final static float JEWEL_PUSHER_LEFT = 0.63f;
-    final static float JEWEL_PUSHER_RIGHT = 0.28f;
+
+
+    final static float JEWEL_PUSHER_LEFT = 0.68f; // make bigger
+    final static float JEWEL_PUSHER_RIGHT = 0.25f; // make smaller
     final static float JEWEL_PUSHER_NEUTRAL = 0.48f;
     final static float JEWEL_ARM_UP = 0.6f;
     final static float JEWEL_ARM_DOWN_READ = .08f;
