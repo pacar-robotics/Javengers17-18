@@ -127,91 +127,129 @@ public class rr_Robot {
     public static final String TAG = "Vuforia VuMark Sample";
     VuforiaLocalizer vuforia;
 
-    public rr_Robot(rr_OpMode aOpMode, HardwareMap ahwMap) throws InterruptedException {
-        // save reference to HW Map
+    public rr_Robot(rr_OpMode aOpMode) throws InterruptedException {    }
 
+
+    //INITIALIZE METHODS
+
+    public void autonomousInit(rr_OpMode aOpMode, HardwareMap ahwMap) throws InterruptedException {
         aOpMode.telemetry.setAutoClear(false); //useful to see the debug values stay on screen
-        //this value gets reset inside Vuforia calls in order for it to work.
 
         aOpMode.DBG("in Robot init");
         hwMap = ahwMap;
 
-        initializeBoschIMU(aOpMode); //use shared method for initialization of bosch gyro
+        //Instantiate motorArray
+        motorArray = new DcMotor[10];
 
-        //Define and Initialize motors, sensors, and servos
+        //Initialize Gyro
+        initIMUGyro(aOpMode);
+
+        //Initialize Cube Arm
+        initCubeArmMotor(aOpMode);
+        initCubeArmSensors(aOpMode);
+        initCubeArmServos(aOpMode);
+
+        //Initialize Relic Arm
+        initRelicArm(aOpMode);
+
+        //Initialize Jewel Arm
+        initJewelSensors(aOpMode);
+        initJewelServos(aOpMode);
+
+        aOpMode.DBG("Exiting Robot init");
+    }
+
+    public void teleopInit(rr_OpMode aOpMode, HardwareMap ahwMap) throws InterruptedException {
+        aOpMode.telemetry.setAutoClear(false); //useful to see the debug values stay on screen
+
+        aOpMode.DBG("in Robot init");
+        hwMap = ahwMap;
 
         //Instantiate motorArray
         motorArray = new DcMotor[10];
 
+        //Initialize Cube Arm
+        initCubeArmMotor(aOpMode);
+        initCubeArmSensors(aOpMode);
+        initCubeArmServos(aOpMode);
+
+        //Initialize Relic Arm
+        initRelicArm(aOpMode);
+
+        //Initialize Jewel Arm
+        initJewelSensors(aOpMode);
+        initJewelServos(aOpMode);
+
+        aOpMode.DBG("Exiting Robot init");
+    }
+
+    public void initIMUGyro(rr_OpMode aOpMode) throws InterruptedException {
+        aOpMode.DBG("Starting Initialize Bosch Gyro");
+        initializeBoschIMU(aOpMode); //use shared method for initialization of bosch gyro
+        aOpMode.DBG("End Initialize Bosch Gyro");
+    }
+
+    public void initDriveMotors(rr_OpMode aOpMode) throws InterruptedException {
         //Map Motors
         motorArray[FRONT_LEFT_MOTOR] = hwMap.get(DcMotor.class, "motor_front_left");
         motorArray[FRONT_RIGHT_MOTOR] = hwMap.get(DcMotor.class, "motor_front_right");
         motorArray[BACK_LEFT_MOTOR] = hwMap.get(DcMotor.class, "motor_back_left");
         motorArray[BACK_RIGHT_MOTOR] = hwMap.get(DcMotor.class, "motor_back_right");
 
-        motorArray[CUBE_ARM] = hwMap.get(DcMotor.class, "motor_cube_arm");
-        motorArray[RELIC_WINCH] = hwMap.get(DcMotor.class, "motor_relic_slide");
-
-
-        //TODO: Map Sensors and Servos
-
-        // Color sensors
-        leftJewelColorSensor = hwMap.get(ColorSensor.class, "left_jewel_color");
-        rightJewelColorSensor = hwMap.get(ColorSensor.class, "right_jewel_color");
-
-
-        //Map Servos
-
-        cubeClaw = hwMap.get(Servo.class, "servo_cube_claw");
-        cubeOrientation = hwMap.get(Servo.class, "servo_cube_orientation");
-        jewelArm = hwMap.get(Servo.class, "servo_jewel_arm");
-        jewelPusher = hwMap.get(Servo.class, "servo_jewel_pusher");
-        relicClaw = hwMap.get(Servo.class, "servo_relic_claw");
-        relicArm = hwMap.get(Servo.class, "servo_relic_arm");
-
-        aOpMode.DBG("Starting Initialize Bosch Gyro");
-        //and setZeroYaw();
-        aOpMode.DBG("End Initialize Bosch Gyro");
-
-//        //Map Sensors
-//        rangeSensor = hwMap.get(ModernRoboticsI2cRangeSensor.class, "range_sensor");
-        cubeArmUpperLimit = hwMap.get(DigitalChannel.class, "cube_arm_upper_limit");
-        cubeArmLowerLimit = hwMap.get(DigitalChannel.class, "cube_arm_lower_limit");
-
-        cubeArmUpperLimit.setMode(DigitalChannel.Mode.INPUT);
-        cubeArmLowerLimit.setMode(DigitalChannel.Mode.INPUT);
-
-
-        aOpMode.DBG("Starting Motor Setups");
-
         //Set the Direction of Motors
-
         motorArray[FRONT_LEFT_MOTOR].setDirection(DcMotorSimple.Direction.REVERSE);
         motorArray[FRONT_RIGHT_MOTOR].setDirection(DcMotorSimple.Direction.FORWARD);
         motorArray[BACK_LEFT_MOTOR].setDirection(DcMotorSimple.Direction.REVERSE);
         motorArray[BACK_RIGHT_MOTOR].setDirection(DcMotorSimple.Direction.FORWARD);
 
-        motorArray[CUBE_ARM].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        Thread.sleep(250);
-
-        motorArray[CUBE_ARM].setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-
         // Set all base motors to zero power
         stopBaseMotors(aOpMode);
+    }
 
-        aOpMode.DBG("Presetting Servos");
+    public void initCubeArmMotor(rr_OpMode aOpMode) throws InterruptedException {
+        motorArray[CUBE_ARM] = hwMap.get(DcMotor.class, "motor_cube_arm");
+        motorArray[CUBE_ARM].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Thread.sleep(250);
+        motorArray[CUBE_ARM].setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
 
-//        //Setting servos to intitial cubeClawPos TODO: CHANGE
+    public void initCubeArmServos(rr_OpMode aOpMode) throws InterruptedException {
+        cubeClaw = hwMap.get(Servo.class, "servo_cube_claw");
+        cubeOrientation = hwMap.get(Servo.class, "servo_cube_orientation");
+
         setCubeClawPosition(CUBE_CLAW_OPEN);
         setCubeClawToHorizontal();
-        setJewelPusherNeutral();
-        setJewelArmUp();
+    }
+
+    public void initCubeArmSensors(rr_OpMode aOpMode) throws InterruptedException {
+        cubeArmUpperLimit = hwMap.get(DigitalChannel.class, "cube_arm_upper_limit");
+        cubeArmLowerLimit = hwMap.get(DigitalChannel.class, "cube_arm_lower_limit");
+
+        cubeArmUpperLimit.setMode(DigitalChannel.Mode.INPUT);
+        cubeArmLowerLimit.setMode(DigitalChannel.Mode.INPUT);
+    }
+
+    public void initRelicArm(rr_OpMode aOpMode) throws InterruptedException {
+        motorArray[RELIC_WINCH] = hwMap.get(DcMotor.class, "motor_relic_slide");
+        relicClaw = hwMap.get(Servo.class, "servo_relic_claw");
+        relicArm = hwMap.get(Servo.class, "servo_relic_arm");
+
         setRelicClawClosed();
         setRelicArmGrab();
+    }
 
-        aOpMode.DBG("Exiting Robot init");
+    public void initJewelServos(rr_OpMode aOpMode) throws InterruptedException {
+        jewelArm = hwMap.get(Servo.class, "servo_jewel_arm");
+        jewelPusher = hwMap.get(Servo.class, "servo_jewel_pusher");
+
+        setJewelPusherNeutral();
+        setJewelArmUp();
+    }
+
+    public void initJewelSensors(rr_OpMode aOpMode) throws InterruptedException {
+        // Color sensors
+        leftJewelColorSensor = hwMap.get(ColorSensor.class, "left_jewel_color");
+        rightJewelColorSensor = hwMap.get(ColorSensor.class, "right_jewel_color");
     }
 
 

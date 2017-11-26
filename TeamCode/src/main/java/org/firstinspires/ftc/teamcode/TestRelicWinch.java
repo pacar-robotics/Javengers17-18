@@ -25,7 +25,8 @@ public class TestRelicWinch extends rr_OpMode {
     }
 
     private void initialize() throws InterruptedException {
-        robot = new rr_Robot(this, this.hardwareMap);
+        robot = new rr_Robot(this);
+        robot.teleopInit(this, this.hardwareMap);
     }
 
     private void processWinchTest() throws InterruptedException {

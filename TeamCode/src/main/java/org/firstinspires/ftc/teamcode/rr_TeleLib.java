@@ -40,14 +40,24 @@ public class rr_TeleLib {
     public float orientationPos = CUBE_ORIENTATION_HORIZONTAL;
     public float gamepad2PowerFactor = STANDARD_DRIVE_POWER_FACTOR;
 
+    private boolean isGyroCalibrated = false;
+
     public rr_TeleLib(rr_OpMode aOpMode, HardwareMap aHwMap) throws InterruptedException {
-        robot = new rr_Robot(aOpMode, aHwMap);
+        robot = new rr_Robot(aOpMode);
         this.aOpMode = aOpMode;
+        robot.teleopInit(aOpMode, aHwMap);
     }
 
 
     //************ PROCESS METHODS ************//
 
+    public void processTeleOpDrive() throws InterruptedException {
+        if (!isGyroCalibrated) {
+            processStandardDrive();
+        } else {
+            processFieldOrientedDrive();
+        }
+    }
     public void processFieldOrientedDrive() throws InterruptedException {
         //process joysticks
 
@@ -100,11 +110,6 @@ public class rr_TeleLib {
             robot.stopBaseMotors(aOpMode);
         }
 
-        if ((aOpMode.gamepad1.right_stick_button && aOpMode.gamepad1.dpad_up) ||
-                (aOpMode.gamepad2.right_stick_button && aOpMode.gamepad2.dpad_up)) {
-            robot.setBoschGyroZeroYaw(aOpMode);
-        }
-
         if (aOpMode.gamepad1.dpad_up || aOpMode.gamepad2.dpad_up) {
             robot.turnAbsoluteBoschGyroDegrees(aOpMode, 0);
         }
@@ -116,6 +121,14 @@ public class rr_TeleLib {
         }
         if (aOpMode.gamepad1.dpad_left || aOpMode.gamepad2.dpad_left) {
             robot.turnAbsoluteBoschGyroDegrees(aOpMode, -90);
+        }
+    }
+
+    public void processIMUGyroReset() throws InterruptedException {
+        if ((aOpMode.gamepad1.right_stick_button && aOpMode.gamepad1.dpad_up) ||
+                (aOpMode.gamepad2.right_stick_button && aOpMode.gamepad2.dpad_up)) {
+            robot.setBoschGyroZeroYaw(aOpMode);
+            isGyroCalibrated = true;
         }
     }
 

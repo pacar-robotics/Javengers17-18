@@ -21,11 +21,12 @@ public class TeleOpMaryland extends rr_OpMode {
             lib.processClaw();
             lib.processOrientationClaw();
             lib.processCubeArm();
-            lib.processFieldOrientedDrive();
+            lib.processTeleOpDrive();
             lib.processRelicSlide();
             lib.processRelicClaw();
             lib.processRelicHand();
             lib.processBalance();
+            lib.processIMUGyroReset();
             lib.printTelemetry();
 
             Thread.sleep(10);
