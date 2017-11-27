@@ -141,6 +141,9 @@ public class rr_Robot {
         //Instantiate motorArray
         motorArray = new DcMotor[10];
 
+        //Initialize Drive Motors
+        initDriveMotors(aOpMode);
+
         //Initialize Gyro
         initIMUGyro(aOpMode);
 
@@ -167,6 +170,9 @@ public class rr_Robot {
 
         //Instantiate motorArray
         motorArray = new DcMotor[10];
+
+        //Initialize Drive Motors
+        initDriveMotors(aOpMode);
 
         //Initialize Cube Arm
         initCubeArmMotor(aOpMode);
