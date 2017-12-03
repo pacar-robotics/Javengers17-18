@@ -994,10 +994,30 @@ public class rr_Robot {
 
     //JEWEL ARM CONTROL
 
-
+    static final double INCREMENT = 0.01;     // amount to slew servo each CYCLE_MS cycle
+    static final int CYCLE_MS = 50;     // period of each cycle
     public void setJewelArmPosition(float armPosition) throws InterruptedException {
-        jewelArm.setPosition(armPosition);
-        Thread.sleep(250);
+        if (jewelArm.getPosition() > armPosition) {
+            boolean isJewelArmAboveFinal = true;
+            while (isJewelArmAboveFinal) {
+                if (jewelArm.getPosition() > armPosition) {
+                    jewelArm.setPosition(jewelArm.getPosition() - INCREMENT);
+                    Thread.sleep(CYCLE_MS);
+                } else {
+                    isJewelArmAboveFinal = false;
+                }
+            }
+        }
+        else { boolean isJewelArmBelowFinal = true;
+            while (isJewelArmBelowFinal) {
+                if (jewelArm.getPosition() < armPosition) {
+                    jewelArm.setPosition(jewelArm.getPosition() + INCREMENT);
+                    Thread.sleep(CYCLE_MS);
+                } else {
+                    isJewelArmBelowFinal = false;
+                }
+            }
+        }
     }
 
     public void setJewelPusherPosition(float armPosition) throws InterruptedException {
@@ -1025,31 +1045,15 @@ public class rr_Robot {
         Thread.sleep(100);
     }
 
-    static final double INCREMENT = 0.01;     // amount to slew servo each CYCLE_MS cycle
-    static final int CYCLE_MS = 50;     // period of each cycle
+
     public void setJewelArmDownPush() throws InterruptedException {
-        boolean isJewelArmAbovePush = true;
-        while (isJewelArmAbovePush) {
-            if (jewelArm.getPosition() > JEWEL_ARM_DOWN_PUSH) {
-                jewelArm.setPosition(jewelArm.getPosition() - INCREMENT);
-                Thread.sleep(CYCLE_MS);
-            } else {
-                isJewelArmAbovePush = false;
+        setJewelArmPosition(JEWEL_ARM_DOWN_PUSH);
             }
-        }
-    }
 
     public void setJewelArmDownRead() throws InterruptedException {
-       boolean isJewelArmAboveRead = true;
-        while(isJewelArmAboveRead) {
-            if (jewelArm.getPosition() > JEWEL_ARM_DOWN_READ) {
-                jewelArm.setPosition(jewelArm.getPosition() - INCREMENT);
-                Thread.sleep(CYCLE_MS);
-            } else {
-                isJewelArmAboveRead = false;
-            }
+        setJewelArmPosition(JEWEL_ARM_DOWN_READ);
         }
-}
+
 
 
     //JEWEL COLOR SENSORS
