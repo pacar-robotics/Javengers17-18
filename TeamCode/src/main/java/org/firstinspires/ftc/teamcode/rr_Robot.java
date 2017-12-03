@@ -32,6 +32,7 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_RIGHT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_LOWER_LIMIT;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_LOWER_POWER;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_MAX_DURATION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_UPPER_LIMIT;
@@ -925,6 +926,13 @@ public class rr_Robot {
         motorArray[CUBE_ARM].setPower(0.0f);
 
         motorArray[CUBE_ARM].setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
+    public void initializeCubeArmToIntakePosition(rr_OpMode aOpMode) throws InterruptedException {
+        aOpMode.reset_timer_array(GENERIC_TIMER);
+        while (!isCubeLowerLimitPressed() && Math.abs(System.currentTimeMillis() - aOpMode.time_elapsed_array(GENERIC_TIMER)) < CUBE_ARM_MAX_DURATION) {
+            setCubeArmPower(aOpMode, CUBE_ARM_LOWER_POWER);
+        }
     }
 
     public void openCubeClawServoOneCube() throws InterruptedException{

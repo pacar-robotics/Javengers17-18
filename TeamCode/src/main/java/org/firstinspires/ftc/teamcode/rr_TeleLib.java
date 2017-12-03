@@ -228,6 +228,13 @@ public class rr_TeleLib {
         }
     }
 
+    public void initializeCubeArm(rr_OpMode aOpMode) throws InterruptedException {
+        robot.initializeCubeArmToIntakePosition(aOpMode);
+        robot.setMotorMode(aOpMode, CUBE_ARM, DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Thread.sleep(250);
+        robot.setMotorMode(aOpMode, CUBE_ARM, DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
     public void processClaw() throws InterruptedException {
        if (aOpMode.gamepad1.right_bumper && cubeClawPos == CUBE_CLAW_ONE_RELEASE) {
             robot.closeCubeClawServoOneCube();
