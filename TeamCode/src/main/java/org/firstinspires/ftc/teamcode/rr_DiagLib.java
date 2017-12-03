@@ -18,7 +18,8 @@ public class rr_DiagLib {
     rr_OpMode aOpMode;
 
     public rr_DiagLib(rr_OpMode aOpMode, HardwareMap aHwMap) throws InterruptedException {
-        robot = new rr_Robot(aOpMode, aHwMap);
+        robot = new rr_Robot(aOpMode);
+        robot.autonomousInit(aOpMode, aHwMap);
         this.aOpMode = aOpMode;
     }
 
