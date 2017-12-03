@@ -72,6 +72,7 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_GRAB;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_CLAW_CLOSED;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_CLAW_OPEN;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WINCH;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WINCH_MAX_DURATION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RIGHT_MOTOR_TRIM_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.ROBOT_TRACK_DISTANCE;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TURN_POWER_FACTOR;
@@ -111,6 +112,8 @@ public class rr_Robot {
 
     private DigitalChannel cubeArmUpperLimit;
     private DigitalChannel cubeArmLowerLimit;
+    private DigitalChannel relicArmUpperLimit;
+    private DigitalChannel relicArmLowerLimit;
 
     private ModernRoboticsI2cRangeSensor rangeSensor;
 
@@ -157,6 +160,7 @@ public class rr_Robot {
 
         //Initialize Relic Arm
         initRelicArm(aOpMode);
+        initRelicArmSensors(aOpMode);
 
         //Initialize Jewel Arm
         initJewelSensors(aOpMode);
@@ -184,6 +188,7 @@ public class rr_Robot {
 
         //Initialize Relic Arm
         initRelicArm(aOpMode);
+        initRelicArmSensors(aOpMode);
 
         //Initialize Jewel Arm
         initJewelSensors(aOpMode);
@@ -245,6 +250,16 @@ public class rr_Robot {
 
         setRelicClawClosed();
         setRelicArmGrab();
+    }
+
+    public void initRelicArmSensors(rr_OpMode aOpMode) throws InterruptedException {
+
+        //TODO: CHANGE THIS
+//        relicArmUpperLimit = hwMap.get(DigitalChannel.class, "relic_arm_upper_limit");
+//        relicArmLowerLimit = hwMap.get(DigitalChannel.class, "relic_arm_lower_limit");
+
+        relicArmUpperLimit.setMode(DigitalChannel.Mode.INPUT);
+        relicArmLowerLimit.setMode(DigitalChannel.Mode.INPUT);
     }
 
     public void initJewelServos(rr_OpMode aOpMode) throws InterruptedException {
@@ -1013,6 +1028,9 @@ public class rr_Robot {
     public void setRelicWinchPower(float power) {
         motorArray[RELIC_WINCH].setPower(power);
     }
+    public void setRelicWinchPowerWithinTouchLimits(float power) {
+
+    }
     public int getRelicWinchPosition() {
         return motorArray[RELIC_WINCH].getCurrentPosition();
     }
@@ -1051,6 +1069,14 @@ public class rr_Robot {
     }
     public float getRelicClawPosition() throws InterruptedException {
         return (float) relicClaw.getPosition();
+    }
+
+    public boolean isRelicUpperLimitPressed() {
+        return !relicArmUpperLimit.getState();
+    }
+
+    public boolean isRelicLowerLimitPressed() {
+        return !relicArmLowerLimit.getState();
     }
 
 

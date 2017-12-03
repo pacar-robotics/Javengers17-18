@@ -248,10 +248,10 @@ public class rr_TeleLib {
     }
 
     public void processRelicSlide(){
-        if(Math.abs(aOpMode.gamepad2.right_trigger)>TRIGGER_THRESHOLD){
-            robot.setRelicWinchPower(0.5f);
-        }else if(Math.abs(aOpMode.gamepad2.left_trigger)>TRIGGER_THRESHOLD){
-            robot.setRelicWinchPower(-0.5f);
+        if(Math.abs(aOpMode.gamepad2.right_trigger)>TRIGGER_THRESHOLD && !robot.isRelicUpperLimitPressed()){
+            robot.setRelicWinchPower(RELIC_WINCH_EXTEND_POWER_FACTOR);
+        }else if(Math.abs(aOpMode.gamepad2.left_trigger)>TRIGGER_THRESHOLD && !robot.isRelicLowerLimitPressed()){
+            robot.setRelicWinchPower(RELIC_WINCH_RETRACT_POWER_FACTOR);
         }else{
             //the triggers are in dead zone.
             //stop the relic slide
