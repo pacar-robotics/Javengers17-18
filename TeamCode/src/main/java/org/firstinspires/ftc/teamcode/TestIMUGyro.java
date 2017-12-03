@@ -3,8 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-@Autonomous(name = "Gyro Code Test Op", group = "Autonomous")
-public class GyroCodeTestOp extends rr_OpMode {
+@Autonomous(name = "Test IMU Gyro", group = "Autonomous")
+public class TestIMUGyro extends rr_OpMode {
 
     rr_AutoLib rrAutoLib;
 

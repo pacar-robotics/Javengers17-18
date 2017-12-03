@@ -2,8 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@TeleOp(name = "TeleOp", group = "TeleOp")
-public class RelicRecoveryTeleOp extends rr_OpMode {
+@TeleOp(name = "TeleOp Main", group = "TeleOp")
+public class TeleOpMaryland extends rr_OpMode {
     rr_TeleLib lib;
 
     @Override
@@ -21,11 +21,12 @@ public class RelicRecoveryTeleOp extends rr_OpMode {
             lib.processClaw();
             lib.processOrientationClaw();
             lib.processCubeArm();
-            lib.processFieldOrientedDrive();
+            lib.processTeleOpDrive();
             lib.processRelicSlide();
             lib.processRelicClaw();
             lib.processRelicHand();
             lib.processBalance();
+            lib.processIMUGyroReset();
             lib.printTelemetry();
 
             Thread.sleep(10);

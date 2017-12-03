@@ -11,8 +11,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 
-@Autonomous(name = "AutoOpBlueOne", group = "Autonomous")
-public class AutoOpBlueOne extends rr_OpMode {
+@Autonomous(name = "Blue Position 1", group = "Autonomous")
+public class AutoOpBlue1 extends rr_OpMode {
 
     rr_AutoLib rrAutoLib;
 

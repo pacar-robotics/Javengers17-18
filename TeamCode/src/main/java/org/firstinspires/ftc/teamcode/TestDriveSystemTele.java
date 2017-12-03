@@ -2,14 +2,15 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@TeleOp(name = "Test Tele Drive", group = "Test")
+@TeleOp(name = "Test Joystick Driving", group = "Test")
 
 public class TestDriveSystemTele extends rr_OpMode {
     rr_Robot robot;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        robot = new rr_Robot(this, this.hardwareMap);
+        robot = new rr_Robot(this);
+        robot.teleopInit(this, this.hardwareMap);
 
         waitForStart();
 
