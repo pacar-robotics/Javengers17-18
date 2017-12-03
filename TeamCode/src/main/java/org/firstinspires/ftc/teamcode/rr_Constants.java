@@ -96,8 +96,10 @@ public class rr_Constants {
 
 
     //Jewel Arm Constants TODO: CHANGE
-    final static float JEWEL_PUSHER_LEFT = 0.63f;
-    final static float JEWEL_PUSHER_RIGHT = 0.28f;
+
+
+    final static float JEWEL_PUSHER_LEFT = 0.68f; // make bigger
+    final static float JEWEL_PUSHER_RIGHT = 0.25f; // make smaller
     final static float JEWEL_PUSHER_NEUTRAL = 0.48f;
     final static float JEWEL_ARM_UP = 0.6f;
     final static float JEWEL_ARM_DOWN_READ = .08f;

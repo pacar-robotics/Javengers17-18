@@ -136,6 +136,8 @@ public class rr_Robot {
         aOpMode.DBG("in Robot init");
         hwMap = ahwMap;
 
+        initializeBoschIMU(aOpMode); //use shared method for initialization of bosch gyro
+
         //Define and Initialize motors, sensors, and servos
 
         //Instantiate motorArray
@@ -168,7 +170,6 @@ public class rr_Robot {
         relicArm = hwMap.get(Servo.class, "servo_relic_arm");
 
         aOpMode.DBG("Starting Initialize Bosch Gyro");
-        initializeBoschIMU(aOpMode); //use shared method for initialization of bosch gyro
         //and setZeroYaw();
         aOpMode.DBG("End Initialize Bosch Gyro");
 
@@ -203,7 +204,7 @@ public class rr_Robot {
         aOpMode.DBG("Presetting Servos");
 
 //        //Setting servos to intitial cubeClawPos TODO: CHANGE
-        openCubeClawServoOneCube();
+        setCubeClawPosition(CUBE_CLAW_OPEN);
         setCubeClawToHorizontal();
         setJewelPusherNeutral();
         setJewelArmUp();
@@ -291,7 +292,7 @@ public class rr_Robot {
 
     protected void initializeBoschIMU(rr_OpMode aOpMode) throws InterruptedException {
         aOpMode.DBG("Starting Initialize Bosch Gyro");
-        Thread.sleep(1000);
+        Thread.sleep(2000);
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
