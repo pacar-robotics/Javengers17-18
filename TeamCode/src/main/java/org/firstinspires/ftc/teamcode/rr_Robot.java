@@ -779,7 +779,6 @@ public class rr_Robot {
         //compare to the current gyro zIntegrated heading and store the result.
         //the Integrated zValue returned is positive for clockwise turns
         //read the heading and store it.
-
         float startingHeading = getBoschGyroSensorHeading(aOpMode);
         float turnDegrees = targetDegrees - startingHeading;
 
@@ -1025,15 +1024,31 @@ public class rr_Robot {
         Thread.sleep(100);
     }
 
+    static final double INCREMENT = 0.01;     // amount to slew servo each CYCLE_MS cycle
+    static final int CYCLE_MS = 50;     // period of each cycle
     public void setJewelArmDownPush() throws InterruptedException {
-        jewelArm.setPosition(JEWEL_ARM_DOWN_PUSH);
-        Thread.sleep(250);
+        boolean isJewelArmAbovePush = true;
+        while (isJewelArmAbovePush) {
+            if (jewelArm.getPosition() > JEWEL_ARM_DOWN_PUSH) {
+                jewelArm.setPosition(jewelArm.getPosition() - INCREMENT);
+                Thread.sleep(CYCLE_MS);
+            } else {
+                isJewelArmAbovePush = false;
+            }
+        }
     }
 
     public void setJewelArmDownRead() throws InterruptedException {
-        jewelArm.setPosition(JEWEL_ARM_DOWN_READ);
-        Thread.sleep(250);
-    }
+       boolean isJewelArmAboveRead = true;
+        while(isJewelArmAboveRead) {
+            if (jewelArm.getPosition() > JEWEL_ARM_DOWN_READ) {
+                jewelArm.setPosition(jewelArm.getPosition() - INCREMENT);
+                Thread.sleep(CYCLE_MS);
+            } else {
+                isJewelArmAboveRead = false;
+            }
+        }
+}
 
 
     //JEWEL COLOR SENSORS
