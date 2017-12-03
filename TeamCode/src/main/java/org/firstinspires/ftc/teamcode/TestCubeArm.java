@@ -3,6 +3,9 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_GRAB;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_CLAW_OPEN;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ORIENTATION_HORIZONTAL;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRIGGER_THRESHOLD;
 
 @TeleOp(name = "Test Cube Arm", group = "Test")
@@ -10,16 +13,18 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.TRIGGER_THRESHOLD;
 public class TestCubeArm extends rr_OpMode {
 
     rr_Robot robot;
-    float position = 0.5f;
-    float orientationPos = .5f;
+    float cubeClawPosition = CUBE_CLAW_OPEN;
+    float cubeOrientationPosition = CUBE_ORIENTATION_HORIZONTAL;
+    float cubeArmPosition = CUBE_ARM_GRAB;
 
 
     @Override
     public void runOpMode() throws InterruptedException {
-        robot = new rr_Robot(this, this.hardwareMap);
+        robot = new rr_Robot(this);
+        robot.teleopInit(this, this.hardwareMap);
 
-        robot.setCubeClawPosition(position);
-        robot.setCubeOrientation(orientationPos);
+        robot.setCubeClawPosition(cubeClawPosition);
+        robot.setCubeOrientation(cubeOrientationPosition);
 
         telemetry.addLine("Ready");
         telemetryUpdate();
@@ -40,24 +45,24 @@ public class TestCubeArm extends rr_OpMode {
 
             if (gamepad1.right_bumper) {
                 robot.setCubeClawPosition(0.445f);
-                position = 0.445f;
+                cubeClawPosition = 0.445f;
             }
 
             if (gamepad1.dpad_right) {
                 robot.setCubeOrientation(0.9f);
-                orientationPos = 1.0f;
+                cubeOrientationPosition = 1.0f;
             }
 
             if (gamepad1.dpad_down) {
                 robot.setCubeOrientation(0.44f);
-                orientationPos = 0.44f;
+                cubeOrientationPosition = 0.44f;
             }
 
             processOrientationClaw();
             moveCubeArmWithLimits();
 
-            telemetry.addLine("ClawServo: " + position);
-            telemetry.addLine("Cube Orientation: " + orientationPos);
+            telemetry.addLine("ClawServo: " + cubeClawPosition);
+            telemetry.addLine("Cube Orientation: " + cubeOrientationPosition);
             telemetry.addLine("Cube Arm Pos: " + robot.getMotorPosition(this, CUBE_ARM));
             telemetryTouchSensor();
             telemetryUpdate();
@@ -67,28 +72,28 @@ public class TestCubeArm extends rr_OpMode {
     }
 
     private void processOrientationClaw() throws InterruptedException {
-        if (gamepad1.x && orientationPos < .9) {
-            orientationPos += .05f;
-            robot.setCubeOrientation(orientationPos);
+        if (gamepad1.x && cubeOrientationPosition < .9) {
+            cubeOrientationPosition += .05f;
+            robot.setCubeOrientation(cubeOrientationPosition);
             Thread.sleep(250);
-        } else if (gamepad1.y && orientationPos > 0) {
-            orientationPos -= .05f;
-            robot.setCubeOrientation(orientationPos);
+        } else if (gamepad1.y && cubeOrientationPosition > 0) {
+            cubeOrientationPosition -= .05f;
+            robot.setCubeOrientation(cubeOrientationPosition);
             Thread.sleep(250);
         }
     }
 
     private void openClaw() throws InterruptedException {
-        if (position < 0.95) {
-            robot.setCubeClawPosition(Math.abs(position + .05f));
-            position = position + .025f;
+        if (cubeClawPosition < 0.95) {
+            robot.setCubeClawPosition(Math.abs(cubeClawPosition + .05f));
+            cubeClawPosition = cubeClawPosition + .025f;
         }
     }
 
     private void closeClaw() throws InterruptedException {
-        if (position > 0.05) {
-            robot.setCubeClawPosition(Math.abs(position - .05f));
-            position = position - .025f;
+        if (cubeClawPosition > 0.05) {
+            robot.setCubeClawPosition(Math.abs(cubeClawPosition - .05f));
+            cubeClawPosition = cubeClawPosition - .025f;
         }
     }
 

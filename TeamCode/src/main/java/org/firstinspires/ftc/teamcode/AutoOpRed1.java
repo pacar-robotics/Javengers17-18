@@ -8,8 +8,8 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.DirectionEnum.Sideways
 import static org.firstinspires.ftc.teamcode.rr_Constants.DirectionEnum.SidewaysRight;
 
 
-@Autonomous(name = "AutoOpRedOne", group = "Autonomous")
-public class AutoOpRedOne extends rr_OpMode {
+@Autonomous(name = "Red Position 1", group = "Autonomous")
+public class AutoOpRed1 extends rr_OpMode {
 
     /* Declare OpMode members. */
     rr_AutoLib rrAutoLib;

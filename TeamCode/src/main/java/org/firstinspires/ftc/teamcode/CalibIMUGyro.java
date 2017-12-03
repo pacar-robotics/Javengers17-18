@@ -31,7 +31,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.adafruit.AdafruitBNO055IMU;
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ReadWriteFile;
@@ -47,7 +46,7 @@ import java.io.File;
 import java.util.Locale;
 
 /**
- * {@link GyroCalibOp} calibrates the IMU accelerometer per
+ * {@link CalibIMUGyro} calibrates the IMU accelerometer per
  * "Section 3.11 Calibration" of the BNO055 specification.
  *
  * <p>Manual calibration of the IMU is definitely NOT necessary: except for the magnetometer
@@ -98,8 +97,8 @@ import java.util.Locale;
  * @see <a href="https://www.bosch-sensortec.com/bst/products/all_products/bno055">BNO055 product page</a>
  * @see <a href="https://ae-bst.resource.bosch.com/media/_tech/media/datasheets/BST_BNO055_DS000_14.pdf">BNO055 specification</a>
  */
-@TeleOp(name = "Bosch Gyro Calibration", group = "Calibrations")
-public class GyroCalibOp extends LinearOpMode
+@TeleOp(name = "Calibrate IMU Gyro", group = "Calibration")
+public class CalibIMUGyro extends LinearOpMode
     {
     //----------------------------------------------------------------------------------------------
     // State

@@ -6,9 +6,9 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.ANDYMARK_MOTOR_ENCODER
 import static org.firstinspires.ftc.teamcode.rr_Constants.MECANUM_WHEEL_DIAMETER;
 import static org.firstinspires.ftc.teamcode.rr_Constants.ROBOT_TRACK_DISTANCE;
 
-@TeleOp(name = "Test Auto Drive", group = "Test")
+@TeleOp(name = "Test Turn 90 Degrees", group = "Test")
 
-public class TestDriveSystemAuto extends rr_OpMode {
+public class TestTurning extends rr_OpMode {
 
     rr_Robot robot;
 
@@ -22,7 +22,8 @@ public class TestDriveSystemAuto extends rr_OpMode {
     }
 
     private void initialize() throws InterruptedException {
-        robot = new rr_Robot(this, this.hardwareMap);
+        robot = new rr_Robot(this);
+        robot.teleopInit(this, this.hardwareMap);
     }
 
     /**

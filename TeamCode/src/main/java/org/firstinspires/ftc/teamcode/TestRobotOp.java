@@ -24,8 +24,8 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ORIENTATION_HORIZ
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ORIENTATION_VERTICAL;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TURN_POWER_FACTOR;
 
-//@TeleOp(name = "Test Op", group = "Test")
-public class TestOp extends rr_OpMode {
+//@TeleOp(name = "Test Robot Op", group = "Test")
+public class TestRobotOp extends rr_OpMode {
     rr_Robot robot;
 
     float cubeClawPos = CUBE_CLAW_OPEN;
@@ -34,7 +34,8 @@ public class TestOp extends rr_OpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        robot = new rr_Robot(this, this.hardwareMap);
+        robot = new rr_Robot(this);
+        robot.teleopInit(this, this.hardwareMap);
 
         robot.setCubeClawPosition(cubeClawPos);
         robot.setCubeOrientation(orientationPos);

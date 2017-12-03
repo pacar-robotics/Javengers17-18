@@ -40,14 +40,24 @@ public class rr_TeleLib {
     public float orientationPos = CUBE_ORIENTATION_HORIZONTAL;
     public float gamepad2PowerFactor = STANDARD_DRIVE_POWER_FACTOR;
 
+    private boolean isGyroCalibrated = false;
+
     public rr_TeleLib(rr_OpMode aOpMode, HardwareMap aHwMap) throws InterruptedException {
-        robot = new rr_Robot(aOpMode, aHwMap);
+        robot = new rr_Robot(aOpMode);
         this.aOpMode = aOpMode;
+        robot.teleopInit(aOpMode, aHwMap);
     }
 
 
     //************ PROCESS METHODS ************//
 
+    public void processTeleOpDrive() throws InterruptedException {
+        if (!isGyroCalibrated) {
+            processStandardDrive();
+        } else {
+            processFieldOrientedDrive();
+        }
+    }
     public void processFieldOrientedDrive() throws InterruptedException {
         //process joysticks
 
@@ -100,11 +110,6 @@ public class rr_TeleLib {
             robot.stopBaseMotors(aOpMode);
         }
 
-        if ((aOpMode.gamepad1.right_stick_button && aOpMode.gamepad1.dpad_up) ||
-                (aOpMode.gamepad2.right_stick_button && aOpMode.gamepad2.dpad_up)) {
-            robot.setBoschGyroZeroYaw(aOpMode);
-        }
-
         if (aOpMode.gamepad1.dpad_up || aOpMode.gamepad2.dpad_up) {
             robot.turnAbsoluteBoschGyroDegrees(aOpMode, 0);
         }
@@ -119,26 +124,34 @@ public class rr_TeleLib {
         }
     }
 
+    public void processIMUGyroReset() throws InterruptedException {
+        if ((aOpMode.gamepad1.right_stick_button && aOpMode.gamepad1.dpad_up) ||
+                (aOpMode.gamepad2.right_stick_button && aOpMode.gamepad2.dpad_up)) {
+            robot.setBoschGyroZeroYaw(aOpMode);
+            isGyroCalibrated = true;
+        }
+    }
+
     public void processStandardDrive() throws InterruptedException {
         if (Math.abs(aOpMode.gamepad2.right_stick_x) > ANALOG_STICK_THRESHOLD) {
 
             //we are not in deadzone. Driver is pushing right joystick, sideways
-            float turnVelocity = (float) getGamePad2RightJoystickPolarMagnitude(aOpMode) * SCORING_DRIVE_POWER_FACTOR;
+            float turnVelocity = (float) getGamePad2RightJoystickPolarMagnitude(aOpMode) * STANDARD_DRIVE_POWER_FACTOR;
 
             if (aOpMode.gamepad2.right_stick_x > 0) {
                 //turn clockwise to correct magnitude
-                robot.runRampedMotors(aOpMode, -turnVelocity, turnVelocity, -turnVelocity, turnVelocity);
+                robot.runRampedMotors(aOpMode, turnVelocity, -turnVelocity, turnVelocity, -turnVelocity);
             } else {
                 //turn counter-clockwise
-                robot.runRampedMotors(aOpMode, turnVelocity, -turnVelocity, turnVelocity, -turnVelocity);
+                robot.runRampedMotors(aOpMode, -turnVelocity, turnVelocity, -turnVelocity, turnVelocity);
             }
         } else if (Math.abs(aOpMode.gamepad1.left_stick_x) > ANALOG_STICK_THRESHOLD ||
                 Math.abs(aOpMode.gamepad1.left_stick_y) > ANALOG_STICK_THRESHOLD) {
             //we are not in deadzone. Driver is pushing left joystick
             //lets make the robot move in chosen angle and magnitude.
             robot.universalMoveRobot(aOpMode,
-                    aOpMode.gamepad1.left_stick_x * SCORING_DRIVE_POWER_FACTOR,
-                    aOpMode.gamepad1.left_stick_y * SCORING_DRIVE_POWER_FACTOR);
+                    aOpMode.gamepad1.left_stick_x * STANDARD_DRIVE_POWER_FACTOR,
+                    -aOpMode.gamepad1.left_stick_y * STANDARD_DRIVE_POWER_FACTOR);
 
         } else if (Math.abs(aOpMode.gamepad1.right_stick_x) > ANALOG_STICK_THRESHOLD) {
 
@@ -147,10 +160,10 @@ public class rr_TeleLib {
 
             if (aOpMode.gamepad1.right_stick_x > 0) {
                 //turn clockwise to correct magnitude
-                robot.runRampedMotors(aOpMode, -turnVelocity, turnVelocity, -turnVelocity, turnVelocity);
+                robot.runRampedMotors(aOpMode, turnVelocity, -turnVelocity, turnVelocity, -turnVelocity);
             } else {
                 //turn counter-clockwise
-                robot.runRampedMotors(aOpMode, turnVelocity, -turnVelocity, turnVelocity, -turnVelocity);
+                robot.runRampedMotors(aOpMode, -turnVelocity, turnVelocity, -turnVelocity, turnVelocity);
             }
         } else if (Math.abs(aOpMode.gamepad1.left_stick_x) > ANALOG_STICK_THRESHOLD ||
                 Math.abs(aOpMode.gamepad1.left_stick_y) > ANALOG_STICK_THRESHOLD) {
@@ -158,7 +171,7 @@ public class rr_TeleLib {
             //lets make the robot move in chosen angle and magnitude.
             robot.universalMoveRobot(aOpMode,
                     aOpMode.gamepad1.left_stick_x * STANDARD_DRIVE_POWER_FACTOR,
-                    aOpMode.gamepad1.left_stick_y * STANDARD_DRIVE_POWER_FACTOR);
+                    -aOpMode.gamepad1.left_stick_y * STANDARD_DRIVE_POWER_FACTOR);
 
         } else {
             //both joysticks on both gamepads are at rest, stop the robot.
