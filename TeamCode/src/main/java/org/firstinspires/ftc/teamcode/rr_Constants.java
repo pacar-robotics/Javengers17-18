@@ -105,6 +105,9 @@ public class rr_Constants {
     final static float JEWEL_ARM_DOWN_READ = .08f;
     final static float JEWEL_ARM_DOWN_PUSH = .05f;
 
+    // TODO: CHANGE
+    final static float JEWEL_DISTANCE = 1.0f;
+
 
     //index of motors
     final static int FRONT_LEFT_MOTOR = 0;

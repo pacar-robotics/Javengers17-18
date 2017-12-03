@@ -273,6 +273,27 @@ public class rr_AutoLib {
 
     }
 
+    public void adjustJewelArmUsingRange(rr_OpMode aOpMode) throws InterruptedException {
+
+        // TODO: change
+        robot.setJewelArmPosition(1.0f);
+
+        if (robot.getFilteredLeftJewelRangeReading(aOpMode) > rr_Constants.JEWEL_DISTANCE ) {
+            // while loop to lower jewel arm until specified distance from jewel
+            while (robot.getFilteredLeftJewelRangeReading(aOpMode) > rr_Constants.JEWEL_DISTANCE) {
+                // TODO: CHANGE
+                robot.setJewelArmPosition(robot.getJewelArmPosition() - .01f);
+            }
+        }
+        else {
+            while(robot.getFilteredLeftJewelRangeReading(aOpMode) < rr_Constants.JEWEL_DISTANCE) {
+                // TODO: CHANGE
+                robot.setJewelArmPosition(robot.getJewelArmPosition() + .01f);
+            }
+        }
+        }
+
+
     public void detectColorAndPushJewel(rr_OpMode aOpMode, rr_Constants.AllianceColorEnum teamColor) throws InterruptedException {
 
         robot.setJewelArmDownRead();
