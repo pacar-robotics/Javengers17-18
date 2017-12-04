@@ -177,6 +177,11 @@ public class rr_Constants {
         UNKNOWN
     }
 
+    enum FilterJewelColorEnum {
+        BLUE,
+        RED
+    }
+
     //values that control the worm drive motor to adjust tension of the Launch arm
 
     // Direction of movement for autonomous

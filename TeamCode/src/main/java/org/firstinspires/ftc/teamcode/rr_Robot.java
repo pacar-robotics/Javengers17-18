@@ -129,7 +129,8 @@ public class rr_Robot {
     public static final String TAG = "Vuforia VuMark Sample";
     VuforiaLocalizer vuforia;
 
-    public rr_Robot(rr_OpMode aOpMode) throws InterruptedException {    }
+    public rr_Robot(rr_OpMode aOpMode) throws InterruptedException {
+    }
 
 
     //INITIALIZE METHODS
@@ -337,7 +338,7 @@ public class rr_Robot {
 
 
     protected void setBoschGyroZeroYaw(rr_OpMode aOpMode) throws InterruptedException {
-      initializeBoschIMU(aOpMode);
+        initializeBoschIMU(aOpMode);
     }
 
     protected void initializeBoschIMU(rr_OpMode aOpMode) throws InterruptedException {
@@ -927,7 +928,7 @@ public class rr_Robot {
         motorArray[CUBE_ARM].setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
-    public void openCubeClawServoOneCube() throws InterruptedException{
+    public void openCubeClawServoOneCube() throws InterruptedException {
         cubeClaw.setPosition(CUBE_CLAW_ONE_RELEASE);
         Thread.sleep(100);
     }
@@ -964,6 +965,7 @@ public class rr_Robot {
     public void setCubeClawPosition(float position) throws InterruptedException {
         cubeClaw.setPosition(position);
     }
+
     public float getCubeClawPosition() throws InterruptedException {
         return (float) cubeClaw.getPosition();
     }
@@ -971,6 +973,7 @@ public class rr_Robot {
     public void setCubeOrientation(float position) throws InterruptedException {
         cubeOrientation.setPosition(position);
     }
+
     public float getCubeOrientation() throws InterruptedException {
         return (float) cubeOrientation.getPosition();
     }
@@ -1002,9 +1005,11 @@ public class rr_Robot {
 
         motorArray[RELIC_WINCH].setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
+
     public void setRelicWinchPower(float power) {
         motorArray[RELIC_WINCH].setPower(power);
     }
+
     public int getRelicWinchPosition() {
         return motorArray[RELIC_WINCH].getCurrentPosition();
     }
@@ -1013,13 +1018,16 @@ public class rr_Robot {
         relicArm.setPosition(RELIC_ARM_GRAB);
         Thread.sleep(100);
     }
+
     public void setRelicArmExtend() throws InterruptedException {
         relicArm.setPosition(RELIC_ARM_EXTEND_IN);
         Thread.sleep(100);
     }
+
     public void setRelicArmPosition(float position) {
         relicArm.setPosition(position);
     }
+
     public float getRelicArmPosition() {
         return (float) relicArm.getPosition();
     }
@@ -1032,15 +1040,18 @@ public class rr_Robot {
         relicClaw.setPosition(RELIC_CLAW_CLOSED);
         Thread.sleep(100);
     }
+
     public void setRelicClawOpen() throws InterruptedException {
         relicClaw.setPosition(RELIC_CLAW_OPEN_STABILIZED);
         Thread.sleep(500);
         relicClaw.setPosition(RELIC_CLAW_OPEN);
         Thread.sleep(100);
     }
+
     public void setRelicClawPosition(float position) throws InterruptedException {
         relicClaw.setPosition(position);
     }
+
     public float getRelicClawPosition() throws InterruptedException {
         return (float) relicClaw.getPosition();
     }
@@ -1060,8 +1071,7 @@ public class rr_Robot {
                     isJewelArmAboveFinal = false;
                 }
             }
-        }
-        else {
+        } else {
             boolean isJewelArmBelowFinal = true;
             while (isJewelArmBelowFinal) {
                 if (jewelArm.getPosition() < armPosition) {
@@ -1102,12 +1112,11 @@ public class rr_Robot {
 
     public void setJewelArmDownPush() throws InterruptedException {
         setJewelArmPosition(JEWEL_ARM_DOWN_PUSH);
-            }
+    }
 
     public void setJewelArmDownRead() throws InterruptedException {
         setJewelArmPosition(JEWEL_ARM_DOWN_READ);
-        }
-
+    }
 
 
     //JEWEL COLOR SENSORS
@@ -1153,10 +1162,10 @@ public class rr_Robot {
 
         double leftJewelRangeReadingsArray[] = new double[10];
 
-        for(int i = 0; i < 11; i++) {
+        for (int i = 0; i < 11; i++) {
             leftJewelRangeReadingsArray[i] = getLeftJewelRange(aOpMode);
             Thread.sleep(30);
-            if(leftJewelRangeReadingsArray[i] == 0) {
+            if (leftJewelRangeReadingsArray[i] == 0) {
                 i--;
             }
         }
@@ -1176,10 +1185,10 @@ public class rr_Robot {
 
         double rightJewelRangeReadingsArray[] = new double[10];
 
-        for(int i = 0; i < 11; i++) {
+        for (int i = 0; i < 11; i++) {
             rightJewelRangeReadingsArray[i] = getRightJewelRange(aOpMode);
             Thread.sleep(30);
-            if(rightJewelRangeReadingsArray[i] == 0) {
+            if (rightJewelRangeReadingsArray[i] == 0) {
                 i--;
             }
         }
@@ -1194,110 +1203,87 @@ public class rr_Robot {
         return rightJewelRangeReadingsArray[5];
     }
 
-    // Applies filter to reduce noise for left jewel blue sensor readings
-    public float getFilteredLeftJewelBlueSensorReading(rr_OpMode aOpMode) throws InterruptedException {
+    // Applies filter to reduce noise for left jewel color sensor readings
+    public float getFilteredLeftJewelColorSensorReading(rr_OpMode aOpMode, rr_Constants.FilterJewelColorEnum JewelColor) throws InterruptedException {
 
-        float leftJewelBlueReadingsArray[] = new float[10];
+        float colorSensorReading = 0;
 
-        for(int i = 0; i < 11; i++) {
-            leftJewelBlueReadingsArray[i] = leftJewelColorSensor.blue();
+        switch (JewelColor) {
+            case RED:
+                colorSensorReading = leftJewelColorSensor.red();
+                break;
+            case BLUE:
+                colorSensorReading = leftJewelColorSensor.blue();
+                break;
+        }
+
+        float leftJewelReadingsArray[] = new float[10];
+
+        for (int i = 0; i < 11; i++) {
+            leftJewelReadingsArray[i] = colorSensorReading;
             Thread.sleep(30);
-            if(leftJewelBlueReadingsArray[i] == 0) {
+            if (leftJewelReadingsArray[i] == 0) {
                 i--;
             }
         }
 
-        Arrays.sort(leftJewelBlueReadingsArray);
+        Arrays.sort(leftJewelReadingsArray);
 
-        aOpMode.telemetryAddData("Left Jewel Blue", "Readings Array", Arrays.toString(leftJewelBlueReadingsArray));
-        aOpMode.telemetryAddData("Left Jewel Blue", "Median Value", "Median" + leftJewelBlueReadingsArray[5]);
+        aOpMode.telemetryAddData("Left Jewel" + JewelColor, "Readings Array", Arrays.toString(leftJewelReadingsArray));
+        aOpMode.telemetryAddData("Left Jewel" + JewelColor, "Median Value", "Median" + leftJewelReadingsArray[5]);
 
         aOpMode.telemetryUpdate();
 
-        return leftJewelBlueReadingsArray[5];
+        return leftJewelReadingsArray[5];
     }
 
-    // Applies filter to reduce noise for left jewel red sensor readings
-    public float getFilteredLeftJewelRedSensorReading(rr_OpMode aOpMode) throws InterruptedException {
+    // Applies filter to reduce noise for right jewel color sensor readings
+    public float getFilteredRightJewelColorSensorReading(rr_OpMode aOpMode, rr_Constants.FilterJewelColorEnum JewelColor) throws InterruptedException {
 
-        float leftJewelRedReadingsArray[] = new float[10];
+        float colorSensorReading = 0;
 
-        for(int i = 0; i < 11; i++) {
-            leftJewelRedReadingsArray[i] = leftJewelColorSensor.blue();
+        switch (JewelColor) {
+            case RED:
+                colorSensorReading = rightJewelColorSensor.red();
+                break;
+            case BLUE:
+                colorSensorReading = rightJewelColorSensor.blue();
+                break;
+        }
+
+        float rightJewelReadingsArray[] = new float[10];
+
+        for (int i = 0; i < 11; i++) {
+            rightJewelReadingsArray[i] = colorSensorReading;
             Thread.sleep(30);
-            if(leftJewelRedReadingsArray[i] == 0) {
+            if (rightJewelReadingsArray[i] == 0) {
                 i--;
             }
         }
 
-        Arrays.sort(leftJewelRedReadingsArray);
+        Arrays.sort(rightJewelReadingsArray);
 
-        aOpMode.telemetryAddData("Left Jewel Red", "Readings Array", Arrays.toString(leftJewelRedReadingsArray));
-        aOpMode.telemetryAddData("Left Jewel Red", "Median Value", "Median" + leftJewelRedReadingsArray[5]);
-
-        aOpMode.telemetryUpdate();
-
-        return leftJewelRedReadingsArray[5];
-    }
-
-    // Applies filter to reduce noise for right jewel blue sensor readings
-    public float getFilteredRightJewelBlueSensorReading(rr_OpMode aOpMode) throws InterruptedException {
-
-        float rightJewelBlueReadingsArray[] = new float[10];
-
-        for(int i = 0; i < 11; i++) {
-            rightJewelBlueReadingsArray[i] = rightJewelColorSensor.blue();
-            Thread.sleep(30);
-            if(rightJewelBlueReadingsArray[i] == 0) {
-                i--;
-            }
-        }
-
-        Arrays.sort(rightJewelBlueReadingsArray);
-
-        aOpMode.telemetryAddData("Right Jewel Blue", "Readings Array", Arrays.toString(rightJewelBlueReadingsArray));
-        aOpMode.telemetryAddData("Right Jewel Blue", "Median Value", "Median" + rightJewelBlueReadingsArray[5]);
+        aOpMode.telemetryAddData("Right Jewel" + JewelColor, "Readings Array", Arrays.toString(rightJewelReadingsArray));
+        aOpMode.telemetryAddData("Right Jewel" + JewelColor, "Median Value", "Median" + rightJewelReadingsArray[5]);
 
         aOpMode.telemetryUpdate();
 
-        return rightJewelBlueReadingsArray[5];
+        return rightJewelReadingsArray[5];
     }
-
-    // Applies filter to reduce noise for right jewel red sensor readings
-    public float getFilteredRightJewelRedSensorReading(rr_OpMode aOpMode) throws InterruptedException {
-
-        float rightJewelRedReadingsArray[] = new float[10];
-
-        for(int i = 0; i < 11; i++) {
-            rightJewelRedReadingsArray[i] = rightJewelColorSensor.blue();
-            Thread.sleep(30);
-            if(rightJewelRedReadingsArray[i] == 0) {
-                i--;
-            }
-        }
-
-        Arrays.sort(rightJewelRedReadingsArray);
-
-        aOpMode.telemetryAddData("Right Jewel Red", "Readings Array", Arrays.toString(rightJewelRedReadingsArray));
-        aOpMode.telemetryAddData("Right Jewel Red", "Median Value", "Median" + rightJewelRedReadingsArray[5]);
-
-        aOpMode.telemetryUpdate();
-
-        return rightJewelRedReadingsArray[5];
-    }
-
 
 
     public rr_Constants.JewelColorEnum getJewelLeftColor(rr_OpMode aOpMode) throws InterruptedException {
         Thread.sleep(500);
 
-        if (getFilteredLeftJewelRedSensorReading(aOpMode) > getFilteredLeftJewelBlueSensorReading(aOpMode)) {
+        if (getFilteredLeftJewelColorSensorReading(aOpMode, rr_Constants.FilterJewelColorEnum.RED)
+                > getFilteredLeftJewelColorSensorReading(aOpMode, rr_Constants.FilterJewelColorEnum.BLUE)) {
 
             aOpMode.telemetryAddData("Color", "Red", "Left Red Detected");
             aOpMode.telemetryUpdate();
             return rr_Constants.JewelColorEnum.RED;
         }
-        if (getFilteredLeftJewelBlueSensorReading(aOpMode) > getFilteredLeftJewelRedSensorReading(aOpMode)) {
+        if (getFilteredLeftJewelColorSensorReading(aOpMode, rr_Constants.FilterJewelColorEnum.BLUE)
+                > getFilteredLeftJewelColorSensorReading(aOpMode, rr_Constants.FilterJewelColorEnum.RED)) {
             aOpMode.telemetryAddData("Color", "Blue", "Left Blue Detected");
             aOpMode.telemetryUpdate();
             return rr_Constants.JewelColorEnum.BLUE;
@@ -1311,12 +1297,14 @@ public class rr_Robot {
     public rr_Constants.JewelColorEnum getJewelRightColor(rr_OpMode aOpMode) throws InterruptedException {
         Thread.sleep(500);
 
-        if (getFilteredRightJewelRedSensorReading(aOpMode) > getFilteredRightJewelBlueSensorReading(aOpMode)) {
+        if (getFilteredLeftJewelColorSensorReading(aOpMode, rr_Constants.FilterJewelColorEnum.RED) >
+                getFilteredLeftJewelColorSensorReading(aOpMode, rr_Constants.FilterJewelColorEnum.BLUE)) {
             aOpMode.telemetryAddData("Color", "Red", "Right Red Detected");
             aOpMode.telemetryUpdate();
             return rr_Constants.JewelColorEnum.RED;
         }
-        if (getFilteredRightJewelBlueSensorReading(aOpMode) > getFilteredRightJewelRedSensorReading(aOpMode)){
+        if (getFilteredLeftJewelColorSensorReading(aOpMode, rr_Constants.FilterJewelColorEnum.BLUE)
+                > getFilteredLeftJewelColorSensorReading(aOpMode, rr_Constants.FilterJewelColorEnum.RED)) {
             aOpMode.telemetryAddData("Color", "Blue", "Right Blue Detected");
             aOpMode.telemetryUpdate();
 
@@ -1458,7 +1446,7 @@ public class rr_Robot {
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
 
             if (vuMark == RelicRecoveryVuMark.LEFT) {
-                aOpMode.telemetryAddData("VuMark", "VuMark Left", "%s visible" );
+                aOpMode.telemetryAddData("VuMark", "VuMark Left", "%s visible");
                 aOpMode.telemetryUpdate();
                 detectedPictograph = pictographType.LEFT;
                 return vuMark;
