@@ -1024,6 +1024,10 @@ public class rr_Robot {
         return (float) relicArm.getPosition();
     }
 
+    public float getJewelArmPosition() {
+        return (float) jewelArm.getPosition();
+    }
+
     public void setRelicClawClosed() throws InterruptedException {
         relicClaw.setPosition(RELIC_CLAW_CLOSED);
         Thread.sleep(100);
