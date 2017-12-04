@@ -1135,13 +1135,22 @@ public class rr_Robot {
 //        return rr_Constants.JewelColorEnum.UNKNOWN;
 //    }
 
+
+    public double getLeftJewelRange(rr_OpMode aOpMode) {
+        return leftJewelRangeSensor.getDistance(DistanceUnit.CM);
+    }
+
+    public double getRightJewelRange(rr_OpMode aOpMode) {
+        return rightJewelRangeSensor.getDistance(DistanceUnit.CM);
+    }
+
     // Applies filter to reduce noise for left range sensor
     public double getFilteredLeftJewelRangeReading(rr_OpMode aOpMode) throws InterruptedException {
 
         double leftJewelRangeReadingsArray[] = new double[10];
 
         for(int i = 0; i < 11; i++) {
-            leftJewelRangeReadingsArray[i] = leftJewelRangeSensor.getDistance(DistanceUnit.CM);
+            leftJewelRangeReadingsArray[i] = getLeftJewelRange(aOpMode);
             Thread.sleep(30);
             if(leftJewelRangeReadingsArray[i] == 0) {
                 i--;
@@ -1164,7 +1173,7 @@ public class rr_Robot {
         double rightJewelRangeReadingsArray[] = new double[10];
 
         for(int i = 0; i < 11; i++) {
-            rightJewelRangeReadingsArray[i] = rightJewelRangeSensor.getDistance(DistanceUnit.CM);
+            rightJewelRangeReadingsArray[i] = getRightJewelRange(aOpMode);
             Thread.sleep(30);
             if(rightJewelRangeReadingsArray[i] == 0) {
                 i--;
