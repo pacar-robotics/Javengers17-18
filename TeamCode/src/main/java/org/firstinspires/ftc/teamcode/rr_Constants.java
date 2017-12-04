@@ -104,6 +104,8 @@ public class rr_Constants {
     final static float JEWEL_ARM_UP = 0.6f;
     final static float JEWEL_ARM_DOWN_READ = .08f;
     final static float JEWEL_ARM_DOWN_PUSH = .05f;
+    static final double JEWEL_ARM_INCREMENT = 0.01;     // amount to slew servo each cycle
+    static final int JEWEL_ARM_CYCLE = 50;     // period of each cycle
 
 
     //index of motors

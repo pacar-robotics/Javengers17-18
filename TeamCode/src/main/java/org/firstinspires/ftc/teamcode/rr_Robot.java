@@ -1042,27 +1042,27 @@ public class rr_Robot {
     }
 
 
-    //JEWEL ARM CONTROL
+    // Positioning jewel arm servo
 
-    static final double INCREMENT = 0.01;     // amount to slew servo each CYCLE_MS cycle
-    static final int CYCLE_MS = 50;     // period of each cycle
     public void setJewelArmPosition(float armPosition) throws InterruptedException {
+
         if (jewelArm.getPosition() > armPosition) {
             boolean isJewelArmAboveFinal = true;
             while (isJewelArmAboveFinal) {
                 if (jewelArm.getPosition() > armPosition) {
-                    jewelArm.setPosition(jewelArm.getPosition() - INCREMENT);
-                    Thread.sleep(CYCLE_MS);
+                    jewelArm.setPosition(jewelArm.getPosition() - rr_Constants.JEWEL_ARM_INCREMENT);
+                    Thread.sleep(rr_Constants.JEWEL_ARM_CYCLE);
                 } else {
                     isJewelArmAboveFinal = false;
                 }
             }
         }
-        else { boolean isJewelArmBelowFinal = true;
+        else {
+            boolean isJewelArmBelowFinal = true;
             while (isJewelArmBelowFinal) {
                 if (jewelArm.getPosition() < armPosition) {
-                    jewelArm.setPosition(jewelArm.getPosition() + INCREMENT);
-                    Thread.sleep(CYCLE_MS);
+                    jewelArm.setPosition(jewelArm.getPosition() + rr_Constants.JEWEL_ARM_INCREMENT);
+                    Thread.sleep(rr_Constants.JEWEL_ARM_CYCLE);
                 } else {
                     isJewelArmBelowFinal = false;
                 }
