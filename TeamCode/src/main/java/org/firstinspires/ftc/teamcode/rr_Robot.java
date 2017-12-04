@@ -32,6 +32,7 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_RIGHT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_LOWER_LIMIT;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_LOWER_POWER;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_MAX_DURATION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_UPPER_LIMIT;
@@ -71,6 +72,7 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_GRAB;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_CLAW_CLOSED;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_CLAW_OPEN;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WINCH;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WINCH_MAX_DURATION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RIGHT_MOTOR_TRIM_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.ROBOT_TRACK_DISTANCE;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TURN_POWER_FACTOR;
@@ -110,6 +112,8 @@ public class rr_Robot {
 
     private DigitalChannel cubeArmUpperLimit;
     private DigitalChannel cubeArmLowerLimit;
+    private DigitalChannel relicArmUpperLimit;
+    private DigitalChannel relicArmLowerLimit;
 
     private ModernRoboticsI2cRangeSensor rangeSensor;
 
@@ -157,6 +161,7 @@ public class rr_Robot {
 
         //Initialize Relic Arm
         initRelicArm(aOpMode);
+        initRelicArmSensors(aOpMode);
 
         //Initialize Jewel Arm
         initJewelSensors(aOpMode);
@@ -184,6 +189,7 @@ public class rr_Robot {
 
         //Initialize Relic Arm
         initRelicArm(aOpMode);
+        initRelicArmSensors(aOpMode);
 
         //Initialize Jewel Arm
         initJewelSensors(aOpMode);
@@ -245,6 +251,16 @@ public class rr_Robot {
 
         setRelicClawClosed();
         setRelicArmGrab();
+    }
+
+    public void initRelicArmSensors(rr_OpMode aOpMode) throws InterruptedException {
+
+        //TODO: CHANGE THIS
+//        relicArmUpperLimit = hwMap.get(DigitalChannel.class, "relic_arm_upper_limit");
+//        relicArmLowerLimit = hwMap.get(DigitalChannel.class, "relic_arm_lower_limit");
+
+        relicArmUpperLimit.setMode(DigitalChannel.Mode.INPUT);
+        relicArmLowerLimit.setMode(DigitalChannel.Mode.INPUT);
     }
 
     public void initJewelServos(rr_OpMode aOpMode) throws InterruptedException {
@@ -928,7 +944,14 @@ public class rr_Robot {
         motorArray[CUBE_ARM].setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
-    public void openCubeClawServoOneCube() throws InterruptedException {
+    public void initializeCubeArmToIntakePosition(rr_OpMode aOpMode) throws InterruptedException {
+        aOpMode.reset_timer_array(GENERIC_TIMER);
+        while (!isCubeLowerLimitPressed() && Math.abs(System.currentTimeMillis() - aOpMode.time_elapsed_array(GENERIC_TIMER)) < CUBE_ARM_MAX_DURATION) {
+            setCubeArmPower(aOpMode, CUBE_ARM_LOWER_POWER);
+        }
+    }
+
+    public void openCubeClawServoOneCube() throws InterruptedException{
         cubeClaw.setPosition(CUBE_CLAW_ONE_RELEASE);
         Thread.sleep(100);
     }
@@ -1054,6 +1077,14 @@ public class rr_Robot {
 
     public float getRelicClawPosition() throws InterruptedException {
         return (float) relicClaw.getPosition();
+    }
+
+    public boolean isRelicUpperLimitPressed() {
+        return !relicArmUpperLimit.getState();
+    }
+
+    public boolean isRelicLowerLimitPressed() {
+        return !relicArmLowerLimit.getState();
     }
 
 

@@ -81,8 +81,9 @@ public class rr_Constants {
     final static float CUBE_ORIENTATION_VERTICAL = 0.75f;
 
     //Relic Arm Constants
-    final static float RELIC_WINCH_EXTEND_POWER_FACTOR = .8f;   // TODO: Change
-    final static float RELIC_WINCH_RETRACT_POWER_FACTOR = .8f;  // TODO: Change
+    final static float RELIC_WINCH_MAX_DURATION = 5000;
+    final static float RELIC_WINCH_EXTEND_POWER_FACTOR = .5f;
+    final static float RELIC_WINCH_RETRACT_POWER_FACTOR = -.5f;
     final static int RELIC_WINCH_REST = -220;                   // TODO: Change
     final static int RELIC_WINCH_UPPER_LIMIT = 11000;           // TODO: Change
     final static float RELIC_ARM_GRAB = 0.3f;

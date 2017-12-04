@@ -228,6 +228,13 @@ public class rr_TeleLib {
         }
     }
 
+    public void initializeCubeArm(rr_OpMode aOpMode) throws InterruptedException {
+        robot.initializeCubeArmToIntakePosition(aOpMode);
+        robot.setMotorMode(aOpMode, CUBE_ARM, DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Thread.sleep(250);
+        robot.setMotorMode(aOpMode, CUBE_ARM, DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
     public void processClaw() throws InterruptedException {
        if (aOpMode.gamepad1.right_bumper && cubeClawPos == CUBE_CLAW_ONE_RELEASE) {
             robot.closeCubeClawServoOneCube();
@@ -241,10 +248,10 @@ public class rr_TeleLib {
     }
 
     public void processRelicSlide(){
-        if(Math.abs(aOpMode.gamepad2.right_trigger)>TRIGGER_THRESHOLD){
-            robot.setRelicWinchPower(0.5f);
-        }else if(Math.abs(aOpMode.gamepad2.left_trigger)>TRIGGER_THRESHOLD){
-            robot.setRelicWinchPower(-0.5f);
+        if(Math.abs(aOpMode.gamepad2.right_trigger)>TRIGGER_THRESHOLD && !robot.isRelicUpperLimitPressed()){
+            robot.setRelicWinchPower(RELIC_WINCH_EXTEND_POWER_FACTOR);
+        }else if(Math.abs(aOpMode.gamepad2.left_trigger)>TRIGGER_THRESHOLD && !robot.isRelicLowerLimitPressed()){
+            robot.setRelicWinchPower(RELIC_WINCH_RETRACT_POWER_FACTOR);
         }else{
             //the triggers are in dead zone.
             //stop the relic slide

@@ -17,6 +17,8 @@ public class TeleOpMaryland extends rr_OpMode {
 
         telemetry.setAutoClear(true);
 
+        lib.initializeCubeArm(this);
+
         while (opModeIsActive()) {
             lib.processClaw();
             lib.processOrientationClaw();
