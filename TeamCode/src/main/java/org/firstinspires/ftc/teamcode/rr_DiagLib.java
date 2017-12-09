@@ -32,6 +32,22 @@ public class rr_DiagLib {
             this.testResult = testResult;
             this.testMessage = testMessage;
         }
+
+        public void setTestMessage(String testMessage) {
+            this.testMessage = testMessage;
+        }
+
+        public String getElementName() {
+            return elementName;
+        }
+
+        public boolean getTestResult() {
+            return testResult;
+        }
+
+        public String getTestMessage() {
+            return testMessage;
+        }
     }
 
     public rr_DiagLib(rr_OpMode aOpMode, HardwareMap aHwMap) throws InterruptedException {
