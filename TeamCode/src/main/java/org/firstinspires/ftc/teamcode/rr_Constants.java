@@ -72,10 +72,10 @@ public class rr_Constants {
     final static float CUBE_ARM_POWER_FACTOR = 0.20f;
     final static float CUBE_ARM_RAISE_POWER = -0.4f;
     final static float CUBE_ARM_LOWER_POWER = 0.1f;
-    final static float CUBE_CLAW_OPEN = 0.625f;
-    final static float CUBE_CLAW_ONE_CLOSED = 0.34f;
-    final static float CUBE_CLAW_ONE_RELEASE = 0.19f;
-    final static float CUBE_CLAW_TWO_CLOSED = 0.77f;
+    final static float CUBE_CLAW_OPEN = 0.7f;
+    final static float CUBE_CLAW_ONE_CLOSED = 0.8f;
+    final static float CUBE_CLAW_ONE_RELEASE = 0.7f;
+    final static float CUBE_CLAW_TWO_CLOSED = 0.8f;
     final static float CUBE_ORIENTATION_HORIZONTAL = 0.9f;
     final static float CUBE_ORIENTATION_VERTICAL = 0.44f;
 
@@ -98,9 +98,9 @@ public class rr_Constants {
     final static float JEWEL_PUSHER_LEFT = 0.63f;
     final static float JEWEL_PUSHER_RIGHT = 0.28f;
     final static float JEWEL_PUSHER_NEUTRAL = 0.48f;
-    final static float JEWEL_ARM_UP = 0.95f;
-    final static float JEWEL_ARM_DOWN_READ = .23f;
-    final static float JEWEL_ARM_DOWN_PUSH = .18f;
+    final static float JEWEL_ARM_UP = 0.34f;
+    final static float JEWEL_ARM_DOWN_READ = .9f;
+    final static float JEWEL_ARM_DOWN_PUSH = .99f;
 
 
     //index of motors

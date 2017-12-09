@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_CLAW_ONE_RELEASE;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRIGGER_THRESHOLD;
 
 @TeleOp(name = "Test Cube Arm", group = "Test")
@@ -10,7 +11,7 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.TRIGGER_THRESHOLD;
 public class TestCubeArm extends rr_OpMode {
 
     rr_Robot robot;
-    float position = 0.5f;
+    float position = CUBE_CLAW_ONE_RELEASE;
     float orientationPos = .5f;
 
 
