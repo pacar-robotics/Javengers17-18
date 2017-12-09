@@ -127,4 +127,132 @@ public class rr_DiagLib {
             return new RobotTest("Platform sideways", true, "Failed to detect platform movement");
         }
     }
+
+    public RobotTest testPlatformDiagonal() throws InterruptedException {
+        // We will move the robot in 4 phases to test all 4 diagonals.
+        // We will pick representative motors based on the specific diagonal as all
+        //wheels will not rotate with power during diagonal moves.
+        // We also check for greater than 3 degree rotation as a means to check if there is platform
+        //rotation occurring during these moves. If the platform is rotating during these moves, this will
+        //lead to inaccuracy and may be symptomatic of other underlying problems such as
+        //irregular weight distribution and lack of coplanar 4 wheel contact.
+
+        //phase 1: Move Robot 45 degrees.
+        boolean failedDiagTopRight = false;
+        boolean failedDiagTopRightRotation = false;
+
+        int motorPosition = robot.getMotorPosition(aOpMode, FRONT_LEFT_MOTOR); //representative motor
+        float startingAngle = robot.getBoschGyroSensorHeading(aOpMode); //save starting angle.
+        universalMoveRobotPolar(aOpMode, 45, 0.5f, 0.0f, 750, new falseCondition(), false, 0, 0); //move robot diag 45
+        int newMotorPosition = robot.getMotorPosition(aOpMode, FRONT_LEFT_MOTOR);
+        float endingAngle = robot.getBoschGyroSensorHeading(aOpMode);
+        float rotationDiagTopRightAngle = Math.abs(startingAngle - endingAngle);
+
+        if (newMotorPosition == motorPosition) {
+            //the motor encoder has not moved. we have a problem.
+            failedDiagTopRight = true;
+        }
+        if (rotationDiagTopRightAngle > 3) {
+            failedDiagTopRightRotation = true;
+        }
+
+        //phase 2: Move Robot 135 degrees
+        boolean failedDiagBottomRight = false;
+        boolean failedDiagBottomRightRotation = false;
+
+        motorPosition = robot.getMotorPosition(aOpMode, FRONT_RIGHT_MOTOR); //representative motor
+        startingAngle = robot.getBoschGyroSensorHeading(aOpMode); //save starting angle.
+        universalMoveRobotPolar(aOpMode, 135, 0.5f, 0.0f, 750, new falseCondition(), false, 0, 0); //move robot diag 45
+        newMotorPosition = robot.getMotorPosition(aOpMode, FRONT_RIGHT_MOTOR);
+        endingAngle = robot.getBoschGyroSensorHeading(aOpMode);
+        float rotationDiagBottomRightAngle = Math.abs(startingAngle - endingAngle);
+
+        if (newMotorPosition == motorPosition) {
+            //the motor encoder has not moved. we have a problem.
+            failedDiagBottomRight = true;
+        }
+        if (rotationDiagBottomRightAngle > 3) {
+            failedDiagBottomRightRotation = true;
+        }
+
+        //phase 3: Move Robot -45 degrees
+        boolean failedDiagTopLeft = false;
+        boolean failedDiagTopLeftRotation = false;
+
+        motorPosition = robot.getMotorPosition(aOpMode, FRONT_RIGHT_MOTOR); //representative motor
+        startingAngle = robot.getBoschGyroSensorHeading(aOpMode); //save starting angle.
+        universalMoveRobotPolar(aOpMode, -45, 0.5f, 0.0f, 750, new falseCondition(), false, 0, 0); //move robot diag 45
+        newMotorPosition = robot.getMotorPosition(aOpMode, FRONT_RIGHT_MOTOR);
+        endingAngle = robot.getBoschGyroSensorHeading(aOpMode);
+        float rotationDiagTopLeftAngle = Math.abs(startingAngle - endingAngle);
+
+        if (newMotorPosition == motorPosition) {
+            //the motor encoder has not moved. we have a problem.
+            failedDiagTopLeft = true;
+        }
+        if (rotationDiagTopLeftAngle > 3) {
+            failedDiagTopLeftRotation = true;
+        }
+
+
+        //phase 4: Move Robot -135 degrees
+        boolean failedDiagBottomLeft = false;
+        boolean failedDiagBottomLeftRotation = false;
+
+        motorPosition = robot.getMotorPosition(aOpMode, FRONT_LEFT_MOTOR); //representative motor
+        startingAngle = robot.getBoschGyroSensorHeading(aOpMode); //save starting angle.
+        universalMoveRobotPolar(aOpMode, -135, 0.5f, 0.0f, 750, new falseCondition(), false, 0, 0); //move robot diag 45
+        newMotorPosition = robot.getMotorPosition(aOpMode, FRONT_LEFT_MOTOR);
+        endingAngle = robot.getBoschGyroSensorHeading(aOpMode);
+        float rotationDiagBottomLeftAngle = Math.abs(startingAngle - endingAngle);
+
+
+        if (newMotorPosition == motorPosition) {
+            //the motor encoder has not moved. we have a problem.
+            failedDiagBottomLeft = true;
+        }
+
+        if (rotationDiagBottomLeftAngle > 3) {
+            failedDiagBottomLeftRotation = true;
+        }
+
+
+        // Check if anything went wrong
+        if (failedDiagTopLeft || failedDiagTopRight || failedDiagBottomLeft || failedDiagBottomRight) {
+            return new RobotTest("Platform Diagonal", false, "Failed to detect platform diagonal movement");
+        }
+
+        if (failedDiagTopLeftRotation ||
+                failedDiagTopRightRotation ||
+                failedDiagBottomLeftRotation ||
+                failedDiagBottomRightRotation) {
+            return new RobotTest("Platform Diagonal", false,
+                    "Detected too much rotation when performing platform diagonal movements" +
+                    "[TDLR:" + rotationDiagTopLeftAngle + "]" +
+                    "[TDRR:" + rotationDiagTopRightAngle + "]" +
+                    "[BDLR:" + rotationDiagBottomLeftAngle + "]" +
+                    "[BDRR:" + rotationDiagBottomRightAngle + "]");
+        }
+
+        // Test passed
+        return new RobotTest("Platform Diagonal", true);
+    }
+
+    // Helper method for testPlatformDiagonal
+    public void universalMoveRobotPolar(rr_OpMode aOpMode, double polarAngle,
+                                        double polarVelocity, double rotationalVelocity,
+                                        long duration, rr_OpMode.StopCondition condition,
+                                        boolean isPulsed, long pulseWidthDuration, long pulseRestDuration)
+            throws InterruptedException {
+        robot.universalMoveRobotWithCondition(aOpMode, polarVelocity * Math.sin(Math.toRadians(polarAngle)),
+                polarVelocity * Math.cos(Math.toRadians(polarAngle)), rotationalVelocity, duration, condition, isPulsed, pulseWidthDuration, pulseRestDuration);
+    }
+
+    // Necessary for testPlatformDiagonal
+    public class falseCondition implements rr_OpMode.StopCondition {
+        //can be used as an empty condition, so the robot keeps running in universal movement
+        public boolean stopCondition(rr_OpMode aOpMode) throws InterruptedException {
+            return (false);
+        }
+    }
 }
