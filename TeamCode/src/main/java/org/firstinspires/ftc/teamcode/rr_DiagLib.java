@@ -12,10 +12,17 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WINCH;
 
 public class rr_DiagLib {
 
+    // Used for motor and platform movements
     private final static float MECCANUM_WHEEL_ENCODER_MARGIN = 50;
 
     rr_Robot robot;
     rr_OpMode aOpMode;
+
+    public rr_DiagLib(rr_OpMode aOpMode, HardwareMap aHwMap) throws InterruptedException {
+        robot = new rr_Robot(aOpMode);
+        robot.autonomousInit(aOpMode, aHwMap);
+        this.aOpMode = aOpMode;
+    }
 
     private class TestResult {
         private String elementName;
@@ -48,12 +55,6 @@ public class rr_DiagLib {
         public String getTestMessage() {
             return testMessage;
         }
-    }
-
-    public rr_DiagLib(rr_OpMode aOpMode, HardwareMap aHwMap) throws InterruptedException {
-        robot = new rr_Robot(aOpMode);
-        robot.autonomousInit(aOpMode, aHwMap);
-        this.aOpMode = aOpMode;
     }
 
 
