@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import java.util.ArrayList;
+
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_RIGHT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM;
@@ -17,11 +19,15 @@ public class rr_DiagLib {
 
     rr_Robot robot;
     rr_OpMode aOpMode;
+    ArrayList<RobotTest> robotTests;
 
     public rr_DiagLib(rr_OpMode aOpMode, HardwareMap aHwMap) throws InterruptedException {
         robot = new rr_Robot(aOpMode);
         robot.autonomousInit(aOpMode, aHwMap);
         this.aOpMode = aOpMode;
+
+        robotTests = new ArrayList<>();
+        initializeRobotTests();
     }
 
 
@@ -83,6 +89,22 @@ public class rr_DiagLib {
         public String getTestMessage() {
             return testMessage;
         }
+    }
+
+
+    //***************** CLASS METHODS *****************//
+
+    private void initializeRobotTests() {
+        robotTests.add(new RobotTest(TestType.AUTOMATIC, new TestFrontLeftWheel()));
+        robotTests.add(new RobotTest(TestType.AUTOMATIC, new TestFrontRightWheel()));
+        robotTests.add(new RobotTest(TestType.AUTOMATIC, new TestBackLeftWheel()));
+        robotTests.add(new RobotTest(TestType.AUTOMATIC, new TestBackRightWheel()));
+        robotTests.add(new RobotTest(TestType.AUTOMATIC, new TestCubeArmMotor()));
+        robotTests.add(new RobotTest(TestType.AUTOMATIC, new TestRelicWinchMotor()));
+
+        robotTests.add(new RobotTest(TestType.AUTOMATIC, new TestPlatformForward()));
+        robotTests.add(new RobotTest(TestType.AUTOMATIC, new TestPlatformLeft()));
+        robotTests.add(new RobotTest(TestType.AUTOMATIC, new TestPlatformDiagonal()));
     }
 
 
