@@ -17,17 +17,17 @@ public class rr_DiagLib {
     rr_Robot robot;
     rr_OpMode aOpMode;
 
-    private class RobotTest {
+    private class TestResult {
         private String elementName;
         private boolean testResult;
         private String testMessage;
 
-        public RobotTest(String elementName, boolean testResult) {
+        public TestResult(String elementName, boolean testResult) {
             this.elementName = elementName;
             this.testResult = testResult;
         }
 
-        public RobotTest(String elementName, boolean testResult, String testMessage) {
+        public TestResult(String elementName, boolean testResult, String testMessage) {
             this.elementName = elementName;
             this.testResult = testResult;
             this.testMessage = testMessage;
@@ -59,7 +59,7 @@ public class rr_DiagLib {
 
     //***************** MOTOR TESTS *****************//
 
-    private RobotTest genericMotorTest(int motor, String motorName) throws InterruptedException {
+    private TestResult genericMotorTest(int motor, String motorName) throws InterruptedException {
         robot.setMotorMode(aOpMode, motor, DcMotor.RunMode.RUN_USING_ENCODER);
         int motorPosition = robot.getMotorPosition(aOpMode, motor);
         robot.testMotor(aOpMode, motor, 0.5f, 1000);    // Runs motor for 1 second at half speed
@@ -67,40 +67,40 @@ public class rr_DiagLib {
 
         // If the positions are different enough, the motor is running and working
         if (Math.abs(newMotorPosition - motorPosition) < MECCANUM_WHEEL_ENCODER_MARGIN) {
-            return new RobotTest(motorName, true);
+            return new TestResult(motorName, true);
         } else {
-            return new RobotTest(motorName, false, "Failed to detect rotation");
+            return new TestResult(motorName, false, "Failed to detect rotation");
         }
     }
 
-    public RobotTest testFrontLeftWheel() throws InterruptedException {
+    public TestResult testFrontLeftWheel() throws InterruptedException {
         return genericMotorTest(FRONT_LEFT_MOTOR, "Front left wheel");
     }
 
-    public RobotTest testFrontRightWheel() throws InterruptedException {
+    public TestResult testFrontRightWheel() throws InterruptedException {
         return genericMotorTest(FRONT_RIGHT_MOTOR, "Front right wheel");
     }
 
-    public RobotTest testBackLeftWheel() throws InterruptedException {
+    public TestResult testBackLeftWheel() throws InterruptedException {
         return genericMotorTest(BACK_LEFT_MOTOR, "Back left wheel");
     }
 
-    public RobotTest testBackRightWheel() throws InterruptedException {
+    public TestResult testBackRightWheel() throws InterruptedException {
         return genericMotorTest(BACK_RIGHT_MOTOR, "Back right wheel");
     }
 
-    public RobotTest testCubeArmMotor() throws InterruptedException {
+    public TestResult testCubeArmMotor() throws InterruptedException {
         return genericMotorTest(CUBE_ARM, "Cube arm motor");
     }
 
-    public RobotTest testRelicWinchMotor() throws InterruptedException {
+    public TestResult testRelicWinchMotor() throws InterruptedException {
         return genericMotorTest(RELIC_WINCH, "Relic winch motor");
     }
 
 
     //***************** PLATFORM TESTS *****************//
 
-    public RobotTest testPlatformForward() throws InterruptedException {
+    public TestResult testPlatformForward() throws InterruptedException {
         int motorPosition = robot.getMotorPosition(aOpMode, FRONT_LEFT_MOTOR); // Representative motor
         float startingAngle = robot.getBoschGyroSensorHeading(aOpMode); // Save starting angle.
         robot.universalMoveRobot(aOpMode, 0.5f, 0.0f);
@@ -108,13 +108,13 @@ public class rr_DiagLib {
         float endingAngle = robot.getBoschGyroSensorHeading(aOpMode);
 
         if ((Math.abs(newMotorPosition - motorPosition) < MECCANUM_WHEEL_ENCODER_MARGIN) || (Math.abs(startingAngle - endingAngle) > 3)) {
-            return new RobotTest("Platform forwards/backwards", true);
+            return new TestResult("Platform forwards/backwards", true);
         } else {
-            return new RobotTest("Platform forwards/backwards", false, "Failed to detect platform movement");
+            return new TestResult("Platform forwards/backwards", false, "Failed to detect platform movement");
         }
     }
 
-    public RobotTest testPlatformLeft() throws InterruptedException {
+    public TestResult testPlatformLeft() throws InterruptedException {
         int motorPosition = robot.getMotorPosition(aOpMode, FRONT_LEFT_MOTOR); // Representative motor
         float startingAngle = robot.getBoschGyroSensorHeading(aOpMode); // Save starting angle.
         robot.universalMoveRobot(aOpMode, 0.0f, 0.5f);
@@ -122,13 +122,13 @@ public class rr_DiagLib {
         float endingAngle = robot.getBoschGyroSensorHeading(aOpMode);
 
         if ((Math.abs(newMotorPosition - motorPosition) < MECCANUM_WHEEL_ENCODER_MARGIN) || (Math.abs(startingAngle - endingAngle) > 3)) {
-            return new RobotTest("Platform sideways", true);
+            return new TestResult("Platform sideways", true);
         } else {
-            return new RobotTest("Platform sideways", true, "Failed to detect platform movement");
+            return new TestResult("Platform sideways", true, "Failed to detect platform movement");
         }
     }
 
-    public RobotTest testPlatformDiagonal() throws InterruptedException {
+    public TestResult testPlatformDiagonal() throws InterruptedException {
         // We will move the robot in 4 phases to test all 4 diagonals.
         // We will pick representative motors based on the specific diagonal as all
         //wheels will not rotate with power during diagonal moves.
@@ -219,14 +219,14 @@ public class rr_DiagLib {
 
         // Check if anything went wrong
         if (failedDiagTopLeft || failedDiagTopRight || failedDiagBottomLeft || failedDiagBottomRight) {
-            return new RobotTest("Platform Diagonal", false, "Failed to detect platform diagonal movement");
+            return new TestResult("Platform Diagonal", false, "Failed to detect platform diagonal movement");
         }
 
         if (failedDiagTopLeftRotation ||
                 failedDiagTopRightRotation ||
                 failedDiagBottomLeftRotation ||
                 failedDiagBottomRightRotation) {
-            return new RobotTest("Platform Diagonal", false,
+            return new TestResult("Platform Diagonal", false,
                     "Detected too much rotation when performing platform diagonal movements" +
                     "[TDLR:" + rotationDiagTopLeftAngle + "]" +
                     "[TDRR:" + rotationDiagTopRightAngle + "]" +
@@ -235,7 +235,7 @@ public class rr_DiagLib {
         }
 
         // Test passed
-        return new RobotTest("Platform Diagonal", true);
+        return new TestResult("Platform Diagonal", true);
     }
 
     // Helper method for testPlatformDiagonal
