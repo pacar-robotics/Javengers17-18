@@ -12,16 +12,16 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_RIGHT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WINCH;
 
-public class rr_DiagLib {
+class rr_DiagLib {
 
     // Used for motor and platform movements
     private final static float MECCANUM_WHEEL_ENCODER_MARGIN = 50;
 
-    rr_Robot robot;
-    rr_OpMode aOpMode;
+    private rr_Robot robot;
+    private rr_OpMode aOpMode;
     ArrayList<RobotTest> robotTests;
 
-    public rr_DiagLib(rr_OpMode aOpMode, HardwareMap aHwMap) throws InterruptedException {
+    rr_DiagLib(rr_OpMode aOpMode, HardwareMap aHwMap) throws InterruptedException {
         robot = new rr_Robot(aOpMode);
         robot.autonomousInit(aOpMode, aHwMap);
         this.aOpMode = aOpMode;
@@ -33,42 +33,42 @@ public class rr_DiagLib {
 
     //***************** INNER CLASSES *****************//
 
-    protected class RobotTest {
+    class RobotTest {
         private TestType testType;
         private RunnableTest testMethod;
 
-        public RobotTest(TestType testType, RunnableTest testMethod) {
+        RobotTest(TestType testType, RunnableTest testMethod) {
             this.testType = testType;
             this.testMethod = testMethod;
         }
 
-        public TestType getTestType() {
+        TestType getTestType() {
             return testType;
         }
 
-        public RunnableTest getTestMethod() {
+        RunnableTest getTestMethod() {
             return testMethod;
         }
     }
 
-    public enum TestType {AUTOMATIC, MANUAL}
+    enum TestType {AUTOMATIC, MANUAL}
 
-    public interface RunnableTest {
+    interface RunnableTest {
         TestResult runTest() throws InterruptedException;
     }
 
 
-    private class TestResult {
+    class TestResult {
         private String elementName;
         private boolean testResult;
         private String testMessage;
 
-        public TestResult(String elementName, boolean testResult) {
+        TestResult(String elementName, boolean testResult) {
             this.elementName = elementName;
             this.testResult = testResult;
         }
 
-        public TestResult(String elementName, boolean testResult, String testMessage) {
+        TestResult(String elementName, boolean testResult, String testMessage) {
             this.elementName = elementName;
             this.testResult = testResult;
             this.testMessage = testMessage;
@@ -124,37 +124,37 @@ public class rr_DiagLib {
         }
     }
 
-    class TestFrontLeftWheel implements RunnableTest {
+    private class TestFrontLeftWheel implements RunnableTest {
         public TestResult runTest() throws InterruptedException {
             return genericMotorTest(FRONT_LEFT_MOTOR, "Front left wheel");
         }
     }
 
-    class TestFrontRightWheel implements RunnableTest {
+    private class TestFrontRightWheel implements RunnableTest {
         public TestResult runTest() throws InterruptedException {
             return genericMotorTest(FRONT_RIGHT_MOTOR, "Front right wheel");
         }
     }
 
-    class TestBackLeftWheel implements RunnableTest {
+    private class TestBackLeftWheel implements RunnableTest {
         public TestResult runTest() throws InterruptedException {
             return genericMotorTest(BACK_LEFT_MOTOR, "Back left wheel");
         }
     }
 
-    class TestBackRightWheel implements RunnableTest {
+    private class TestBackRightWheel implements RunnableTest {
         public TestResult runTest() throws InterruptedException {
             return genericMotorTest(BACK_RIGHT_MOTOR, "Back right wheel");
         }
     }
 
-    class TestCubeArmMotor implements RunnableTest {
+    private class TestCubeArmMotor implements RunnableTest {
         public TestResult runTest() throws InterruptedException {
             return genericMotorTest(CUBE_ARM, "Cube arm motor");
         }
     }
 
-    class TestRelicWinchMotor implements RunnableTest {
+    private class TestRelicWinchMotor implements RunnableTest {
         public TestResult runTest() throws InterruptedException {
             return genericMotorTest(RELIC_WINCH, "Relic winch motor");
         }
@@ -163,7 +163,7 @@ public class rr_DiagLib {
 
     //***************** PLATFORM TESTS *****************//
 
-    class TestPlatformForward implements RunnableTest {
+    private class TestPlatformForward implements RunnableTest {
         public TestResult runTest() throws InterruptedException {
             int motorPosition = robot.getMotorPosition(aOpMode, FRONT_LEFT_MOTOR); // Representative motor
             float startingAngle = robot.getBoschGyroSensorHeading(aOpMode); // Save starting angle.
@@ -179,7 +179,7 @@ public class rr_DiagLib {
         }
     }
 
-    class TestPlatformLeft implements RunnableTest {
+    private class TestPlatformLeft implements RunnableTest {
         public TestResult runTest() throws InterruptedException {
             int motorPosition = robot.getMotorPosition(aOpMode, FRONT_LEFT_MOTOR); // Representative motor
             float startingAngle = robot.getBoschGyroSensorHeading(aOpMode); // Save starting angle.
@@ -195,7 +195,7 @@ public class rr_DiagLib {
         }
     }
 
-    class TestPlatformDiagonal implements RunnableTest {
+    private class TestPlatformDiagonal implements RunnableTest {
         public TestResult runTest() throws InterruptedException {
 // We will move the robot in 4 phases to test all 4 diagonals.
             // We will pick representative motors based on the specific diagonal as all
