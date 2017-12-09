@@ -8,7 +8,7 @@ package org.firstinspires.ftc.teamcode;
 public class rr_Constants {
 
     //Constants for Debugging
-    final static boolean DEBUG = true;
+    final static boolean DEBUG = false;
     final static int DEBUG_LEVEL = 0;
     final static long DEBUG_MESSAGE_DISPLAY_TIME = 10; //time to flash DEBUG message on telemetry
     // setting DEBUG_AUTO_CLEAR to false interferes with Vuforia code
