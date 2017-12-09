@@ -34,10 +34,12 @@ class rr_DiagLib {
     //***************** INNER CLASSES *****************//
 
     class RobotTest {
+        private String testName;
         private TestType testType;
         private RunnableTest testMethod;
 
-        RobotTest(TestType testType, RunnableTest testMethod) {
+        RobotTest(String testName, TestType testType, RunnableTest testMethod) {
+            this.testName = testName;
             this.testType = testType;
             this.testMethod = testMethod;
         }
@@ -48,6 +50,10 @@ class rr_DiagLib {
 
         RunnableTest getTestMethod() {
             return testMethod;
+        }
+
+        String getTestName() {
+            return testName;
         }
     }
 
@@ -95,16 +101,16 @@ class rr_DiagLib {
     //***************** CLASS METHODS *****************//
 
     private void initializeRobotTests() {
-        robotTests.add(new RobotTest(TestType.AUTOMATIC, new TestFrontLeftWheel()));
-        robotTests.add(new RobotTest(TestType.AUTOMATIC, new TestFrontRightWheel()));
-        robotTests.add(new RobotTest(TestType.AUTOMATIC, new TestBackLeftWheel()));
-        robotTests.add(new RobotTest(TestType.AUTOMATIC, new TestBackRightWheel()));
-        robotTests.add(new RobotTest(TestType.AUTOMATIC, new TestCubeArmMotor()));
-        robotTests.add(new RobotTest(TestType.AUTOMATIC, new TestRelicWinchMotor()));
+        robotTests.add(new RobotTest("Front Left Wheel", TestType.AUTOMATIC, new TestFrontLeftWheel()));
+        robotTests.add(new RobotTest("Front Right Wheel", TestType.AUTOMATIC, new TestFrontRightWheel()));
+        robotTests.add(new RobotTest("Back Left Wheel", TestType.AUTOMATIC, new TestBackLeftWheel()));
+        robotTests.add(new RobotTest("Back Right Wheel", TestType.AUTOMATIC, new TestBackRightWheel()));
+        robotTests.add(new RobotTest("Cube Arm Motor", TestType.AUTOMATIC, new TestCubeArmMotor()));
+        robotTests.add(new RobotTest("Relic Winch Motor", TestType.AUTOMATIC, new TestRelicWinchMotor()));
 
-        robotTests.add(new RobotTest(TestType.AUTOMATIC, new TestPlatformForward()));
-        robotTests.add(new RobotTest(TestType.AUTOMATIC, new TestPlatformLeft()));
-        robotTests.add(new RobotTest(TestType.AUTOMATIC, new TestPlatformDiagonal()));
+        robotTests.add(new RobotTest("Platform Forward", TestType.AUTOMATIC, new TestPlatformForward()));
+        robotTests.add(new RobotTest("Platform Left", TestType.AUTOMATIC, new TestPlatformLeft()));
+        robotTests.add(new RobotTest("Platform Diagonal", TestType.AUTOMATIC, new TestPlatformDiagonal()));
     }
 
 
