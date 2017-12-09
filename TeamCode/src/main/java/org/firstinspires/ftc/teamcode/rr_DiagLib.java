@@ -100,7 +100,7 @@ public class rr_DiagLib {
 
     //***************** PLATFORM TESTS *****************//
 
-    public RobotTest testForward() throws InterruptedException {
+    public RobotTest testPlatformForward() throws InterruptedException {
         int motorPosition = robot.getMotorPosition(aOpMode, FRONT_LEFT_MOTOR); // Representative motor
         float startingAngle = robot.getBoschGyroSensorHeading(aOpMode); // Save starting angle.
         robot.universalMoveRobot(aOpMode, 0.5f, 0.0f);
@@ -114,7 +114,7 @@ public class rr_DiagLib {
         }
     }
 
-    public RobotTest testLeft() throws InterruptedException {
+    public RobotTest testPlatformLeft() throws InterruptedException {
         int motorPosition = robot.getMotorPosition(aOpMode, FRONT_LEFT_MOTOR); // Representative motor
         float startingAngle = robot.getBoschGyroSensorHeading(aOpMode); // Save starting angle.
         robot.universalMoveRobot(aOpMode, 0.0f, 0.5f);
