@@ -15,7 +15,9 @@ public class DiagOp extends rr_OpMode {
         initialize();
         waitForStart();
 
+        runAllTests();
 
+        printResults();
     }
 
     private void initialize() throws InterruptedException {
@@ -38,6 +40,18 @@ public class DiagOp extends rr_OpMode {
         }
     }
 
+    private void printResults() throws InterruptedException {
+        telemetry.clearAll();
+
+        for (rr_DiagLib.TestResult result : testResults) {
+            if (!result.getTestResult()) {  // Print message if test failed
+                telemetry.addLine(result.getElementName() + ":");
+                telemetry.addLine("   " + result.getTestMessage());
+            }
+        }
+        telemetry.update();
+    }
+
     private void runTest(rr_DiagLib.RobotTest robotTest) throws InterruptedException {
         telemetry.clear();
         telemetry.addLine("Running: " + robotTest.getTestName());
@@ -47,7 +61,7 @@ public class DiagOp extends rr_OpMode {
         rr_DiagLib.TestResult testResult = robotTest.getTestMethod().runTest();
 
         telemetry.addLine("Test " + (testResult.getTestResult() ? "PASSED" : "FAILED"));
-        telemetry.addLine(testResult.getTestMessage());
+        if (testResult.getTestResult()) telemetry.addLine(testResult.getTestMessage());
         telemetry.update();
 
         // Adds test result to list to be reviewed at the end
