@@ -36,20 +36,31 @@ class rr_DiagLib {
     class RobotTest {
         private String testName;
         private TestType testType;
-        private RunnableTest testMethod;
+        private AutomaticTest automaticTest;
+        private ManualTest manualTest;
 
-        RobotTest(String testName, TestType testType, RunnableTest testMethod) {
+        RobotTest(String testName, TestType testType, AutomaticTest automaticTest) {
             this.testName = testName;
             this.testType = testType;
-            this.testMethod = testMethod;
+            this.automaticTest = automaticTest;
+        }
+
+        RobotTest(String testName, TestType testType, ManualTest manualTest) {
+            this.testName = testName;
+            this.testType = testType;
+            this.manualTest = manualTest;
         }
 
         TestType getTestType() {
             return testType;
         }
 
-        RunnableTest getTestMethod() {
-            return testMethod;
+        AutomaticTest getAutomaticTest() {
+            return automaticTest;
+        }
+
+        ManualTest getManualTest() {
+            return manualTest;
         }
 
         String getTestName() {
@@ -59,8 +70,12 @@ class rr_DiagLib {
 
     enum TestType {AUTOMATIC, MANUAL}
 
-    interface RunnableTest {
+    interface AutomaticTest {
         TestResult runTest() throws InterruptedException;
+    }
+
+    interface ManualTest {
+        void runTest() throws InterruptedException;
     }
 
 
@@ -111,6 +126,10 @@ class rr_DiagLib {
         robotTests.add(new RobotTest("Platform Forward", TestType.AUTOMATIC, new TestPlatformForward()));
         robotTests.add(new RobotTest("Platform Left", TestType.AUTOMATIC, new TestPlatformLeft()));
         robotTests.add(new RobotTest("Platform Diagonal", TestType.AUTOMATIC, new TestPlatformDiagonal()));
+
+        robotTests.add(new RobotTest("Cube Claw", TestType.MANUAL, new TestCubeClaw()));
+        robotTests.add(new RobotTest("Relic Arm", TestType.MANUAL, new TestRelicArm()));
+        robotTests.add(new RobotTest("Relic Claw", TestType.MANUAL, new TestRelicClaw()));
     }
 
 
@@ -137,46 +156,70 @@ class rr_DiagLib {
         }
     }
 
-    private class TestFrontLeftWheel implements RunnableTest {
+    private class TestFrontLeftWheel implements AutomaticTest {
         public TestResult runTest() throws InterruptedException {
             return genericMotorTest(FRONT_LEFT_MOTOR, "Front left wheel", true, false);
         }
     }
 
-    private class TestFrontRightWheel implements RunnableTest {
+    private class TestFrontRightWheel implements AutomaticTest {
         public TestResult runTest() throws InterruptedException {
             return genericMotorTest(FRONT_RIGHT_MOTOR, "Front right wheel", true, false);
         }
     }
 
-    private class TestBackLeftWheel implements RunnableTest {
+    private class TestBackLeftWheel implements AutomaticTest {
         public TestResult runTest() throws InterruptedException {
             return genericMotorTest(BACK_LEFT_MOTOR, "Back left wheel", true, false);
         }
     }
 
-    private class TestBackRightWheel implements RunnableTest {
+    private class TestBackRightWheel implements AutomaticTest {
         public TestResult runTest() throws InterruptedException {
             return genericMotorTest(BACK_RIGHT_MOTOR, "Back right wheel", true, false);
         }
     }
 
-    private class TestCubeArmMotor implements RunnableTest {
+    private class TestCubeArmMotor implements AutomaticTest {
         public TestResult runTest() throws InterruptedException {
             return genericMotorTest(CUBE_ARM, "Cube arm motor", false, true);
         }
     }
 
-    private class TestRelicWinchMotor implements RunnableTest {
+    private class TestRelicWinchMotor implements AutomaticTest {
         public TestResult runTest() throws InterruptedException {
             return genericMotorTest(RELIC_WINCH, "Relic winch motor", true, true);
         }
     }
 
 
+    //***************** SERVO TESTS *****************//
+
+    private class TestCubeClaw implements ManualTest {
+        public void runTest() throws InterruptedException {
+            robot.closeCubeClawServoTwoCube();
+            robot.closeCubeClawServoOneCube();
+        }
+    }
+
+    private class TestRelicArm implements ManualTest {
+        public void runTest() throws InterruptedException {
+            robot.setRelicArmExtend();
+            robot.setRelicArmGrab();
+        }
+    }
+
+    private class TestRelicClaw implements ManualTest {
+        public void runTest() throws InterruptedException {
+            robot.setRelicClawOpen();
+            robot.setRelicClawClosed();
+        }
+    }
+
+
     //***************** PLATFORM TESTS *****************//
 
-    private class TestPlatformForward implements RunnableTest {
+    private class TestPlatformForward implements AutomaticTest {
         public TestResult runTest() throws InterruptedException {
             int motorPosition = robot.getMotorPosition(aOpMode, FRONT_LEFT_MOTOR); // Representative motor
             float startingAngle = robot.getBoschGyroSensorHeading(aOpMode); // Save starting angle.
@@ -192,7 +235,7 @@ class rr_DiagLib {
         }
     }
 
-    private class TestPlatformLeft implements RunnableTest {
+    private class TestPlatformLeft implements AutomaticTest {
         public TestResult runTest() throws InterruptedException {
             int motorPosition = robot.getMotorPosition(aOpMode, FRONT_LEFT_MOTOR); // Representative motor
             float startingAngle = robot.getBoschGyroSensorHeading(aOpMode); // Save starting angle.
@@ -208,7 +251,7 @@ class rr_DiagLib {
         }
     }
 
-    private class TestPlatformDiagonal implements RunnableTest {
+    private class TestPlatformDiagonal implements AutomaticTest {
         public TestResult runTest() throws InterruptedException {
 // We will move the robot in 4 phases to test all 4 diagonals.
             // We will pick representative motors based on the specific diagonal as all
