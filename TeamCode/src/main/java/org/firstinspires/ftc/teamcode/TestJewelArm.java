@@ -36,9 +36,9 @@ public class  TestJewelArm extends rr_OpMode {
 
     private void processJewelArmTest() throws InterruptedException {
         if (gamepad1.a) {
-            armPosition += .05f;
+            armPosition += .01f;
         } else if (gamepad1.b) {
-            armPosition -= .05f;
+            armPosition -= .01f;
         }
 
         robot.setJewelArmPosition(armPosition);
@@ -46,12 +46,23 @@ public class  TestJewelArm extends rr_OpMode {
 
     private void processJewelKnockerTest() throws InterruptedException {
         if (gamepad1.x) {
-            knockerPosition += .05f;
+            knockerPosition += .01f;
         } else if (gamepad1.y) {
-            knockerPosition -= .05f;
+            knockerPosition -= .01f;
         }
 
         robot.setJewelPusherPosition(knockerPosition);
+    }
+
+    private void processColorSensorsTest() throws InterruptedException {
+        telemetryAddLine("Left Jewel Color:"+robot.getJewelLeftColor(this).toString());
+        telemetryAddLine("Left Luminosity:"+robot.getJewelLeftLumunosity(this));
+
+        telemetryAddLine("Right Jewel Color:" + robot.getJewelRightColor(this).toString());
+        telemetryAddLine("Right Luminosity:"+robot.getJewelRightLumunosity(this));
+
+        telemetry.update();
+
     }
 }
 

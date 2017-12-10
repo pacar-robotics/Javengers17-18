@@ -50,6 +50,7 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.GENERIC_TIMER;
 import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_ARM_DOWN_PUSH;
 import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_ARM_DOWN_READ;
 import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_ARM_UP;
+import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_COLOR_LUMINOSITY_THRESHOLD;
 import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_PUSHER_LEFT;
 import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_PUSHER_NEUTRAL;
 import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_PUSHER_RIGHT;
@@ -1070,7 +1071,7 @@ public class rr_Robot {
 
     // Positioning jewel arm servo
 
-    public void setJewelArmPosition(float armPosition) throws InterruptedException {
+    public void setJewelArmPositionTest(float armPosition) throws InterruptedException {
 
         if (jewelArm.getPosition() > armPosition) {
             boolean isJewelArmAboveFinal = true;
@@ -1095,19 +1096,24 @@ public class rr_Robot {
         }
     }
 
+    public void setJewelArmPosition (float armPosition) throws InterruptedException {
+        jewelArm.setPosition(armPosition);
+        Thread.sleep(50);
+    }
+
     public void setJewelPusherPosition(float armPosition) throws InterruptedException {
         jewelPusher.setPosition(armPosition);
-        Thread.sleep(250);
+        Thread.sleep(50);
     }
 
     public void pushRightJewel() throws InterruptedException {
         jewelPusher.setPosition(JEWEL_PUSHER_RIGHT);
-        Thread.sleep(250);
+        Thread.sleep(100);
     }
 
     public void pushLeftJewel() throws InterruptedException {
         jewelPusher.setPosition(JEWEL_PUSHER_LEFT);
-        Thread.sleep(250);
+        Thread.sleep(100);
     }
 
     public void setJewelPusherNeutral() throws InterruptedException {
@@ -1128,36 +1134,6 @@ public class rr_Robot {
     public void setJewelArmDownRead() throws InterruptedException {
         setJewelArmPosition(JEWEL_ARM_DOWN_READ);
     }
-
-
-    //JEWEL COLOR SENSORS
-
-
-//    public rr_Constants.JewelColorEnum getJewelLeftColor(rr_OpMode aOpMode) throws InterruptedException {
-//        Thread.sleep(500);
-//
-//        if((leftJewelColorSensor.red() - leftJewelColorSensor.blue()) > rr_Constants.JEWEL_COLOR_MARGIN) {
-//            return rr_Constants.JewelColorEnum.RED;
-//        }
-//        if((leftJewelColorSensor.blue() - leftJewelColorSensor.red()) > rr_Constants.JEWEL_COLOR_MARGIN) {
-//            return rr_Constants.JewelColorEnum.BLUE;
-//        }
-//
-//        return rr_Constants.JewelColorEnum.UNKNOWN;
-//    }
-//
-//    public rr_Constants.JewelColorEnum getJewelRightColor(rr_OpMode aOpMode) throws InterruptedException {
-//        Thread.sleep(500);
-//
-//        if((leftJewelColorSensor.red() - leftJewelColorSensor.blue()) > rr_Constants.JEWEL_COLOR_MARGIN) {
-//            return rr_Constants.JewelColorEnum.RED;
-//        }
-//        if((leftJewelColorSensor.blue() - leftJewelColorSensor.red()) > rr_Constants.JEWEL_COLOR_MARGIN) {
-//            return rr_Constants.JewelColorEnum.BLUE;
-//        }
-//
-//        return rr_Constants.JewelColorEnum.UNKNOWN;
-//    }
 
 
     public double getLeftJewelRange(rr_OpMode aOpMode) {
@@ -1285,21 +1261,21 @@ public class rr_Robot {
 
     public rr_Constants.JewelColorEnum getJewelLeftColor(rr_OpMode aOpMode) throws InterruptedException {
         Thread.sleep(500);
+        if(getJewelLeftLumunosity(aOpMode)>JEWEL_COLOR_LUMINOSITY_THRESHOLD) {
+            if (getFilteredLeftJewelColorSensorReading(aOpMode, rr_Constants.FilterJewelColorEnum.RED)
+                    > getFilteredLeftJewelColorSensorReading(aOpMode, rr_Constants.FilterJewelColorEnum.BLUE)) {
 
-        if (getFilteredLeftJewelColorSensorReading(aOpMode, rr_Constants.FilterJewelColorEnum.RED)
-                > getFilteredLeftJewelColorSensorReading(aOpMode, rr_Constants.FilterJewelColorEnum.BLUE)) {
-
-            aOpMode.telemetryAddData("Color", "Red", "Left Red Detected");
-            aOpMode.telemetryUpdate();
-            return rr_Constants.JewelColorEnum.RED;
+                aOpMode.telemetryAddData("Color", "Red", "Left Red Detected");
+                aOpMode.telemetryUpdate();
+                return rr_Constants.JewelColorEnum.RED;
+            }
+            if (getFilteredLeftJewelColorSensorReading(aOpMode, rr_Constants.FilterJewelColorEnum.BLUE)
+                    > getFilteredLeftJewelColorSensorReading(aOpMode, rr_Constants.FilterJewelColorEnum.RED)) {
+                aOpMode.telemetryAddData("Color", "Blue", "Left Blue Detected");
+                aOpMode.telemetryUpdate();
+                return rr_Constants.JewelColorEnum.BLUE;
+            }
         }
-        if (getFilteredLeftJewelColorSensorReading(aOpMode, rr_Constants.FilterJewelColorEnum.BLUE)
-                > getFilteredLeftJewelColorSensorReading(aOpMode, rr_Constants.FilterJewelColorEnum.RED)) {
-            aOpMode.telemetryAddData("Color", "Blue", "Left Blue Detected");
-            aOpMode.telemetryUpdate();
-            return rr_Constants.JewelColorEnum.BLUE;
-        }
-
         aOpMode.telemetryAddData("Color", "Unknown", "No Color Detected");
         aOpMode.telemetryUpdate();
         return rr_Constants.JewelColorEnum.UNKNOWN;
@@ -1307,24 +1283,33 @@ public class rr_Robot {
 
     public rr_Constants.JewelColorEnum getJewelRightColor(rr_OpMode aOpMode) throws InterruptedException {
         Thread.sleep(500);
+        if(getJewelRightLumunosity(aOpMode)>JEWEL_COLOR_LUMINOSITY_THRESHOLD) {
+            if (getFilteredLeftJewelColorSensorReading(aOpMode, rr_Constants.FilterJewelColorEnum.RED) >
+                    getFilteredLeftJewelColorSensorReading(aOpMode, rr_Constants.FilterJewelColorEnum.BLUE)) {
+                aOpMode.telemetryAddData("Color", "Red", "Right Red Detected");
+                aOpMode.telemetryUpdate();
+                return rr_Constants.JewelColorEnum.RED;
+            }
+            if (getFilteredLeftJewelColorSensorReading(aOpMode, rr_Constants.FilterJewelColorEnum.BLUE)
+                    > getFilteredLeftJewelColorSensorReading(aOpMode, rr_Constants.FilterJewelColorEnum.RED)) {
+                aOpMode.telemetryAddData("Color", "Blue", "Right Blue Detected");
+                aOpMode.telemetryUpdate();
 
-        if (getFilteredLeftJewelColorSensorReading(aOpMode, rr_Constants.FilterJewelColorEnum.RED) >
-                getFilteredLeftJewelColorSensorReading(aOpMode, rr_Constants.FilterJewelColorEnum.BLUE)) {
-            aOpMode.telemetryAddData("Color", "Red", "Right Red Detected");
-            aOpMode.telemetryUpdate();
-            return rr_Constants.JewelColorEnum.RED;
-        }
-        if (getFilteredLeftJewelColorSensorReading(aOpMode, rr_Constants.FilterJewelColorEnum.BLUE)
-                > getFilteredLeftJewelColorSensorReading(aOpMode, rr_Constants.FilterJewelColorEnum.RED)) {
-            aOpMode.telemetryAddData("Color", "Blue", "Right Blue Detected");
-            aOpMode.telemetryUpdate();
-
-            return rr_Constants.JewelColorEnum.BLUE;
+                return rr_Constants.JewelColorEnum.BLUE;
+            }
         }
 
         aOpMode.telemetryAddData("Color", "Unknown", "No Color Detected");
         aOpMode.telemetryUpdate();
         return rr_Constants.JewelColorEnum.UNKNOWN;
+    }
+
+    public float getJewelLeftLumunosity(rr_OpMode aOpMode) {
+        return leftJewelColorSensor.alpha();
+    }
+    
+    public float getJewelRightLumunosity(rr_OpMode aOpMode) {
+        return rightJewelColorSensor.alpha();
     }
 
 
