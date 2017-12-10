@@ -321,9 +321,9 @@ class rr_DiagLib {
 
         // Helper method for testPlatformDiagonal
         private void universalMoveRobotPolar(rr_OpMode aOpMode, double polarAngle,
-                                            double polarVelocity, double rotationalVelocity,
-                                            long duration, rr_OpMode.StopCondition condition,
-                                            boolean isPulsed, long pulseWidthDuration, long pulseRestDuration)
+                                             double polarVelocity, double rotationalVelocity,
+                                             long duration, rr_OpMode.StopCondition condition,
+                                             boolean isPulsed, long pulseWidthDuration, long pulseRestDuration)
                 throws InterruptedException {
             robot.universalMoveRobotWithCondition(aOpMode, polarVelocity * Math.sin(Math.toRadians(polarAngle)),
                     polarVelocity * Math.cos(Math.toRadians(polarAngle)), rotationalVelocity, duration, condition, isPulsed, pulseWidthDuration, pulseRestDuration);
