@@ -116,11 +116,18 @@ class rr_DiagLib {
 
     //***************** MOTOR TESTS *****************//
 
-    private TestResult genericMotorTest(int motor, String motorName) throws InterruptedException {
+    private TestResult genericMotorTest(int motor, String motorName, boolean defaultDirection,
+                                        boolean resetMotor) throws InterruptedException {
         robot.setMotorMode(aOpMode, motor, DcMotor.RunMode.RUN_USING_ENCODER);
         int motorPosition = robot.getMotorPosition(aOpMode, motor);
-        robot.testMotor(aOpMode, motor, 0.5f, 1000);    // Runs motor for 1 second at half speed
+        // Runs motor for 1 second at half speed
+        robot.testMotor(aOpMode, motor, 0.5f * (defaultDirection ? 1 : -1), 1000);
         int newMotorPosition = robot.getMotorPosition(aOpMode, motor);
+
+        // Move motor back if requested
+        if (resetMotor) {
+            robot.testMotor(aOpMode, motor, -0.5f * (defaultDirection ? 1 : -1), 1000);
+        }
 
         // If the positions are different enough, the motor is running and working
         if (Math.abs(newMotorPosition - motorPosition) < MECCANUM_WHEEL_ENCODER_MARGIN) {
@@ -132,37 +139,37 @@ class rr_DiagLib {
 
     private class TestFrontLeftWheel implements RunnableTest {
         public TestResult runTest() throws InterruptedException {
-            return genericMotorTest(FRONT_LEFT_MOTOR, "Front left wheel");
+            return genericMotorTest(FRONT_LEFT_MOTOR, "Front left wheel", true, false);
         }
     }
 
     private class TestFrontRightWheel implements RunnableTest {
         public TestResult runTest() throws InterruptedException {
-            return genericMotorTest(FRONT_RIGHT_MOTOR, "Front right wheel");
+            return genericMotorTest(FRONT_RIGHT_MOTOR, "Front right wheel", true, false);
         }
     }
 
     private class TestBackLeftWheel implements RunnableTest {
         public TestResult runTest() throws InterruptedException {
-            return genericMotorTest(BACK_LEFT_MOTOR, "Back left wheel");
+            return genericMotorTest(BACK_LEFT_MOTOR, "Back left wheel", true, false);
         }
     }
 
     private class TestBackRightWheel implements RunnableTest {
         public TestResult runTest() throws InterruptedException {
-            return genericMotorTest(BACK_RIGHT_MOTOR, "Back right wheel");
+            return genericMotorTest(BACK_RIGHT_MOTOR, "Back right wheel", true, false);
         }
     }
 
     private class TestCubeArmMotor implements RunnableTest {
         public TestResult runTest() throws InterruptedException {
-            return genericMotorTest(CUBE_ARM, "Cube arm motor");
+            return genericMotorTest(CUBE_ARM, "Cube arm motor", false, true);
         }
     }
 
     private class TestRelicWinchMotor implements RunnableTest {
         public TestResult runTest() throws InterruptedException {
-            return genericMotorTest(RELIC_WINCH, "Relic winch motor");
+            return genericMotorTest(RELIC_WINCH, "Relic winch motor", true, true);
         }
     }
 
