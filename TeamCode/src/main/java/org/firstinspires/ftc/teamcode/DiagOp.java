@@ -21,9 +21,16 @@ public class DiagOp extends rr_OpMode {
     }
 
     private void initialize() throws InterruptedException {
+        telemetry.setAutoClear(false);
+
+        telemetry.addLine("Initializing...");
+        telemetry.update();
+
         diagLib = new rr_DiagLib(this, this.hardwareMap);
         testResults = new ArrayList<>();
-        telemetry.setAutoClear(false);
+
+        telemetry.addLine("Done with Initialization");
+        telemetry.update();
     }
 
     private void runAutomaticTests() throws InterruptedException {
