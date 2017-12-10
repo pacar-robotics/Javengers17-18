@@ -96,7 +96,6 @@ public class rr_Robot {
 
     //Servo
     private Servo cubeClaw;
-    private Servo cubeOrientation;
     private Servo jewelArm;
     private Servo jewelPusher;
     private Servo relicClaw;
@@ -230,10 +229,8 @@ public class rr_Robot {
 
     public void initCubeArmServos(rr_OpMode aOpMode) throws InterruptedException {
         cubeClaw = hwMap.get(Servo.class, "servo_cube_claw");
-        cubeOrientation = hwMap.get(Servo.class, "servo_cube_orientation");
 
         setCubeClawPosition(CUBE_CLAW_OPEN);
-        setCubeClawToHorizontal();
     }
 
     public void initCubeArmSensors(rr_OpMode aOpMode) throws InterruptedException {
@@ -966,15 +963,6 @@ public class rr_Robot {
         Thread.sleep(100);
     }
 
-    public void setCubeClawToHorizontal() throws InterruptedException {
-        cubeOrientation.setPosition(CUBE_ORIENTATION_HORIZONTAL);
-        Thread.sleep(100);
-    }
-
-    public void setCubeClawToVertical() throws InterruptedException {
-        cubeOrientation.setPosition(CUBE_ORIENTATION_VERTICAL);
-        Thread.sleep(100);
-    }
 
     public boolean isCubeUpperLimitPressed() {
         return !cubeArmUpperLimit.getState();
@@ -991,14 +979,6 @@ public class rr_Robot {
 
     public float getCubeClawPosition() throws InterruptedException {
         return (float) cubeClaw.getPosition();
-    }
-
-    public void setCubeOrientation(float position) throws InterruptedException {
-        cubeOrientation.setPosition(position);
-    }
-
-    public float getCubeOrientation() throws InterruptedException {
-        return (float) cubeOrientation.getPosition();
     }
 
 
