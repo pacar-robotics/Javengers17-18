@@ -79,6 +79,8 @@ public class rr_Constants {
     final static float CUBE_ORIENTATION_HORIZONTAL = 0.9f;
     final static float CUBE_ORIENTATION_VERTICAL = 0.44f;
 
+
+
     //Relic Arm Constants
     final static float RELIC_WINCH_EXTEND_POWER_FACTOR = .8f;   // TODO: Change
     final static float RELIC_WINCH_RETRACT_POWER_FACTOR = .8f;  // TODO: Change
@@ -101,6 +103,7 @@ public class rr_Constants {
     final static float JEWEL_ARM_UP = 0.34f;
     final static float JEWEL_ARM_DOWN_READ = .9f;
     final static float JEWEL_ARM_DOWN_PUSH = .99f;
+    final static float JEWEL_COLOR_LUMINOSITY_THRESHOLD=35f;
 
 
     //index of motors
