@@ -12,6 +12,7 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_GRAB;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_MIDDLE;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_RAISE_POWER;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_SAFE_POS;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_TOP;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_CLAW_ONE_CLOSED;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_CLAW_ONE_RELEASE;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_CLAW_OPEN;
@@ -190,11 +191,14 @@ public class rr_TeleLib {
 
         if (aOpMode.gamepad1.x) {
             robot.closeCubeClawServoOneCube();
+            robot.moveRobotToPositionFB(aOpMode, -6, 0.5f, false);
             robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_MIDDLE, CUBE_ARM_RAISE_POWER);
         }
         if (aOpMode.gamepad1.y) {
             robot.closeCubeClawServoOneCube();
-            robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_MIDDLE, CUBE_ARM_RAISE_POWER);
+            robot.moveRobotToPositionFB(aOpMode, -6, 0.5f, false);
+
+            robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_TOP, CUBE_ARM_RAISE_POWER);
         }
         if (aOpMode.gamepad1.b) {
             robot.setCubeClawPosition(CUBE_CLAW_ONE_RELEASE);

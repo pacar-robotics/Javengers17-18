@@ -67,7 +67,7 @@ public class rr_Constants {
     final static int CUBE_ARM_GRAB = 0;
     final static int CUBE_ARM_AUTONOMOUS_CARRY=-350;
     final static int CUBE_ARM_MIDDLE = -500;
-    final static int CUBE_ARM_TOP = -1500;
+    final static int CUBE_ARM_TOP = -1800;
     final static int CUBE_ARM_SAFE_POS = -700;
     final static float CUBE_ARM_SCORING_POWER = .5f;
     final static float CUBE_ARM_POWER_FACTOR = 0.20f;
