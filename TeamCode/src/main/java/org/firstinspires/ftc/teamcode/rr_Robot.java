@@ -358,7 +358,6 @@ public class rr_Robot {
 
     protected void initializeBoschIMU(rr_OpMode aOpMode) throws InterruptedException {
         aOpMode.DBG("Starting Initialize Bosch Gyro");
-        Thread.sleep(2000);
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
@@ -373,7 +372,7 @@ public class rr_Robot {
         imu.initialize(parameters);
         // Start the logging of measured acceleration
         //imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
-        Thread.sleep(1000);
+        Thread.sleep(500);
         aOpMode.DBG("End Initialize Bosch Gyro");
     }
 
