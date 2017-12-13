@@ -2,8 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@TeleOp(name = "TestJewelArm", group = "TeleOp")
-public class TestJewelArm extends rr_OpMode {
+@TeleOp(name = "TestJewelArm", group = "Test")
+public class  TestJewelArm extends rr_OpMode {
     rr_Robot robot;
 
     float knockerPosition = rr_Constants.JEWEL_PUSHER_NEUTRAL;
@@ -11,10 +11,11 @@ public class TestJewelArm extends rr_OpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        robot = new rr_Robot(this, this.hardwareMap);
+        robot = new rr_Robot(this);
+        robot.teleopInit(this, this.hardwareMap);
 
-        //robot.setJewelArmPosition(armPosition);
-        //robot.setJewelKnockerPosition(knockerPosition);
+        robot.setJewelArmPosition(armPosition);
+        robot.setJewelPusherPosition(knockerPosition);
 
         waitForStart();
 
@@ -22,8 +23,7 @@ public class TestJewelArm extends rr_OpMode {
 
         while (opModeIsActive()) {
             processJewelArmTest();
-            processJewelPusherTest();
-            processColorSensorsTest();
+            processJewelKnockerTest();
 
             telemetry.addLine("Jewel Arm Position: " + armPosition);
             telemetry.addLine("Jewel Knocker Position: " + knockerPosition);
@@ -44,7 +44,7 @@ public class TestJewelArm extends rr_OpMode {
         robot.setJewelArmPosition(armPosition);
     }
 
-    private void processJewelPusherTest() throws InterruptedException {
+    private void processJewelKnockerTest() throws InterruptedException {
         if (gamepad1.x) {
             knockerPosition += .01f;
         } else if (gamepad1.y) {
@@ -55,7 +55,6 @@ public class TestJewelArm extends rr_OpMode {
     }
 
     private void processColorSensorsTest() throws InterruptedException {
-
         telemetryAddLine("Left Jewel Color:"+robot.getJewelLeftColor(this).toString());
         telemetryAddLine("Left Luminosity:"+robot.getJewelLeftLumunosity(this));
 
@@ -65,7 +64,5 @@ public class TestJewelArm extends rr_OpMode {
         telemetry.update();
 
     }
-
 }
-
 

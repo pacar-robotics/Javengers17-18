@@ -8,7 +8,7 @@ package org.firstinspires.ftc.teamcode;
 public class rr_Constants {
 
     //Constants for Debugging
-    final static boolean DEBUG = false;
+    final static boolean DEBUG = true;
     final static int DEBUG_LEVEL = 0;
     final static long DEBUG_MESSAGE_DISPLAY_TIME = 10; //time to flash DEBUG message on telemetry
     // setting DEBUG_AUTO_CLEAR to false interferes with Vuforia code
@@ -65,8 +65,9 @@ public class rr_Constants {
     final static int TWO_CUBE_POS_2 = 0;
     final static int TWO_CUBE_POS_3 = 0; //Highest
     final static int CUBE_ARM_GRAB = 0;
+    final static int CUBE_ARM_AUTONOMOUS_CARRY=-350;
     final static int CUBE_ARM_MIDDLE = -500;
-    final static int CUBE_ARM_TOP = -1500;
+    final static int CUBE_ARM_TOP = -1800;
     final static int CUBE_ARM_SAFE_POS = -700;
     final static float CUBE_ARM_SCORING_POWER = .5f;
     final static float CUBE_ARM_POWER_FACTOR = 0.20f;
@@ -76,14 +77,13 @@ public class rr_Constants {
     final static float CUBE_CLAW_ONE_CLOSED = 0.8f;
     final static float CUBE_CLAW_ONE_RELEASE = 0.7f;
     final static float CUBE_CLAW_TWO_CLOSED = 0.8f;
-    final static float CUBE_ORIENTATION_HORIZONTAL = 0.9f;
-    final static float CUBE_ORIENTATION_VERTICAL = 0.44f;
-
-
+    final static float CUBE_ORIENTATION_HORIZONTAL = 0.225f;
+    final static float CUBE_ORIENTATION_VERTICAL = 0.75f;
 
     //Relic Arm Constants
-    final static float RELIC_WINCH_EXTEND_POWER_FACTOR = .8f;   // TODO: Change
-    final static float RELIC_WINCH_RETRACT_POWER_FACTOR = .8f;  // TODO: Change
+    final static float RELIC_WINCH_MAX_DURATION = 5000;
+    final static float RELIC_WINCH_EXTEND_POWER_FACTOR = .5f;
+    final static float RELIC_WINCH_RETRACT_POWER_FACTOR = -.5f;
     final static int RELIC_WINCH_REST = -220;                   // TODO: Change
     final static int RELIC_WINCH_UPPER_LIMIT = 11000;           // TODO: Change
     final static float RELIC_ARM_GRAB = 0.3f;
@@ -97,13 +97,20 @@ public class rr_Constants {
 
 
     //Jewel Arm Constants TODO: CHANGE
-    final static float JEWEL_PUSHER_LEFT = 0.63f;
-    final static float JEWEL_PUSHER_RIGHT = 0.28f;
+
+
+    final static float JEWEL_PUSHER_LEFT = 0.68f; // make bigger
+    final static float JEWEL_PUSHER_RIGHT = 0.25f; // make smaller
     final static float JEWEL_PUSHER_NEUTRAL = 0.48f;
     final static float JEWEL_ARM_UP = 0.34f;
     final static float JEWEL_ARM_DOWN_READ = .9f;
     final static float JEWEL_ARM_DOWN_PUSH = .99f;
-    final static float JEWEL_COLOR_LUMINOSITY_THRESHOLD=35f;
+    static final double JEWEL_ARM_INCREMENT = 0.01;     // amount to slew servo each cycle
+    static final int JEWEL_ARM_CYCLE = 50;     // period of each cycle
+    final static float JEWEL_COLOR_LUMINOSITY_THRESHOLD = 35f;
+
+    // TODO: CHANGE
+    final static float JEWEL_DISTANCE = 1.0f;
 
 
     //index of motors
@@ -170,6 +177,11 @@ public class rr_Constants {
         BLUE,
         RED,
         UNKNOWN
+    }
+
+    enum FilterJewelColorEnum {
+        BLUE,
+        RED
     }
 
     //values that control the worm drive motor to adjust tension of the Launch arm
