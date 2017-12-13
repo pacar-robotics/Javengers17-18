@@ -112,8 +112,8 @@ public class rr_Robot {
 
     private DigitalChannel cubeArmUpperLimit;
     private DigitalChannel cubeArmLowerLimit;
-    private DigitalChannel relicArmUpperLimit;
-    private DigitalChannel relicArmLowerLimit;
+    //private DigitalChannel relicArmUpperLimit;
+    //private DigitalChannel relicArmLowerLimit;
 
     private ModernRoboticsI2cRangeSensor rangeSensor;
 
@@ -254,11 +254,11 @@ public class rr_Robot {
     public void initRelicArmSensors(rr_OpMode aOpMode) throws InterruptedException {
 
         //TODO: CHANGE THIS
-//        relicArmUpperLimit = hwMap.get(DigitalChannel.class, "relic_arm_upper_limit");
-//        relicArmLowerLimit = hwMap.get(DigitalChannel.class, "relic_arm_lower_limit");
+    // relicArmUpperLimit = hwMap.get(DigitalChannel.class, "relic_arm_upper_limit");
+    // relicArmLowerLimit = hwMap.get(DigitalChannel.class, "relic_arm_lower_limit");
 
-        relicArmUpperLimit.setMode(DigitalChannel.Mode.INPUT);
-        relicArmLowerLimit.setMode(DigitalChannel.Mode.INPUT);
+        //relicArmUpperLimit.setMode(DigitalChannel.Mode.INPUT);
+       // relicArmLowerLimit.setMode(DigitalChannel.Mode.INPUT);
     }
 
     public void initJewelServos(rr_OpMode aOpMode) throws InterruptedException {
@@ -271,12 +271,13 @@ public class rr_Robot {
 
     public void initJewelSensors(rr_OpMode aOpMode) throws InterruptedException {
         // Color sensors
-        leftJewelColorSensor = hwMap.get(ColorSensor.class, "left_jewel_color");
-        rightJewelColorSensor = hwMap.get(ColorSensor.class, "right_jewel_color");
+        leftJewelColorSensor = hwMap.get(ColorSensor.class, "left_jewel_color_distance");
+        rightJewelColorSensor = hwMap.get(ColorSensor.class, "right_jewel_color_distance");
 
-        // Range sensors
-        leftJewelRangeSensor = hwMap.get(DistanceSensor.class, "left_jewel_range");
-        rightJewelRangeSensor = hwMap.get(DistanceSensor.class, "right_jewel_range");
+
+        // Range sensors are actually on the same actual port.
+       leftJewelRangeSensor = hwMap.get(DistanceSensor.class, "left_jewel_color_distance");
+       rightJewelRangeSensor = hwMap.get(DistanceSensor.class, "right_jewel_color_distance");
 
     }
 
@@ -1061,11 +1062,16 @@ public class rr_Robot {
     }
 
     public boolean isRelicUpperLimitPressed() {
-        return !relicArmUpperLimit.getState();
+        //return !relicArmUpperLimit.getState();
+        //TODO FIx this
+        return false;
     }
 
     public boolean isRelicLowerLimitPressed() {
-        return !relicArmLowerLimit.getState();
+
+        //return !relicArmLowerLimit.getState();
+        //TODO Fix this
+        return false;
     }
 
 
