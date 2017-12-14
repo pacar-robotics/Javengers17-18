@@ -6,7 +6,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
 import static org.firstinspires.ftc.teamcode.rr_Constants.ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_GRAB;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_LOWER_POWER;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_LOWERING_POWER;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_MIDDLE;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_RAISE_POWER;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DirectionEnum.Backward;
@@ -62,7 +62,7 @@ public class rr_AutoLib {
 
         robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_MIDDLE, CUBE_ARM_RAISE_POWER);
         robot.openCubeClawServoOneCube();
-        robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_GRAB, CUBE_ARM_LOWER_POWER);
+        robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_GRAB, CUBE_ARM_LOWERING_POWER);
         robot.closeCubeClawServoOneCube();
         robot.moveCubeArmToPositionWithTouchLimits(aOpMode, rr_Constants.CUBE_ARM_MIDDLE, CUBE_ARM_RAISE_POWER);
 
@@ -90,7 +90,7 @@ public class rr_AutoLib {
         Thread.sleep(250);
         robot.turnAbsoluteBoschGyroDegrees(aOpMode, -65);
         Thread.sleep(250);
-        robot.moveCubeArmToPositionWithLimits(aOpMode, CUBE_ARM_GRAB, CUBE_ARM_LOWER_POWER);
+        robot.moveCubeArmToPositionWithLimits(aOpMode, CUBE_ARM_GRAB, CUBE_ARM_LOWERING_POWER);
         Thread.sleep(250);
         universalMoveRobot(aOpMode, 20, .3f, 0, 1500, falseStop, false, 0, 0);
         Thread.sleep(250);
@@ -116,7 +116,7 @@ public class rr_AutoLib {
 
         robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_MIDDLE, CUBE_ARM_RAISE_POWER);
         robot.openCubeClawServoOneCube();
-        robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_GRAB, CUBE_ARM_LOWER_POWER);
+        robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_GRAB, CUBE_ARM_LOWERING_POWER);
         robot.closeCubeClawServoOneCube();
         robot.moveCubeArmToPositionWithTouchLimits(aOpMode, rr_Constants.CUBE_ARM_MIDDLE, CUBE_ARM_RAISE_POWER);
 
@@ -141,7 +141,7 @@ public class rr_AutoLib {
         Thread.sleep(300);
         robot.turnAbsoluteBoschGyroDegrees(aOpMode, 25);
         Thread.sleep(300);
-        robot.moveCubeArmToPositionWithLimits(aOpMode, CUBE_ARM_GRAB, CUBE_ARM_LOWER_POWER);
+        robot.moveCubeArmToPositionWithLimits(aOpMode, CUBE_ARM_GRAB, CUBE_ARM_LOWERING_POWER);
         Thread.sleep(300);
         universalMoveRobot(aOpMode, 20, .3f, 0, 1250, falseStop, false, 0, 0);
         Thread.sleep(300);
@@ -164,7 +164,7 @@ public class rr_AutoLib {
 
         robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_MIDDLE, CUBE_ARM_RAISE_POWER);
         robot.openCubeClawServoOneCube();
-        robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_GRAB, CUBE_ARM_LOWER_POWER);
+        robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_GRAB, CUBE_ARM_LOWERING_POWER);
         robot.closeCubeClawServoOneCube();
         robot.moveCubeArmToPositionWithTouchLimits(aOpMode, rr_Constants.CUBE_ARM_AUTONOMOUS_CARRY, CUBE_ARM_RAISE_POWER);
 
@@ -195,7 +195,7 @@ public class rr_AutoLib {
         Thread.sleep(300);
         robot.turnAbsoluteBoschGyroDegrees(aOpMode, -110);
         Thread.sleep(300);
-        robot.moveCubeArmToPositionWithLimits(aOpMode, CUBE_ARM_GRAB, CUBE_ARM_LOWER_POWER);
+        robot.moveCubeArmToPositionWithLimits(aOpMode, CUBE_ARM_GRAB, CUBE_ARM_LOWERING_POWER);
         Thread.sleep(300);
         universalMoveRobot(aOpMode, 20, .3f, 0, 1500, falseStop , false, 0, 0);
         Thread.sleep(250);
@@ -223,7 +223,7 @@ public class rr_AutoLib {
 
         robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_MIDDLE, CUBE_ARM_RAISE_POWER);
         robot.openCubeClawServoOneCube();
-        robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_GRAB, CUBE_ARM_LOWER_POWER);
+        robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_GRAB, CUBE_ARM_LOWERING_POWER);
         robot.closeCubeClawServoOneCube();
         robot.moveCubeArmToPositionWithTouchLimits(aOpMode, rr_Constants.CUBE_ARM_MIDDLE - 200, CUBE_ARM_RAISE_POWER);
 
@@ -262,7 +262,7 @@ public class rr_AutoLib {
         Thread.sleep(300);
         moveWheels(aOpMode, 21 , .3f, rr_Constants.DirectionEnum.Backward, true);
         Thread.sleep(300);
-        robot.moveCubeArmToPositionWithLimits(aOpMode, CUBE_ARM_GRAB, CUBE_ARM_LOWER_POWER);
+        robot.moveCubeArmToPositionWithLimits(aOpMode, CUBE_ARM_GRAB, CUBE_ARM_LOWERING_POWER);
         Thread.sleep(300);
         robot.turnUsingEncoders(aOpMode, 120, .3f, rr_Constants.TurnDirectionEnum.Clockwise);
         Thread.sleep(300);
@@ -350,6 +350,7 @@ public class rr_AutoLib {
                 aOpMode.telemetryAddData("Left color", "left color", "Left color" + robot.getJewelLeftColor(aOpMode));
                 aOpMode.telemetryAddData("Right color", "Right color", "Right color" + robot.getJewelRightColor(aOpMode));
                 aOpMode.telemetryUpdate();
+                aOpMode.DBG("UNKNOWN Result");
             }
         }
 
@@ -383,6 +384,7 @@ public class rr_AutoLib {
                 aOpMode.telemetryAddData("Left color", "left color", "Left color" + robot.getJewelLeftColor(aOpMode));
                 aOpMode.telemetryAddData("Right color", "Right color", "Right color" + robot.getJewelRightColor(aOpMode));
                 aOpMode.telemetryUpdate();
+                aOpMode.DBG("UNKNOWN Result");
             }
         }
 

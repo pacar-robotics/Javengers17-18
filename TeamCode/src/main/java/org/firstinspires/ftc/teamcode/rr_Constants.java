@@ -72,7 +72,7 @@ public class rr_Constants {
     final static float CUBE_ARM_SCORING_POWER = .5f;
     final static float CUBE_ARM_POWER_FACTOR = 0.20f;
     final static float CUBE_ARM_RAISE_POWER = -0.4f;
-    final static float CUBE_ARM_LOWER_POWER = 0.1f;
+    final static float CUBE_ARM_LOWERING_POWER = 0.2f;
     final static float CUBE_CLAW_OPEN = 0.63f;
     final static float CUBE_CLAW_ONE_CLOSED = 0.8f;
     final static float CUBE_CLAW_ONE_RELEASE = 0.63f;
@@ -99,16 +99,16 @@ public class rr_Constants {
     //Jewel Arm Constants TODO: CHANGE
 
 
-    final static float JEWEL_PUSHER_LEFT = 0.68f; // make bigger
-    final static float JEWEL_PUSHER_RIGHT = 0.25f; // make smaller
-    final static float JEWEL_PUSHER_NEUTRAL = 0.48f;
+    final static float JEWEL_PUSHER_LEFT = 0.90f; // make bigger
+    final static float JEWEL_PUSHER_RIGHT = 0.10f; // make smaller
+    final static float JEWEL_PUSHER_NEUTRAL = 0.50f;
     final static float JEWEL_ARM_UP = 0.34f;
-    final static float JEWEL_ARM_DOWN_READ = .9f;
-    final static float JEWEL_ARM_DOWN_PUSH = .99f;
+    final static float JEWEL_ARM_DOWN_READ = .89f;
+    final static float JEWEL_ARM_DOWN_PUSH = .92f;
     static final double JEWEL_ARM_INCREMENT = 0.01;     // amount to slew servo each cycle
     static final int JEWEL_ARM_CYCLE = 50;     // period of each cycle
-    final static float JEWEL_COLOR_LUMINOSITY_THRESHOLD = 35f;
-    final static float JEWEL_COLOR_DIFFERENTIAL_THRESHOLD = 10f;
+    final static float JEWEL_COLOR_LUMINOSITY_THRESHOLD = 10f;
+    final static float JEWEL_COLOR_DIFFERENTIAL_THRESHOLD = 5f;
 
     final static int JEWEL_COLOR_FILTER_COUNT = 3; //must be odd
 
