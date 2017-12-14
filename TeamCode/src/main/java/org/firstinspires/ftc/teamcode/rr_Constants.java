@@ -67,16 +67,16 @@ public class rr_Constants {
     final static int CUBE_ARM_GRAB = 0;
     final static int CUBE_ARM_AUTONOMOUS_CARRY=-350;
     final static int CUBE_ARM_MIDDLE = -500;
-    final static int CUBE_ARM_TOP = -1500;
+    final static int CUBE_ARM_TOP = -1800;
     final static int CUBE_ARM_SAFE_POS = -700;
     final static float CUBE_ARM_SCORING_POWER = .5f;
     final static float CUBE_ARM_POWER_FACTOR = 0.20f;
     final static float CUBE_ARM_RAISE_POWER = -0.4f;
     final static float CUBE_ARM_LOWER_POWER = 0.1f;
-    final static float CUBE_CLAW_OPEN = 0.7f;
-    final static float CUBE_CLAW_ONE_CLOSED = 0.925f;
-    final static float CUBE_CLAW_ONE_RELEASE = 0.7f;
-    final static float CUBE_CLAW_TWO_CLOSED = 0.925f;
+    final static float CUBE_CLAW_OPEN = 0.63f;
+    final static float CUBE_CLAW_ONE_CLOSED = 0.8f;
+    final static float CUBE_CLAW_ONE_RELEASE = 0.63f;
+    final static float CUBE_CLAW_TWO_CLOSED = 0.8f;
     final static float CUBE_ORIENTATION_HORIZONTAL = 0.225f;
     final static float CUBE_ORIENTATION_VERTICAL = 0.75f;
 
@@ -102,11 +102,15 @@ public class rr_Constants {
     final static float JEWEL_PUSHER_LEFT = 0.68f; // make bigger
     final static float JEWEL_PUSHER_RIGHT = 0.25f; // make smaller
     final static float JEWEL_PUSHER_NEUTRAL = 0.48f;
-    final static float JEWEL_ARM_UP = 0.6f;
-    final static float JEWEL_ARM_DOWN_READ = .08f;
-    final static float JEWEL_ARM_DOWN_PUSH = .05f;
+    final static float JEWEL_ARM_UP = 0.34f;
+    final static float JEWEL_ARM_DOWN_READ = .9f;
+    final static float JEWEL_ARM_DOWN_PUSH = .99f;
     static final double JEWEL_ARM_INCREMENT = 0.01;     // amount to slew servo each cycle
     static final int JEWEL_ARM_CYCLE = 50;     // period of each cycle
+    final static float JEWEL_COLOR_LUMINOSITY_THRESHOLD = 35f;
+    final static float JEWEL_COLOR_DIFFERENTIAL_THRESHOLD = 10f;
+
+    final static int JEWEL_COLOR_FILTER_COUNT = 3; //must be odd
 
     // TODO: CHANGE
     final static float BOTTOM_JEWEL_POSITION = 0.9f;
@@ -128,7 +132,7 @@ public class rr_Constants {
     final static float MECANUM_WHEEL_FRONT_TRACK_DISTANCE = 14.5f;
 
     //Power Factors
-    final static float STANDARD_DRIVE_POWER_FACTOR = 0.8f;
+    final static float STANDARD_DRIVE_POWER_FACTOR = 0.95f;
     final static float TURN_POWER_FACTOR = 0.5f;
     final static float SCORING_DRIVE_POWER_FACTOR = 0.25f;  //TODO: CHANGE LATER
 
@@ -181,7 +185,8 @@ public class rr_Constants {
 
     enum FilterJewelColorEnum {
         BLUE,
-        RED
+        RED,
+        UNKNOWN
     }
 
     //values that control the worm drive motor to adjust tension of the Launch arm

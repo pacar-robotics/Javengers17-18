@@ -102,6 +102,10 @@ public class rr_AutoLib {
         Thread.sleep(250);
         moveWheels(aOpMode, 2f, 0.4f, Backward, false);
 
+        universalMoveRobot(aOpMode, 20, .3f, 0, 500, falseStop , false, 0, 0);
+        Thread.sleep(300);
+        moveWheels(aOpMode, 2f, 0.4f, Backward, false);
+
     }
 
     // robot starts farther away from audience
@@ -149,6 +153,10 @@ public class rr_AutoLib {
         Thread.sleep(300);
         moveWheels(aOpMode, 2f, 0.4f, Backward, false);
 
+        universalMoveRobot(aOpMode, 20, .3f, 0, 500, falseStop , false, 0, 0);
+        Thread.sleep(300);
+        moveWheels(aOpMode, 2f, 0.4f, Backward, false);
+
     }
 
     // robot starts closer to audience
@@ -164,10 +172,12 @@ public class rr_AutoLib {
         Thread.sleep(300);
         aOpMode.telemetry.setAutoClear(true); //neccessary for using Vuforia
         switch (robot.getPictograph(aOpMode)) {
-            case RIGHT:
+            case RIGHT: {
                 columnDistance = 30 - 7;
                 break; // 7 inches between cube columns
+            }
             case CENTER:
+
                 columnDistance = 30;
                 break; // 7 inches between cube columns
             case LEFT:
@@ -176,7 +186,8 @@ public class rr_AutoLib {
             default:
                 columnDistance = 30;
                 break;
-/*
+        }
+
           aOpMode.telemetry.setAutoClear(false); //turning off the auto clear afterward
 
             aOpMode.DBG("Detected" + robot.detectedPictograph);
@@ -206,10 +217,10 @@ public class rr_AutoLib {
             // universalMoveRobot - backwards until red line is detected
             // Move forward / backward based on Vuforia pattern detected
             // rotate counterclockwise 90 degrees
-            */
+
         }
 
-    }
+
 
     // robot starts farther away from audience
     public void redTwoAutonomousCommonAction(rr_OpMode aOpMode)throws InterruptedException{
@@ -275,6 +286,10 @@ public class rr_AutoLib {
         Thread.sleep(250);
         robot.openCubeClawServoOneCube();
         Thread.sleep(300);
+        universalMoveRobot(aOpMode, 20, .3f, 0, 500, falseStop , false, 0, 0);
+        Thread.sleep(300);
+        moveWheels(aOpMode, 2f, 0.4f, Backward, false);
+
         universalMoveRobot(aOpMode, 20, .3f, 0, 500, falseStop , false, 0, 0);
         Thread.sleep(300);
         moveWheels(aOpMode, 2f, 0.4f, Backward, false);
