@@ -109,7 +109,8 @@ public class rr_Constants {
     static final int JEWEL_ARM_CYCLE = 50;     // period of each cycle
 
     // TODO: CHANGE
-    final static float JEWEL_DISTANCE = 1.0f;
+    final static float BOTTOM_JEWEL_POSITION = 0.9f;
+
 
 
     //index of motors

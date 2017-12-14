@@ -87,6 +87,8 @@ public class rr_Robot {
         UNKNOWN,
     }
 
+    rr_OpMode aOpMode;
+
     pictographType detectedPictograph = pictographType.UNKNOWN;
 
     HardwareMap hwMap = null;
@@ -112,8 +114,8 @@ public class rr_Robot {
 
     private DigitalChannel cubeArmUpperLimit;
     private DigitalChannel cubeArmLowerLimit;
-    private DigitalChannel relicArmUpperLimit;
-    private DigitalChannel relicArmLowerLimit;
+   // private DigitalChannel relicArmUpperLimit;
+  //  private DigitalChannel relicArmLowerLimit;
 
     private ModernRoboticsI2cRangeSensor rangeSensor;
 
@@ -134,6 +136,7 @@ public class rr_Robot {
     VuforiaLocalizer vuforia;
 
     public rr_Robot(rr_OpMode aOpMode) throws InterruptedException {
+        this.aOpMode = aOpMode;
     }
 
 
@@ -156,6 +159,7 @@ public class rr_Robot {
 
         //Initialize Cube Arm
         initCubeArmMotor(aOpMode);
+
         initCubeArmSensors(aOpMode);
         initCubeArmServos(aOpMode);
 
@@ -259,8 +263,8 @@ public class rr_Robot {
 //        relicArmUpperLimit = hwMap.get(DigitalChannel.class, "relic_arm_upper_limit");
 //        relicArmLowerLimit = hwMap.get(DigitalChannel.class, "relic_arm_lower_limit");
 
-        relicArmUpperLimit.setMode(DigitalChannel.Mode.INPUT);
-        relicArmLowerLimit.setMode(DigitalChannel.Mode.INPUT);
+     //   relicArmUpperLimit.setMode(DigitalChannel.Mode.INPUT);
+      //  relicArmLowerLimit.setMode(DigitalChannel.Mode.INPUT);
     }
 
     public void initJewelServos(rr_OpMode aOpMode) throws InterruptedException {
@@ -273,12 +277,12 @@ public class rr_Robot {
 
     public void initJewelSensors(rr_OpMode aOpMode) throws InterruptedException {
         // Color sensors
-        leftJewelColorSensor = hwMap.get(ColorSensor.class, "left_jewel_color");
-        rightJewelColorSensor = hwMap.get(ColorSensor.class, "right_jewel_color");
+        leftJewelColorSensor = hwMap.get(ColorSensor.class, "left_jewel_color_distance");
+        rightJewelColorSensor = hwMap.get(ColorSensor.class, "right_jewel_color_distance");
 
         // Range sensors
-        leftJewelRangeSensor = hwMap.get(DistanceSensor.class, "left_jewel_range");
-        rightJewelRangeSensor = hwMap.get(DistanceSensor.class, "right_jewel_range");
+        leftJewelRangeSensor = hwMap.get(DistanceSensor.class, "left_jewel_color_distance");
+        rightJewelRangeSensor = hwMap.get(DistanceSensor.class, "right_jewel_color_distance");
 
     }
 
@@ -1078,7 +1082,7 @@ public class rr_Robot {
     public float getRelicClawPosition() throws InterruptedException {
         return (float) relicClaw.getPosition();
     }
-
+/*
     public boolean isRelicUpperLimitPressed() {
         return !relicArmUpperLimit.getState();
     }
@@ -1087,10 +1091,10 @@ public class rr_Robot {
         return !relicArmLowerLimit.getState();
     }
 
-
+*/
     // Positioning jewel arm servo
 
-    public void setJewelArmPosition(float armPosition) throws InterruptedException {
+    public void moveToJewelArmPosition(float armPosition) throws InterruptedException {
 
         if (jewelArm.getPosition() > armPosition) {
             boolean isJewelArmAboveFinal = true;
@@ -1142,11 +1146,11 @@ public class rr_Robot {
 
 
     public void setJewelArmDownPush() throws InterruptedException {
-        setJewelArmPosition(JEWEL_ARM_DOWN_PUSH);
+        setJewelArmPosition(aOpMode, JEWEL_ARM_DOWN_PUSH);
     }
 
     public void setJewelArmDownRead() throws InterruptedException {
-        setJewelArmPosition(JEWEL_ARM_DOWN_READ);
+        setJewelArmPosition(aOpMode, JEWEL_ARM_DOWN_READ);
     }
 
 
@@ -1193,7 +1197,7 @@ public class rr_Robot {
 
         double leftJewelRangeReadingsArray[] = new double[10];
 
-        for (int i = 0; i < 11; i++) {
+        for (int i = 0; i < 10; i++) {
             leftJewelRangeReadingsArray[i] = getLeftJewelRange(aOpMode);
             Thread.sleep(30);
             if (leftJewelRangeReadingsArray[i] == 0) {
@@ -1250,7 +1254,7 @@ public class rr_Robot {
 
         float leftJewelReadingsArray[] = new float[10];
 
-        for (int i = 0; i < 11; i++) {
+        for (int i = 0; i < 10; i++) {
             leftJewelReadingsArray[i] = colorSensorReading;
             Thread.sleep(30);
             if (leftJewelReadingsArray[i] == 0) {
@@ -1505,5 +1509,11 @@ public class rr_Robot {
 
         return RelicRecoveryVuMark.UNKNOWN;
 
+    }
+
+    public void setJewelArmPosition(rr_OpMode aOpMode, float position) throws InterruptedException
+    {
+        jewelArm.setPosition(position);
+        Thread.sleep(100);
     }
 }
