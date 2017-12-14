@@ -73,9 +73,9 @@ public class rr_Constants {
     final static float CUBE_ARM_POWER_FACTOR = 0.20f;
     final static float CUBE_ARM_RAISE_POWER = -0.4f;
     final static float CUBE_ARM_LOWER_POWER = 0.1f;
-    final static float CUBE_CLAW_OPEN = 0.7f;
+    final static float CUBE_CLAW_OPEN = 0.63f;
     final static float CUBE_CLAW_ONE_CLOSED = 0.8f;
-    final static float CUBE_CLAW_ONE_RELEASE = 0.7f;
+    final static float CUBE_CLAW_ONE_RELEASE = 0.63f;
     final static float CUBE_CLAW_TWO_CLOSED = 0.8f;
     final static float CUBE_ORIENTATION_HORIZONTAL = 0.225f;
     final static float CUBE_ORIENTATION_VERTICAL = 0.75f;

@@ -257,8 +257,8 @@ public class rr_Robot {
 //        relicArmUpperLimit = hwMap.get(DigitalChannel.class, "relic_arm_upper_limit");
 //        relicArmLowerLimit = hwMap.get(DigitalChannel.class, "relic_arm_lower_limit");
 
-        relicArmUpperLimit.setMode(DigitalChannel.Mode.INPUT);
-        relicArmLowerLimit.setMode(DigitalChannel.Mode.INPUT);
+//        relicArmUpperLimit.setMode(DigitalChannel.Mode.INPUT);
+//        relicArmLowerLimit.setMode(DigitalChannel.Mode.INPUT);
     }
 
     public void initJewelServos(rr_OpMode aOpMode) throws InterruptedException {
@@ -271,8 +271,8 @@ public class rr_Robot {
 
     public void initJewelSensors(rr_OpMode aOpMode) throws InterruptedException {
         // Color sensors
-        leftJewelColorSensor = hwMap.get(ColorSensor.class, "left_jewel_color");
-        rightJewelColorSensor = hwMap.get(ColorSensor.class, "right_jewel_color");
+        leftJewelColorSensor = hwMap.get(ColorSensor.class, "left_jewel_color_distance");
+        rightJewelColorSensor = hwMap.get(ColorSensor.class, "right_jewel_color_distance");
 
         // Range sensors
         leftJewelRangeSensor = hwMap.get(DistanceSensor.class, "left_jewel_range");
@@ -357,7 +357,6 @@ public class rr_Robot {
 
     protected void initializeBoschIMU(rr_OpMode aOpMode) throws InterruptedException {
         aOpMode.DBG("Starting Initialize Bosch Gyro");
-        Thread.sleep(2000);
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
@@ -372,7 +371,7 @@ public class rr_Robot {
         imu.initialize(parameters);
         // Start the logging of measured acceleration
         //imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
-        Thread.sleep(1000);
+        Thread.sleep(500);
         aOpMode.DBG("End Initialize Bosch Gyro");
     }
 
@@ -1061,11 +1060,15 @@ public class rr_Robot {
     }
 
     public boolean isRelicUpperLimitPressed() {
-        return !relicArmUpperLimit.getState();
+
+        //return !relicArmUpperLimit.getState();
+        return false;
     }
 
     public boolean isRelicLowerLimitPressed() {
-        return !relicArmLowerLimit.getState();
+
+        //return !relicArmLowerLimit.getState();
+        return false;
     }
 
 
