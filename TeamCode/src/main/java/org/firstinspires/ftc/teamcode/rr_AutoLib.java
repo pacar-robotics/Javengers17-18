@@ -222,6 +222,7 @@ public class rr_AutoLib {
 
 
 
+
     // robot starts farther away from audience
     public void redTwoAutonomousCommonAction(rr_OpMode aOpMode)throws InterruptedException{
 

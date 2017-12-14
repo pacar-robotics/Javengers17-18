@@ -270,6 +270,9 @@ public class rr_Robot {
 //        relicArmUpperLimit.setMode(DigitalChannel.Mode.INPUT);
 //        relicArmLowerLimit.setMode(DigitalChannel.Mode.INPUT);
 
+//        relicArmUpperLimit.setMode(DigitalChannel.Mode.INPUT);
+//        relicArmLowerLimit.setMode(DigitalChannel.Mode.INPUT);
+
     }
 
     public void initJewelServos(rr_OpMode aOpMode) throws InterruptedException {
@@ -1069,20 +1072,6 @@ public class rr_Robot {
     public float getRelicClawPosition() throws InterruptedException {
         return (float) relicClaw.getPosition();
     }
-/*
-    public boolean isRelicUpperLimitPressed() {
-
-        //return !relicArmUpperLimit.getState();
-        return false;
-    }
-
-    public boolean isRelicLowerLimitPressed() {
-
-        //return !relicArmLowerLimit.getState();
-        return false;
-    }
-
-*/
     // Positioning jewel arm servo
 
     public void setJewelArmPositionTest(float armPosition) throws InterruptedException {
@@ -1147,6 +1136,9 @@ public class rr_Robot {
 
     public void setJewelArmDownRead() throws InterruptedException {
         setJewelArmPosition(aOpMode, JEWEL_ARM_DOWN_READ);
+
+        setJewelArmPosition(JEWEL_ARM_DOWN_READ);
+
     }
 
 
@@ -1214,16 +1206,34 @@ public class rr_Robot {
         for (int i = 0; i < (JEWEL_COLOR_FILTER_COUNT - 1); i++) {
             leftJewelRedArray[i] = leftJewelColorSensor.red();
 
+
+            Thread.sleep(30);
+            if (leftJewelRedArray[i] == 0) {
+
+
             Thread.sleep(30);
             if (leftJewelRedArray[i] == 0) {
                 i--;
             }
+        }}
+
+        for (int i = 0; i < (JEWEL_COLOR_FILTER_COUNT); i++) {
+            leftJewelBlueArray[i] = leftJewelColorSensor
+                    .blue();
+
+            Thread.sleep(30);
+            if (leftJewelBlueArray[i] == 0) {
+
+                i--;
+            }
         }
+
 
         for (int i = 0; i < (JEWEL_COLOR_FILTER_COUNT); i++) {
             leftJewelBlueArray[i] = leftJewelColorSensor
                     .blue();
         }
+
         Arrays.sort(leftJewelBlueArray);
         Arrays.sort(leftJewelRedArray);
 

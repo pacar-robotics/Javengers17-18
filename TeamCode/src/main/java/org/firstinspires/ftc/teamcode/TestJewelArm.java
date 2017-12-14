@@ -31,6 +31,8 @@ public class  TestJewelArm extends rr_OpMode {
 
             processColorSensorsTest();
 
+            processColorSensorsTest();
+
             telemetry.update();
 
         }
