@@ -28,6 +28,8 @@ public class  TestJewelArm extends rr_OpMode {
             telemetry.addLine("Jewel Arm Position: " + armPosition);
             telemetry.addLine("Jewel Knocker Position: " + knockerPosition);
 
+            processColorSensorsTest();
+
             telemetry.update();
 
         }
@@ -60,6 +62,9 @@ public class  TestJewelArm extends rr_OpMode {
 
         telemetryAddLine("Right Jewel Color:" + robot.getJewelRightColor(this).toString());
         telemetryAddLine("Right Luminosity:"+robot.getJewelRightLumunosity(this));
+
+        telemetryAddLine("Right Jewel Distance:" + robot.getRightJewelRange(this));
+        telemetryAddLine("Left Jewel Distance:" + robot.getLeftJewelRange(this));
 
         telemetry.update();
 

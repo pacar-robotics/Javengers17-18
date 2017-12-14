@@ -108,6 +108,9 @@ public class rr_Constants {
     static final double JEWEL_ARM_INCREMENT = 0.01;     // amount to slew servo each cycle
     static final int JEWEL_ARM_CYCLE = 50;     // period of each cycle
     final static float JEWEL_COLOR_LUMINOSITY_THRESHOLD = 35f;
+    final static float JEWEL_COLOR_DIFFERENTIAL_THRESHOLD = 10f;
+
+    final static int JEWEL_COLOR_FILTER_COUNT = 3; //must be odd
 
     // TODO: CHANGE
     final static float JEWEL_DISTANCE = 1.0f;
@@ -181,7 +184,8 @@ public class rr_Constants {
 
     enum FilterJewelColorEnum {
         BLUE,
-        RED
+        RED,
+        UNKNOWN
     }
 
     //values that control the worm drive motor to adjust tension of the Launch arm
