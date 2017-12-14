@@ -100,6 +100,10 @@ public class rr_AutoLib {
         Thread.sleep(250);
         moveWheels(aOpMode, 2f, 0.4f, Backward, false);
 
+        universalMoveRobot(aOpMode, 20, .3f, 0, 500, falseStop , false, 0, 0);
+        Thread.sleep(300);
+        moveWheels(aOpMode, 2f, 0.4f, Backward, false);
+
     }
 
     // robot starts farther away from audience
@@ -143,6 +147,10 @@ public class rr_AutoLib {
         Thread.sleep(300);
         robot.openCubeClawServoOneCube();
         Thread.sleep(300);
+        universalMoveRobot(aOpMode, 20, .3f, 0, 500, falseStop , false, 0, 0);
+        Thread.sleep(300);
+        moveWheels(aOpMode, 2f, 0.4f, Backward, false);
+
         universalMoveRobot(aOpMode, 20, .3f, 0, 500, falseStop , false, 0, 0);
         Thread.sleep(300);
         moveWheels(aOpMode, 2f, 0.4f, Backward, false);
@@ -193,6 +201,10 @@ public class rr_AutoLib {
         Thread.sleep(250);
         robot.openCubeClawServoOneCube();
         Thread.sleep(300);
+        universalMoveRobot(aOpMode, 20, .3f, 0, 500, falseStop , false, 0, 0);
+        Thread.sleep(300);
+        moveWheels(aOpMode, 2f, 0.4f, Backward, false);
+
         universalMoveRobot(aOpMode, 20, .3f, 0, 500, falseStop , false, 0, 0);
         Thread.sleep(300);
         moveWheels(aOpMode, 2f, 0.4f, Backward, false);
@@ -267,6 +279,10 @@ public class rr_AutoLib {
         Thread.sleep(250);
         robot.openCubeClawServoOneCube();
         Thread.sleep(300);
+        universalMoveRobot(aOpMode, 20, .3f, 0, 500, falseStop , false, 0, 0);
+        Thread.sleep(300);
+        moveWheels(aOpMode, 2f, 0.4f, Backward, false);
+
         universalMoveRobot(aOpMode, 20, .3f, 0, 500, falseStop , false, 0, 0);
         Thread.sleep(300);
         moveWheels(aOpMode, 2f, 0.4f, Backward, false);
