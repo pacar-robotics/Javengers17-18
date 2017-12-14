@@ -127,9 +127,13 @@ class rr_DiagLib {
         robotTests.add(new RobotTest("Platform Left", TestType.AUTOMATIC, new TestPlatformLeft()));
         robotTests.add(new RobotTest("Platform Diagonal", TestType.AUTOMATIC, new TestPlatformDiagonal()));
 
+
         robotTests.add(new RobotTest("Cube Claw", TestType.MANUAL, new TestCubeClaw()));
         robotTests.add(new RobotTest("Relic Arm", TestType.MANUAL, new TestRelicArm()));
         robotTests.add(new RobotTest("Relic Claw", TestType.MANUAL, new TestRelicClaw()));
+
+        robotTests.add(new RobotTest("Jewel Arm", TestType.MANUAL, new TestJewelArm()));
+        robotTests.add(new RobotTest("Jewel Pusher", TestType.MANUAL, new TestJewelPusher()));
     }
 
 
@@ -213,6 +217,21 @@ class rr_DiagLib {
         public void runTest() throws InterruptedException {
             robot.setRelicClawOpen();
             robot.setRelicClawClosed();
+        }
+    }
+
+    private class TestJewelArm implements ManualTest {
+        public void runTest() throws InterruptedException {
+            robot.setJewelArmDownPush();
+            robot.setJewelArmUp();
+        }
+    }
+
+    private class TestJewelPusher implements ManualTest {
+        public void runTest() throws InterruptedException {
+            robot.pushRightJewel();
+            robot.pushLeftJewel();
+            robot.setJewelPusherNeutral();
         }
     }
 
