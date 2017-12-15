@@ -98,19 +98,15 @@ class rr_DiagLib {
             this.testMessage = testMessage;
         }
 
-        public void setTestMessage(String testMessage) {
-            this.testMessage = testMessage;
-        }
-
-        public String getElementName() {
+        String getElementName() {
             return elementName;
         }
 
-        public boolean getTestResult() {
+        boolean getTestResult() {
             return testResult;
         }
 
-        public String getTestMessage() {
+        String getTestMessage() {
             return testMessage;
         }
     }
@@ -245,11 +241,12 @@ class rr_DiagLib {
     //***************** SENSOR TESTS *****************//
 
     private class TestCubeArmUpperLimit implements AutomaticTest {
+        @SuppressWarnings("StatementWithEmptyBody")
         public TestResult runTest() throws InterruptedException {
             Calendar cal = new GregorianCalendar();
             cal.setTimeInMillis(System.currentTimeMillis());
 
-            while (!robot.isCubeUpperLimitPressed() && (System.currentTimeMillis() - cal.getTimeInMillis() < TOUCH_WAIT_TIME));
+            while (!robot.isCubeUpperLimitPressed() && (System.currentTimeMillis() - cal.getTimeInMillis() < TOUCH_WAIT_TIME)){}
 
             if (robot.isCubeUpperLimitPressed()) {
                 return new TestResult("Cube Arm Upper Limit", true);
@@ -260,11 +257,12 @@ class rr_DiagLib {
     }
 
     private class TestCubeArmLowerLimit implements AutomaticTest {
+        @SuppressWarnings("StatementWithEmptyBody")
         public TestResult runTest() throws InterruptedException {
             Calendar cal = new GregorianCalendar();
             cal.setTimeInMillis(System.currentTimeMillis());
 
-            while (!robot.isCubeLowerLimitPressed() && (System.currentTimeMillis() - cal.getTimeInMillis() < TOUCH_WAIT_TIME));
+            while (!robot.isCubeLowerLimitPressed() && (System.currentTimeMillis() - cal.getTimeInMillis() < TOUCH_WAIT_TIME)){}
 
             if (robot.isCubeLowerLimitPressed()) {
                 return new TestResult("Cube Arm Lower Limit", true);
