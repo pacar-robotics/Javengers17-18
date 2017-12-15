@@ -14,7 +14,7 @@ public class  TestJewelArm extends rr_OpMode {
         robot = new rr_Robot(this);
         robot.teleopInit(this, this.hardwareMap);
 
-        robot.setJewelArmPosition(armPosition);
+        robot.setJewelArmPosition(this, armPosition);
         robot.setJewelPusherPosition(knockerPosition);
 
         waitForStart();
@@ -27,6 +27,9 @@ public class  TestJewelArm extends rr_OpMode {
 
             telemetry.addLine("Jewel Arm Position: " + armPosition);
             telemetry.addLine("Jewel Knocker Position: " + knockerPosition);
+            telemetry.addLine("range" + (float)robot.getFilteredLeftJewelRangeReading(this));
+
+            processColorSensorsTest();
 
             processColorSensorsTest();
 
@@ -43,7 +46,7 @@ public class  TestJewelArm extends rr_OpMode {
             armPosition -= .01f;
         }
 
-        robot.setJewelArmPosition(armPosition);
+        robot.setJewelArmPosition(this, armPosition);
     }
 
     private void processJewelKnockerTest() throws InterruptedException {

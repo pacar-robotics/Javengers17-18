@@ -234,7 +234,7 @@ public class rr_TeleLib {
             Thread.sleep(200);
         }
     }
-
+/*
     public void processRelicSlide(){
         if(Math.abs(aOpMode.gamepad2.right_trigger)>TRIGGER_THRESHOLD && !robot.isRelicUpperLimitPressed()){
             robot.setRelicWinchPower(RELIC_WINCH_EXTEND_POWER_FACTOR);
@@ -246,7 +246,7 @@ public class rr_TeleLib {
             robot.setRelicWinchPower(0);
         }
     }
-
+*/
     public void processRelicClaw() throws InterruptedException{
         if(aOpMode.gamepad2.x){
             robot.setRelicClawClosed();

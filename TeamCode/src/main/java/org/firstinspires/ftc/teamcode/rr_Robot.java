@@ -31,9 +31,8 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.ANDYMARK_MOTOR_ENCODER
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_RIGHT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_LOWERING_POWER;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_LOWER_LIMIT;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_LOWERING_POWER;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_LOWER_POWER;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_MAX_DURATION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_UPPER_LIMIT;
@@ -91,6 +90,8 @@ public class rr_Robot {
         UNKNOWN,
     }
 
+    rr_OpMode aOpMode;
+
     pictographType detectedPictograph = pictographType.UNKNOWN;
 
     HardwareMap hwMap = null;
@@ -115,8 +116,8 @@ public class rr_Robot {
 
     private DigitalChannel cubeArmUpperLimit;
     private DigitalChannel cubeArmLowerLimit;
-    private DigitalChannel relicArmUpperLimit;
-    private DigitalChannel relicArmLowerLimit;
+   // private DigitalChannel relicArmUpperLimit;
+  //  private DigitalChannel relicArmLowerLimit;
 
     private ModernRoboticsI2cRangeSensor rangeSensor;
 
@@ -137,6 +138,7 @@ public class rr_Robot {
     VuforiaLocalizer vuforia;
 
     public rr_Robot(rr_OpMode aOpMode) throws InterruptedException {
+        this.aOpMode = aOpMode;
     }
 
 
@@ -159,6 +161,7 @@ public class rr_Robot {
 
         //Initialize Cube Arm
         initCubeArmMotor(aOpMode);
+
         initCubeArmSensors(aOpMode);
         initCubeArmServos(aOpMode);
 
@@ -260,8 +263,16 @@ public class rr_Robot {
 //        relicArmUpperLimit = hwMap.get(DigitalChannel.class, "relic_arm_upper_limit");
 //        relicArmLowerLimit = hwMap.get(DigitalChannel.class, "relic_arm_lower_limit");
 
+
+     //   relicArmUpperLimit.setMode(DigitalChannel.Mode.INPUT);
+      //  relicArmLowerLimit.setMode(DigitalChannel.Mode.INPUT);
+
 //        relicArmUpperLimit.setMode(DigitalChannel.Mode.INPUT);
 //        relicArmLowerLimit.setMode(DigitalChannel.Mode.INPUT);
+
+//        relicArmUpperLimit.setMode(DigitalChannel.Mode.INPUT);
+//        relicArmLowerLimit.setMode(DigitalChannel.Mode.INPUT);
+
     }
 
     public void initJewelServos(rr_OpMode aOpMode) throws InterruptedException {
@@ -946,8 +957,8 @@ public class rr_Robot {
 
     public void initializeCubeArmToIntakePosition(rr_OpMode aOpMode) throws InterruptedException {
         aOpMode.reset_timer_array(GENERIC_TIMER);
-        while (!isCubeLowerLimitPressed() &&  (aOpMode.time_elapsed_array(GENERIC_TIMER) < CUBE_ARM_MAX_DURATION)) {
-            setCubeArmPower(aOpMode, CUBE_ARM_LOWERING_POWER);
+        while (!isCubeLowerLimitPressed() && Math.abs(System.currentTimeMillis() - aOpMode.time_elapsed_array(GENERIC_TIMER)) < CUBE_ARM_MAX_DURATION) {
+            setCubeArmPower(aOpMode, CUBE_ARM_LOWER_POWER);
         }
     }
 
@@ -1061,20 +1072,6 @@ public class rr_Robot {
     public float getRelicClawPosition() throws InterruptedException {
         return (float) relicClaw.getPosition();
     }
-
-    public boolean isRelicUpperLimitPressed() {
-
-        //return !relicArmUpperLimit.getState();
-        return false;
-    }
-
-    public boolean isRelicLowerLimitPressed() {
-
-        //return !relicArmLowerLimit.getState();
-        return false;
-    }
-
-
     // Positioning jewel arm servo
 
     public void setJewelArmPositionTest(float armPosition) throws InterruptedException {
@@ -1114,17 +1111,17 @@ public class rr_Robot {
 
     public void pushRightJewel() throws InterruptedException {
         jewelPusher.setPosition(JEWEL_PUSHER_RIGHT);
-        Thread.sleep(500);
+        Thread.sleep(100);
     }
 
     public void pushLeftJewel() throws InterruptedException {
         jewelPusher.setPosition(JEWEL_PUSHER_LEFT);
-        Thread.sleep(500);
+        Thread.sleep(100);
     }
 
     public void setJewelPusherNeutral() throws InterruptedException {
         jewelPusher.setPosition(JEWEL_PUSHER_NEUTRAL);
-        Thread.sleep(200);
+        Thread.sleep(100);
     }
 
     public void setJewelArmUp() throws InterruptedException {
@@ -1134,11 +1131,14 @@ public class rr_Robot {
 
 
     public void setJewelArmDownPush() throws InterruptedException {
-        setJewelArmPosition(JEWEL_ARM_DOWN_PUSH);
+        setJewelArmPosition(aOpMode, JEWEL_ARM_DOWN_PUSH);
     }
 
     public void setJewelArmDownRead() throws InterruptedException {
+        setJewelArmPosition(aOpMode, JEWEL_ARM_DOWN_READ);
+
         setJewelArmPosition(JEWEL_ARM_DOWN_READ);
+
     }
 
 
@@ -1203,23 +1203,35 @@ public class rr_Robot {
         float leftJewelRedArray[] = new float[(JEWEL_COLOR_FILTER_COUNT)];
         float leftJewelBlueArray[] = new float[(JEWEL_COLOR_FILTER_COUNT)];
 
-        for (int i = 0,j=0; i < (JEWEL_COLOR_FILTER_COUNT - 1)&&j<10; j++) {
+        for (int i = 0; i < (JEWEL_COLOR_FILTER_COUNT - 1); i++) {
             leftJewelRedArray[i] = leftJewelColorSensor.red();
 
+
             Thread.sleep(30);
-            if (leftJewelRedArray[i++] == 0) {
+            if (leftJewelRedArray[i] == 0) {
+
+
+            Thread.sleep(30);
+            if (leftJewelRedArray[i] == 0) {
                 i--;
             }
-        }
+        }}
 
-        for (int i = 0,j=0; i < (JEWEL_COLOR_FILTER_COUNT)&&j<10; j++) {
+        for (int i = 0; i < (JEWEL_COLOR_FILTER_COUNT); i++) {
             leftJewelBlueArray[i] = leftJewelColorSensor
                     .blue();
 
             Thread.sleep(30);
-            if (leftJewelBlueArray[i++] == 0) {
+            if (leftJewelBlueArray[i] == 0) {
+
                 i--;
             }
+        }
+
+
+        for (int i = 0; i < (JEWEL_COLOR_FILTER_COUNT); i++) {
+            leftJewelBlueArray[i] = leftJewelColorSensor
+                    .blue();
         }
 
         Arrays.sort(leftJewelBlueArray);
@@ -1249,20 +1261,20 @@ public class rr_Robot {
         float rightJewelRedArray[] = new float[JEWEL_COLOR_FILTER_COUNT];
         float rightJewelBlueArray[] = new float[JEWEL_COLOR_FILTER_COUNT];
 
-        for (int i = 0,j=0; (i < JEWEL_COLOR_FILTER_COUNT)&&j<10; j++) {
+        for (int i = 0; i < JEWEL_COLOR_FILTER_COUNT; i++) {
             rightJewelRedArray[i] = rightJewelColorSensor.red();
 
             Thread.sleep(30);
-            if (rightJewelRedArray[i++] == 0) {
+            if (rightJewelRedArray[i] == 0) {
                 i--;
             }
         }
 
-        for (int i = 0,j=0; (i < JEWEL_COLOR_FILTER_COUNT)&& j<10; i++) {
+        for (int i = 0; i < JEWEL_COLOR_FILTER_COUNT; i++) {
             rightJewelBlueArray[i] = rightJewelColorSensor.blue();
 
             Thread.sleep(30);
-            if (rightJewelBlueArray[i++] == 0) {
+            if (rightJewelBlueArray[i] == 0) {
                 i--;
             }
         }
@@ -1293,52 +1305,39 @@ public class rr_Robot {
         if(getJewelLeftLumunosity(aOpMode)>JEWEL_COLOR_LUMINOSITY_THRESHOLD) {
             if (getFilteredLeftJewelColor(aOpMode) == rr_Constants.FilterJewelColorEnum.RED) {
 
-                aOpMode.telemetryAddData("Left Jewel Color", "Red", "Red Detected");
+                aOpMode.telemetryAddData("Color", "Red", "Left Red Detected");
                 aOpMode.telemetryUpdate();
                 return rr_Constants.JewelColorEnum.RED;
             }
             if (getFilteredLeftJewelColor(aOpMode) == rr_Constants.FilterJewelColorEnum.BLUE) {
-                aOpMode.telemetryAddData("Left Jewel Color", "Blue", "Blue Detected");
+                aOpMode.telemetryAddData("Color", "Blue", "Left Blue Detected");
                 aOpMode.telemetryUpdate();
                 return rr_Constants.JewelColorEnum.BLUE;
             }
-        }else{
-            aOpMode.telemetryAddLine("Left Luminosity Below Threshold");
-            aOpMode.telemetryUpdate();
         }
-        aOpMode.telemetryAddData("Left Jewel Color", "Unknown", "No Color Detected");
+        aOpMode.telemetryAddData("Color", "Unknown", "No Color Detected");
         aOpMode.telemetryUpdate();
-        if(DEBUG){
-            Thread.sleep(2000);
-        }
         return rr_Constants.JewelColorEnum.UNKNOWN;
-
     }
 
     public rr_Constants.JewelColorEnum getJewelRightColor(rr_OpMode aOpMode) throws InterruptedException {
         Thread.sleep(25);
         if(getJewelRightLumunosity(aOpMode)>JEWEL_COLOR_LUMINOSITY_THRESHOLD) {
             if (getFilteredRightJewelColor(aOpMode) == rr_Constants.FilterJewelColorEnum.RED) {
-                aOpMode.telemetryAddData("Right Jewel Color", "Red", "Red Detected");
+                aOpMode.telemetryAddData("Color", "Red", "Right Red Detected");
                 aOpMode.telemetryUpdate();
                 return rr_Constants.JewelColorEnum.RED;
             }
             if (getFilteredRightJewelColor(aOpMode) == rr_Constants.FilterJewelColorEnum.BLUE) {
-                aOpMode.telemetryAddData("Right Jewel Color", "Blue", "Blue Detected");
+                aOpMode.telemetryAddData("Color", "Blue", "Right Blue Detected");
                 aOpMode.telemetryUpdate();
 
                 return rr_Constants.JewelColorEnum.BLUE;
             }
-        }else{
-            aOpMode.telemetryAddLine("Right Luminosity Below Threshold");
-            aOpMode.telemetryUpdate();
         }
 
-        aOpMode.telemetryAddData("Right Color", "Unknown", "No Color Detected");
+        aOpMode.telemetryAddData("Color", "Unknown", "No Color Detected");
         aOpMode.telemetryUpdate();
-        if(DEBUG){
-            Thread.sleep(2000);
-        }
         return rr_Constants.JewelColorEnum.UNKNOWN;
     }
 
@@ -1508,5 +1507,11 @@ public class rr_Robot {
 
         return RelicRecoveryVuMark.UNKNOWN;
 
+    }
+
+    public void setJewelArmPosition(rr_OpMode aOpMode, float position) throws InterruptedException
+    {
+        jewelArm.setPosition(position);
+        Thread.sleep(100);
     }
 }

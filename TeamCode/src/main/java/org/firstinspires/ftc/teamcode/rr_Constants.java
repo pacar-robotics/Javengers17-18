@@ -113,7 +113,8 @@ public class rr_Constants {
     final static int JEWEL_COLOR_FILTER_COUNT = 3; //must be odd
 
     // TODO: CHANGE
-    final static float JEWEL_DISTANCE = 1.0f;
+    final static float BOTTOM_JEWEL_POSITION = 0.9f;
+
 
 
     //index of motors
