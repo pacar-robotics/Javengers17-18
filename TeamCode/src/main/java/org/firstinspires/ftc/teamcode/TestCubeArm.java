@@ -16,7 +16,6 @@ public class TestCubeArm extends rr_OpMode {
     rr_Robot robot;
     
     float cubeClawPosition = CUBE_CLAW_OPEN;
-    float cubeOrientationPosition = CUBE_ORIENTATION_HORIZONTAL;
     float cubeArmPosition = CUBE_ARM_GRAB;
     float position = CUBE_CLAW_ONE_RELEASE;
 
@@ -27,7 +26,6 @@ public class TestCubeArm extends rr_OpMode {
         robot.teleopInit(this, this.hardwareMap);
 
         robot.setCubeClawPosition(cubeClawPosition);
-        robot.setCubeOrientation(cubeOrientationPosition);
 
         telemetry.addLine("Ready");
         telemetryUpdate();
@@ -51,38 +49,15 @@ public class TestCubeArm extends rr_OpMode {
                 cubeClawPosition = 0.445f;
             }
 
-            if (gamepad1.dpad_right) {
-                robot.setCubeOrientation(0.9f);
-                cubeOrientationPosition = 1.0f;
-            }
 
-            if (gamepad1.dpad_down) {
-                robot.setCubeOrientation(0.44f);
-                cubeOrientationPosition = 0.44f;
-            }
-
-            processOrientationClaw();
             moveCubeArmWithLimits();
 
             telemetry.addLine("ClawServo: " + cubeClawPosition);
-            telemetry.addLine("Cube Orientation: " + cubeOrientationPosition);
             telemetry.addLine("Cube Arm Pos: " + robot.getMotorPosition(this, CUBE_ARM));
             telemetryTouchSensor();
             telemetryUpdate();
 
             Thread.sleep(10);
-        }
-    }
-
-    private void processOrientationClaw() throws InterruptedException {
-        if (gamepad1.x && cubeOrientationPosition < .9) {
-            cubeOrientationPosition += .05f;
-            robot.setCubeOrientation(cubeOrientationPosition);
-            Thread.sleep(250);
-        } else if (gamepad1.y && cubeOrientationPosition > 0) {
-            cubeOrientationPosition -= .05f;
-            robot.setCubeOrientation(cubeOrientationPosition);
-            Thread.sleep(250);
         }
     }
 

@@ -42,7 +42,6 @@ public class TestRobotOp extends rr_OpMode {
         robot.teleopInit(this, this.hardwareMap);
 
         robot.setCubeClawPosition(cubeClawPos);
-        robot.setCubeOrientation(orientationPos);
 
         telemetry.addLine("Ready");
         telemetryUpdate();
@@ -53,7 +52,6 @@ public class TestRobotOp extends rr_OpMode {
 
         while (opModeIsActive()) {
             processClaw();
-            processOrientationClaw();
             processCubeArm();
             processStandardDrive();
 
@@ -75,28 +73,6 @@ public class TestRobotOp extends rr_OpMode {
         }
     }
 
-    private void processOrientationClaw() throws InterruptedException {
-            if (gamepad1.dpad_up && orientationPos < .9) {
-                orientationPos += .05f;
-                robot.setCubeOrientation(orientationPos);
-                Thread.sleep(250);
-            } else if (gamepad1.dpad_left && orientationPos > 0) {
-                orientationPos -= .05f;
-                robot.setCubeOrientation(orientationPos);
-                Thread.sleep(250);
-            }
-
-
-            if (gamepad1.left_bumper && orientationPos == CUBE_ORIENTATION_HORIZONTAL && robot.getMotorPosition(this, CUBE_ARM) < CUBE_ARM_SAFE_POS) {
-                robot.setCubeClawToVertical();
-                orientationPos = CUBE_ORIENTATION_VERTICAL;
-                Thread.sleep(200);
-            } else if (gamepad1.left_bumper) {
-                robot.setCubeClawToHorizontal();
-                orientationPos = CUBE_ORIENTATION_HORIZONTAL;
-                Thread.sleep(200);
-            }
-    }
 
     private void processClaw() throws InterruptedException {
         if (gamepad1.dpad_right && cubeClawPos < .9) {
@@ -131,12 +107,10 @@ public class TestRobotOp extends rr_OpMode {
         }
 
         if (gamepad1.a) {
-            robot.setCubeClawToHorizontal();
             robot.openCubeClawServoOneCube();
             robot.moveCubeArmToPositionWithTouchLimits(this, CUBE_ARM_GRAB, CUBE_ARM_RAISE_POWER); //TODO: CHANGE CUBE_ARM_GRAB
         }
         if (gamepad1.y) {
-            robot.setCubeClawToHorizontal();
             robot.closeCubeClawServoOneCube();
             robot.moveCubeArmToPositionWithTouchLimits(this, CUBE_ARM_MIDDLE, CUBE_ARM_RAISE_POWER); //TODO: CHANGE CUBE_ARM_MIDDLE
         }
