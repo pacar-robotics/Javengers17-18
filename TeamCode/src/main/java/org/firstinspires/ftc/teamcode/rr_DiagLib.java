@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_RIGHT_MOTOR;
@@ -16,6 +18,7 @@ class rr_DiagLib {
 
     // Used for motor and platform movements
     private final static float MECCANUM_WHEEL_ENCODER_MARGIN = 50;
+    private final static int TOUCH_WAIT_TIME = 5000;    // milliseconds
 
     private rr_Robot robot;
     private rr_OpMode aOpMode;
@@ -127,6 +130,9 @@ class rr_DiagLib {
         robotTests.add(new RobotTest("Platform Left", TestType.AUTOMATIC, new TestPlatformLeft()));
         robotTests.add(new RobotTest("Platform Diagonal", TestType.AUTOMATIC, new TestPlatformDiagonal()));
 
+        robotTests.add(new RobotTest("Cube Upper Arm Touch", TestType.AUTOMATIC, new TestCubeArmUpperLimit()));
+        robotTests.add(new RobotTest("Cube Lower Arm Touch", TestType.AUTOMATIC, new TestCubeArmLowerLimit()));
+
 
         robotTests.add(new RobotTest("Cube Claw", TestType.MANUAL, new TestCubeClaw()));
         robotTests.add(new RobotTest("Relic Arm", TestType.MANUAL, new TestRelicArm()));
@@ -232,6 +238,39 @@ class rr_DiagLib {
             robot.pushRightJewel();
             robot.pushLeftJewel();
             robot.setJewelPusherNeutral();
+        }
+    }
+
+
+    //***************** SENSOR TESTS *****************//
+
+    private class TestCubeArmUpperLimit implements AutomaticTest {
+        public TestResult runTest() throws InterruptedException {
+            Calendar cal = new GregorianCalendar();
+            cal.setTimeInMillis(System.currentTimeMillis());
+
+            while (!robot.isCubeUpperLimitPressed() && (System.currentTimeMillis() - cal.getTimeInMillis() < TOUCH_WAIT_TIME));
+
+            if (robot.isCubeUpperLimitPressed()) {
+                return new TestResult("Cube Arm Upper Limit", true);
+            } else {
+                return new TestResult("Cube Arm Upper Limit", false, "Not pressed within 5 seconds");
+            }
+        }
+    }
+
+    private class TestCubeArmLowerLimit implements AutomaticTest {
+        public TestResult runTest() throws InterruptedException {
+            Calendar cal = new GregorianCalendar();
+            cal.setTimeInMillis(System.currentTimeMillis());
+
+            while (!robot.isCubeLowerLimitPressed() && (System.currentTimeMillis() - cal.getTimeInMillis() < TOUCH_WAIT_TIME));
+
+            if (robot.isCubeLowerLimitPressed()) {
+                return new TestResult("Cube Arm Lower Limit", true);
+            } else {
+                return new TestResult("Cube Arm Lower Limit", false, "Not pressed within 5 seconds");
+            }
         }
     }
 
