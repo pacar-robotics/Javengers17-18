@@ -164,9 +164,15 @@ public class rr_AutoLib {
 
         float columnDistance;
 
-        aOpMode.DBG("In Red One Common");
-        adjustJewelArmUsingRange(aOpMode);
+        rr_Constants.DirectionEnum moveDirection;
 
+        robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_MIDDLE, CUBE_ARM_RAISE_POWER);
+        robot.openCubeClawServoOneCube();
+        robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_GRAB, CUBE_ARM_LOWER_POWER);
+        robot.closeCubeClawServoOneCube();
+        robot.moveCubeArmToPositionWithTouchLimits(aOpMode, rr_Constants.CUBE_ARM_MIDDLE - 200, CUBE_ARM_RAISE_POWER);
+
+        aOpMode.DBG("In Red One Common");
 
         detectColorAndPushJewel(aOpMode, rr_Constants.AllianceColorEnum.RED);
         Thread.sleep(300);
@@ -297,19 +303,7 @@ public class rr_AutoLib {
 
     }
 
-    public void
-
-
-
-
-
-
-
-
-
-
-
-    adjustJewelArmUsingRange(rr_OpMode aOpMode) throws InterruptedException {
+    public void adjustJewelArmUsingRange(rr_OpMode aOpMode) throws InterruptedException {
 
 
         // FOR ROBOT WITH VERTICAL RANGE SENSOR

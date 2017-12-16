@@ -54,7 +54,7 @@ public class rr_Constants {
     final static float RIGHT_MOTOR_TRIM_FACTOR = 1.0f;
 
     //Cube Arm Constants TODO: CHANGE
-    final static int CUBE_ARM_MAX_DURATION = 5000;
+    final static int CUBE_ARM_MAX_DURATION = 3000;
     final static float CUBE_ARM_UPPER_LIMIT = -2216;
     final static float CUBE_ARM_LOWER_LIMIT = 0;
     final static int ONE_CUBE_ROW_4 = 0; //Highest
@@ -76,6 +76,7 @@ public class rr_Constants {
     final static float CUBE_CLAW_OPEN = 0.63f;
     final static float CUBE_CLAW_ONE_CLOSED = 0.8f;
     final static float CUBE_CLAW_ONE_RELEASE = 0.63f;
+    final static float CUBE_CLAW_INITIALIZE = 0.67f;
     final static float CUBE_CLAW_TWO_CLOSED = 0.8f;
     final static float CUBE_ORIENTATION_HORIZONTAL = 0.225f;
     final static float CUBE_ORIENTATION_VERTICAL = 0.75f;

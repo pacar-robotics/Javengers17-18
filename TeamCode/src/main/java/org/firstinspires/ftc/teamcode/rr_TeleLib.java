@@ -125,8 +125,8 @@ public class rr_TeleLib {
     }
 
     public void processIMUGyroReset() throws InterruptedException {
-        if ((aOpMode.gamepad1.right_stick_button && aOpMode.gamepad1.dpad_up) ||
-                (aOpMode.gamepad2.right_stick_button && aOpMode.gamepad2.dpad_up)) {
+        if ((aOpMode.gamepad1.right_stick_button && aOpMode.gamepad1.left_stick_button) ||
+                (aOpMode.gamepad2.right_stick_button && aOpMode.gamepad2.left_stick_button)) {
             robot.setBoschGyroZeroYaw(aOpMode);
             isGyroCalibrated = true;
         }
