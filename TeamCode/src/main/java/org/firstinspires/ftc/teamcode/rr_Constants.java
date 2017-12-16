@@ -100,18 +100,18 @@ public class rr_Constants {
     //Jewel Arm Constants TODO: CHANGE
 
 
-    final static float JEWEL_PUSHER_LEFT = 0.68f; // make bigger
-    final static float JEWEL_PUSHER_RIGHT = 0.25f; // make smaller
-    final static float JEWEL_PUSHER_NEUTRAL = 0.48f;
+    final static float JEWEL_PUSHER_LEFT = 0.90f; // make bigger
+    final static float JEWEL_PUSHER_RIGHT = 0.10f; // make smaller
+    final static float JEWEL_PUSHER_NEUTRAL = 0.50f;
     final static float JEWEL_ARM_UP = 0.34f;
-    final static float JEWEL_ARM_DOWN_READ = .9f;
-    final static float JEWEL_ARM_DOWN_PUSH = .99f;
+    final static float JEWEL_ARM_DOWN_READ = .89f;
+    final static float JEWEL_ARM_DOWN_PUSH = .92f;
     static final double JEWEL_ARM_INCREMENT = 0.01;     // amount to slew servo each cycle
     static final int JEWEL_ARM_CYCLE = 50;     // period of each cycle
-    final static float JEWEL_COLOR_LUMINOSITY_THRESHOLD = 35f;
-    final static float JEWEL_COLOR_DIFFERENTIAL_THRESHOLD = 10f;
+    final static float JEWEL_COLOR_LUMINOSITY_THRESHOLD = 10f;
+    final static float JEWEL_COLOR_DIFFERENTIAL_THRESHOLD = 5f;
 
-    final static int JEWEL_COLOR_FILTER_COUNT = 3; //must be odd
+    final static int JEWEL_COLOR_FILTER_COUNT = 11; //must be odd
 
     // TODO: CHANGE
     final static float BOTTOM_JEWEL_POSITION = 0.9f;

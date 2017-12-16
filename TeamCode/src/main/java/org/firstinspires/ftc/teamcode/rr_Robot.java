@@ -619,10 +619,10 @@ public class rr_Robot {
         motorArray[3].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         Thread.sleep(50);
 
-        fl_Power = (float) (fl_Power + prevFLVelocity) / 2;
-        fr_Power = (float) (fr_Power + prevFRVelocity) / 2;
-        bl_Power = (float) (bl_Power + prevBLVelocity) / 2;
-        br_Power = (float) (br_Power + prevBRVelocity) / 2;
+        fl_Power = (float) (fl_Power + prevFLVelocity) / 2f;
+        fr_Power = (float) (fr_Power + prevFRVelocity) / 2f;
+        bl_Power = (float) (bl_Power + prevBLVelocity) / 2f;
+        br_Power = (float) (br_Power + prevBRVelocity) / 2f;
 
         prevFLVelocity = fl_Power;
         prevFRVelocity = fr_Power;
