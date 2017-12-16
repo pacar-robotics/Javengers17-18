@@ -68,7 +68,6 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.MOTOR_RAMP_FB_POWER_LO
 import static org.firstinspires.ftc.teamcode.rr_Constants.MOTOR_RAMP_FB_POWER_UPPER_LIMIT;
 import static org.firstinspires.ftc.teamcode.rr_Constants.MOTOR_RAMP_SIDEWAYS_POWER_LOWER_LIMIT;
 import static org.firstinspires.ftc.teamcode.rr_Constants.MOTOR_RAMP_SIDEWAYS_POWER_UPPER_LIMIT;
-import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_EXTEND_IN;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_CLAW_OPEN_STABILIZED;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_GRAB;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_CLAW_CLOSED;
@@ -170,6 +169,7 @@ public class rr_Robot {
         //Initialize Jewel Arm
         initJewelSensors(aOpMode);
         initJewelServos(aOpMode);
+        setJewelPusherPosition(JEWEL_PUSHER_RIGHT - 0.1f);
 
         aOpMode.DBG("Exiting Robot init");
     }
@@ -198,6 +198,7 @@ public class rr_Robot {
         //Initialize Jewel Arm
         initJewelSensors(aOpMode);
         initJewelServos(aOpMode);
+        setJewelPusherPosition(JEWEL_PUSHER_NEUTRAL);
 
         aOpMode.DBG("Exiting Robot init");
     }
@@ -277,7 +278,6 @@ public class rr_Robot {
         jewelArm = hwMap.get(Servo.class, "servo_jewel_arm");
         jewelPusher = hwMap.get(Servo.class, "servo_jewel_pusher");
 
-        setJewelPusherNeutral();
         setJewelArmUp();
     }
 
@@ -1039,10 +1039,6 @@ public class rr_Robot {
         Thread.sleep(100);
     }
 
-    public void setRelicArmExtend() throws InterruptedException {
-        relicArm.setPosition(RELIC_ARM_EXTEND_IN);
-        Thread.sleep(100);
-    }
 
     public void setRelicArmPosition(float position) {
         relicArm.setPosition(position);

@@ -23,7 +23,7 @@ public class TeleOpMaryland extends rr_OpMode {
             lib.processClaw();
             lib.processCubeArm();
             lib.processTeleOpDrive();
-        //    lib.processRelicSlide();
+            lib.processRelicSlide();
             lib.processRelicClaw();
             lib.processRelicHand();
             lib.processBalance();

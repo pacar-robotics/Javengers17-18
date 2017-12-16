@@ -89,7 +89,7 @@ public class rr_Constants {
     final static int RELIC_WINCH_UPPER_LIMIT = 11000;           // TODO: Change
     final static float RELIC_ARM_GRAB = 0.3f;
     final static float RELIC_ARM_EXTEND_UP = 0.75f;//feet of robot pointing up
-    final static float RELIC_ARM_EXTEND_IN = 0.0f; //feet of relic toward the robot
+    final static float RELIC_ARM_OPEN_PULSE = 0.25f;
     final static float RELIC_ARM_MAX = 1f;              // TODO: Change
     final static float RELIC_ARM_MIN = .1f;              // TODO: Change
     final static float RELIC_CLAW_OPEN = 0.8f;
