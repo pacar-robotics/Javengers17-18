@@ -1110,17 +1110,17 @@ public class rr_Robot {
 
     public void pushRightJewel() throws InterruptedException {
         jewelPusher.setPosition(JEWEL_PUSHER_RIGHT);
-        Thread.sleep(100);
+        Thread.sleep(500);
     }
 
     public void pushLeftJewel() throws InterruptedException {
         jewelPusher.setPosition(JEWEL_PUSHER_LEFT);
-        Thread.sleep(100);
+        Thread.sleep(500);
     }
 
     public void setJewelPusherNeutral() throws InterruptedException {
         jewelPusher.setPosition(JEWEL_PUSHER_NEUTRAL);
-        Thread.sleep(100);
+        Thread.sleep(500);
     }
 
     public void setJewelArmUp() throws InterruptedException {

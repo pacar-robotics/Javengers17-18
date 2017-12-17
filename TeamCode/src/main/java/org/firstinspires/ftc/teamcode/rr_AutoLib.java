@@ -295,7 +295,7 @@ public class rr_AutoLib {
         Thread.sleep(300);
         moveWheels(aOpMode, columnDistance, .4f, moveDirection, true);
         Thread.sleep(300);
-        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 160);
+        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 167);
         Thread.sleep(300);
         universalMoveRobot(aOpMode, 20, .3f, 0, 900, falseStop , false, 0, 0);
         Thread.sleep(250);
@@ -305,7 +305,7 @@ public class rr_AutoLib {
         Thread.sleep(300);
         moveWheels(aOpMode, 2f, 0.4f, Backward, false);
 
-        universalMoveRobot(aOpMode, 20, .3f, 0, 500, falseStop , false, 0, 0);
+        universalMoveRobot(aOpMode, 20, .3f, 0, 1200, falseStop , false, 0, 0);
         Thread.sleep(300);
         moveWheels(aOpMode, 2f, 0.4f, Backward, false);
 
@@ -402,6 +402,7 @@ public class rr_AutoLib {
                 aOpMode.telemetryAddData("Right color", "Right color", "Right color" + robot.getJewelRightColor(aOpMode));
                 aOpMode.telemetryUpdate();
             }
+
         }
 
         aOpMode.DBG("Exiting blue alliance detect color and push");
@@ -437,6 +438,8 @@ public class rr_AutoLib {
             }
         }
 
+        robot.setJewelPusherNeutral();
+        Thread.sleep(500);
         robot.setJewelArmUp();
         aOpMode.DBG("Exiting detect color and push");
 
