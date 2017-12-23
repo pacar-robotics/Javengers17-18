@@ -12,6 +12,7 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_RIGHT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_RIGHT_MOTOR;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_EXTEND_UP;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WINCH;
 
 class rr_DiagLib {
@@ -210,7 +211,7 @@ class rr_DiagLib {
 
     private class TestRelicArm implements ManualTest {
         public void runTest() throws InterruptedException {
-            robot.setRelicArmExtend();
+            robot.setRelicArmPosition(RELIC_ARM_EXTEND_UP);
             robot.setRelicArmGrab();
         }
     }
@@ -246,7 +247,7 @@ class rr_DiagLib {
             Calendar cal = new GregorianCalendar();
             cal.setTimeInMillis(System.currentTimeMillis());
 
-            while (!robot.isCubeUpperLimitPressed() && (System.currentTimeMillis() - cal.getTimeInMillis() < TOUCH_WAIT_TIME)){}
+            while (!robot.isCubeUpperLimitPressed() && (System.currentTimeMillis() - cal.getTimeInMillis() < TOUCH_WAIT_TIME)) {}
 
             if (robot.isCubeUpperLimitPressed()) {
                 return new TestResult("Cube Arm Upper Limit", true);
@@ -262,7 +263,7 @@ class rr_DiagLib {
             Calendar cal = new GregorianCalendar();
             cal.setTimeInMillis(System.currentTimeMillis());
 
-            while (!robot.isCubeLowerLimitPressed() && (System.currentTimeMillis() - cal.getTimeInMillis() < TOUCH_WAIT_TIME)){}
+            while (!robot.isCubeLowerLimitPressed() && (System.currentTimeMillis() - cal.getTimeInMillis() < TOUCH_WAIT_TIME)) {}
 
             if (robot.isCubeLowerLimitPressed()) {
                 return new TestResult("Cube Arm Lower Limit", true);
@@ -419,6 +420,7 @@ class rr_DiagLib {
         }
 
         // Helper method for testPlatformDiagonal
+        @SuppressWarnings("SameParameterValue")
         private void universalMoveRobotPolar(rr_OpMode aOpMode, double polarAngle,
                                              double polarVelocity, double rotationalVelocity,
                                              long duration, rr_OpMode.StopCondition condition,
