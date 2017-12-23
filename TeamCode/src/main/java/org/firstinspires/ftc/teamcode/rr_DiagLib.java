@@ -156,7 +156,7 @@ class rr_DiagLib {
         }
 
         // If the positions are different enough, the motor is running and working
-        if (Math.abs(newMotorPosition - motorPosition) < MECCANUM_WHEEL_ENCODER_MARGIN) {
+        if (Math.abs(newMotorPosition - motorPosition) > MECCANUM_WHEEL_ENCODER_MARGIN) {
             return new TestResult(motorName, true);
         } else {
             return new TestResult(motorName, false, "Failed to detect rotation");
