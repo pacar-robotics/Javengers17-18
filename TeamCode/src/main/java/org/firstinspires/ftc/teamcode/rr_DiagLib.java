@@ -281,10 +281,13 @@ class rr_DiagLib {
             int motorPosition = robot.getMotorPosition(aOpMode, FRONT_LEFT_MOTOR); // Representative motor
             float startingAngle = robot.getBoschGyroSensorHeading(aOpMode); // Save starting angle.
             robot.universalMoveRobot(aOpMode, 0.5f, 0.0f);
+            Thread.sleep(1000);
+            robot.stopBaseMotors(aOpMode);
             int newMotorPosition = robot.getMotorPosition(aOpMode, FRONT_LEFT_MOTOR);
             float endingAngle = robot.getBoschGyroSensorHeading(aOpMode);
 
-            if ((Math.abs(newMotorPosition - motorPosition) < MECCANUM_WHEEL_ENCODER_MARGIN) || (Math.abs(startingAngle - endingAngle) > 3)) {
+            if ((Math.abs(newMotorPosition - motorPosition) > MECCANUM_WHEEL_ENCODER_MARGIN) ||
+                    (Math.abs(startingAngle - endingAngle) > 3)) {
                 return new TestResult("Platform forwards/backwards", true);
             } else {
                 return new TestResult("Platform forwards/backwards", false, "Failed to detect platform movement");
@@ -297,10 +300,13 @@ class rr_DiagLib {
             int motorPosition = robot.getMotorPosition(aOpMode, FRONT_LEFT_MOTOR); // Representative motor
             float startingAngle = robot.getBoschGyroSensorHeading(aOpMode); // Save starting angle.
             robot.universalMoveRobot(aOpMode, 0.0f, 0.5f);
+            Thread.sleep(1000);
+            robot.stopBaseMotors(aOpMode);
             int newMotorPosition = robot.getMotorPosition(aOpMode, FRONT_LEFT_MOTOR);
             float endingAngle = robot.getBoschGyroSensorHeading(aOpMode);
 
-            if ((Math.abs(newMotorPosition - motorPosition) < MECCANUM_WHEEL_ENCODER_MARGIN) || (Math.abs(startingAngle - endingAngle) > 3)) {
+            if ((Math.abs(newMotorPosition - motorPosition) > MECCANUM_WHEEL_ENCODER_MARGIN) ||
+                    (Math.abs(startingAngle - endingAngle) > 3)) {
                 return new TestResult("Platform sideways", true);
             } else {
                 return new TestResult("Platform sideways", true, "Failed to detect platform movement");
