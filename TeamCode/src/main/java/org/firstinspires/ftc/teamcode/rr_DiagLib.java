@@ -200,80 +200,6 @@ class rr_DiagLib {
     }
 
 
-    //***************** SERVO TESTS *****************//
-
-    private class TestCubeClaw implements ManualTest {
-        public void runTest() throws InterruptedException {
-            robot.closeCubeClawServoTwoCube();
-            robot.closeCubeClawServoOneCube();
-        }
-    }
-
-    private class TestRelicArm implements ManualTest {
-        public void runTest() throws InterruptedException {
-            robot.setRelicArmPosition(RELIC_ARM_EXTEND_UP);
-            robot.setRelicArmGrab();
-        }
-    }
-
-    private class TestRelicClaw implements ManualTest {
-        public void runTest() throws InterruptedException {
-            robot.setRelicClawOpen();
-            robot.setRelicClawClosed();
-        }
-    }
-
-    private class TestJewelArm implements ManualTest {
-        public void runTest() throws InterruptedException {
-            robot.setJewelArmDownPush();
-            robot.setJewelArmUp();
-        }
-    }
-
-    private class TestJewelPusher implements ManualTest {
-        public void runTest() throws InterruptedException {
-            robot.pushRightJewel();
-            robot.pushLeftJewel();
-            robot.setJewelPusherNeutral();
-        }
-    }
-
-
-    //***************** SENSOR TESTS *****************//
-
-    private class TestCubeArmUpperLimit implements AutomaticTest {
-        @SuppressWarnings("StatementWithEmptyBody")
-        public TestResult runTest() throws InterruptedException {
-            Calendar cal = new GregorianCalendar();
-            cal.setTimeInMillis(System.currentTimeMillis());
-
-            while (!robot.isCubeUpperLimitPressed() && (System.currentTimeMillis() - cal.getTimeInMillis() < TOUCH_WAIT_TIME)) {}
-
-            if (robot.isCubeUpperLimitPressed()) {
-                return new TestResult("Cube Arm Upper Limit", true);
-            } else {
-                return new TestResult("Cube Arm Upper Limit", false, "Not pressed within 5 seconds");
-            }
-        }
-    }
-
-    private class TestCubeArmLowerLimit implements AutomaticTest {
-        @SuppressWarnings("StatementWithEmptyBody")
-        public TestResult runTest() throws InterruptedException {
-            Calendar cal = new GregorianCalendar();
-            cal.setTimeInMillis(System.currentTimeMillis());
-
-            while (!robot.isCubeLowerLimitPressed() && (System.currentTimeMillis() - cal.getTimeInMillis() < TOUCH_WAIT_TIME)) {}
-
-            if (robot.isCubeLowerLimitPressed()) {
-                return new TestResult("Cube Arm Lower Limit", true);
-            } else {
-                return new TestResult("Cube Arm Lower Limit", false, "Not pressed within 5 seconds");
-            }
-        }
-    }
-
-
     //***************** PLATFORM TESTS *****************//
 
     private class TestPlatformForward implements AutomaticTest {
@@ -441,6 +367,80 @@ class rr_DiagLib {
             //can be used as an empty condition, so the robot keeps running in universal movement
             public boolean stopCondition(rr_OpMode aOpMode) throws InterruptedException {
                 return (false);
+            }
+        }
+    }
+
+
+    //***************** SERVO TESTS *****************//
+
+    private class TestCubeClaw implements ManualTest {
+        public void runTest() throws InterruptedException {
+            robot.closeCubeClawServoTwoCube();
+            robot.closeCubeClawServoOneCube();
+        }
+    }
+
+    private class TestRelicArm implements ManualTest {
+        public void runTest() throws InterruptedException {
+            robot.setRelicArmPosition(RELIC_ARM_EXTEND_UP);
+            robot.setRelicArmGrab();
+        }
+    }
+
+    private class TestRelicClaw implements ManualTest {
+        public void runTest() throws InterruptedException {
+            robot.setRelicClawOpen();
+            robot.setRelicClawClosed();
+        }
+    }
+
+    private class TestJewelArm implements ManualTest {
+        public void runTest() throws InterruptedException {
+            robot.setJewelArmDownPush();
+            robot.setJewelArmUp();
+        }
+    }
+
+    private class TestJewelPusher implements ManualTest {
+        public void runTest() throws InterruptedException {
+            robot.pushRightJewel();
+            robot.pushLeftJewel();
+            robot.setJewelPusherNeutral();
+        }
+    }
+
+
+    //***************** SENSOR TESTS *****************//
+
+    private class TestCubeArmUpperLimit implements AutomaticTest {
+        @SuppressWarnings("StatementWithEmptyBody")
+        public TestResult runTest() throws InterruptedException {
+            Calendar cal = new GregorianCalendar();
+            cal.setTimeInMillis(System.currentTimeMillis());
+
+            while (!robot.isCubeUpperLimitPressed() && (System.currentTimeMillis() - cal.getTimeInMillis() < TOUCH_WAIT_TIME)) {}
+
+            if (robot.isCubeUpperLimitPressed()) {
+                return new TestResult("Cube Arm Upper Limit", true);
+            } else {
+                return new TestResult("Cube Arm Upper Limit", false, "Not pressed within 5 seconds");
+            }
+        }
+    }
+
+    private class TestCubeArmLowerLimit implements AutomaticTest {
+        @SuppressWarnings("StatementWithEmptyBody")
+        public TestResult runTest() throws InterruptedException {
+            Calendar cal = new GregorianCalendar();
+            cal.setTimeInMillis(System.currentTimeMillis());
+
+            while (!robot.isCubeLowerLimitPressed() && (System.currentTimeMillis() - cal.getTimeInMillis() < TOUCH_WAIT_TIME)) {}
+
+            if (robot.isCubeLowerLimitPressed()) {
+                return new TestResult("Cube Arm Lower Limit", true);
+            } else {
+                return new TestResult("Cube Arm Lower Limit", false, "Not pressed within 5 seconds");
             }
         }
     }
