@@ -500,6 +500,9 @@ class rr_DiagLib {
             robot.universalMoveRobot(aOpMode, 1, 1);
             Thread.sleep(500);
             robot.universalMoveRobot(aOpMode, -1, -1);
+            Thread.sleep(500);
+
+            robot.stopBaseMotors(aOpMode);
         }
     }
 }
