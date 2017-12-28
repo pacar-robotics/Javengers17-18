@@ -20,6 +20,7 @@ class rr_DiagLib {
     // Used for motor and platform movements
     private final static float MECCANUM_WHEEL_ENCODER_MARGIN = 50;
     private final static int TOUCH_WAIT_TIME = 2500;    // milliseconds
+    private static final int SERVO_WAIT_TIME = 250;
 
     private rr_Robot robot;
     private rr_OpMode aOpMode;
@@ -380,6 +381,7 @@ class rr_DiagLib {
     private class TestCubeClaw implements ManualTest {
         public void runTest() throws InterruptedException {
             robot.closeCubeClawServoTwoCube();
+            Thread.sleep(SERVO_WAIT_TIME);
             robot.closeCubeClawServoOneCube();
         }
     }
@@ -387,6 +389,7 @@ class rr_DiagLib {
     private class TestRelicArm implements ManualTest {
         public void runTest() throws InterruptedException {
             robot.setRelicArmPosition(RELIC_ARM_EXTEND_UP);
+            Thread.sleep(SERVO_WAIT_TIME);
             robot.setRelicArmGrab();
         }
     }
@@ -394,6 +397,7 @@ class rr_DiagLib {
     private class TestRelicClaw implements ManualTest {
         public void runTest() throws InterruptedException {
             robot.setRelicClawOpen();
+            Thread.sleep(SERVO_WAIT_TIME);
             robot.setRelicClawClosed();
         }
     }
