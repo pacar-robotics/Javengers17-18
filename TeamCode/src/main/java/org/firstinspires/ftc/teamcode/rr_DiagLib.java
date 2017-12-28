@@ -203,43 +203,35 @@ class rr_DiagLib {
 
     //***************** PLATFORM TESTS *****************//
 
+    private TestResult genericPlatformTest(String platformName, float xVelocity, float yVelocity) throws InterruptedException {
+        int motorPosition = robot.getMotorPosition(aOpMode, FRONT_LEFT_MOTOR);  // Representative motor
+        float startingAngle = robot.getBoschGyroSensorHeading(aOpMode);
+
+        robot.universalMoveRobot(aOpMode, xVelocity, yVelocity);
+        Thread.sleep(1000);
+        robot.stopBaseMotors(aOpMode);
+
+        int newMotorPosition = robot.getMotorPosition(aOpMode, FRONT_LEFT_MOTOR);
+        float endingAngle = robot.getBoschGyroSensorHeading(aOpMode);
+
+        if ((Math.abs(newMotorPosition - motorPosition) > MECCANUM_WHEEL_ENCODER_MARGIN) ||
+                (Math.abs(startingAngle - endingAngle) > 3)) {
+            return new TestResult("Platform " + platformName, true);
+        } else {
+            return new TestResult(platformName, false, "Motors not moving" +
+                    " or encoders are faulty");
+        }
+    }
+
     private class TestPlatformForward implements AutomaticTest {
         public TestResult runTest() throws InterruptedException {
-            int motorPosition = robot.getMotorPosition(aOpMode, FRONT_LEFT_MOTOR); // Representative motor
-            float startingAngle = robot.getBoschGyroSensorHeading(aOpMode); // Save starting angle.
-            robot.universalMoveRobot(aOpMode, 0.5f, 0.0f);
-            Thread.sleep(1000);
-            robot.stopBaseMotors(aOpMode);
-            int newMotorPosition = robot.getMotorPosition(aOpMode, FRONT_LEFT_MOTOR);
-            float endingAngle = robot.getBoschGyroSensorHeading(aOpMode);
-
-            if ((Math.abs(newMotorPosition - motorPosition) > MECCANUM_WHEEL_ENCODER_MARGIN) ||
-                    (Math.abs(startingAngle - endingAngle) > 3)) {
-                return new TestResult("Platform forwards/backwards", true);
-            } else {
-                return new TestResult("Platform forwards/backwards", false, "Motors not moving" +
-                        " or encoders are faulty");
-            }
+            return genericPlatformTest("forwards/backwards", 0.5f, 0.0f);
         }
     }
 
     private class TestPlatformLeft implements AutomaticTest {
         public TestResult runTest() throws InterruptedException {
-            int motorPosition = robot.getMotorPosition(aOpMode, FRONT_LEFT_MOTOR); // Representative motor
-            float startingAngle = robot.getBoschGyroSensorHeading(aOpMode); // Save starting angle.
-            robot.universalMoveRobot(aOpMode, 0.0f, 0.5f);
-            Thread.sleep(1000);
-            robot.stopBaseMotors(aOpMode);
-            int newMotorPosition = robot.getMotorPosition(aOpMode, FRONT_LEFT_MOTOR);
-            float endingAngle = robot.getBoschGyroSensorHeading(aOpMode);
-
-            if ((Math.abs(newMotorPosition - motorPosition) > MECCANUM_WHEEL_ENCODER_MARGIN) ||
-                    (Math.abs(startingAngle - endingAngle) > 3)) {
-                return new TestResult("Platform sideways", true);
-            } else {
-                return new TestResult("Platform sideways", true, "Motors not moving or " +
-                        "encoders are faulty");
-            }
+            return genericPlatformTest("sideways", 0.0f, 0.5f);
         }
     }
 
