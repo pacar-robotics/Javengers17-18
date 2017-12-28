@@ -163,7 +163,7 @@ class rr_DiagLib {
         if (Math.abs(newMotorPosition - motorPosition) > MECCANUM_WHEEL_ENCODER_MARGIN) {
             return new TestResult(motorName, true);
         } else {
-            return new TestResult(motorName, false, "Failed to detect rotation");
+            return new TestResult(motorName, false, "Motor not moving or faulty encoder");
         }
     }
 
@@ -220,7 +220,8 @@ class rr_DiagLib {
                     (Math.abs(startingAngle - endingAngle) > 3)) {
                 return new TestResult("Platform forwards/backwards", true);
             } else {
-                return new TestResult("Platform forwards/backwards", false, "Failed to detect platform movement");
+                return new TestResult("Platform forwards/backwards", false, "Motors not moving" +
+                        " or encoders are faulty");
             }
         }
     }
@@ -239,7 +240,8 @@ class rr_DiagLib {
                     (Math.abs(startingAngle - endingAngle) > 3)) {
                 return new TestResult("Platform sideways", true);
             } else {
-                return new TestResult("Platform sideways", true, "Failed to detect platform movement");
+                return new TestResult("Platform sideways", true, "Motors not moving or " +
+                        "encoders are faulty");
             }
         }
     }
@@ -336,7 +338,8 @@ class rr_DiagLib {
 
             // Check if anything went wrong
             if (failedDiagTopLeft || failedDiagTopRight || failedDiagBottomLeft || failedDiagBottomRight) {
-                return new TestResult("Platform Diagonal", false, "Failed to detect platform diagonal movement");
+                return new TestResult("Platform Diagonal", false, "Motors not moving or " +
+                        "encoders are faulty");
             }
 
             if (failedDiagTopLeftRotation ||
@@ -460,7 +463,8 @@ class rr_DiagLib {
             if (robot.isCubeUpperLimitPressed()) {
                 return new TestResult("Cube Arm Upper Limit", true);
             } else {
-                return new TestResult("Cube Arm Upper Limit", false, "Not pressed within 5 seconds");
+                return new TestResult("Cube Arm Upper Limit", false, "Cube Arm not moving or " +
+                        "touch sensor disconnected");
             }
         }
     }
@@ -482,7 +486,8 @@ class rr_DiagLib {
             if (robot.isCubeLowerLimitPressed()) {
                 return new TestResult("Cube Arm Lower Limit", true);
             } else {
-                return new TestResult("Cube Arm Lower Limit", false, "Not pressed within 5 seconds");
+                return new TestResult("Cube Arm Lower Limit", false, "Cube Arm not moving or " +
+                        "touch sensor disconnected");
             }
         }
     }
