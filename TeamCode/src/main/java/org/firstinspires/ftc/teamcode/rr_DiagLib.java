@@ -407,6 +407,8 @@ class rr_DiagLib {
                     prevRightColor = robot.getJewelRightLuminosity(aOpMode);
             robot.setJewelArmDownRead();
 
+            Thread.sleep(500);  // Give some time to move the arm
+
             float curLeftColor = robot.getJewelLeftLuminosity(aOpMode),
                     curRightColor = robot.getJewelRightLuminosity(aOpMode);
             robot.setJewelArmUp();
@@ -442,7 +444,7 @@ class rr_DiagLib {
             Calendar cal = new GregorianCalendar();
             cal.setTimeInMillis(System.currentTimeMillis());
 
-            robot.setCubeArmPower(aOpMode, -.25f);
+            robot.setCubeArmPower(aOpMode, -.4f);
 
             // Waits for touch sensor to be pressed while motor is moving
             while (!robot.isCubeUpperLimitPressed() && (System.currentTimeMillis() - cal.getTimeInMillis() < TOUCH_WAIT_TIME)) {
