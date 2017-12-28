@@ -137,6 +137,8 @@ class rr_DiagLib {
 
         robotTests.add(new RobotTest("Jewel Arm", TestType.MANUAL, new TestJewelArm()));
         robotTests.add(new RobotTest("Jewel Pusher", TestType.MANUAL, new TestJewelPusher()));
+
+        robotTests.add(new RobotTest("Test Connection", TestType.MANUAL, new TestConnection()));
     }
 
 
@@ -442,6 +444,22 @@ class rr_DiagLib {
             } else {
                 return new TestResult("Cube Arm Lower Limit", false, "Not pressed within 5 seconds");
             }
+        }
+    }
+
+
+    //***************** CONNECTION TESTS *****************//
+
+    private class TestConnection implements ManualTest {
+        public void runTest() throws InterruptedException {
+            // Shake the robot around to test connections
+            robot.universalMoveRobot(aOpMode, 1, 0);
+            Thread.sleep(500);
+            robot.universalMoveRobot(aOpMode, -1, 0);
+            Thread.sleep(500);
+            robot.universalMoveRobot(aOpMode, 1, 1);
+            Thread.sleep(500);
+            robot.universalMoveRobot(aOpMode, -1, -1);
         }
     }
 }
