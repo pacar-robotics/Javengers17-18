@@ -36,26 +36,6 @@ public class DiagOp extends rr_OpMode {
         telemetry.update();
     }
 
-    private void runAutomaticTests() throws InterruptedException {
-        for (rr_DiagLib.RobotTest robotTest : diagLib.robotTests) {
-            if (robotTest.getTestType() == rr_DiagLib.TestType.AUTOMATIC) {
-                telemetry.clear();
-                telemetry.addLine("Running: " + robotTest.getTestName());
-                telemetry.update();
-
-                // Runs and stores test result
-                rr_DiagLib.TestResult testResult = robotTest.getAutomaticTest().runTest();
-
-                telemetry.addLine("Test " + (testResult.getTestResult() ? "PASSED" : "FAILED"));
-                if (!testResult.getTestResult()) telemetry.addLine(testResult.getTestMessage());
-                telemetry.update();
-
-                // Adds test result to list to be reviewed at the end
-                testResults.add(testResult);
-            }
-        }
-    }
-
     private void runAllTests() throws InterruptedException {
         for (rr_DiagLib.RobotTest robotTest : diagLib.robotTests) {
             telemetry.clear();
