@@ -214,6 +214,11 @@ class rr_DiagLib {
         int newMotorPosition = robot.getMotorPosition(aOpMode, FRONT_LEFT_MOTOR);
         float endingAngle = robot.getBoschGyroSensorHeading(aOpMode);
 
+        // Move robot back to original position
+        robot.universalMoveRobot(aOpMode, -xVelocity, -yVelocity);
+        Thread.sleep(1000);
+        robot.stopBaseMotors(aOpMode);
+
         if ((Math.abs(newMotorPosition - motorPosition) > MECCANUM_WHEEL_ENCODER_MARGIN) ||
                 (Math.abs(startingAngle - endingAngle) > 3)) {
             return new TestResult("Platform " + platformName, true);
