@@ -66,7 +66,7 @@ public class DiagOp extends rr_OpMode {
                 rr_DiagLib.TestResult testResult = robotTest.getAutomaticTest().runTest();
 
                 telemetry.addLine("Test " + (testResult.getTestResult() ? "PASSED" : "FAILED"));
-                if (testResult.getTestResult()) telemetry.addLine(testResult.getTestMessage());
+                if (!testResult.getTestResult()) telemetry.addLine(testResult.getTestMessage());
                 telemetry.update();
 
                 // Adds test result to list to be reviewed at the end
