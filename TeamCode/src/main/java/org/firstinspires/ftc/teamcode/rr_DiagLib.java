@@ -441,7 +441,7 @@ class rr_DiagLib {
             Calendar cal = new GregorianCalendar();
             cal.setTimeInMillis(System.currentTimeMillis());
 
-            robot.setCubeArmPower(aOpMode, .25f);
+            robot.setCubeArmPower(aOpMode, .35f);
 
             // Waits for touch sensor to be pressed while motor is moving
             while (!robot.isCubeLowerLimitPressed() && (System.currentTimeMillis() - cal.getTimeInMillis() < TOUCH_WAIT_TIME)) {
