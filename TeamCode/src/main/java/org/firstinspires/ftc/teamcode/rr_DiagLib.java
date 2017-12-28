@@ -230,13 +230,13 @@ class rr_DiagLib {
 
     private class TestPlatformForward implements AutomaticTest {
         public TestResult runTest() throws InterruptedException {
-            return genericPlatformTest("forwards/backwards", 0.5f, 0.0f);
+            return genericPlatformTest("forwards/backwards", 0.7f, 0.0f);
         }
     }
 
     private class TestPlatformLeft implements AutomaticTest {
         public TestResult runTest() throws InterruptedException {
-            return genericPlatformTest("sideways", 0.0f, 0.5f);
+            return genericPlatformTest("sideways", 0.0f, 0.7f);
         }
     }
 
@@ -415,7 +415,7 @@ class rr_DiagLib {
             Calendar cal = new GregorianCalendar();
             cal.setTimeInMillis(System.currentTimeMillis());
 
-            robot.setCubeArmPower(aOpMode, -.4f);
+            robot.setCubeArmPower(aOpMode, -.5f);
 
             // Waits for touch sensor to be pressed while motor is moving
             while (!robot.isCubeUpperLimitPressed() && (System.currentTimeMillis() - cal.getTimeInMillis() < TOUCH_WAIT_TIME)) {
@@ -438,7 +438,7 @@ class rr_DiagLib {
             Calendar cal = new GregorianCalendar();
             cal.setTimeInMillis(System.currentTimeMillis());
 
-            robot.setCubeArmPower(aOpMode, .35f);
+            robot.setCubeArmPower(aOpMode, .4f);
 
             // Waits for touch sensor to be pressed while motor is moving
             while (!robot.isCubeLowerLimitPressed() && (System.currentTimeMillis() - cal.getTimeInMillis() < TOUCH_WAIT_TIME)) {
