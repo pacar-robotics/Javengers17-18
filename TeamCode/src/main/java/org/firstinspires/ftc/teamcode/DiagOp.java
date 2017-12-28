@@ -81,10 +81,18 @@ public class DiagOp extends rr_OpMode {
     private void printResults() throws InterruptedException {
         telemetry.clearAll();
 
-        for (rr_DiagLib.TestResult result : testResults) {
-            if (!result.getTestResult()) {  // Print message if test failed
-                telemetry.addLine(result.getElementName() + ":");
-                telemetry.addLine("   " + result.getTestMessage());
+        if (testResults.size() == 0) {
+            telemetry.addLine("ALL AUTOMATIC TESTS PASSED");
+        } else {
+            telemetry.addLine("FAILED AUTOMATIC TESTS:");
+            telemetry.addLine();
+
+            for (rr_DiagLib.TestResult result : testResults) {
+                if (!result.getTestResult()) {  // Print message if test failed
+                    telemetry.addLine(result.getElementName() + ":");
+                    telemetry.addLine(result.getTestMessage());
+                    telemetry.addLine();
+                }
             }
         }
         telemetry.update();
