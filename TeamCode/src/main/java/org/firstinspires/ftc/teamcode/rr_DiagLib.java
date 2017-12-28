@@ -135,7 +135,8 @@ class rr_DiagLib {
         robotTests.add(new RobotTest("Relic Arm", TestType.MANUAL, new TestRelicArm()));
         robotTests.add(new RobotTest("Relic Claw", TestType.MANUAL, new TestRelicClaw()));
 
-        robotTests.add(new RobotTest("Jewel Arm", TestType.MANUAL, new TestJewelArm()));
+        robotTests.add(new RobotTest("Jewel Arm and Color Sensors", TestType.AUTOMATIC, new
+                TestJewelArmAndColorSensors()));
         robotTests.add(new RobotTest("Jewel Pusher", TestType.MANUAL, new TestJewelPusher()));
 
         robotTests.add(new RobotTest("Test Connection", TestType.MANUAL, new TestConnection()));
@@ -397,10 +398,31 @@ class rr_DiagLib {
         }
     }
 
-    private class TestJewelArm implements ManualTest {
-        public void runTest() throws InterruptedException {
-            robot.setJewelArmDownPush();
+    private class TestJewelArmAndColorSensors implements AutomaticTest {
+        public TestResult runTest() throws InterruptedException {
+            // Works by attempting to move the servo and comparing sensor values before and after
+            // If the values of the sensors are the same, something is wrong
+
+            float prevLeftColor = robot.getJewelLeftLuminosity(aOpMode),
+                    prevRightColor = robot.getJewelRightLuminosity(aOpMode);
+            robot.setJewelArmDownRead();
+
+            float curLeftColor = robot.getJewelLeftLuminosity(aOpMode),
+                    curRightColor = robot.getJewelRightLuminosity(aOpMode);
             robot.setJewelArmUp();
+
+            if (prevLeftColor == curLeftColor && prevRightColor == curRightColor) {
+                return new TestResult("Jewel Arm and Color Sensors", false,
+                        "Both color values are the same. Sensors and/or servo disconnected");
+            } else if (prevLeftColor == curLeftColor) {
+                return new TestResult("Jewel Arm and Color Sensors", false,
+                        "Left color sensor not working");
+            } else if (prevRightColor == curRightColor) {
+                return new TestResult("Jewel Arm and Color Sensors", false,
+                        "Right color sensor not working");
+            } else {
+                return new TestResult("Jewel Arm and Color Sensors", true);
+            }
         }
     }
 
