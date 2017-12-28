@@ -19,7 +19,7 @@ class rr_DiagLib {
 
     // Used for motor and platform movements
     private final static float MECCANUM_WHEEL_ENCODER_MARGIN = 50;
-    private final static int TOUCH_WAIT_TIME = 5000;    // milliseconds
+    private final static int TOUCH_WAIT_TIME = 2500;    // milliseconds
 
     private rr_Robot robot;
     private rr_OpMode aOpMode;
@@ -438,12 +438,18 @@ class rr_DiagLib {
     //***************** SENSOR TESTS *****************//
 
     private class TestCubeArmUpperLimit implements AutomaticTest {
-        @SuppressWarnings("StatementWithEmptyBody")
         public TestResult runTest() throws InterruptedException {
             Calendar cal = new GregorianCalendar();
             cal.setTimeInMillis(System.currentTimeMillis());
 
-            while (!robot.isCubeUpperLimitPressed() && (System.currentTimeMillis() - cal.getTimeInMillis() < TOUCH_WAIT_TIME)) {}
+            robot.setCubeArmPower(aOpMode, -.25f);
+
+            // Waits for touch sensor to be pressed while motor is moving
+            while (!robot.isCubeUpperLimitPressed() && (System.currentTimeMillis() - cal.getTimeInMillis() < TOUCH_WAIT_TIME)) {
+                aOpMode.idle();
+            }
+
+            robot.setCubeArmPower(aOpMode, 0);
 
             if (robot.isCubeUpperLimitPressed()) {
                 return new TestResult("Cube Arm Upper Limit", true);
@@ -454,12 +460,18 @@ class rr_DiagLib {
     }
 
     private class TestCubeArmLowerLimit implements AutomaticTest {
-        @SuppressWarnings("StatementWithEmptyBody")
         public TestResult runTest() throws InterruptedException {
             Calendar cal = new GregorianCalendar();
             cal.setTimeInMillis(System.currentTimeMillis());
 
-            while (!robot.isCubeLowerLimitPressed() && (System.currentTimeMillis() - cal.getTimeInMillis() < TOUCH_WAIT_TIME)) {}
+            robot.setCubeArmPower(aOpMode, .25f);
+
+            // Waits for touch sensor to be pressed while motor is moving
+            while (!robot.isCubeLowerLimitPressed() && (System.currentTimeMillis() - cal.getTimeInMillis() < TOUCH_WAIT_TIME)) {
+                aOpMode.idle();
+            }
+
+            robot.setCubeArmPower(aOpMode, 0);
 
             if (robot.isCubeLowerLimitPressed()) {
                 return new TestResult("Cube Arm Lower Limit", true);
