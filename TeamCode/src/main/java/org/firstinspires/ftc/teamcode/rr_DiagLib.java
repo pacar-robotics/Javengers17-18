@@ -20,7 +20,7 @@ class rr_DiagLib {
     // Used for motor and platform movements
     private final static float MECCANUM_WHEEL_ENCODER_MARGIN = 50;
     private final static int TOUCH_WAIT_TIME = 2500;    // milliseconds
-    private static final int SERVO_WAIT_TIME = 250;
+    private static final int SERVO_WAIT_TIME = 250;     // milliseconds
 
     private rr_Robot robot;
     private rr_OpMode aOpMode;
@@ -28,7 +28,7 @@ class rr_DiagLib {
 
     rr_DiagLib(rr_OpMode aOpMode, HardwareMap aHwMap) throws InterruptedException {
         robot = new rr_Robot(aOpMode);
-        robot.autonomousInit(aOpMode, aHwMap);
+        robot.autonomousInit(aOpMode, aHwMap);  // teleOpInit ignores some sensors
         this.aOpMode = aOpMode;
 
         robotTests = new ArrayList<>();
@@ -37,6 +37,18 @@ class rr_DiagLib {
 
 
     //***************** INNER CLASSES *****************//
+
+    enum TestType {AUTOMATIC, MANUAL}
+
+    interface AutomaticTest {
+        // Can test themselves and say what went wrong
+        TestResult runTest() throws InterruptedException;
+    }
+
+    interface ManualTest {
+        // Can run themselves but require a user to assess the test
+        void runTest() throws InterruptedException;
+    }
 
     class RobotTest {
         private String testName;
@@ -72,17 +84,6 @@ class rr_DiagLib {
             return testName;
         }
     }
-
-    enum TestType {AUTOMATIC, MANUAL}
-
-    interface AutomaticTest {
-        TestResult runTest() throws InterruptedException;
-    }
-
-    interface ManualTest {
-        void runTest() throws InterruptedException;
-    }
-
 
     class TestResult {
         private String elementName;
@@ -128,10 +129,9 @@ class rr_DiagLib {
         robotTests.add(new RobotTest("Platform Left", TestType.AUTOMATIC, new TestPlatformLeft()));
         robotTests.add(new RobotTest("Platform Diagonal", TestType.AUTOMATIC, new TestPlatformDiagonal()));
 
-        robotTests.add(new RobotTest("Cube Upper Arm Touch", TestType.AUTOMATIC, new TestCubeArmUpperLimit()));
-        robotTests.add(new RobotTest("Cube Lower Arm Touch", TestType.AUTOMATIC, new TestCubeArmLowerLimit()));
-        robotTests.add(new RobotTest("Jewel Arm and Color Sensors", TestType.AUTOMATIC, new
-                TestJewelArmAndColorSensors()));
+        robotTests.add(new RobotTest("Cube Upper Arm Limit", TestType.AUTOMATIC, new TestCubeArmUpperLimit()));
+        robotTests.add(new RobotTest("Cube Lower Arm Limit", TestType.AUTOMATIC, new TestCubeArmLowerLimit()));
+        robotTests.add(new RobotTest("Jewel Arm and Color Sensors", TestType.AUTOMATIC, new TestJewelArmAndColorSensors()));
 
 
         robotTests.add(new RobotTest("Cube Claw", TestType.MANUAL, new TestCubeClaw()));
@@ -159,7 +159,7 @@ class rr_DiagLib {
             robot.testMotor(aOpMode, motor, -0.5f * (defaultDirection ? 1 : -1), 1000);
         }
 
-        // If the positions are different enough, the motor is running and working
+        // If the positions are different enough, the motor and encoder are working
         if (Math.abs(newMotorPosition - motorPosition) > MECCANUM_WHEEL_ENCODER_MARGIN) {
             return new TestResult(motorName, true);
         } else {
@@ -248,7 +248,7 @@ class rr_DiagLib {
 
     private class TestPlatformDiagonal implements AutomaticTest {
         public TestResult runTest() throws InterruptedException {
-// We will move the robot in 4 phases to test all 4 diagonals.
+            // We will move the robot in 4 phases to test all 4 diagonals.
             // We will pick representative motors based on the specific diagonal as all
             //wheels will not rotate with power during diagonal moves.
             // We also check for greater than 3 degree rotation as a means to check if there is platform
@@ -405,36 +405,6 @@ class rr_DiagLib {
         }
     }
 
-    private class TestJewelArmAndColorSensors implements AutomaticTest {
-        public TestResult runTest() throws InterruptedException {
-            // Works by attempting to move the servo and comparing sensor values before and after
-            // If the values of the sensors are the same, something is wrong
-
-            float prevLeftColor = robot.getJewelLeftLuminosity(aOpMode),
-                    prevRightColor = robot.getJewelRightLuminosity(aOpMode);
-            robot.setJewelArmDownRead();
-
-            Thread.sleep(500);  // Give some time to move the arm
-
-            float curLeftColor = robot.getJewelLeftLuminosity(aOpMode),
-                    curRightColor = robot.getJewelRightLuminosity(aOpMode);
-            robot.setJewelArmUp();
-
-            if (prevLeftColor == curLeftColor && prevRightColor == curRightColor) {
-                return new TestResult("Jewel Arm and Color Sensors", false,
-                        "Both color values are the same. Sensors and/or servo disconnected");
-            } else if (prevLeftColor == curLeftColor) {
-                return new TestResult("Jewel Arm and Color Sensors", false,
-                        "Left color sensor not working");
-            } else if (prevRightColor == curRightColor) {
-                return new TestResult("Jewel Arm and Color Sensors", false,
-                        "Right color sensor not working");
-            } else {
-                return new TestResult("Jewel Arm and Color Sensors", true);
-            }
-        }
-    }
-
     private class TestJewelPusher implements ManualTest {
         public void runTest() throws InterruptedException {
             robot.pushRightJewel();
@@ -488,6 +458,36 @@ class rr_DiagLib {
             } else {
                 return new TestResult("Cube Arm Lower Limit", false, "Cube Arm not moving or " +
                         "touch sensor disconnected");
+            }
+        }
+    }
+
+    private class TestJewelArmAndColorSensors implements AutomaticTest {
+        public TestResult runTest() throws InterruptedException {
+            // Works by attempting to move the servo and comparing sensor values before and after
+            // If the values of the sensors are the same, something is wrong
+
+            float prevLeftColor = robot.getJewelLeftLuminosity(aOpMode),
+                    prevRightColor = robot.getJewelRightLuminosity(aOpMode);
+            robot.setJewelArmDownRead();
+
+            Thread.sleep(500);  // Give some time to move the arm
+
+            float curLeftColor = robot.getJewelLeftLuminosity(aOpMode),
+                    curRightColor = robot.getJewelRightLuminosity(aOpMode);
+            robot.setJewelArmUp();
+
+            if (prevLeftColor == curLeftColor && prevRightColor == curRightColor) {
+                return new TestResult("Jewel Arm and Color Sensors", false,
+                        "Both color values are the same. Sensors and/or servo disconnected");
+            } else if (prevLeftColor == curLeftColor) {
+                return new TestResult("Jewel Arm and Color Sensors", false,
+                        "Left color sensor not working");
+            } else if (prevRightColor == curRightColor) {
+                return new TestResult("Jewel Arm and Color Sensors", false,
+                        "Right color sensor not working");
+            } else {
+                return new TestResult("Jewel Arm and Color Sensors", true);
             }
         }
     }
