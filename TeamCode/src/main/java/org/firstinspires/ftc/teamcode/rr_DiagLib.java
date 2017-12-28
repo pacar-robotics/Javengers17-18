@@ -344,7 +344,7 @@ class rr_DiagLib {
                     failedDiagBottomLeftRotation ||
                     failedDiagBottomRightRotation) {
                 return new TestResult("Platform Diagonal", false,
-                        "Detected too much rotation when performing platform diagonal movements" +
+                        "Detected too much rotation when performing platform diagonal movements " +
                                 "[TDLR:" + rotationDiagTopLeftAngle + "]" +
                                 "[TDRR:" + rotationDiagTopRightAngle + "]" +
                                 "[BDLR:" + rotationDiagBottomLeftAngle + "]" +
