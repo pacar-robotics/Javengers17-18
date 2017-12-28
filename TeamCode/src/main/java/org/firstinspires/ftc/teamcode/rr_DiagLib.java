@@ -129,14 +129,14 @@ class rr_DiagLib {
 
         robotTests.add(new RobotTest("Cube Upper Arm Touch", TestType.AUTOMATIC, new TestCubeArmUpperLimit()));
         robotTests.add(new RobotTest("Cube Lower Arm Touch", TestType.AUTOMATIC, new TestCubeArmLowerLimit()));
+        robotTests.add(new RobotTest("Jewel Arm and Color Sensors", TestType.AUTOMATIC, new
+                TestJewelArmAndColorSensors()));
 
 
         robotTests.add(new RobotTest("Cube Claw", TestType.MANUAL, new TestCubeClaw()));
         robotTests.add(new RobotTest("Relic Arm", TestType.MANUAL, new TestRelicArm()));
         robotTests.add(new RobotTest("Relic Claw", TestType.MANUAL, new TestRelicClaw()));
 
-        robotTests.add(new RobotTest("Jewel Arm and Color Sensors", TestType.AUTOMATIC, new
-                TestJewelArmAndColorSensors()));
         robotTests.add(new RobotTest("Jewel Pusher", TestType.MANUAL, new TestJewelPusher()));
 
         robotTests.add(new RobotTest("Test Connection", TestType.MANUAL, new TestConnection()));
