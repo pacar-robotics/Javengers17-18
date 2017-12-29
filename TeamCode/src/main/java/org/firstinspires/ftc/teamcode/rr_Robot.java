@@ -1419,6 +1419,29 @@ public class rr_Robot {
         return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
     }
 
+    public void  turnUsingEncodersWithoutRamped(rr_OpMode aOpMode, float angle, float power, rr_Constants.TurnDirectionEnum TurnDirection)
+            throws InterruptedException {
+
+        //calculate the turn distance to be used in terms of encoder clicks.
+        //for Andymark encoders.
+
+        int turnDistance = (int) (2 * ((ROBOT_TRACK_DISTANCE) * angle
+                * ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION) /
+                (MECANUM_WHEEL_DIAMETER * 360));
+
+        switch (TurnDirection) {
+            case Clockwise:
+                runRobotToPosition(aOpMode, power, power, power, power, turnDistance, -turnDistance, turnDistance, -turnDistance, false);
+                break;
+            case Counterclockwise:
+                runRobotToPosition(aOpMode, power, power, power, power, -turnDistance, turnDistance, -turnDistance, turnDistance, false);
+                break;
+        }
+
+        //wait just a bit for the commands to complete
+        Thread.sleep(50);
+    }
+
     public void turnUsingEncoders(rr_OpMode aOpMode, float angle, float power, rr_Constants.TurnDirectionEnum TurnDirection)
             throws InterruptedException {
 
