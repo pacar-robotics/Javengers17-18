@@ -129,8 +129,8 @@ public class rr_Constants {
     //Mecanum wheel properties
     final static float MECANUM_WHEEL_DIAMETER = 4f;   //in inches
     final static float MECANUM_WHEEL_ENCODER_MARGIN = 50;
-    final static float MECANUM_WHEEL_SIDE_TRACK_DISTANCE = 13.0f;
-    final static float MECANUM_WHEEL_FRONT_TRACK_DISTANCE = 14.5f;
+    final static float MECANUM_WHEEL_SIDE_TRACK_DISTANCE = 7.75f;
+    final static float MECANUM_WHEEL_FRONT_TRACK_DISTANCE = 15.5f;
 
     //Power Factors
     final static float STANDARD_DRIVE_POWER_FACTOR = 0.95f;
