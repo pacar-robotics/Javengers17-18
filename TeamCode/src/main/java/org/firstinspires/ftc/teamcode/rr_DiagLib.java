@@ -491,15 +491,25 @@ class rr_DiagLib {
 
     private class TestConnection implements ManualTest {
         public void runTest() throws InterruptedException {
+            final int DELAY = 150;
             // Shake the robot around to test connections
             robot.universalMoveRobot(aOpMode, 1, 0);
-            Thread.sleep(500);
+            Thread.sleep(DELAY);
             robot.universalMoveRobot(aOpMode, -1, 0);
-            Thread.sleep(500);
+            Thread.sleep(DELAY);
             robot.universalMoveRobot(aOpMode, 1, 1);
-            Thread.sleep(500);
+            Thread.sleep(DELAY);
             robot.universalMoveRobot(aOpMode, -1, -1);
-            Thread.sleep(500);
+            Thread.sleep(DELAY);
+
+            robot.turnUsingEncoders(aOpMode, 180, 1, rr_Constants.TurnDirectionEnum.Clockwise);
+            Thread.sleep(DELAY);
+            robot.turnUsingEncoders(aOpMode, 180, 1, rr_Constants.TurnDirectionEnum.Counterclockwise);
+            Thread.sleep(DELAY);
+            robot.turnUsingEncoders(aOpMode, 90, 1, rr_Constants.TurnDirectionEnum.Clockwise);
+            Thread.sleep(DELAY);
+            robot.turnUsingEncoders(aOpMode, 90, 1, rr_Constants.TurnDirectionEnum.Counterclockwise);
+            Thread.sleep(DELAY);
 
             robot.stopBaseMotors(aOpMode);
         }
