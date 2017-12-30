@@ -230,13 +230,13 @@ class rr_DiagLib {
 
     private class TestPlatformForward implements AutomaticTest {
         public TestResult runTest() throws InterruptedException {
-            return genericPlatformTest("forwards/backwards", 0.7f, 0.0f);
+            return genericPlatformTest("forwards/backwards", 0.0f, 0.7f);
         }
     }
 
     private class TestPlatformLeft implements AutomaticTest {
         public TestResult runTest() throws InterruptedException {
-            return genericPlatformTest("sideways", 0.0f, 0.7f);
+            return genericPlatformTest("sideways", 0.7f, 0.0f);
         }
     }
 
