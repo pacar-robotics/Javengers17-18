@@ -186,9 +186,9 @@ public class rr_TeleLib {
 
     public void processCubeArm() throws InterruptedException {
         if (aOpMode.gamepad1.left_trigger >= TRIGGER_THRESHOLD && !robot.isCubeLowerLimitPressed()) {
-            robot.setCubeArmPower(aOpMode, 0.1f);
+            robot.setCubeArmPower(aOpMode, 0.2f);
         } else if (aOpMode.gamepad1.right_trigger >= TRIGGER_THRESHOLD && !robot.isCubeUpperLimitPressed()) {
-            robot.setCubeArmPower(aOpMode, -0.4f);
+            robot.setCubeArmPower(aOpMode, -0.75f);
         } else {
             robot.setCubeArmPower(aOpMode, 0.0f);
         }
