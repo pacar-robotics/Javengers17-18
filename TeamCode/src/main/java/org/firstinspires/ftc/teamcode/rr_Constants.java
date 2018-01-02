@@ -54,7 +54,7 @@ public class rr_Constants {
     final static float RIGHT_MOTOR_TRIM_FACTOR = 1.0f;
 
     //Cube Arm Constants TODO: CHANGE
-    final static int CUBE_ARM_MAX_DURATION = 5000;
+    final static int CUBE_ARM_MAX_DURATION = 3000;
     final static float CUBE_ARM_UPPER_LIMIT = -2216;
     final static float CUBE_ARM_LOWER_LIMIT = 0;
     final static int ONE_CUBE_ROW_4 = 0; //Highest
@@ -76,6 +76,7 @@ public class rr_Constants {
     final static float CUBE_CLAW_OPEN = 0.63f;
     final static float CUBE_CLAW_ONE_CLOSED = 0.8f;
     final static float CUBE_CLAW_ONE_RELEASE = 0.63f;
+    final static float CUBE_CLAW_INITIALIZE = 0.67f;
     final static float CUBE_CLAW_TWO_CLOSED = 0.8f;
     final static float CUBE_ORIENTATION_HORIZONTAL = 0.225f;
     final static float CUBE_ORIENTATION_VERTICAL = 0.75f;
@@ -88,7 +89,7 @@ public class rr_Constants {
     final static int RELIC_WINCH_UPPER_LIMIT = 11000;           // TODO: Change
     final static float RELIC_ARM_GRAB = 0.3f;
     final static float RELIC_ARM_EXTEND_UP = 0.75f;//feet of robot pointing up
-    final static float RELIC_ARM_EXTEND_IN = 0.0f; //feet of relic toward the robot
+    final static float RELIC_ARM_OPEN_PULSE = 0.25f;
     final static float RELIC_ARM_MAX = 1f;              // TODO: Change
     final static float RELIC_ARM_MIN = .1f;              // TODO: Change
     final static float RELIC_CLAW_OPEN = 0.8f;
@@ -110,7 +111,7 @@ public class rr_Constants {
     final static float JEWEL_COLOR_LUMINOSITY_THRESHOLD = 10f;
     final static float JEWEL_COLOR_DIFFERENTIAL_THRESHOLD = 5f;
 
-    final static int JEWEL_COLOR_FILTER_COUNT = 3; //must be odd
+    final static int JEWEL_COLOR_FILTER_COUNT = 11; //must be odd
 
     // TODO: CHANGE
     final static float BOTTOM_JEWEL_POSITION = 0.9f;
@@ -128,8 +129,8 @@ public class rr_Constants {
     //Mecanum wheel properties
     final static float MECANUM_WHEEL_DIAMETER = 4f;   //in inches
     final static float MECANUM_WHEEL_ENCODER_MARGIN = 50;
-    final static float MECANUM_WHEEL_SIDE_TRACK_DISTANCE = 13.0f;
-    final static float MECANUM_WHEEL_FRONT_TRACK_DISTANCE = 14.5f;
+    final static float MECANUM_WHEEL_SIDE_TRACK_DISTANCE = 7.75f;
+    final static float MECANUM_WHEEL_FRONT_TRACK_DISTANCE = 15.5f;
 
     //Power Factors
     final static float STANDARD_DRIVE_POWER_FACTOR = 0.95f;

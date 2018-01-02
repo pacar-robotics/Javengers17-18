@@ -36,12 +36,11 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_LOWER_POWER;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_MAX_DURATION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_UPPER_LIMIT;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_CLAW_INITIALIZE;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_CLAW_ONE_CLOSED;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_CLAW_ONE_RELEASE;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_CLAW_OPEN;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_CLAW_TWO_CLOSED;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ORIENTATION_HORIZONTAL;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ORIENTATION_VERTICAL;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DEBUG;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DEBUG_LEVEL;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_LEFT_MOTOR;
@@ -69,13 +68,11 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.MOTOR_RAMP_FB_POWER_LO
 import static org.firstinspires.ftc.teamcode.rr_Constants.MOTOR_RAMP_FB_POWER_UPPER_LIMIT;
 import static org.firstinspires.ftc.teamcode.rr_Constants.MOTOR_RAMP_SIDEWAYS_POWER_LOWER_LIMIT;
 import static org.firstinspires.ftc.teamcode.rr_Constants.MOTOR_RAMP_SIDEWAYS_POWER_UPPER_LIMIT;
-import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_EXTEND_IN;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_CLAW_OPEN_STABILIZED;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_GRAB;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_CLAW_CLOSED;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_CLAW_OPEN;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WINCH;
-import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WINCH_MAX_DURATION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RIGHT_MOTOR_TRIM_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.ROBOT_TRACK_DISTANCE;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TURN_POWER_FACTOR;
@@ -172,6 +169,7 @@ public class rr_Robot {
         //Initialize Jewel Arm
         initJewelSensors(aOpMode);
         initJewelServos(aOpMode);
+        setJewelPusherPosition(JEWEL_PUSHER_RIGHT - 0.1f);
 
         aOpMode.DBG("Exiting Robot init");
     }
@@ -200,6 +198,7 @@ public class rr_Robot {
         //Initialize Jewel Arm
         initJewelSensors(aOpMode);
         initJewelServos(aOpMode);
+        setJewelPusherPosition(JEWEL_PUSHER_NEUTRAL);
 
         aOpMode.DBG("Exiting Robot init");
     }
@@ -237,7 +236,7 @@ public class rr_Robot {
     public void initCubeArmServos(rr_OpMode aOpMode) throws InterruptedException {
         cubeClaw = hwMap.get(Servo.class, "servo_cube_claw");
 
-        setCubeClawPosition(CUBE_CLAW_OPEN);
+        setCubeClawPosition(CUBE_CLAW_INITIALIZE);
     }
 
     public void initCubeArmSensors(rr_OpMode aOpMode) throws InterruptedException {
@@ -279,7 +278,6 @@ public class rr_Robot {
         jewelArm = hwMap.get(Servo.class, "servo_jewel_arm");
         jewelPusher = hwMap.get(Servo.class, "servo_jewel_pusher");
 
-        setJewelPusherNeutral();
         setJewelArmUp();
     }
 
@@ -621,10 +619,10 @@ public class rr_Robot {
         motorArray[3].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         Thread.sleep(50);
 
-        fl_Power = (float) (fl_Power + prevFLVelocity) / 2;
-        fr_Power = (float) (fr_Power + prevFRVelocity) / 2;
-        bl_Power = (float) (bl_Power + prevBLVelocity) / 2;
-        br_Power = (float) (br_Power + prevBRVelocity) / 2;
+        fl_Power = (float) (fl_Power + prevFLVelocity) / 2f;
+        fr_Power = (float) (fr_Power + prevFRVelocity) / 2f;
+        bl_Power = (float) (bl_Power + prevBLVelocity) / 2f;
+        br_Power = (float) (br_Power + prevBRVelocity) / 2f;
 
         prevFLVelocity = fl_Power;
         prevFRVelocity = fr_Power;
@@ -956,10 +954,15 @@ public class rr_Robot {
     }
 
     public void initializeCubeArmToIntakePosition(rr_OpMode aOpMode) throws InterruptedException {
+
+        setCubeClawPosition(CUBE_CLAW_INITIALIZE);
+        Thread.sleep(250);
+
         aOpMode.reset_timer_array(GENERIC_TIMER);
-        while (!isCubeLowerLimitPressed() && Math.abs(System.currentTimeMillis() - aOpMode.time_elapsed_array(GENERIC_TIMER)) < CUBE_ARM_MAX_DURATION) {
+        while (!isCubeLowerLimitPressed() && aOpMode.time_elapsed_array(GENERIC_TIMER) < CUBE_ARM_MAX_DURATION) {
             setCubeArmPower(aOpMode, CUBE_ARM_LOWER_POWER);
         }
+        setCubeArmPower(aOpMode, 0);
     }
 
     public void openCubeClawServoOneCube() throws InterruptedException{
@@ -1036,10 +1039,6 @@ public class rr_Robot {
         Thread.sleep(100);
     }
 
-    public void setRelicArmExtend() throws InterruptedException {
-        relicArm.setPosition(RELIC_ARM_EXTEND_IN);
-        Thread.sleep(100);
-    }
 
     public void setRelicArmPosition(float position) {
         relicArm.setPosition(position);
@@ -1111,17 +1110,17 @@ public class rr_Robot {
 
     public void pushRightJewel() throws InterruptedException {
         jewelPusher.setPosition(JEWEL_PUSHER_RIGHT);
-        Thread.sleep(100);
+        Thread.sleep(500);
     }
 
     public void pushLeftJewel() throws InterruptedException {
         jewelPusher.setPosition(JEWEL_PUSHER_LEFT);
-        Thread.sleep(100);
+        Thread.sleep(500);
     }
 
     public void setJewelPusherNeutral() throws InterruptedException {
         jewelPusher.setPosition(JEWEL_PUSHER_NEUTRAL);
-        Thread.sleep(100);
+        Thread.sleep(500);
     }
 
     public void setJewelArmUp() throws InterruptedException {
@@ -1205,34 +1204,20 @@ public class rr_Robot {
 
         for (int i = 0; i < (JEWEL_COLOR_FILTER_COUNT - 1); i++) {
             leftJewelRedArray[i] = leftJewelColorSensor.red();
-
-
-            Thread.sleep(30);
-            if (leftJewelRedArray[i] == 0) {
-
-
             Thread.sleep(30);
             if (leftJewelRedArray[i] == 0) {
                 i--;
             }
-        }}
+        }
 
-        for (int i = 0; i < (JEWEL_COLOR_FILTER_COUNT); i++) {
-            leftJewelBlueArray[i] = leftJewelColorSensor
-                    .blue();
-
+        for (int i = 0; i < (JEWEL_COLOR_FILTER_COUNT - 1); i++) {
+            leftJewelBlueArray[i] = leftJewelColorSensor.blue();
             Thread.sleep(30);
             if (leftJewelBlueArray[i] == 0) {
-
                 i--;
             }
         }
 
-
-        for (int i = 0; i < (JEWEL_COLOR_FILTER_COUNT); i++) {
-            leftJewelBlueArray[i] = leftJewelColorSensor
-                    .blue();
-        }
 
         Arrays.sort(leftJewelBlueArray);
         Arrays.sort(leftJewelRedArray);
@@ -1302,7 +1287,7 @@ public class rr_Robot {
 
     public rr_Constants.JewelColorEnum getJewelLeftColor(rr_OpMode aOpMode) throws InterruptedException {
         Thread.sleep(25);
-        if(getJewelLeftLumunosity(aOpMode)>JEWEL_COLOR_LUMINOSITY_THRESHOLD) {
+        if(getJewelLeftLuminosity(aOpMode)>JEWEL_COLOR_LUMINOSITY_THRESHOLD) {
             if (getFilteredLeftJewelColor(aOpMode) == rr_Constants.FilterJewelColorEnum.RED) {
 
                 aOpMode.telemetryAddData("Color", "Red", "Left Red Detected");
@@ -1322,7 +1307,7 @@ public class rr_Robot {
 
     public rr_Constants.JewelColorEnum getJewelRightColor(rr_OpMode aOpMode) throws InterruptedException {
         Thread.sleep(25);
-        if(getJewelRightLumunosity(aOpMode)>JEWEL_COLOR_LUMINOSITY_THRESHOLD) {
+        if(getJewelRightLuminosity(aOpMode)>JEWEL_COLOR_LUMINOSITY_THRESHOLD) {
             if (getFilteredRightJewelColor(aOpMode) == rr_Constants.FilterJewelColorEnum.RED) {
                 aOpMode.telemetryAddData("Color", "Red", "Right Red Detected");
                 aOpMode.telemetryUpdate();
@@ -1341,11 +1326,11 @@ public class rr_Robot {
         return rr_Constants.JewelColorEnum.UNKNOWN;
     }
 
-    public float getJewelLeftLumunosity(rr_OpMode aOpMode) {
+    public float getJewelLeftLuminosity(rr_OpMode aOpMode) {
         return leftJewelColorSensor.alpha();
     }
     
-    public float getJewelRightLumunosity(rr_OpMode aOpMode) {
+    public float getJewelRightLuminosity(rr_OpMode aOpMode) {
         return rightJewelColorSensor.alpha();
     }
 
@@ -1434,6 +1419,29 @@ public class rr_Robot {
         return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
     }
 
+    public void  turnUsingEncodersWithoutRamped(rr_OpMode aOpMode, float angle, float power, rr_Constants.TurnDirectionEnum TurnDirection)
+            throws InterruptedException {
+
+        //calculate the turn distance to be used in terms of encoder clicks.
+        //for Andymark encoders.
+
+        int turnDistance = (int) (2 * ((ROBOT_TRACK_DISTANCE) * angle
+                * ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION) /
+                (MECANUM_WHEEL_DIAMETER * 360));
+
+        switch (TurnDirection) {
+            case Clockwise:
+                runRobotToPosition(aOpMode, power, power, power, power, turnDistance, -turnDistance, turnDistance, -turnDistance, false);
+                break;
+            case Counterclockwise:
+                runRobotToPosition(aOpMode, power, power, power, power, -turnDistance, turnDistance, -turnDistance, turnDistance, false);
+                break;
+        }
+
+        //wait just a bit for the commands to complete
+        Thread.sleep(50);
+    }
+
     public void turnUsingEncoders(rr_OpMode aOpMode, float angle, float power, rr_Constants.TurnDirectionEnum TurnDirection)
             throws InterruptedException {
 
@@ -1514,4 +1522,6 @@ public class rr_Robot {
         jewelArm.setPosition(position);
         Thread.sleep(100);
     }
+
+
 }

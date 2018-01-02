@@ -61,10 +61,10 @@ public class  TestJewelArm extends rr_OpMode {
 
     private void processColorSensorsTest() throws InterruptedException {
         telemetryAddLine("Left Jewel Color:"+robot.getJewelLeftColor(this).toString());
-        telemetryAddLine("Left Luminosity:"+robot.getJewelLeftLumunosity(this));
+        telemetryAddLine("Left Luminosity:"+robot.getJewelLeftLuminosity(this));
 
         telemetryAddLine("Right Jewel Color:" + robot.getJewelRightColor(this).toString());
-        telemetryAddLine("Right Luminosity:"+robot.getJewelRightLumunosity(this));
+        telemetryAddLine("Right Luminosity:"+robot.getJewelRightLuminosity(this));
 
         telemetryAddLine("Right Jewel Distance:" + robot.getRightJewelRange(this));
         telemetryAddLine("Left Jewel Distance:" + robot.getLeftJewelRange(this));

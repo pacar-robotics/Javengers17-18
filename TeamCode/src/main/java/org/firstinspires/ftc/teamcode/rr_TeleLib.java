@@ -20,11 +20,12 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ORIENTATION_HORIZ
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ORIENTATION_VERTICAL;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DEBUG;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_LEFT_MOTOR;
-import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_EXTEND_IN;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_EXTEND_UP;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_GRAB;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_MAX;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_MIN;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_OPEN_PULSE;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_CLAW_CLOSED;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WINCH_EXTEND_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WINCH_RETRACT_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.SCORING_DRIVE_POWER_FACTOR;
@@ -79,9 +80,11 @@ public class rr_TeleLib {
 
             if (aOpMode.gamepad2.right_stick_x > 0) {
                 //turn clockwise to correct magnitude
+                turnVelocity = (float) getGamePad2RightJoystickPolarMagnitude(aOpMode) * STANDARD_DRIVE_POWER_FACTOR;
                 robot.runMotors(aOpMode, turnVelocity, -turnVelocity, turnVelocity, -turnVelocity);
             } else {
                 //turn counter-clockwise
+                turnVelocity = (float) getGamePad2RightJoystickPolarMagnitude(aOpMode) * STANDARD_DRIVE_POWER_FACTOR;
                 robot.runMotors(aOpMode, -turnVelocity, turnVelocity, -turnVelocity, turnVelocity);
             }
         } else if (Math.abs(aOpMode.gamepad1.left_stick_x) > ANALOG_STICK_THRESHOLD ||
@@ -100,9 +103,11 @@ public class rr_TeleLib {
 
             if (aOpMode.gamepad1.right_stick_x > 0) {
                 //turn clockwise to correct magnitude
+                turnVelocity = (float) getGamePad1RightJoystickPolarMagnitude(aOpMode) * STANDARD_DRIVE_POWER_FACTOR;
                 robot.runRampedMotors(aOpMode, turnVelocity, -turnVelocity, turnVelocity, -turnVelocity);
             } else {
                 //turn counter-clockwise
+                turnVelocity = (float) getGamePad1RightJoystickPolarMagnitude(aOpMode) * STANDARD_DRIVE_POWER_FACTOR;
                 robot.runRampedMotors(aOpMode, -turnVelocity, turnVelocity, -turnVelocity, turnVelocity);
             }
         } else {
@@ -125,8 +130,8 @@ public class rr_TeleLib {
     }
 
     public void processIMUGyroReset() throws InterruptedException {
-        if ((aOpMode.gamepad1.right_stick_button && aOpMode.gamepad1.dpad_up) ||
-                (aOpMode.gamepad2.right_stick_button && aOpMode.gamepad2.dpad_up)) {
+        if ((aOpMode.gamepad1.right_stick_button && aOpMode.gamepad1.left_stick_button) ||
+                (aOpMode.gamepad2.right_stick_button && aOpMode.gamepad2.left_stick_button)) {
             robot.setBoschGyroZeroYaw(aOpMode);
             isGyroCalibrated = true;
         }
@@ -145,13 +150,13 @@ public class rr_TeleLib {
                 //turn counter-clockwise
                 robot.runRampedMotors(aOpMode, -turnVelocity, turnVelocity, -turnVelocity, turnVelocity);
             }
-        } else if (Math.abs(aOpMode.gamepad1.left_stick_x) > ANALOG_STICK_THRESHOLD ||
-                Math.abs(aOpMode.gamepad1.left_stick_y) > ANALOG_STICK_THRESHOLD) {
+        } else if (Math.abs(aOpMode.gamepad2.left_stick_x) > ANALOG_STICK_THRESHOLD ||
+                Math.abs(aOpMode.gamepad2.left_stick_y) > ANALOG_STICK_THRESHOLD) {
             //we are not in deadzone. Driver is pushing left joystick
             //lets make the robot move in chosen angle and magnitude.
             robot.universalMoveRobot(aOpMode,
-                    aOpMode.gamepad1.left_stick_x * STANDARD_DRIVE_POWER_FACTOR,
-                    -aOpMode.gamepad1.left_stick_y * STANDARD_DRIVE_POWER_FACTOR);
+                    aOpMode.gamepad2.left_stick_x * STANDARD_DRIVE_POWER_FACTOR,
+                    -aOpMode.gamepad2.left_stick_y * STANDARD_DRIVE_POWER_FACTOR);
 
         } else if (Math.abs(aOpMode.gamepad1.right_stick_x) > ANALOG_STICK_THRESHOLD) {
 
@@ -192,6 +197,7 @@ public class rr_TeleLib {
         if (aOpMode.gamepad1.x) {
             robot.closeCubeClawServoOneCube();
             robot.moveRobotToPositionFB(aOpMode, -6, 0.5f, false);
+
             robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_MIDDLE, CUBE_ARM_RAISE_POWER);
         }
         if (aOpMode.gamepad1.y) {
@@ -234,11 +240,11 @@ public class rr_TeleLib {
             Thread.sleep(200);
         }
     }
-/*
+
     public void processRelicSlide(){
-        if(Math.abs(aOpMode.gamepad2.right_trigger)>TRIGGER_THRESHOLD && !robot.isRelicUpperLimitPressed()){
+        if(Math.abs(aOpMode.gamepad2.right_trigger)>TRIGGER_THRESHOLD){
             robot.setRelicWinchPower(RELIC_WINCH_EXTEND_POWER_FACTOR);
-        }else if(Math.abs(aOpMode.gamepad2.left_trigger)>TRIGGER_THRESHOLD && !robot.isRelicLowerLimitPressed()){
+        }else if(Math.abs(aOpMode.gamepad2.left_trigger)>TRIGGER_THRESHOLD){
             robot.setRelicWinchPower(RELIC_WINCH_RETRACT_POWER_FACTOR);
         }else{
             //the triggers are in dead zone.
@@ -246,7 +252,7 @@ public class rr_TeleLib {
             robot.setRelicWinchPower(0);
         }
     }
-*/
+
     public void processRelicClaw() throws InterruptedException{
         if(aOpMode.gamepad2.x){
             robot.setRelicClawClosed();
@@ -254,13 +260,15 @@ public class rr_TeleLib {
         if(aOpMode.gamepad2.b){
             robot.setRelicClawOpen();
         }
+        if(aOpMode.gamepad2.y){
+            robot.setRelicClawPosition(RELIC_ARM_OPEN_PULSE);
+            Thread.sleep(250);
+            robot.setRelicClawPosition(RELIC_CLAW_CLOSED);
+        }
     }
     public void processRelicHand() throws InterruptedException{
         if(aOpMode.gamepad2.a){
             robot.setRelicArmPosition(RELIC_ARM_GRAB);
-        }
-        if(aOpMode.gamepad2.left_bumper){
-            robot.setRelicArmPosition(RELIC_ARM_EXTEND_IN);
         }
         if(aOpMode.gamepad2.right_bumper) {
             robot.setRelicArmPosition(RELIC_ARM_EXTEND_UP);
@@ -269,7 +277,7 @@ public class rr_TeleLib {
     }
 
     public void processBalance() throws InterruptedException {
-        if (aOpMode.gamepad2.y) {
+        if (aOpMode.gamepad2.left_bumper) {
             robot.moveRobotToPositionFB(aOpMode, -20.5f, 1.0f, true);
             gamepad2PowerFactor =  0.35f;
         }

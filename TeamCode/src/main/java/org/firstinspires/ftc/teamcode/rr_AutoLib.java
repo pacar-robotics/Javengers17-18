@@ -62,6 +62,8 @@ public class rr_AutoLib {
 
         float columnDistance;
 
+        robot.setJewelPusherNeutral();
+
         robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_MIDDLE, CUBE_ARM_RAISE_POWER);
         robot.openCubeClawServoOneCube();
         robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_GRAB, CUBE_ARM_LOWER_POWER);
@@ -73,10 +75,10 @@ public class rr_AutoLib {
 
         aOpMode.telemetry.setAutoClear(true); //neccessary for using Vuforia
         switch(robot.getPictograph(aOpMode)) {
-            case RIGHT: columnDistance = 33; break; // 7 inches between cube columns
-            case CENTER: columnDistance = 33 - 7; break; // 7 inches between cube columns
-            case LEFT: columnDistance = 33 - 14; break; // 7 inches between cube columns
-            default: columnDistance = 33 - 7; break;
+            case RIGHT: columnDistance = 37; break; // 7 inches between cube columns
+            case CENTER: columnDistance = 37 - 7; break; // 7 inches between cube columns
+            case LEFT: columnDistance = 37 - 14; break; // 7 inches between cube columns
+            default: columnDistance = 37 - 7; break;
         }
         aOpMode.telemetry.setAutoClear(false); //turning off the auto clear afterward
 
@@ -94,15 +96,15 @@ public class rr_AutoLib {
         Thread.sleep(250);
         robot.moveCubeArmToPositionWithLimits(aOpMode, CUBE_ARM_GRAB, CUBE_ARM_LOWER_POWER);
         Thread.sleep(250);
-        universalMoveRobot(aOpMode, 20, .3f, 0, 1500, falseStop, false, 0, 0);
+        universalMoveRobot(aOpMode, -20, .3f, 0, 1500, falseStop, false, 0, 0);
         Thread.sleep(250);
         robot.openCubeClawServoOneCube();
         Thread.sleep(300);
-        universalMoveRobot(aOpMode, 20, .3f, 0, 500, falseStop , false, 0, 0);
+        universalMoveRobot(aOpMode, -20, .3f, 0, 500, falseStop , false, 0, 0);
         Thread.sleep(250);
         moveWheels(aOpMode, 2f, 0.4f, Backward, false);
 
-        universalMoveRobot(aOpMode, 20, .3f, 0, 500, falseStop , false, 0, 0);
+        universalMoveRobot(aOpMode, -20, .3f, 0, 500, falseStop , false, 0, 0);
         Thread.sleep(300);
         moveWheels(aOpMode, 2f, 0.4f, Backward, false);
 
@@ -115,6 +117,8 @@ public class rr_AutoLib {
 
         float columnDistance;
         rr_Constants.DirectionEnum moveDirection;
+
+        robot.setJewelPusherNeutral();
 
         robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_MIDDLE, CUBE_ARM_RAISE_POWER);
         robot.openCubeClawServoOneCube();
@@ -164,9 +168,17 @@ public class rr_AutoLib {
 
         float columnDistance;
 
-        aOpMode.DBG("In Red One Common");
-        adjustJewelArmUsingRange(aOpMode);
+        rr_Constants.DirectionEnum moveDirection;
 
+        robot.setJewelPusherNeutral();
+
+        robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_MIDDLE, CUBE_ARM_RAISE_POWER);
+        robot.openCubeClawServoOneCube();
+        robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_GRAB, CUBE_ARM_LOWER_POWER);
+        robot.closeCubeClawServoOneCube();
+        robot.moveCubeArmToPositionWithTouchLimits(aOpMode, rr_Constants.CUBE_ARM_MIDDLE - 200, CUBE_ARM_RAISE_POWER);
+
+        aOpMode.DBG("In Red One Common");
 
         detectColorAndPushJewel(aOpMode, rr_Constants.AllianceColorEnum.RED);
         Thread.sleep(300);
@@ -229,6 +241,8 @@ public class rr_AutoLib {
         float columnDistance;
         rr_Constants.DirectionEnum moveDirection;
 
+        robot.setJewelPusherNeutral();
+
         robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_MIDDLE, CUBE_ARM_RAISE_POWER);
         robot.openCubeClawServoOneCube();
         robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_GRAB, CUBE_ARM_LOWER_POWER);
@@ -281,7 +295,7 @@ public class rr_AutoLib {
         Thread.sleep(300);
         moveWheels(aOpMode, columnDistance, .4f, moveDirection, true);
         Thread.sleep(300);
-        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 160);
+        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 167);
         Thread.sleep(300);
         universalMoveRobot(aOpMode, 20, .3f, 0, 900, falseStop , false, 0, 0);
         Thread.sleep(250);
@@ -291,25 +305,13 @@ public class rr_AutoLib {
         Thread.sleep(300);
         moveWheels(aOpMode, 2f, 0.4f, Backward, false);
 
-        universalMoveRobot(aOpMode, 20, .3f, 0, 500, falseStop , false, 0, 0);
+        universalMoveRobot(aOpMode, 20, .3f, 0, 1200, falseStop , false, 0, 0);
         Thread.sleep(300);
         moveWheels(aOpMode, 2f, 0.4f, Backward, false);
 
     }
 
-    public void
-
-
-
-
-
-
-
-
-
-
-
-    adjustJewelArmUsingRange(rr_OpMode aOpMode) throws InterruptedException {
+    public void adjustJewelArmUsingRange(rr_OpMode aOpMode) throws InterruptedException {
 
 
         // FOR ROBOT WITH VERTICAL RANGE SENSOR
@@ -400,6 +402,7 @@ public class rr_AutoLib {
                 aOpMode.telemetryAddData("Right color", "Right color", "Right color" + robot.getJewelRightColor(aOpMode));
                 aOpMode.telemetryUpdate();
             }
+
         }
 
         aOpMode.DBG("Exiting blue alliance detect color and push");
@@ -435,6 +438,8 @@ public class rr_AutoLib {
             }
         }
 
+        robot.setJewelPusherNeutral();
+        Thread.sleep(500);
         robot.setJewelArmUp();
         aOpMode.DBG("Exiting detect color and push");
 
