@@ -32,7 +32,7 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_RIGHT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_LOWER_LIMIT;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_LOWER_POWER;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_LOWERING_POWER;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_MAX_DURATION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_UPPER_LIMIT;
@@ -153,8 +153,7 @@ public class rr_Robot {
         //Initialize Drive Motors
         initDriveMotors(aOpMode);
 
-        //Initialize Gyro
-        initIMUGyro(aOpMode);
+       //dont initilize gyro, because we have to adjust position before this operation.
 
         //Initialize Cube Arm
         initCubeArmMotor(aOpMode);
@@ -199,6 +198,9 @@ public class rr_Robot {
         initJewelSensors(aOpMode);
         initJewelServos(aOpMode);
         setJewelPusherPosition(JEWEL_PUSHER_NEUTRAL);
+
+        //initialize Gyro.
+        initIMUGyro(aOpMode);
 
         aOpMode.DBG("Exiting Robot init");
     }
@@ -960,7 +962,7 @@ public class rr_Robot {
 
         aOpMode.reset_timer_array(GENERIC_TIMER);
         while (!isCubeLowerLimitPressed() && aOpMode.time_elapsed_array(GENERIC_TIMER) < CUBE_ARM_MAX_DURATION) {
-            setCubeArmPower(aOpMode, CUBE_ARM_LOWER_POWER);
+            setCubeArmPower(aOpMode, CUBE_ARM_LOWERING_POWER);
         }
         setCubeArmPower(aOpMode, 0);
     }
