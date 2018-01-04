@@ -37,6 +37,8 @@ public class ActionShakeRobotLight extends rr_OpMode {
             lib.moveWheels(this,generateRandomDistance(),
                     0.99f,generateRandomDirection(),false);
             telemetryAddData("Shake count","ShakeCount", "["+ shakeCount++ +"]");
+            telemetryAddData("Shake time","ShakeTime in ms ",
+                    "["+ time_elapsed_array(GENERIC_TIMER) +"]");
             telemetry.update();
         }
 

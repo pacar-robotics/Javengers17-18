@@ -19,6 +19,7 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_CLAW_OPEN;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ORIENTATION_HORIZONTAL;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ORIENTATION_VERTICAL;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DEBUG;
+import static org.firstinspires.ftc.teamcode.rr_Constants.FIELD_ORIENTED_DRIVE_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_EXTEND_UP;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_GRAB;
@@ -42,6 +43,8 @@ public class rr_TeleLib {
     public float gamepad2PowerFactor = STANDARD_DRIVE_POWER_FACTOR;
 
     private boolean isGyroCalibrated = false;
+    private float turnVelocity=0.0f;
+    private double polarMagnitude=0.0f;
 
     public rr_TeleLib(rr_OpMode aOpMode, HardwareMap aHwMap) throws InterruptedException {
         robot = new rr_Robot(aOpMode);
@@ -75,7 +78,7 @@ public class rr_TeleLib {
 
         } else if (Math.abs(aOpMode.gamepad2.right_stick_x) > ANALOG_STICK_THRESHOLD) {
 
-            //we are not in deadzone. Driver is pushing right joystick, sideways
+            //we are not in deadzone. Driver is pushing right joystick, sideways. We need to turn.
             float turnVelocity = (float) getGamePad2RightJoystickPolarMagnitude(aOpMode) * gamepad2PowerFactor;
 
             if (aOpMode.gamepad2.right_stick_x > 0) {
@@ -91,23 +94,35 @@ public class rr_TeleLib {
                 Math.abs(aOpMode.gamepad1.left_stick_y) > ANALOG_STICK_THRESHOLD) {
             //we are not in deadzone. Driver is pushing left joystick
             //lets make the robot move in chosen angle and magnitude.
-            robot.universalMoveRobot(aOpMode, getXVelocity(getGamePad1LeftJoystickPolarMagnitude(aOpMode) * STANDARD_DRIVE_POWER_FACTOR,
+            //add to  previous turnvelocity and divide by 2, to smoothen out the turn response.
+            //moves will start out slow then build.
+            //moves will stop rapidly as the joystick when released will be be read as less than ANALOG_STICK_THRESHOLD
+            //and motors will stop.
+
+            polarMagnitude=(polarMagnitude+(getGamePad1LeftJoystickPolarMagnitude(aOpMode)*FIELD_ORIENTED_DRIVE_POWER_FACTOR))/2;
+            robot.universalMoveRobot(aOpMode,
+                    getXVelocity(polarMagnitude,
                     getGamePad1LeftJoystickPolarAngle(aOpMode) - robot.getBoschGyroSensorHeading(aOpMode)),
-                    getYVelocity(getGamePad1LeftJoystickPolarMagnitude(aOpMode) * STANDARD_DRIVE_POWER_FACTOR,
+                    getYVelocity(polarMagnitude,
                             getGamePad1LeftJoystickPolarAngle(aOpMode) - robot.getBoschGyroSensorHeading(aOpMode)));
 
         } else if (Math.abs(aOpMode.gamepad1.right_stick_x) > ANALOG_STICK_THRESHOLD) {
 
-            //we are not in deadzone. Driver is pushing right joystick, sideways
-            float turnVelocity = (float) getGamePad1RightJoystickPolarMagnitude(aOpMode) * STANDARD_DRIVE_POWER_FACTOR;
+            //we are not in deadzone. Driver is pushing right joystick, sideways. We need to turn.
+            //add to  previous turnvelocity and divide by 2, to smoothen out the turn response.
+            //turns will start out slow then build.
+            //turns will stop rapidly as the joystick when released will be be read as less than ANALOG_STICK_THRESHOLD
+            //and motors will stop.
+
+            turnVelocity = (turnVelocity+
+                    (float) getGamePad1RightJoystickPolarMagnitude(aOpMode) * FIELD_ORIENTED_DRIVE_POWER_FACTOR)/2;
+
 
             if (aOpMode.gamepad1.right_stick_x > 0) {
                 //turn clockwise to correct magnitude
-                turnVelocity = (float) getGamePad1RightJoystickPolarMagnitude(aOpMode) * STANDARD_DRIVE_POWER_FACTOR;
                 robot.runRampedMotors(aOpMode, turnVelocity, -turnVelocity, turnVelocity, -turnVelocity);
             } else {
                 //turn counter-clockwise
-                turnVelocity = (float) getGamePad1RightJoystickPolarMagnitude(aOpMode) * STANDARD_DRIVE_POWER_FACTOR;
                 robot.runRampedMotors(aOpMode, -turnVelocity, turnVelocity, -turnVelocity, turnVelocity);
             }
         } else {
@@ -188,7 +203,7 @@ public class rr_TeleLib {
         if (aOpMode.gamepad1.left_trigger >= TRIGGER_THRESHOLD && !robot.isCubeLowerLimitPressed()) {
             robot.setCubeArmPower(aOpMode, 0.1f);
         } else if (aOpMode.gamepad1.right_trigger >= TRIGGER_THRESHOLD && !robot.isCubeUpperLimitPressed()) {
-            robot.setCubeArmPower(aOpMode, -0.4f);
+            robot.setCubeArmPower(aOpMode, CUBE_ARM_RAISE_POWER);
         } else {
             robot.setCubeArmPower(aOpMode, 0.0f);
         }
