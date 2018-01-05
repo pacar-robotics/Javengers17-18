@@ -8,7 +8,7 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_RIGHT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_GRAB;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_LOWER_POWER;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_LOWERING_POWER;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_MIDDLE;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_RAISE_POWER;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_SAFE_POS;

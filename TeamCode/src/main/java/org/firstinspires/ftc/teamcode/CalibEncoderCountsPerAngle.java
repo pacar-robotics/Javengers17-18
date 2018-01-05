@@ -7,7 +7,7 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.*;
  * Created by Kenneth on 12/29/2017.
  */
 
-@Autonomous(name = "Calibrate Encoder Turning", group = "Calibration")
+@Autonomous(name = "Calibrate Encoder Turn Angle", group = "Calibration")
 public class CalibEncoderCountsPerAngle extends rr_OpMode{
 
     rr_AutoLib rrAutoLib; //initializes bosch gyro heading to 0
