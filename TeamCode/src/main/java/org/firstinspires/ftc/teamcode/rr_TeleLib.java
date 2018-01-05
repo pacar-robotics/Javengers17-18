@@ -21,6 +21,7 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ORIENTATION_VERTI
 import static org.firstinspires.ftc.teamcode.rr_Constants.DEBUG;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FIELD_ORIENTED_DRIVE_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_LEFT_MOTOR;
+import static org.firstinspires.ftc.teamcode.rr_Constants.MOTOR_LOWER_POWER_THRESHOLD;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_EXTEND_UP;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_GRAB;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_MAX;
@@ -99,7 +100,13 @@ public class rr_TeleLib {
             //moves will stop rapidly as the joystick when released will be be read as less than ANALOG_STICK_THRESHOLD
             //and motors will stop.
 
-            polarMagnitude=(polarMagnitude+(getGamePad1LeftJoystickPolarMagnitude(aOpMode)*FIELD_ORIENTED_DRIVE_POWER_FACTOR))/2;
+
+
+
+            polarMagnitude=
+                    clipAndScaleMagnitude(polarMagnitude+(getGamePad1LeftJoystickPolarMagnitude(aOpMode)*FIELD_ORIENTED_DRIVE_POWER_FACTOR))/2;
+
+
             robot.universalMoveRobot(aOpMode,
                     getXVelocity(polarMagnitude,
                     getGamePad1LeftJoystickPolarAngle(aOpMode) - robot.getBoschGyroSensorHeading(aOpMode)),
@@ -200,13 +207,7 @@ public class rr_TeleLib {
     }
 
     public void processCubeArm() throws InterruptedException {
-        if (aOpMode.gamepad1.left_trigger >= TRIGGER_THRESHOLD && !robot.isCubeLowerLimitPressed()) {
-            robot.setCubeArmPower(aOpMode, 0.1f);
-        } else if (aOpMode.gamepad1.right_trigger >= TRIGGER_THRESHOLD && !robot.isCubeUpperLimitPressed()) {
-            robot.setCubeArmPower(aOpMode, CUBE_ARM_RAISE_POWER);
-        } else {
-            robot.setCubeArmPower(aOpMode, 0.0f);
-        }
+
 
 
         if (aOpMode.gamepad1.x) {
@@ -226,14 +227,17 @@ public class rr_TeleLib {
             robot.moveRobotToPositionFB(aOpMode, -6, 0.25f, false);
             robot.closeCubeClawServoOneCube();
             cubeClawPos = CUBE_CLAW_ONE_CLOSED;
-        }
-        if (aOpMode.gamepad1.left_trigger > TRIGGER_THRESHOLD && aOpMode.gamepad1.a) {
-            robot.setMotorMode(aOpMode, CUBE_ARM, DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            Thread.sleep(250);
-            robot.setMotorMode(aOpMode, CUBE_ARM, DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         } else if (aOpMode.gamepad1.a) {
             robot.openCubeClawServoOneCube();
             robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_GRAB, CUBE_ARM_RAISE_POWER);
+        }
+
+        if (aOpMode.gamepad1.left_trigger >= TRIGGER_THRESHOLD && !robot.isCubeLowerLimitPressed()) {
+            robot.setCubeArmPower(aOpMode, 0.1f);
+        } else if (aOpMode.gamepad1.right_trigger >= TRIGGER_THRESHOLD && !robot.isCubeUpperLimitPressed()) {
+            robot.setCubeArmPower(aOpMode, CUBE_ARM_RAISE_POWER);
+        } else {
+            robot.setCubeArmPower(aOpMode, 0.0f);
         }
     }
 
@@ -435,5 +439,13 @@ public class rr_TeleLib {
 
     public double getYVelocity(double polarMagnitude, double polarAngle) {
         return polarMagnitude * Math.cos(Math.toRadians(polarAngle));
+    }
+
+    public double clipAndScaleMagnitude(double magnitude){
+        magnitude=magnitude-ANALOG_STICK_THRESHOLD+MOTOR_LOWER_POWER_THRESHOLD;
+        if(magnitude>1.0f){
+            magnitude=1.0f;
+        }
+        return magnitude;
     }
 }

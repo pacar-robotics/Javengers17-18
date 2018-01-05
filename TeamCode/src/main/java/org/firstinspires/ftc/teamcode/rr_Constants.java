@@ -8,7 +8,7 @@ package org.firstinspires.ftc.teamcode;
 public class rr_Constants {
 
     //Constants for Debugging
-    final static boolean DEBUG = true;
+    final static boolean DEBUG = false;
     final static int DEBUG_LEVEL = 0;
     final static long DEBUG_MESSAGE_DISPLAY_TIME = 10; //time to flash DEBUG message on telemetry
     // setting DEBUG_AUTO_CLEAR to false interferes with Vuforia code
@@ -31,7 +31,7 @@ public class rr_Constants {
     final static int MOTOR_ENCODER_THRESHOLD = 50;
 
     //Motor constants
-    final static float MOTOR_LOWER_POWER_THRESHOLD = 0.20f;
+    final static float MOTOR_LOWER_POWER_THRESHOLD = 0.15f;
     final static int MAX_MOTOR_LOOP_TIME = 10000;     //max time to wait in a tight loop
     final static int ENCODED_MOTOR_STALL_TIME_DELTA = 200; //time to wait in stall check code
 
