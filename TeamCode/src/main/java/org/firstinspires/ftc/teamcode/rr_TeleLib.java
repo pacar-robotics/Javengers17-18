@@ -46,6 +46,7 @@ public class rr_TeleLib {
     private boolean isGyroCalibrated = false;
     private float turnVelocity=0.0f;
     private double polarMagnitude=0.0f;
+    private double cubeArmPower=0.0f;
 
     public rr_TeleLib(rr_OpMode aOpMode, HardwareMap aHwMap) throws InterruptedException {
         robot = new rr_Robot(aOpMode);
@@ -102,9 +103,10 @@ public class rr_TeleLib {
 
 
 
-
+            //adjust the power to address the effect of checking for deadzone.
+            //if the clip and scale operation is not performed, the starting
             polarMagnitude=
-                    clipAndScaleMagnitude(polarMagnitude+(getGamePad1LeftJoystickPolarMagnitude(aOpMode)*FIELD_ORIENTED_DRIVE_POWER_FACTOR))/2;
+                    clipAndScaleTranslationPower(polarMagnitude+(getGamePad1LeftJoystickPolarMagnitude(aOpMode)*FIELD_ORIENTED_DRIVE_POWER_FACTOR))/2;
 
 
             robot.universalMoveRobot(aOpMode,
@@ -235,7 +237,10 @@ public class rr_TeleLib {
         if (aOpMode.gamepad1.left_trigger >= TRIGGER_THRESHOLD && !robot.isCubeLowerLimitPressed()) {
             robot.setCubeArmPower(aOpMode, 0.1f);
         } else if (aOpMode.gamepad1.right_trigger >= TRIGGER_THRESHOLD && !robot.isCubeUpperLimitPressed()) {
-            robot.setCubeArmPower(aOpMode, CUBE_ARM_RAISE_POWER);
+           cubeArmPower= - clipAndScaleCubeArmPower(((-cubeArmPower+aOpMode.gamepad1.right_trigger)/2));
+
+            robot.setCubeArmPower(aOpMode, (float) cubeArmPower);
+            //robot.setCubeArmPower(aOpMode, (float) CUBE_ARM_RAISE_POWER);
         } else {
             robot.setCubeArmPower(aOpMode, 0.0f);
         }
@@ -441,11 +446,22 @@ public class rr_TeleLib {
         return polarMagnitude * Math.cos(Math.toRadians(polarAngle));
     }
 
-    public double clipAndScaleMagnitude(double magnitude){
+    public double clipAndScaleTranslationPower(double magnitude){
         magnitude=magnitude-ANALOG_STICK_THRESHOLD+MOTOR_LOWER_POWER_THRESHOLD;
         if(magnitude>1.0f){
             magnitude=1.0f;
         }
+        return magnitude;
+    }
+    public double clipAndScaleCubeArmPower(double magnitude){
+        magnitude=magnitude-TRIGGER_THRESHOLD+MOTOR_LOWER_POWER_THRESHOLD;
+        if(magnitude>1.0f){
+            magnitude=1.0f;
+        }else if(magnitude<MOTOR_LOWER_POWER_THRESHOLD){
+            magnitude=CUBE_ARM_RAISE_POWER;
+        }
+
+        aOpMode.telemetryAddData("Cube Arm Power","cubeArmPower", "["+magnitude + "]");
         return magnitude;
     }
 }
