@@ -153,7 +153,9 @@ public class rr_Robot {
         //Initialize Drive Motors
         initDriveMotors(aOpMode);
 
-       //dont initilize gyro, because we have to adjust position before this operation.
+        //Initialize Gyro
+        initIMUGyro(aOpMode);
+
 
         //Initialize Cube Arm
         initCubeArmMotor(aOpMode);
@@ -1133,11 +1135,11 @@ public class rr_Robot {
 
 
     public void setJewelArmDownPush() throws InterruptedException {
-        setJewelArmPosition(aOpMode, JEWEL_ARM_DOWN_PUSH);
+        setJewelArmPosition(JEWEL_ARM_DOWN_PUSH);
     }
 
     public void setJewelArmDownRead() throws InterruptedException {
-        setJewelArmPosition(aOpMode, JEWEL_ARM_DOWN_READ);
+        setJewelArmPosition(JEWEL_ARM_DOWN_READ);
 
         setJewelArmPosition(JEWEL_ARM_DOWN_READ);
 
@@ -1332,7 +1334,7 @@ public class rr_Robot {
     public float getJewelLeftLuminosity(rr_OpMode aOpMode) {
         return leftJewelColorSensor.alpha();
     }
-    
+
     public float getJewelRightLuminosity(rr_OpMode aOpMode) {
         return rightJewelColorSensor.alpha();
     }
