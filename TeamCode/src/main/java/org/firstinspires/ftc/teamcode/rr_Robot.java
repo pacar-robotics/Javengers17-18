@@ -32,7 +32,7 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_RIGHT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_LOWER_LIMIT;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_LOWER_POWER;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_LOWERING_POWER;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_MAX_DURATION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_UPPER_LIMIT;
@@ -156,6 +156,7 @@ public class rr_Robot {
         //Initialize Gyro
         initIMUGyro(aOpMode);
 
+
         //Initialize Cube Arm
         initCubeArmMotor(aOpMode);
 
@@ -169,7 +170,8 @@ public class rr_Robot {
         //Initialize Jewel Arm
         initJewelSensors(aOpMode);
         initJewelServos(aOpMode);
-        setJewelPusherPosition(JEWEL_PUSHER_RIGHT - 0.1f);
+
+        initIMUGyro(aOpMode);
 
         aOpMode.DBG("Exiting Robot init");
     }
@@ -198,7 +200,9 @@ public class rr_Robot {
         //Initialize Jewel Arm
         initJewelSensors(aOpMode);
         initJewelServos(aOpMode);
-        setJewelPusherPosition(JEWEL_PUSHER_NEUTRAL);
+
+        //initialize Gyro.
+        initIMUGyro(aOpMode);
 
         aOpMode.DBG("Exiting Robot init");
     }
@@ -278,6 +282,7 @@ public class rr_Robot {
         jewelArm = hwMap.get(Servo.class, "servo_jewel_arm");
         jewelPusher = hwMap.get(Servo.class, "servo_jewel_pusher");
 
+        setJewelPusherPosition(JEWEL_PUSHER_RIGHT - 0.1f);
         setJewelArmUp();
     }
 
@@ -960,7 +965,7 @@ public class rr_Robot {
 
         aOpMode.reset_timer_array(GENERIC_TIMER);
         while (!isCubeLowerLimitPressed() && aOpMode.time_elapsed_array(GENERIC_TIMER) < CUBE_ARM_MAX_DURATION) {
-            setCubeArmPower(aOpMode, CUBE_ARM_LOWER_POWER);
+            setCubeArmPower(aOpMode, CUBE_ARM_LOWERING_POWER);
         }
         setCubeArmPower(aOpMode, 0);
     }
@@ -1321,7 +1326,8 @@ public class rr_Robot {
             }
         }
 
-        aOpMode.DBG("Right Color Unknown");
+        aOpMode.telemetryAddData("Color", "Unknown", "No Color Detected");
+        aOpMode.telemetryUpdate();
         return rr_Constants.JewelColorEnum.UNKNOWN;
     }
 
@@ -1416,6 +1422,29 @@ public class rr_Robot {
 
     String formatDegrees(double degrees) {
         return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
+    }
+
+    public void  turnUsingEncodersWithoutRamped(rr_OpMode aOpMode, float angle, float power, rr_Constants.TurnDirectionEnum TurnDirection)
+            throws InterruptedException {
+
+        //calculate the turn distance to be used in terms of encoder clicks.
+        //for Andymark encoders.
+
+        int turnDistance = (int) (2 * ((ROBOT_TRACK_DISTANCE) * angle
+                * ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION) /
+                (MECANUM_WHEEL_DIAMETER * 360));
+
+        switch (TurnDirection) {
+            case Clockwise:
+                runRobotToPosition(aOpMode, power, power, power, power, turnDistance, -turnDistance, turnDistance, -turnDistance, false);
+                break;
+            case Counterclockwise:
+                runRobotToPosition(aOpMode, power, power, power, power, -turnDistance, turnDistance, -turnDistance, turnDistance, false);
+                break;
+        }
+
+        //wait just a bit for the commands to complete
+        Thread.sleep(50);
     }
 
     public void turnUsingEncoders(rr_OpMode aOpMode, float angle, float power, rr_Constants.TurnDirectionEnum TurnDirection)
