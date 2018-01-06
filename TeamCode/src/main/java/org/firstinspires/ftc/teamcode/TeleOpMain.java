@@ -17,7 +17,6 @@ public class TeleOpMain extends rr_OpMode {
 
         telemetry.setAutoClear(true);
 
-        lib.robot.setJewelPusherNeutral();
         lib.initializeCubeArm(this);
 
         while (opModeIsActive()) {

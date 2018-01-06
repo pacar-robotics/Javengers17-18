@@ -103,7 +103,7 @@ public class rr_Constants {
     final static float JEWEL_PUSHER_LEFT = 0.90f; // make bigger
     final static float JEWEL_PUSHER_RIGHT = 0.10f; // make smaller
     final static float JEWEL_PUSHER_NEUTRAL = 0.50f;
-    final static float JEWEL_ARM_UP = 0.27f;
+    final static float JEWEL_ARM_UP = 0.25f;
     final static float JEWEL_ARM_DOWN_READ = .89f;
     final static float JEWEL_ARM_DOWN_PUSH = .92f;
     static final double JEWEL_ARM_INCREMENT = 0.01;     // amount to slew servo each cycle

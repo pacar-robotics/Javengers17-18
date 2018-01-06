@@ -64,9 +64,6 @@ public class rr_AutoLib {
 
         robot.setJewelPusherNeutral();
 
-        robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_MIDDLE, CUBE_ARM_RAISE_POWER);
-        robot.openCubeClawServoOneCube();
-        robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_GRAB, CUBE_ARM_LOWERING_POWER);
         robot.closeCubeClawServoOneCube();
         robot.moveCubeArmToPositionWithTouchLimits(aOpMode, rr_Constants.CUBE_ARM_MIDDLE, CUBE_ARM_RAISE_POWER);
 
@@ -120,9 +117,6 @@ public class rr_AutoLib {
 
         robot.setJewelPusherNeutral();
 
-        robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_MIDDLE, CUBE_ARM_RAISE_POWER);
-        robot.openCubeClawServoOneCube();
-        robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_GRAB, CUBE_ARM_LOWERING_POWER);
         robot.closeCubeClawServoOneCube();
         robot.moveCubeArmToPositionWithTouchLimits(aOpMode, rr_Constants.CUBE_ARM_MIDDLE, CUBE_ARM_RAISE_POWER);
 
@@ -172,9 +166,6 @@ public class rr_AutoLib {
 
         robot.setJewelPusherNeutral();
 
-        robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_MIDDLE, CUBE_ARM_RAISE_POWER);
-        robot.openCubeClawServoOneCube();
-        robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_GRAB, CUBE_ARM_LOWERING_POWER);
         robot.closeCubeClawServoOneCube();
         robot.moveCubeArmToPositionWithTouchLimits(aOpMode, rr_Constants.CUBE_ARM_MIDDLE - 200, CUBE_ARM_RAISE_POWER);
 
@@ -243,9 +234,6 @@ public class rr_AutoLib {
 
         robot.setJewelPusherNeutral();
 
-        robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_MIDDLE, CUBE_ARM_RAISE_POWER);
-        robot.openCubeClawServoOneCube();
-        robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_GRAB, CUBE_ARM_LOWERING_POWER);
         robot.closeCubeClawServoOneCube();
         robot.moveCubeArmToPositionWithTouchLimits(aOpMode, rr_Constants.CUBE_ARM_MIDDLE - 200, CUBE_ARM_RAISE_POWER);
 

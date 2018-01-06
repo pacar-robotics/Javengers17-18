@@ -169,6 +169,8 @@ public class rr_Robot {
         initJewelSensors(aOpMode);
         initJewelServos(aOpMode);
 
+        initIMUGyro(aOpMode);
+
         aOpMode.DBG("Exiting Robot init");
     }
 
