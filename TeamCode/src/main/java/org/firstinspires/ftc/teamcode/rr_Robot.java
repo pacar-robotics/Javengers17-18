@@ -168,7 +168,6 @@ public class rr_Robot {
         //Initialize Jewel Arm
         initJewelSensors(aOpMode);
         initJewelServos(aOpMode);
-        setJewelPusherPosition(JEWEL_PUSHER_RIGHT - 0.1f);
 
         aOpMode.DBG("Exiting Robot init");
     }
@@ -197,7 +196,6 @@ public class rr_Robot {
         //Initialize Jewel Arm
         initJewelSensors(aOpMode);
         initJewelServos(aOpMode);
-        setJewelPusherPosition(JEWEL_PUSHER_NEUTRAL);
 
         //initialize Gyro.
         initIMUGyro(aOpMode);
@@ -280,6 +278,7 @@ public class rr_Robot {
         jewelArm = hwMap.get(Servo.class, "servo_jewel_arm");
         jewelPusher = hwMap.get(Servo.class, "servo_jewel_pusher");
 
+        setJewelPusherPosition(JEWEL_PUSHER_RIGHT - 0.1f);
         setJewelArmUp();
     }
 

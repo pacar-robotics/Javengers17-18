@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp(name = "TeleOp Main", group = "TeleOp")
-public class TeleOpMaryland extends rr_OpMode {
+public class TeleOpMain extends rr_OpMode {
     rr_TeleLib lib;
 
     @Override
@@ -17,6 +17,7 @@ public class TeleOpMaryland extends rr_OpMode {
 
         telemetry.setAutoClear(true);
 
+        lib.robot.setJewelPusherNeutral();
         lib.initializeCubeArm(this);
 
         while (opModeIsActive()) {
