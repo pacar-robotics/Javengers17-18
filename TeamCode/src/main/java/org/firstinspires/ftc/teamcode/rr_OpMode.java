@@ -27,7 +27,9 @@ public abstract class rr_OpMode extends LinearOpMode {
 
     public void telemetryAddLine(String caption) {
         telemetry.addLine(caption);
+
     }
+
 
     public void telemetryUpdate() {
         telemetry.update();

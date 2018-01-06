@@ -31,7 +31,7 @@ public class rr_Constants {
     final static int MOTOR_ENCODER_THRESHOLD = 50;
 
     //Motor constants
-    final static float MOTOR_LOWER_POWER_THRESHOLD = 0.20f;
+    final static float MOTOR_LOWER_POWER_THRESHOLD = 0.15f;
     final static int MAX_MOTOR_LOOP_TIME = 10000;     //max time to wait in a tight loop
     final static int ENCODED_MOTOR_STALL_TIME_DELTA = 200; //time to wait in stall check code
 
@@ -70,10 +70,9 @@ public class rr_Constants {
     final static int CUBE_ARM_TOP = -1800;
     final static int CUBE_ARM_SAFE_POS = -700;
     final static float CUBE_ARM_SCORING_POWER = .5f;
-    final static float CUBE_ARM_POWER_FACTOR = 0.20f;
-    final static float CUBE_ARM_RAISE_POWER = -0.4f;
-    final static float CUBE_ARM_LOWER_POWER = 0.1f;
-
+    final static float CUBE_ARM_POWER_FACTOR = 0.75f;
+    final static float CUBE_ARM_RAISE_POWER = -0.75f;
+    final static float CUBE_ARM_LOWERING_POWER = 0.2f;
     final static float CUBE_CLAW_OPEN = 0.63f;
     final static float CUBE_CLAW_ONE_CLOSED = 0.9f;
     final static float CUBE_CLAW_ONE_RELEASE = 0.63f;
@@ -104,7 +103,7 @@ public class rr_Constants {
     final static float JEWEL_PUSHER_LEFT = 0.90f; // make bigger
     final static float JEWEL_PUSHER_RIGHT = 0.10f; // make smaller
     final static float JEWEL_PUSHER_NEUTRAL = 0.50f;
-    final static float JEWEL_ARM_UP = 0.34f;
+    final static float JEWEL_ARM_UP = 0.25f;
     final static float JEWEL_ARM_DOWN_READ = .89f;
     final static float JEWEL_ARM_DOWN_PUSH = .92f;
     static final double JEWEL_ARM_INCREMENT = 0.01;     // amount to slew servo each cycle
@@ -118,6 +117,7 @@ public class rr_Constants {
     final static float BOTTOM_JEWEL_POSITION = 0.9f;
 
 
+
     //index of motors
     final static int FRONT_LEFT_MOTOR = 0;
     final static int FRONT_RIGHT_MOTOR = 1;
@@ -129,11 +129,12 @@ public class rr_Constants {
     //Mecanum wheel properties
     final static float MECANUM_WHEEL_DIAMETER = 4f;   //in inches
     final static float MECANUM_WHEEL_ENCODER_MARGIN = 50;
-    final static float MECANUM_WHEEL_SIDE_TRACK_DISTANCE = 13.0f;
-    final static float MECANUM_WHEEL_FRONT_TRACK_DISTANCE = 14.5f;
+    final static float MECANUM_WHEEL_SIDE_TRACK_DISTANCE = 8.25f;
+    final static float MECANUM_WHEEL_FRONT_TRACK_DISTANCE = 15.5f;
 
     //Power Factors
     final static float STANDARD_DRIVE_POWER_FACTOR = 0.95f;
+    final static float FIELD_ORIENTED_DRIVE_POWER_FACTOR = 0.95f;
     final static float TURN_POWER_FACTOR = 0.5f;
     final static float SCORING_DRIVE_POWER_FACTOR = 0.25f;  //TODO: CHANGE LATER
 
