@@ -23,8 +23,7 @@ public class  TestJewelArm extends rr_OpMode {
 
         while (opModeIsActive()) {
             processJewelArmTest();
-            processJewelPusherTest();
-            processColorSensorsTest();
+            processJewelKnockerTest();
 
             telemetry.addLine("Jewel Arm Position: " + armPosition);
             telemetry.addLine("Jewel Knocker Position: " + knockerPosition);
@@ -50,7 +49,7 @@ public class  TestJewelArm extends rr_OpMode {
         robot.setJewelArmPosition(this, armPosition);
     }
 
-    private void processJewelPusherTest() throws InterruptedException {
+    private void processJewelKnockerTest() throws InterruptedException {
         if (gamepad1.x) {
             knockerPosition += .01f;
         } else if (gamepad1.y) {
@@ -71,7 +70,7 @@ public class  TestJewelArm extends rr_OpMode {
         telemetryAddLine("Left Jewel Distance:" + robot.getLeftJewelRange(this));
 
         telemetry.update();
+
     }
 }
-
 

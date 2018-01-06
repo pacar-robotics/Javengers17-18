@@ -6,6 +6,7 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_GRAB;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_CLAW_OPEN;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ORIENTATION_HORIZONTAL;
+
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_CLAW_ONE_RELEASE;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRIGGER_THRESHOLD;
 
@@ -14,6 +15,7 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.TRIGGER_THRESHOLD;
 public class TestCubeArm extends rr_OpMode {
 
     rr_Robot robot;
+
     
     float cubeClawPosition = CUBE_CLAW_OPEN;
     float cubeArmPosition = CUBE_ARM_GRAB;
