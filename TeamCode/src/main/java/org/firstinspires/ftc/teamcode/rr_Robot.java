@@ -30,17 +30,6 @@ import java.util.Locale;
 import static org.firstinspires.ftc.teamcode.rr_Constants.ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_RIGHT_MOTOR;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_LOWER_LIMIT;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_LOWERING_POWER;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_MAX_DURATION;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_POWER_FACTOR;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_UPPER_LIMIT;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_CLAW_INITIALIZE;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_CLAW_ONE_CLOSED;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_CLAW_ONE_RELEASE;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_CLAW_OPEN;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_CLAW_TWO_CLOSED;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DEBUG;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DEBUG_LEVEL;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_LEFT_MOTOR;
@@ -97,7 +86,6 @@ public class rr_Robot {
     private DcMotor motorArray[];
 
     //Servo
-    private Servo cubeClaw;
     private Servo jewelArm;
     private Servo jewelPusher;
     private Servo relicClaw;
@@ -105,16 +93,9 @@ public class rr_Robot {
 
     private ColorSensor leftJewelColorSensor;
     private ColorSensor rightJewelColorSensor;
-    private ColorSensor frontFloorColorSensor;
-    private ColorSensor backFloorColorSensor;
 
     private DistanceSensor leftJewelRangeSensor;
     private DistanceSensor rightJewelRangeSensor;
-
-    private DigitalChannel cubeArmUpperLimit;
-    private DigitalChannel cubeArmLowerLimit;
-   // private DigitalChannel relicArmUpperLimit;
-  //  private DigitalChannel relicArmLowerLimit;
 
     private ModernRoboticsI2cRangeSensor rangeSensor;
 
@@ -139,7 +120,12 @@ public class rr_Robot {
     }
 
 
-    //INITIALIZE METHODS
+    /***********************************************
+     *
+     *     INITIALIZE METHODS
+     *
+     ***********************************************/
+
 
     public void autonomousInit(rr_OpMode aOpMode, HardwareMap ahwMap) throws InterruptedException {
         aOpMode.telemetry.setAutoClear(false); //useful to see the debug values stay on screen
@@ -157,15 +143,8 @@ public class rr_Robot {
         initIMUGyro(aOpMode);
 
 
-        //Initialize Cube Arm
-        initCubeArmMotor(aOpMode);
-
-        initCubeArmSensors(aOpMode);
-        initCubeArmServos(aOpMode);
-
         //Initialize Relic Arm
         initRelicArm(aOpMode);
-        initRelicArmSensors(aOpMode);
 
         //Initialize Jewel Arm
         initJewelSensors(aOpMode);
@@ -188,14 +167,8 @@ public class rr_Robot {
         //Initialize Drive Motors
         initDriveMotors(aOpMode);
 
-        //Initialize Cube Arm
-        initCubeArmMotor(aOpMode);
-        initCubeArmSensors(aOpMode);
-        initCubeArmServos(aOpMode);
-
         //Initialize Relic Arm
         initRelicArm(aOpMode);
-        initRelicArmSensors(aOpMode);
 
         //Initialize Jewel Arm
         initJewelSensors(aOpMode);
@@ -230,26 +203,6 @@ public class rr_Robot {
         stopBaseMotors(aOpMode);
     }
 
-    public void initCubeArmMotor(rr_OpMode aOpMode) throws InterruptedException {
-        motorArray[CUBE_ARM] = hwMap.get(DcMotor.class, "motor_cube_arm");
-        motorArray[CUBE_ARM].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        Thread.sleep(250);
-        motorArray[CUBE_ARM].setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-    }
-
-    public void initCubeArmServos(rr_OpMode aOpMode) throws InterruptedException {
-        cubeClaw = hwMap.get(Servo.class, "servo_cube_claw");
-
-        setCubeClawPosition(CUBE_CLAW_INITIALIZE);
-    }
-
-    public void initCubeArmSensors(rr_OpMode aOpMode) throws InterruptedException {
-        cubeArmUpperLimit = hwMap.get(DigitalChannel.class, "cube_arm_upper_limit");
-        cubeArmLowerLimit = hwMap.get(DigitalChannel.class, "cube_arm_lower_limit");
-
-        cubeArmUpperLimit.setMode(DigitalChannel.Mode.INPUT);
-        cubeArmLowerLimit.setMode(DigitalChannel.Mode.INPUT);
-    }
 
     public void initRelicArm(rr_OpMode aOpMode) throws InterruptedException {
         motorArray[RELIC_WINCH] = hwMap.get(DcMotor.class, "motor_relic_slide");
@@ -258,24 +211,6 @@ public class rr_Robot {
 
         setRelicClawClosed();
         setRelicArmGrab();
-    }
-
-    public void initRelicArmSensors(rr_OpMode aOpMode) throws InterruptedException {
-
-        //TODO: CHANGE THIS
-//        relicArmUpperLimit = hwMap.get(DigitalChannel.class, "relic_arm_upper_limit");
-//        relicArmLowerLimit = hwMap.get(DigitalChannel.class, "relic_arm_lower_limit");
-
-
-     //   relicArmUpperLimit.setMode(DigitalChannel.Mode.INPUT);
-      //  relicArmLowerLimit.setMode(DigitalChannel.Mode.INPUT);
-
-//        relicArmUpperLimit.setMode(DigitalChannel.Mode.INPUT);
-//        relicArmLowerLimit.setMode(DigitalChannel.Mode.INPUT);
-
-//        relicArmUpperLimit.setMode(DigitalChannel.Mode.INPUT);
-//        relicArmLowerLimit.setMode(DigitalChannel.Mode.INPUT);
-
     }
 
     public void initJewelServos(rr_OpMode aOpMode) throws InterruptedException {
@@ -297,7 +232,12 @@ public class rr_Robot {
 
     }
 
-    //MOTOR METHODS
+
+    /***********************************************
+     *
+     *     MOTOR METHODS
+     *
+     ***********************************************/
 
 
     /**
@@ -338,24 +278,11 @@ public class rr_Robot {
     }
 
 
-    //SENSOR METHODS
-
-
-    public int getRangeSensorUltrasonicRaw(rr_OpMode aOpMode) {
-        return rangeSensor.rawUltrasonic();
-    }
-
-    public int getRangeSensorOpticalRaw(rr_OpMode aOpMode) {
-        return rangeSensor.rawOptical();
-    }
-
-    public double getRangeSensorDistance(rr_OpMode aOpMode) {
-        return rangeSensor.getDistance(DistanceUnit.CM);
-    }
-
-    public double getRangeSensorOpticalCM(rr_OpMode aOpMode) {
-        return rangeSensor.cmOptical();
-    }
+    /***********************************************
+     *
+     *     SENSOR METHODS
+     *
+     ***********************************************/
 
 
     public float getBoschGyroSensorHeading(rr_OpMode aOpMode) throws InterruptedException {
@@ -393,16 +320,11 @@ public class rr_Robot {
     }
 
 
-    public double getFloorBlueReading() {
-        return frontFloorColorSensor.blue();
-    }
-
-    public double getFloorRedReading() {
-        return backFloorColorSensor.red();
-    }
-
-
-    //CONTROL OF WHEELS
+    /***********************************************
+     *
+     *     CONTROL OF WHEELS
+     *
+     ***********************************************/
 
 
     /**
@@ -900,111 +822,58 @@ public class rr_Robot {
 
     }
 
-    //CUBE ARM CONTROL
+    public void  turnUsingEncodersWithoutRamped(rr_OpMode aOpMode, float angle, float power, rr_Constants.TurnDirectionEnum TurnDirection)
+            throws InterruptedException {
 
+        //calculate the turn distance to be used in terms of encoder clicks.
+        //for Andymark encoders.
 
-    //used in TeleOp
-    public void setCubeArmPower(rr_OpMode aOpMode, float power) {
-        motorArray[CUBE_ARM].setPower(power);
-    }
+        int turnDistance = (int) (2 * ((ROBOT_TRACK_DISTANCE) * angle
+                * ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION) /
+                (MECANUM_WHEEL_DIAMETER * 360));
 
-    public void moveCubeArmToPositionWithLimits(rr_OpMode aOpMode, int position, float power) throws InterruptedException {
-        //set the mode to be RUN_TO_POSITION
-        motorArray[CUBE_ARM].setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        switch (TurnDirection) {
+            case Clockwise:
+                runRobotToPosition(aOpMode, power, power, power, power, turnDistance, -turnDistance, turnDistance, -turnDistance, false);
+                break;
+            case Counterclockwise:
+                runRobotToPosition(aOpMode, power, power, power, power, -turnDistance, turnDistance, -turnDistance, turnDistance, false);
+                break;
+        }
+
+        //wait just a bit for the commands to complete
         Thread.sleep(50);
-
-        //Now set the target
-        motorArray[CUBE_ARM].setTargetPosition(position);
-
-        //now set the power
-        motorArray[CUBE_ARM].setPower(power * CUBE_ARM_POWER_FACTOR);
-
-        //reset clock for checking stall
-        aOpMode.reset_timer_array(GENERIC_TIMER);
-
-
-        while (motorArray[CUBE_ARM].isBusy() && motorArray[CUBE_ARM].getCurrentPosition() < CUBE_ARM_UPPER_LIMIT &&
-                motorArray[CUBE_ARM].getCurrentPosition() > CUBE_ARM_LOWER_LIMIT && (aOpMode.time_elapsed_array(GENERIC_TIMER) < CUBE_ARM_MAX_DURATION)) {
-            aOpMode.idle();
-        }
-        //stop the motor
-        motorArray[CUBE_ARM].setPower(0.0f);
     }
 
+    public void turnUsingEncoders(rr_OpMode aOpMode, float angle, float power, rr_Constants.TurnDirectionEnum TurnDirection)
+            throws InterruptedException {
 
-    public void moveCubeArmToPositionWithTouchLimits(rr_OpMode aOpMode, int position, float power) throws InterruptedException {
-        //set the mode to be RUN_TO_POSITION
-        motorArray[CUBE_ARM].setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //calculate the turn distance to be used in terms of encoder clicks.
+        //for Andymark encoders.
+
+        int turnDistance = (int) (2 * ((ROBOT_TRACK_DISTANCE) * angle
+                * ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION) /
+                (MECANUM_WHEEL_DIAMETER * 360));
+
+        switch (TurnDirection) {
+            case Clockwise:
+                runRobotToPosition(aOpMode, power, power, power, power, turnDistance, -turnDistance, turnDistance, -turnDistance, true);
+                break;
+            case Counterclockwise:
+                runRobotToPosition(aOpMode, power, power, power, power, -turnDistance, turnDistance, -turnDistance, turnDistance, true);
+                break;
+        }
+
+        //wait just a bit for the commands to complete
         Thread.sleep(50);
-
-        //Now set the target
-        motorArray[CUBE_ARM].setTargetPosition(position);
-
-        //now set the power
-        motorArray[CUBE_ARM].setPower(power);
-
-        //reset clock for checking stall
-        aOpMode.reset_timer_array(GENERIC_TIMER);
-
-
-        while (motorArray[CUBE_ARM].isBusy() &&
-                (position < motorArray[CUBE_ARM].getCurrentPosition()) ? !isCubeUpperLimitPressed() : !isCubeLowerLimitPressed()
-                && (aOpMode.time_elapsed_array(GENERIC_TIMER) < CUBE_ARM_MAX_DURATION) && Math.abs(motorArray[CUBE_ARM].getCurrentPosition() - position) > rr_Constants.MOTOR_ENCODER_THRESHOLD) {
-            aOpMode.idle();
-        }
-        //stop the motor
-        motorArray[CUBE_ARM].setPower(0.0f);
-
-        motorArray[CUBE_ARM].setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-    }
-
-    public void initializeCubeArmToIntakePosition(rr_OpMode aOpMode) throws InterruptedException {
-
-        setCubeClawPosition(CUBE_CLAW_INITIALIZE);
-        Thread.sleep(250);
-
-        aOpMode.reset_timer_array(GENERIC_TIMER);
-        while (!isCubeLowerLimitPressed() && aOpMode.time_elapsed_array(GENERIC_TIMER) < CUBE_ARM_MAX_DURATION) {
-            setCubeArmPower(aOpMode, CUBE_ARM_LOWERING_POWER);
-        }
-        setCubeArmPower(aOpMode, 0);
-    }
-
-    public void openCubeClawServoOneCube() throws InterruptedException{
-        cubeClaw.setPosition(CUBE_CLAW_ONE_RELEASE);
-        Thread.sleep(100);
-    }
-
-    public void closeCubeClawServoOneCube() throws InterruptedException {
-        cubeClaw.setPosition(CUBE_CLAW_ONE_CLOSED);
-        Thread.sleep(100);
-    }
-
-    public void closeCubeClawServoTwoCube() throws InterruptedException {
-        cubeClaw.setPosition(CUBE_CLAW_TWO_CLOSED);
-        Thread.sleep(100);
     }
 
 
-    public boolean isCubeUpperLimitPressed() {
-        return !cubeArmUpperLimit.getState();
-    }
-
-    public boolean isCubeLowerLimitPressed() {
-        return !cubeArmLowerLimit.getState();
-    }
-
-    // Test methods
-    public void setCubeClawPosition(float position) throws InterruptedException {
-        cubeClaw.setPosition(position);
-    }
-
-    public float getCubeClawPosition() throws InterruptedException {
-        return (float) cubeClaw.getPosition();
-    }
-
-
-    //RELIC ARM CONTROL
+    /***********************************************
+     *
+     *     RELIC ARM CONTROL
+     *
+     ***********************************************/
 
 
     public void setRelicWinchPosition(rr_OpMode aOpMode, int position, float power) throws InterruptedException {
@@ -1076,7 +945,14 @@ public class rr_Robot {
     public float getRelicClawPosition() throws InterruptedException {
         return (float) relicClaw.getPosition();
     }
-    // Positioning jewel arm servo
+
+
+    /***********************************************
+     *
+     *     JEWEL ARM CONTROL
+     *
+     ***********************************************/
+
 
     public void setJewelArmPositionTest(float armPosition) throws InterruptedException {
 
@@ -1140,9 +1016,7 @@ public class rr_Robot {
 
     public void setJewelArmDownRead() throws InterruptedException {
         setJewelArmPosition(JEWEL_ARM_DOWN_READ);
-
         setJewelArmPosition(JEWEL_ARM_DOWN_READ);
-
     }
 
 
@@ -1412,9 +1286,12 @@ public class rr_Robot {
     }
 
 
-    //----------------------------------------------------------------------------------------------
-    // Formatting angles and degrees for imu
-    //----------------------------------------------------------------------------------------------
+    /***********************************************
+     *
+     *     IMU ANGLES AND DEGREES
+     *
+     ***********************************************/
+
 
     String formatAngle(AngleUnit angleUnit, double angle) {
         return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
@@ -1424,51 +1301,7 @@ public class rr_Robot {
         return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
     }
 
-    public void  turnUsingEncodersWithoutRamped(rr_OpMode aOpMode, float angle, float power, rr_Constants.TurnDirectionEnum TurnDirection)
-            throws InterruptedException {
 
-        //calculate the turn distance to be used in terms of encoder clicks.
-        //for Andymark encoders.
-
-        int turnDistance = (int) (2 * ((ROBOT_TRACK_DISTANCE) * angle
-                * ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION) /
-                (MECANUM_WHEEL_DIAMETER * 360));
-
-        switch (TurnDirection) {
-            case Clockwise:
-                runRobotToPosition(aOpMode, power, power, power, power, turnDistance, -turnDistance, turnDistance, -turnDistance, false);
-                break;
-            case Counterclockwise:
-                runRobotToPosition(aOpMode, power, power, power, power, -turnDistance, turnDistance, -turnDistance, turnDistance, false);
-                break;
-        }
-
-        //wait just a bit for the commands to complete
-        Thread.sleep(50);
-    }
-
-    public void turnUsingEncoders(rr_OpMode aOpMode, float angle, float power, rr_Constants.TurnDirectionEnum TurnDirection)
-            throws InterruptedException {
-
-        //calculate the turn distance to be used in terms of encoder clicks.
-        //for Andymark encoders.
-
-        int turnDistance = (int) (2 * ((ROBOT_TRACK_DISTANCE) * angle
-                * ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION) /
-                (MECANUM_WHEEL_DIAMETER * 360));
-
-        switch (TurnDirection) {
-            case Clockwise:
-                runRobotToPosition(aOpMode, power, power, power, power, turnDistance, -turnDistance, turnDistance, -turnDistance, true);
-                break;
-            case Counterclockwise:
-                runRobotToPosition(aOpMode, power, power, power, power, -turnDistance, turnDistance, -turnDistance, turnDistance, true);
-                break;
-        }
-
-        //wait just a bit for the commands to complete
-        Thread.sleep(50);
-    }
 
 
     public RelicRecoveryVuMark getPictograph(rr_OpMode aOpMode) throws InterruptedException {
