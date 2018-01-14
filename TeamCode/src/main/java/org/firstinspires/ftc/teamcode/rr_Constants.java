@@ -40,7 +40,6 @@ public class rr_Constants {
     final static int ENCODED_MOTOR_STALL_CLICKS_TETRIX = 10;
     final static int ENCODED_MOTOR_STALL_CLICKS_MATRIX = 5;
 
-
     //Base Motor power limits
     final static float MOTOR_RAMP_FB_POWER_LOWER_LIMIT = 0.3f;
     final static float MOTOR_RAMP_FB_POWER_UPPER_LIMIT = 0.78f;
@@ -53,33 +52,7 @@ public class rr_Constants {
     final static float LEFT_MOTOR_TRIM_FACTOR = 0.95f;
     final static float RIGHT_MOTOR_TRIM_FACTOR = 1.0f;
 
-    //Cube Arm Constants TODO: CHANGE
-    final static int CUBE_ARM_MAX_DURATION = 3000;
-    final static float CUBE_ARM_UPPER_LIMIT = -2216;
-    final static float CUBE_ARM_LOWER_LIMIT = 0;
-    final static int ONE_CUBE_ROW_4 = 0; //Highest
-    final static int ONE_CUBE_ROW_3 = 0;
-    final static int ONE_CUBE_ROW_2 = 0;
-    final static int ONE_CUBE_ROW_1 = 0; //Lowest
-    final static int TWO_CUBE_POS_1 = 0; //Lowest
-    final static int TWO_CUBE_POS_2 = 0;
-    final static int TWO_CUBE_POS_3 = 0; //Highest
-    final static int CUBE_ARM_GRAB = 0;
-    final static int CUBE_ARM_AUTONOMOUS_CARRY=-350;
-    final static int CUBE_ARM_MIDDLE = -500;
-    final static int CUBE_ARM_TOP = -1800;
-    final static int CUBE_ARM_SAFE_POS = -700;
-    final static float CUBE_ARM_SCORING_POWER = .5f;
-    final static float CUBE_ARM_POWER_FACTOR = 0.75f;
-    final static float CUBE_ARM_RAISE_POWER = -0.75f;
-    final static float CUBE_ARM_LOWERING_POWER = 0.2f;
-    final static float CUBE_CLAW_OPEN = 0.63f;
-    final static float CUBE_CLAW_ONE_CLOSED = 0.9f;
-    final static float CUBE_CLAW_ONE_RELEASE = 0.63f;
-    final static float CUBE_CLAW_INITIALIZE = 0.67f;
-    final static float CUBE_CLAW_TWO_CLOSED = 0.8f;
-    final static float CUBE_ORIENTATION_HORIZONTAL = 0.225f;
-    final static float CUBE_ORIENTATION_VERTICAL = 0.75f;
+    //Cube Control Constants
 
     //Relic Arm Constants
     final static float RELIC_WINCH_MAX_DURATION = 5000;
@@ -97,9 +70,7 @@ public class rr_Constants {
     final static float RELIC_CLAW_CLOSED = 0.21f;
 
 
-    //Jewel Arm Constants TODO: CHANGE
-
-
+    //Jewel Arm Constants
     final static float JEWEL_PUSHER_LEFT = 0.90f; // make bigger
     final static float JEWEL_PUSHER_RIGHT = 0.10f; // make smaller
     final static float JEWEL_PUSHER_NEUTRAL = 0.50f;
@@ -108,23 +79,19 @@ public class rr_Constants {
     final static float JEWEL_ARM_DOWN_PUSH = .92f;
     static final double JEWEL_ARM_INCREMENT = 0.01;     // amount to slew servo each cycle
     static final int JEWEL_ARM_CYCLE = 50;     // period of each cycle
-    final static float JEWEL_COLOR_LUMINOSITY_THRESHOLD = 10f;
-    final static float JEWEL_COLOR_DIFFERENTIAL_THRESHOLD = 5f;
-
-    final static int JEWEL_COLOR_FILTER_COUNT = 11; //must be odd
-
-    // TODO: CHANGE
     final static float BOTTOM_JEWEL_POSITION = 0.9f;
 
-
+    //Jewel Sensors
+    final static float JEWEL_COLOR_LUMINOSITY_THRESHOLD = 10f;
+    final static float JEWEL_COLOR_DIFFERENTIAL_THRESHOLD = 5f;
+    final static int JEWEL_COLOR_FILTER_COUNT = 11; //must be odd
 
     //index of motors
     final static int FRONT_LEFT_MOTOR = 0;
     final static int FRONT_RIGHT_MOTOR = 1;
     final static int BACK_LEFT_MOTOR = 2;
     final static int BACK_RIGHT_MOTOR = 3;
-    final static int CUBE_ARM = 4;
-    final static int RELIC_WINCH = 5;
+    final static int RELIC_WINCH = 4;
 
     //Mecanum wheel properties
     final static float MECANUM_WHEEL_DIAMETER = 4f;   //in inches
@@ -145,21 +112,8 @@ public class rr_Constants {
     //distance between wheels left to right of the Robot in inches.
     final static float ROBOT_TRACK_DISTANCE = 12.25f; //adjusted from observation.
 
-    //Sensor Constants TODO: CHANGE
-    final static int JEWEL_COLOR_MARGIN = 10;
-
-    //TODO: Change these
     final static float FLOOR_RED_THRESHOLD = 0.5f;
     final static float FLOOR_BLUE_THRESHOLD = 0.5f;
-
-    //the value below for floor color sensor is the fallback value.
-    //it needs to be adjusted if the height of the floor color sensor
-    //is changed.
-    //normally Floor sensor calibration automatically sets values in
-    //an XML file adjusting for the light in the competition venue.
-
-    final static float FLOOR_WHITE_THRESHOLD = 30f; //may need to calibrate
-    final static float FLOOR_WHITE_MARGIN = 3f; //may need to calibrate
 
     //Range Sensor Threshold
     final static double RANGESENSOR_OPTICAL_PROXIMITY_THRESHOLD = 1.0d;
@@ -191,7 +145,6 @@ public class rr_Constants {
         UNKNOWN
     }
 
-    //values that control the worm drive motor to adjust tension of the Launch arm
 
     // Direction of movement for autonomous
     enum DirectionEnum {
