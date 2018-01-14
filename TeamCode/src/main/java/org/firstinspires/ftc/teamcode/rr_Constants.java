@@ -53,6 +53,9 @@ public class rr_Constants {
     final static float RIGHT_MOTOR_TRIM_FACTOR = 1.0f;
 
     //Cube Control Constants
+    //TODO: Change
+    final static float CUBE_INTAKE_POWER = 0.5f;
+    final static float CUBE_OUTAKE_POWER = 0.5f;
 
     //Relic Arm Constants
     final static float RELIC_WINCH_MAX_DURATION = 5000;
@@ -92,6 +95,7 @@ public class rr_Constants {
     final static int BACK_LEFT_MOTOR = 2;
     final static int BACK_RIGHT_MOTOR = 3;
     final static int RELIC_WINCH = 4;
+    final static int CUBE_COLLECTION = 5;
 
     //Mecanum wheel properties
     final static float MECANUM_WHEEL_DIAMETER = 4f;   //in inches

@@ -30,6 +30,7 @@ import java.util.Locale;
 import static org.firstinspires.ftc.teamcode.rr_Constants.ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_RIGHT_MOTOR;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_COLLECTION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DEBUG;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DEBUG_LEVEL;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_LEFT_MOTOR;
@@ -142,6 +143,8 @@ public class rr_Robot {
         //Initialize Gyro
         initIMUGyro(aOpMode);
 
+        //initialize Cube Control
+        initCubeControl(aOpMode);
 
         //Initialize Relic Arm
         initRelicArm(aOpMode);
@@ -163,6 +166,9 @@ public class rr_Robot {
 
         //Instantiate motorArray
         motorArray = new DcMotor[10];
+
+        //initialize Cube Control
+        initCubeControl(aOpMode);
 
         //Initialize Drive Motors
         initDriveMotors(aOpMode);
@@ -211,6 +217,10 @@ public class rr_Robot {
 
         setRelicClawClosed();
         setRelicArmGrab();
+    }
+
+    public void initCubeControl(rr_OpMode aOpMode) throws InterruptedException {
+        motorArray[CUBE_COLLECTION] = hwMap.get(DcMotor.class, "motor_cube_collection");
     }
 
     public void initJewelServos(rr_OpMode aOpMode) throws InterruptedException {
@@ -944,6 +954,18 @@ public class rr_Robot {
 
     public float getRelicClawPosition() throws InterruptedException {
         return (float) relicClaw.getPosition();
+    }
+
+
+    /***********************************************
+     *
+     *     CUBE CONTROL
+     *
+     ***********************************************/
+
+
+    public void setCubeCollectionPower(float power) throws InterruptedException {
+        motorArray[CUBE_COLLECTION].setPower(power);
     }
 
 
