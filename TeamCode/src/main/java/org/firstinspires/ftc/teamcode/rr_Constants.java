@@ -56,6 +56,8 @@ public class rr_Constants {
     //TODO: Change
     final static float CUBE_INTAKE_POWER = 0.5f;
     final static float CUBE_OUTAKE_POWER = 0.5f;
+    final static float CUBE_HORIZONTAL = 0.5f;
+    final static float CUBBE_VERTICAL = 0.5f;
 
     //Relic Arm Constants
     final static float RELIC_WINCH_MAX_DURATION = 5000;

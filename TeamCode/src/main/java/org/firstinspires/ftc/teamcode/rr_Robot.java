@@ -91,6 +91,7 @@ public class rr_Robot {
     private Servo jewelPusher;
     private Servo relicClaw;
     private Servo relicArm;
+    private Servo cubeOrientation;
 
     private ColorSensor leftJewelColorSensor;
     private ColorSensor rightJewelColorSensor;
@@ -221,6 +222,9 @@ public class rr_Robot {
 
     public void initCubeControl(rr_OpMode aOpMode) throws InterruptedException {
         motorArray[CUBE_COLLECTION] = hwMap.get(DcMotor.class, "motor_cube_collection");
+        cubeOrientation = hwMap.get(Servo.class, "servo_cube_orientation");
+
+        setCubeOrientationPosition(CUBE_HORIZONTAL);
     }
 
     public void initJewelServos(rr_OpMode aOpMode) throws InterruptedException {
@@ -966,6 +970,14 @@ public class rr_Robot {
 
     public void setCubeCollectionPower(float power) throws InterruptedException {
         motorArray[CUBE_COLLECTION].setPower(power);
+    }
+
+    public void setCubeOrientation(float position) throws InterruptedException {
+        cubeOrientation.setPosition(position);
+    }
+
+    public float getCubeOrientation(float posiition) throws InterruptedException {
+        return (float) cubeOrientation.getPosition();
     }
 
 
