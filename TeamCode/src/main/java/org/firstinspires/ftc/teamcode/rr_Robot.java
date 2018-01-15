@@ -1516,6 +1516,7 @@ public class rr_Robot {
             //aOpMode.telemetryUpdate();
         }
 
+        vuforia.close();
 
         return RelicRecoveryVuMark.UNKNOWN;
 
