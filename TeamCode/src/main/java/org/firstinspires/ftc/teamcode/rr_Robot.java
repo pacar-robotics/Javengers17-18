@@ -20,6 +20,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
@@ -131,7 +132,7 @@ public class rr_Robot {
 
     // Vuforia
     public static final String TAG = "Vuforia VuMark Sample";
-    ClosableVuforiaLocalizer vuforia;
+    VuforiaLocalizer vuforia;
 
     public rr_Robot(rr_OpMode aOpMode) throws InterruptedException {
         this.aOpMode = aOpMode;
@@ -1473,12 +1474,12 @@ public class rr_Robot {
     public RelicRecoveryVuMark getPictograph(rr_OpMode aOpMode) throws InterruptedException {
         aOpMode.telemetry.setAutoClear(true); //neccessary for using Vuforia
         int cameraMonitorViewId = aOpMode.hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", aOpMode.hardwareMap.appContext.getPackageName());
-        ClosableVuforiaLocalizer.Parameters parameters = new ClosableVuforiaLocalizer.Parameters(cameraMonitorViewId);
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
 
         parameters.vuforiaLicenseKey = "AevlBL3/////AAAAGZ3T16bk1EepnUsSLPkQW/sFqYxxQLGZ0w6paGMug92slctEFAuXjXeMqrzDuCLvLZmY1sWjvn4kb5WKPKH4RdCZB7ccft3XGKh8rVn0r+TxhcJUmZwsdciAzCBYVe5FLnGtldKTV1eVbNFcN6FpDfZstRXXBdjqyMBg5XzJmhJp5rcG5TIi0qMcjaoHFqaBdnMyYBAeERylDVGBbDbIAX0dLDiQ5bjxA/lAphyHjDDyetpVjGlEwziUzcYbdvZK3zjGpR7WH62RqM6QzO1s7PcTppQMgRi3FxhisqKKZdWWF5pFGBPMP6bpsOzHTd8TDxPjwXiYIZxt3MwkhQ+1JpyAG9CVo+I0T/b/oNT0/ulZ";
 
         parameters.cameraDirection = ClosableVuforiaLocalizer.CameraDirection.BACK;
-        this.vuforia = (ClosableVuforiaLocalizer) ClassFactory.createVuforiaLocalizer(parameters);
+        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
 
         VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
@@ -1515,8 +1516,6 @@ public class rr_Robot {
             Thread.sleep(100);
             //aOpMode.telemetryUpdate();
         }
-
-        vuforia.close();
 
         return RelicRecoveryVuMark.UNKNOWN;
 
