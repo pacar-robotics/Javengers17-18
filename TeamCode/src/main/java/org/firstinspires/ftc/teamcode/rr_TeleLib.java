@@ -8,16 +8,7 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.ANALOG_STICK_THRESHOLD
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_RIGHT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_GRAB;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_MIDDLE;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_RAISE_POWER;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_SAFE_POS;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_TOP;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_CLAW_ONE_CLOSED;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_CLAW_ONE_RELEASE;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_CLAW_OPEN;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ORIENTATION_HORIZONTAL;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ORIENTATION_VERTICAL;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DEBUG;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FIELD_ORIENTED_DRIVE_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_LEFT_MOTOR;
@@ -47,7 +38,6 @@ public class rr_TeleLib {
     rr_Robot robot;
     rr_OpMode aOpMode;
 
-    public float cubeClawPos = CUBE_CLAW_ONE_RELEASE;
     public float gamepad2PowerFactor = STANDARD_DRIVE_POWER_FACTOR;
 
     private boolean isGyroCalibrated = false;
@@ -215,60 +205,6 @@ public class rr_TeleLib {
         }
     }
 
-    public void processCubeArm() throws InterruptedException {
-        if (aOpMode.gamepad1.x) {
-            robot.closeCubeClawServoOneCube();
-            robot.moveRobotToPositionFB(aOpMode, -6, 0.5f, false);
-
-            robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_MIDDLE, CUBE_ARM_RAISE_POWER);
-        }
-        if (aOpMode.gamepad1.y) {
-            robot.closeCubeClawServoOneCube();
-            robot.moveRobotToPositionFB(aOpMode, -6, 0.5f, false);
-
-            robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_TOP, CUBE_ARM_RAISE_POWER);
-        }
-        if (aOpMode.gamepad1.b) {
-            robot.setCubeClawPosition(CUBE_CLAW_ONE_RELEASE);
-            robot.moveRobotToPositionFB(aOpMode, -6, 0.25f, false);
-            robot.closeCubeClawServoOneCube();
-            cubeClawPos = CUBE_CLAW_ONE_CLOSED;
-        } else if (aOpMode.gamepad1.a) {
-            robot.openCubeClawServoOneCube();
-            robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_GRAB, CUBE_ARM_RAISE_POWER);
-        }
-
-        if (aOpMode.gamepad1.left_trigger >= TRIGGER_THRESHOLD && !robot.isCubeLowerLimitPressed()) {
-            robot.setCubeArmPower(aOpMode, 0.1f);
-        } else if (aOpMode.gamepad1.right_trigger >= TRIGGER_THRESHOLD && !robot.isCubeUpperLimitPressed()) {
-            cubeArmPower = -clipAndScaleCubeArmPower(((-cubeArmPower + aOpMode.gamepad1.right_trigger) / 2));
-
-            robot.setCubeArmPower(aOpMode, (float) cubeArmPower);
-            //robot.setCubeArmPower(aOpMode, (float) CUBE_ARM_RAISE_POWER);
-        } else {
-            robot.setCubeArmPower(aOpMode, 0.0f);
-        }
-    }
-
-    public void initializeCubeArm(rr_OpMode aOpMode) throws InterruptedException {
-        robot.initializeCubeArmToIntakePosition(aOpMode);
-        robot.setMotorMode(aOpMode, CUBE_ARM, DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        Thread.sleep(250);
-        robot.setMotorMode(aOpMode, CUBE_ARM, DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-    }
-
-    public void processClaw() throws InterruptedException {
-        if (aOpMode.gamepad1.right_bumper && cubeClawPos == CUBE_CLAW_ONE_RELEASE) {
-            robot.closeCubeClawServoOneCube();
-            cubeClawPos = CUBE_CLAW_ONE_CLOSED;
-            Thread.sleep(200);
-        } else if (aOpMode.gamepad1.right_bumper) {
-            robot.openCubeClawServoOneCube();
-            cubeClawPos = CUBE_CLAW_ONE_RELEASE;
-            Thread.sleep(200);
-        }
-    }
-
     public void processRelicSlide() {
         if (Math.abs(aOpMode.gamepad2.right_trigger) > TRIGGER_THRESHOLD) {
             robot.setRelicWinchPower(RELIC_WINCH_EXTEND_POWER_FACTOR);
@@ -333,22 +269,11 @@ public class rr_TeleLib {
 
     public void printTelemetry() throws InterruptedException {
         if (DEBUG) {
-            aOpMode.telemetry.addLine("ClawServo: " + cubeClawPos);
             aOpMode.telemetry.addLine("Cube Arm Pos: " + robot.getMotorPosition(aOpMode, CUBE_ARM));
             aOpMode.telemetryAddLine("BRPower" + robot.getMotorPower(aOpMode, BACK_RIGHT_MOTOR));
             aOpMode.telemetryAddLine("FRPower" + robot.getMotorPower(aOpMode, FRONT_LEFT_MOTOR));
             aOpMode.telemetryAddLine("BLPower" + robot.getMotorPower(aOpMode, BACK_LEFT_MOTOR));
             aOpMode.telemetryAddLine("FLPower" + robot.getMotorPower(aOpMode, FRONT_LEFT_MOTOR));
-            if (robot.isCubeLowerLimitPressed()) {
-                aOpMode.telemetry.addLine("Lower Limit Pressed");
-            } else {
-                aOpMode.telemetry.addLine("Lower Limit Not Pressed");
-            }
-            if (robot.isCubeUpperLimitPressed()) {
-                aOpMode.telemetry.addLine("Upper Limit Pressed");
-            } else {
-                aOpMode.telemetry.addLine("Upper" + " Limit Not Pressed");
-            }
             aOpMode.telemetryUpdate();
         }
     }

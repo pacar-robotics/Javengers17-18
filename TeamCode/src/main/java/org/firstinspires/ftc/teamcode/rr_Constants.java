@@ -49,20 +49,18 @@ public class rr_Constants {
     final static float MIN_ROBOT_TURN_MOTOR_VELOCITY = 0.15f;
 
 
-    final static float INTAKE_POWER_LOW=0.2f;
-    final static float INTAKE_POWER_MEDIUM=0.5f;
-    final static float INTAKE_POWER_HIGH=1.0f;
-
     //Base Motor Trims
     final static float LEFT_MOTOR_TRIM_FACTOR = 0.95f;
     final static float RIGHT_MOTOR_TRIM_FACTOR = 1.0f;
 
     //Cube Control Constants
     //TODO: Change
-    final static float CUBE_INTAKE_POWER = 0.5f;
-    final static float CUBE_OUTAKE_POWER = 0.5f;
     final static float CUBE_HORIZONTAL = 0.5f;
-    final static float CUBBE_VERTICAL = 0.5f;
+    final static float CUBE_VERTICAL = 0.5f;
+    final static float CUBE_ARM_RAISE_POWER = -0.75f;
+    final static float INTAKE_POWER_LOW = 0.2f;
+    final static float INTAKE_POWER_MEDIUM = 0.5f;
+    final static float INTAKE_POWER_HIGH = 1.0f;
 
     //Relic Arm Constants
     final static float RELIC_WINCH_MAX_DURATION = 5000;

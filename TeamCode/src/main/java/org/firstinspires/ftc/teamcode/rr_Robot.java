@@ -191,11 +191,9 @@ public class rr_Robot {
         motorArray = new DcMotor[10];
 
         //initialize Cube Control
-        initCubeControl(aOpMode);
 
         //Initialize Drive Motors
         initDriveMotors(aOpMode);
-
 
         //initialize Intake Motors
         initIntakeMotors(aOpMode);
@@ -259,12 +257,11 @@ public class rr_Robot {
 
     public void initIntakeMotors(rr_OpMode aOpMode) throws InterruptedException {
         //Map Intake Motors
-
         motorArray[INTAKE_LEFT_MOTOR]=hwMap.get(DcMotor.class,"motor_left_intake");
         motorArray[INTAKE_RIGHT_MOTOR]=hwMap.get(DcMotor.class,"motor_right_intake");
+
         motorArray[INTAKE_LEFT_MOTOR].setDirection(DcMotorSimple.Direction.REVERSE);
         motorArray[INTAKE_RIGHT_MOTOR].setDirection(DcMotorSimple.Direction.REVERSE);
-
     }
 
 
@@ -295,13 +292,6 @@ public class rr_Robot {
 
         setRelicClawClosed();
         setRelicArmGrab();
-    }
-
-    public void initCubeControl(rr_OpMode aOpMode) throws InterruptedException {
-        motorArray[CUBE_COLLECTION] = hwMap.get(DcMotor.class, "motor_cube_collection");
-        cubeOrientation = hwMap.get(Servo.class, "servo_cube_orientation");
-
-        setCubeOrientationPosition(CUBE_HORIZONTAL);
     }
 
     public void initJewelServos(rr_OpMode aOpMode) throws InterruptedException {
@@ -1042,8 +1032,17 @@ public class rr_Robot {
      ***********************************************/
 
 
-    public void setCubeCollectionPower(float power) throws InterruptedException {
-        motorArray[CUBE_COLLECTION].setPower(power);
+    public double getIntakeOpticalRightSensorRange(rr_OpMode aOpMode){
+        return intakeRightRangeSensor.cmOptical();
+    }
+
+    public double getIntakeUltrasonicRightSensorRange(rr_OpMode aOpMode){
+        return intakeRightRangeSensor.cmUltrasonic();
+    }
+
+    public void runIntake(rr_OpMode aOpMode, float leftPower, float rightPower) throws InterruptedException{
+        setPower(aOpMode,INTAKE_LEFT_MOTOR,leftPower);
+        setPower(aOpMode,INTAKE_RIGHT_MOTOR, rightPower);
     }
 
     public void setCubeOrientation(float position) throws InterruptedException {
@@ -1061,6 +1060,11 @@ public class rr_Robot {
      *
      ***********************************************/
 
+    public void setJewelArmPosition(rr_OpMode aOpMode, float position) throws InterruptedException
+    {
+        jewelArm.setPosition(position);
+        Thread.sleep(100);
+    }
 
     public void setJewelArmPositionTest(float armPosition) throws InterruptedException {
 
@@ -1409,9 +1413,6 @@ public class rr_Robot {
         return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
     }
 
-
-
-
     public RelicRecoveryVuMark getPictograph(rr_OpMode aOpMode) throws InterruptedException {
         aOpMode.telemetry.setAutoClear(true); //neccessary for using Vuforia
         int cameraMonitorViewId = aOpMode.hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", aOpMode.hardwareMap.appContext.getPackageName());
@@ -1462,28 +1463,4 @@ public class rr_Robot {
         return RelicRecoveryVuMark.UNKNOWN;
 
     }
-
-    public void setJewelArmPosition(rr_OpMode aOpMode, float position) throws InterruptedException
-    {
-        jewelArm.setPosition(position);
-        Thread.sleep(100);
-    }
-
-
-    public double getIntakeOpticalRightSensorRange(rr_OpMode aOpMode){
-        return intakeRightRangeSensor.cmOptical();
-    }
-
-    public double getIntakeUltrasonicRightSensorRange(rr_OpMode aOpMode){
-        return intakeRightRangeSensor.cmUltrasonic();
-    }
-
-    public void runIntake(rr_OpMode aOpMode, float leftPower, float rightPower) throws InterruptedException{
-        setPower(aOpMode,INTAKE_LEFT_MOTOR,leftPower);
-        setPower(aOpMode,INTAKE_RIGHT_MOTOR, rightPower);
-    }
-
-
-
-
 }
