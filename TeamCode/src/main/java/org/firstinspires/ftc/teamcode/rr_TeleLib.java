@@ -41,6 +41,7 @@ public class rr_TeleLib {
     public float gamepad2PowerFactor = STANDARD_DRIVE_POWER_FACTOR;
 
     private boolean isGyroCalibrated = false;
+    private boolean isIntake = true;
     private float turnVelocity = 0.0f;
     private double polarMagnitude = 0.0f;
     private double cubeArmPower = 0.0f;
@@ -252,6 +253,20 @@ public class rr_TeleLib {
         if (aOpMode.gamepad1.right_bumper) {
             if (robot.intakeState == STOPPED) {
                 robot.intakeState = RUNNING;
+                isIntake = true;
+
+                Thread.sleep(500); //absorb the extra key presses
+
+            } else {
+                robot.runIntake(this.aOpMode, 0, 0);
+                robot.intakeState = STOPPED;
+                Thread.sleep(500); //absorb the extra key presses
+            }
+        }
+        if (aOpMode.gamepad1.left_bumper) {
+            if (robot.intakeState == STOPPED) {
+                robot.intakeState = RUNNING;
+                isIntake = false;
 
                 Thread.sleep(500); //absorb the extra key presses
 
@@ -262,7 +277,7 @@ public class rr_TeleLib {
             }
         }
         if(robot.intakeState==RUNNING){
-            runIntakeWithDiagonalCheck(aOpMode); //check for cubes going in sideways
+            runIntakeWithDiagonalCheck(aOpMode, isIntake); //check for cubes going in sideways
             //so we can counter rotate to straighten
         }
     }
@@ -415,7 +430,14 @@ public class rr_TeleLib {
         return magnitude;
     }
 
-    public void runIntakeWithDiagonalCheck(rr_OpMode aOpMode) throws InterruptedException {
+    public void runIntakeWithDiagonalCheck(rr_OpMode aOpMode, boolean isOuttake) throws InterruptedException {
+        int polarity = 0;
+
+        if(isOuttake) {
+            polarity = 1;
+        } else {
+            polarity = -1;
+        }
         if ((robot.getIntakeUltrasonicRightSensorRange(aOpMode) < 5)
                 || robot.getIntakeOpticalRightSensorRange(aOpMode) < 2)
 
@@ -431,7 +453,7 @@ public class rr_TeleLib {
         } else
 
         {
-            robot.runIntake(aOpMode, INTAKE_POWER_HIGH, INTAKE_POWER_HIGH);
+            robot.runIntake(aOpMode, polarity * INTAKE_POWER_HIGH, polarity * INTAKE_POWER_HIGH);
         }
     }
 

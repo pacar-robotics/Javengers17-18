@@ -109,9 +109,7 @@ public class rr_Robot {
     private DistanceSensor rightJewelRangeSensor;
 
     private ModernRoboticsI2cRangeSensor intakeRightRangeSensor;
-
-    private DigitalChannel cubeArmUpperLimit;
-    private DigitalChannel cubeArmLowerLimit;
+    
    // private DigitalChannel relicArmUpperLimit;
   //  private DigitalChannel relicArmLowerLimit;
     private ModernRoboticsI2cRangeSensor rangeSensor;
@@ -163,12 +161,6 @@ public class rr_Robot {
 
        //dont initilize gyro, because we have to adjust position before this operation.
 
-        //Initialize Cube Arm
-        //initCubeArmMotor(aOpMode);
-
-        //initCubeArmSensors(aOpMode);
-        //initCubeArmServos(aOpMode);
-
         //Initialize Relic Arm
         //initRelicArm(aOpMode);
         //initRelicArmSensors(aOpMode);
@@ -201,11 +193,6 @@ public class rr_Robot {
         //initialize intake range sensor.
         initIntakeSensors(aOpMode);
 
-
-        //Initialize Cube Arm
-        //initCubeArmMotor(aOpMode);
-        //initCubeArmSensors(aOpMode);
-       // initCubeArmServos(aOpMode);
 
         //Initialize Relic Arm
        // initRelicArm(aOpMode);
@@ -267,22 +254,6 @@ public class rr_Robot {
 
     public void initIntakeSensors(rr_OpMode aOpMode) throws InterruptedException{
         intakeRightRangeSensor=hwMap.get(ModernRoboticsI2cRangeSensor.class, "RightIntakeRangeSensor");
-    }
-
-    public void initCubeArmMotor(rr_OpMode aOpMode) throws InterruptedException {
-        motorArray[CUBE_ARM] = hwMap.get(DcMotor.class, "motor_cube_arm");
-        motorArray[CUBE_ARM].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        Thread.sleep(250);
-        motorArray[CUBE_ARM].setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-    }
-
-
-    public void initCubeArmSensors(rr_OpMode aOpMode) throws InterruptedException {
-        cubeArmUpperLimit = hwMap.get(DigitalChannel.class, "cube_arm_upper_limit");
-        cubeArmLowerLimit = hwMap.get(DigitalChannel.class, "cube_arm_lower_limit");
-
-        cubeArmUpperLimit.setMode(DigitalChannel.Mode.INPUT);
-        cubeArmLowerLimit.setMode(DigitalChannel.Mode.INPUT);
     }
 
     public void initRelicArm(rr_OpMode aOpMode) throws InterruptedException {
