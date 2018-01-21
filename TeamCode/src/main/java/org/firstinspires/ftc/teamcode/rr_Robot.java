@@ -6,7 +6,6 @@ import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -30,8 +29,8 @@ import java.util.Locale;
 import static org.firstinspires.ftc.teamcode.rr_Constants.ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_RIGHT_MOTOR;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_HORIZONTAL;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_LIFT;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DEBUG;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DEBUG_LEVEL;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_LEFT_MOTOR;
@@ -288,6 +287,11 @@ public class rr_Robot {
     public void initCubeOrientation(rr_OpMode aOpMode) throws InterruptedException{
         cubeOrientation = hwMap.get(Servo.class, "servo_cube_orientation");
         setCubeOrientation(CUBE_HORIZONTAL);
+    }
+
+    public void initCubeLife(rr_OpMode aOpMode) throws InterruptedException {
+        motorArray[CUBE_LIFT] = hwMap.get(DcMotor.class, "motor_cube_lift");
+        motorArray[CUBE_LIFT].setDirection(DcMotorSimple.Direction.FORWARD);
     }
 
     /***********************************************
@@ -1007,6 +1011,9 @@ public class rr_Robot {
      *
      ***********************************************/
 
+    public void setCubeLiftPower(rr_OpMode aOpMode, float power) throws InterruptedException {
+        setPower(aOpMode, CUBE_LIFT, power);
+    }
 
     public double getIntakeOpticalRightSensorRange(rr_OpMode aOpMode){
         return intakeRightRangeSensor.cmOptical();

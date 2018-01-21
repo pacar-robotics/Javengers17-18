@@ -58,6 +58,7 @@ public class rr_Constants {
     final static float CUBE_HORIZONTAL = 0.5f;
     final static float CUBE_VERTICAL = 0.5f;
     final static float CUBE_ARM_RAISE_POWER = -0.75f;
+    final static float CUBE_LIFT_POWER_FACTOR = 0.5f;
     final static float INTAKE_POWER_LOW = 0.2f;
     final static float INTAKE_POWER_MEDIUM = 0.5f;
     final static float INTAKE_POWER_HIGH = 1.0f;
@@ -99,7 +100,7 @@ public class rr_Constants {
     final static int FRONT_RIGHT_MOTOR = 1;
     final static int BACK_LEFT_MOTOR = 2;
     final static int BACK_RIGHT_MOTOR = 3;
-    final static int CUBE_ARM = 4;
+    final static int CUBE_LIFT = 4;
     final static int RELIC_WINCH = 5;
     final static int INTAKE_RIGHT_MOTOR=6;
     final static int INTAKE_LEFT_MOTOR=7;

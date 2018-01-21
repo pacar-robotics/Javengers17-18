@@ -1,34 +1,26 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import static org.firstinspires.ftc.teamcode.rr_Constants.ANALOG_STICK_THRESHOLD;
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_RIGHT_MOTOR;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_LIFT;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_RAISE_POWER;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_HORIZONTAL;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_LIFT_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_VERTICAL;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DEBUG;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FIELD_ORIENTED_DRIVE_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_LEFT_MOTOR;
-import static org.firstinspires.ftc.teamcode.rr_Constants.INTAKE_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.INTAKE_POWER_HIGH;
-import static org.firstinspires.ftc.teamcode.rr_Constants.INTAKE_POWER_LOW;
-import static org.firstinspires.ftc.teamcode.rr_Constants.INTAKE_POWER_MEDIUM;
-import static org.firstinspires.ftc.teamcode.rr_Constants.INTAKE_RIGHT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.MOTOR_LOWER_POWER_THRESHOLD;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_EXTEND_UP;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_GRAB;
-import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_MAX;
-import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_MIN;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_OPEN_PULSE;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_CLAW_CLOSED;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WINCH_EXTEND_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WINCH_RETRACT_POWER_FACTOR;
-import static org.firstinspires.ftc.teamcode.rr_Constants.SCORING_DRIVE_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.STANDARD_DRIVE_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRIGGER_THRESHOLD;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TURN_POWER_FACTOR;
@@ -294,9 +286,19 @@ public class rr_TeleLib {
         }
     }
 
+    public void processCubeLift() throws InterruptedException {
+        if (aOpMode.gamepad1.left_trigger >= TRIGGER_THRESHOLD) {
+            robot.setCubeLiftPower(aOpMode, aOpMode.gamepad1.left_trigger * CUBE_LIFT_POWER_FACTOR);
+        } else if (aOpMode.gamepad1.right_trigger >= TRIGGER_THRESHOLD) {
+            robot.setCubeLiftPower(aOpMode, aOpMode.gamepad1.right_trigger * CUBE_LIFT_POWER_FACTOR);
+        } else {
+            robot.setCubeLiftPower(aOpMode, 0);
+        }
+    }
+
     public void printTelemetry() throws InterruptedException {
         if (DEBUG) {
-            aOpMode.telemetry.addLine("Cube Arm Pos: " + robot.getMotorPosition(aOpMode, CUBE_ARM));
+            aOpMode.telemetry.addLine("Cube Arm Pos: " + robot.getMotorPosition(aOpMode, CUBE_LIFT));
             aOpMode.telemetryAddLine("BRPower" + robot.getMotorPower(aOpMode, BACK_RIGHT_MOTOR));
             aOpMode.telemetryAddLine("FRPower" + robot.getMotorPower(aOpMode, FRONT_LEFT_MOTOR));
             aOpMode.telemetryAddLine("BLPower" + robot.getMotorPower(aOpMode, BACK_LEFT_MOTOR));

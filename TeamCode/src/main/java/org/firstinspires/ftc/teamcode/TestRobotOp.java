@@ -1,12 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.util.ThreadPool;
-
 import static org.firstinspires.ftc.teamcode.rr_Constants.ANALOG_STICK_THRESHOLD;
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_RIGHT_MOTOR;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_LIFT;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_GRAB;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_LOWERING_POWER;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_MIDDLE;
@@ -54,7 +51,7 @@ public class TestRobotOp extends rr_OpMode {
 
             telemetry.addLine("ClawServo: " + cubeClawPos);
             telemetry.addLine("Cube Orientation: " + orientationPos);
-            telemetry.addLine("Cube Arm Pos: " + robot.getMotorPosition(this, CUBE_ARM));
+            telemetry.addLine("Cube Arm Pos: " + robot.getMotorPosition(this, CUBE_LIFT));
             telemetryTouchSensor();
             telemetryAddLine("BRPower" + robot.getMotorPower(this, BACK_RIGHT_MOTOR));
             telemetryAddLine("FRPower" + robot.getMotorPower(this, FRONT_LEFT_MOTOR));

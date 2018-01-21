@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_LIFT;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_GRAB;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_CLAW_OPEN;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ORIENTATION_HORIZONTAL;
@@ -55,7 +55,7 @@ public class TestCubeArm extends rr_OpMode {
             moveCubeArmWithLimits();
 
             telemetry.addLine("ClawServo: " + cubeClawPosition);
-            telemetry.addLine("Cube Arm Pos: " + robot.getMotorPosition(this, CUBE_ARM));
+            telemetry.addLine("Cube Arm Pos: " + robot.getMotorPosition(this, CUBE_LIFT));
             telemetryTouchSensor();
             telemetryUpdate();
 
