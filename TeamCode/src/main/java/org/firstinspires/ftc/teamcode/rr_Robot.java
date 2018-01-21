@@ -31,6 +31,7 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.ANDYMARK_MOTOR_ENCODER
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_RIGHT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_HORIZONTAL;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DEBUG;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DEBUG_LEVEL;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_LEFT_MOTOR;
@@ -109,7 +110,7 @@ public class rr_Robot {
     private DistanceSensor rightJewelRangeSensor;
 
     private ModernRoboticsI2cRangeSensor intakeRightRangeSensor;
-    
+
    // private DigitalChannel relicArmUpperLimit;
   //  private DigitalChannel relicArmLowerLimit;
     private ModernRoboticsI2cRangeSensor rangeSensor;
@@ -284,6 +285,10 @@ public class rr_Robot {
 
     }
 
+    public void initCubeOrientation(rr_OpMode aOpMode) throws InterruptedException{
+        cubeOrientation = hwMap.get(Servo.class, "servo_cube_orientation");
+        setCubeOrientation(CUBE_HORIZONTAL);
+    }
 
     /***********************************************
      *
@@ -1020,7 +1025,7 @@ public class rr_Robot {
         cubeOrientation.setPosition(position);
     }
 
-    public float getCubeOrientation(float posiition) throws InterruptedException {
+    public float getCubeOrientation() throws InterruptedException {
         return (float) cubeOrientation.getPosition();
     }
 
