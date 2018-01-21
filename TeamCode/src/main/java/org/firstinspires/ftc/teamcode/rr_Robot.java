@@ -46,6 +46,8 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.DEBUG_LEVEL;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_RIGHT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.GENERIC_TIMER;
+import static org.firstinspires.ftc.teamcode.rr_Constants.INTAKE_LEFT_MOTOR;
+import static org.firstinspires.ftc.teamcode.rr_Constants.INTAKE_RIGHT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_ARM_DOWN_PUSH;
 import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_ARM_DOWN_READ;
 import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_ARM_UP;
@@ -87,9 +89,16 @@ public class rr_Robot {
         UNKNOWN,
     }
 
+    enum intakeStateEnum{
+        RUNNING,
+        STOPPED
+    }
+
     rr_OpMode aOpMode;
 
     pictographType detectedPictograph = pictographType.UNKNOWN;
+
+    intakeStateEnum intakeState = intakeStateEnum.STOPPED;
 
     HardwareMap hwMap = null;
 
@@ -110,6 +119,8 @@ public class rr_Robot {
 
     private DistanceSensor leftJewelRangeSensor;
     private DistanceSensor rightJewelRangeSensor;
+
+    private ModernRoboticsI2cRangeSensor intakeRightRangeSensor;
 
     private DigitalChannel cubeArmUpperLimit;
     private DigitalChannel cubeArmLowerLimit;
@@ -148,27 +159,31 @@ public class rr_Robot {
         hwMap = ahwMap;
 
         //Instantiate motorArray
+
         motorArray = new DcMotor[10];
 
         //Initialize Drive Motors
         initDriveMotors(aOpMode);
 
+        //initialize intake range sensor.
+        initIntakeSensors(aOpMode);
+
        //dont initilize gyro, because we have to adjust position before this operation.
 
         //Initialize Cube Arm
-        initCubeArmMotor(aOpMode);
+        //initCubeArmMotor(aOpMode);
 
-        initCubeArmSensors(aOpMode);
-        initCubeArmServos(aOpMode);
+        //initCubeArmSensors(aOpMode);
+        //initCubeArmServos(aOpMode);
 
         //Initialize Relic Arm
-        initRelicArm(aOpMode);
-        initRelicArmSensors(aOpMode);
+        //initRelicArm(aOpMode);
+        //initRelicArmSensors(aOpMode);
 
         //Initialize Jewel Arm
-        initJewelSensors(aOpMode);
-        initJewelServos(aOpMode);
-        setJewelPusherPosition(JEWEL_PUSHER_RIGHT - 0.1f);
+        //initJewelSensors(aOpMode);
+       // initJewelServos(aOpMode);
+        //setJewelPusherPosition(JEWEL_PUSHER_RIGHT - 0.1f);
 
         aOpMode.DBG("Exiting Robot init");
     }
@@ -185,19 +200,26 @@ public class rr_Robot {
         //Initialize Drive Motors
         initDriveMotors(aOpMode);
 
+        //initialize Intake Motors
+        initIntakeMotors(aOpMode);
+
+        //initialize intake range sensor.
+        initIntakeSensors(aOpMode);
+
+
         //Initialize Cube Arm
-        initCubeArmMotor(aOpMode);
-        initCubeArmSensors(aOpMode);
-        initCubeArmServos(aOpMode);
+        //initCubeArmMotor(aOpMode);
+        //initCubeArmSensors(aOpMode);
+       // initCubeArmServos(aOpMode);
 
         //Initialize Relic Arm
-        initRelicArm(aOpMode);
-        initRelicArmSensors(aOpMode);
+       // initRelicArm(aOpMode);
+        //initRelicArmSensors(aOpMode);
 
         //Initialize Jewel Arm
-        initJewelSensors(aOpMode);
-        initJewelServos(aOpMode);
-        setJewelPusherPosition(JEWEL_PUSHER_NEUTRAL);
+        //initJewelSensors(aOpMode);
+        //initJewelServos(aOpMode);
+       // setJewelPusherPosition(JEWEL_PUSHER_NEUTRAL);
 
         //initialize Gyro.
         initIMUGyro(aOpMode);
@@ -213,6 +235,8 @@ public class rr_Robot {
 
     public void initDriveMotors(rr_OpMode aOpMode) throws InterruptedException {
         //Map Motors
+
+
         motorArray[FRONT_LEFT_MOTOR] = hwMap.get(DcMotor.class, "motor_front_left");
         motorArray[FRONT_RIGHT_MOTOR] = hwMap.get(DcMotor.class, "motor_front_right");
         motorArray[BACK_LEFT_MOTOR] = hwMap.get(DcMotor.class, "motor_back_left");
@@ -224,8 +248,30 @@ public class rr_Robot {
         motorArray[BACK_LEFT_MOTOR].setDirection(DcMotorSimple.Direction.REVERSE);
         motorArray[BACK_RIGHT_MOTOR].setDirection(DcMotorSimple.Direction.FORWARD);
 
+        motorArray[INTAKE_LEFT_MOTOR]=hwMap.get(DcMotor.class,"motor_left_intake");
+        motorArray[INTAKE_RIGHT_MOTOR]=hwMap.get(DcMotor.class,"motor_right_intake");
+        motorArray[INTAKE_LEFT_MOTOR].setDirection(DcMotorSimple.Direction.REVERSE);
+        motorArray[INTAKE_RIGHT_MOTOR].setDirection(DcMotorSimple.Direction.REVERSE);
+
+
+
         // Set all base motors to zero power
         stopBaseMotors(aOpMode);
+    }
+
+    public void initIntakeMotors(rr_OpMode aOpMode) throws InterruptedException {
+        //Map Intake Motors
+
+        motorArray[INTAKE_LEFT_MOTOR]=hwMap.get(DcMotor.class,"motor_left_intake");
+        motorArray[INTAKE_RIGHT_MOTOR]=hwMap.get(DcMotor.class,"motor_right_intake");
+        motorArray[INTAKE_LEFT_MOTOR].setDirection(DcMotorSimple.Direction.REVERSE);
+        motorArray[INTAKE_RIGHT_MOTOR].setDirection(DcMotorSimple.Direction.REVERSE);
+
+    }
+
+
+    public void initIntakeSensors(rr_OpMode aOpMode) throws InterruptedException{
+        intakeRightRangeSensor=hwMap.get(ModernRoboticsI2cRangeSensor.class, "RightIntakeRangeSensor");
     }
 
     public void initCubeArmMotor(rr_OpMode aOpMode) throws InterruptedException {
@@ -680,9 +726,6 @@ public class rr_Robot {
         motorArray[FRONT_RIGHT_MOTOR].setPower(0);
         motorArray[BACK_LEFT_MOTOR].setPower(0);
         motorArray[BACK_RIGHT_MOTOR].setPower(0);
-        while (motorArray[BACK_RIGHT_MOTOR].getPower() != 0) {
-            aOpMode.idle();
-        }
     }
 
 
@@ -1524,6 +1567,22 @@ public class rr_Robot {
         jewelArm.setPosition(position);
         Thread.sleep(100);
     }
+
+
+    public double getIntakeOpticalRightSensorRange(rr_OpMode aOpMode){
+        return intakeRightRangeSensor.cmOptical();
+    }
+
+    public double getIntakeUltrasonicRightSensorRange(rr_OpMode aOpMode){
+        return intakeRightRangeSensor.cmUltrasonic();
+    }
+
+    public void runIntake(rr_OpMode aOpMode, float leftPower, float rightPower) throws InterruptedException{
+        setPower(aOpMode,INTAKE_LEFT_MOTOR,leftPower);
+        setPower(aOpMode,INTAKE_RIGHT_MOTOR, rightPower);
+    }
+
+
 
 
 }

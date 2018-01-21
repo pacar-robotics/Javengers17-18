@@ -49,6 +49,11 @@ public class rr_Constants {
     final static float MAX_ROBOT_TURN_MOTOR_VELOCITY = 0.78f;
     final static float MIN_ROBOT_TURN_MOTOR_VELOCITY = 0.15f;
 
+
+    final static float INTAKE_POWER_LOW=0.2f;
+    final static float INTAKE_POWER_MEDIUM=0.5f;
+    final static float INTAKE_POWER_HIGH=1.0f;
+
     //Base Motor Trims
     final static float LEFT_MOTOR_TRIM_FACTOR = 0.95f;
     final static float RIGHT_MOTOR_TRIM_FACTOR = 1.0f;
@@ -125,6 +130,8 @@ public class rr_Constants {
     final static int BACK_RIGHT_MOTOR = 3;
     final static int CUBE_ARM = 4;
     final static int RELIC_WINCH = 5;
+    final static int INTAKE_RIGHT_MOTOR=6;
+    final static int INTAKE_LEFT_MOTOR=7;
 
     //Mecanum wheel properties
     final static float MECANUM_WHEEL_DIAMETER = 4f;   //in inches

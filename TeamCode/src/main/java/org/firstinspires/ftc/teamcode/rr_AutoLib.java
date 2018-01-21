@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
+import java.util.InputMismatchException;
+
 import static org.firstinspires.ftc.teamcode.rr_Constants.ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION;
 
 
@@ -13,6 +15,8 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_MIDDLE;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_RAISE_POWER;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DirectionEnum.Backward;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DirectionEnum.Forward;
+import static org.firstinspires.ftc.teamcode.rr_Constants.INTAKE_LEFT_MOTOR;
+import static org.firstinspires.ftc.teamcode.rr_Constants.INTAKE_RIGHT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.MECANUM_WHEEL_DIAMETER;
 import static org.firstinspires.ftc.teamcode.rr_Constants.ROBOT_TRACK_DISTANCE;
 
@@ -491,6 +495,8 @@ public class rr_AutoLib {
                 targetPosition, targetPosition, targetPosition, targetPosition, isRampedPower);
     }
 
+
+
     /**
      * Runs robot to a specific position while driving sideways
      *
@@ -533,52 +539,6 @@ public class rr_AutoLib {
             return (false);
         }
     }
-//
-//
-//    public class EopdProximityCondition implements vv_OpMode.StopCondition {
-//        public boolean stopCondition(vv_OpMode aOpMode) throws InterruptedException {
-//            return (getEopdRawValue(aOpMode) > EOPD_PROXIMITY_THRESHOLD);
-//        }
-//    }
-//
-//    public class RangeSensorProximityOrColorVerifiedCondition implements vv_OpMode.StopCondition {
-//        public boolean stopCondition(vv_OpMode aOpMode) throws InterruptedException {
-//            return (((getOpticalDistance(aOpMode) < RANGESENSOR_OPTICAL_PROXIMITY_THRESHOLD)
-//                    && getOpticalDistance(aOpMode) > 0) ||
-//                    (getUltrasonicDistance(aOpMode)
-//                            < RANGESENSOR_ULTRASONIC_PROXIMITY_THRESHOLD) ||
-//                    (getBeaconLeftColor(aOpMode) == getBeaconRightColor(aOpMode)));
-//
-//        }
-//    }
-//
-//    public class RangeSensorOpticalProximityCondition implements vv_OpMode.StopCondition {
-//        public boolean stopCondition(vv_OpMode aOpMode) throws InterruptedException {
-//            return (((getOpticalDistance(aOpMode) < RANGESENSOR_OPTICAL_PROXIMITY_THRESHOLD)
-//                    && getOpticalDistance(aOpMode) > 0));
-//
-//        }
-//    }
-//
-//    public class RangeSensorUltraSonicProximityCondition implements vv_OpMode.StopCondition {
-//        public boolean stopCondition(vv_OpMode aOpMode) throws InterruptedException {
-//            return (getUltrasonicDistance(aOpMode)
-//                    < RANGESENSOR_ULTRASONIC_PROXIMITY_THRESHOLD);
-//
-//        }
-//    }
-//
-//    public class RangeSensorUltraSonicCornerPositioningCondition implements vv_OpMode.StopCondition {
-//        public boolean stopCondition(vv_OpMode aOpMode) throws InterruptedException {
-//
-//            //TODO: This code is not functioning because we are not facing the right wall to do this.
-//            return (getUltrasonicDistance(aOpMode)
-//                    < 2 * RANGESENSOR_ULTRASONIC_PROXIMITY_THRESHOLD);
-//        }
-//    }
-//    }
-
-
 
 
 
