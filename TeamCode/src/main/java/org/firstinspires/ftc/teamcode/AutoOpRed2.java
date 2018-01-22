@@ -19,6 +19,6 @@ public class AutoOpRed2 extends rr_OpMode {
 
         rrAutoLib = new rr_AutoLib(this, this.hardwareMap);
         waitForStart();
-        rrAutoLib.redTwoAutonomousCommonAction(this);
+        //rrAutoLib.redTwoAutonomousCommonAction(this);
     }
 }
