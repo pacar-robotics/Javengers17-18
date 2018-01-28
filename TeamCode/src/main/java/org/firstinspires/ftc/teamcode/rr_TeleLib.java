@@ -244,7 +244,20 @@ public class rr_TeleLib {
     }
 
     public void processIntake() throws InterruptedException {
-        if (aOpMode.gamepad1.right_bumper) {
+        //checks if the alternate button is pressed
+        if (aOpMode.gamepad1.left_bumper && aOpMode.gamepad1.right_bumper) {
+            if (robot.intakeState == STOPPED) {
+                robot.intakeState = RUNNING;
+                isIntake = false;
+
+                Thread.sleep(500); //absorb the extra key presses
+
+            } else {
+                robot.runIntake(this.aOpMode, 0, 0);
+                robot.intakeState = STOPPED;
+                Thread.sleep(500); //absorb the extra key presses
+            }
+        } else if (aOpMode.gamepad1.right_bumper) {
             if (robot.intakeState == STOPPED) {
                 robot.intakeState = RUNNING;
                 isIntake = true;
@@ -257,22 +270,9 @@ public class rr_TeleLib {
                 Thread.sleep(500); //absorb the extra key presses
             }
         }
-        if (aOpMode.gamepad1.left_bumper) {
-            if (robot.intakeState == STOPPED) {
-                robot.intakeState = RUNNING;
-                isIntake = false;
-
-                Thread.sleep(500); //absorb the extra key presses
-
-            } else {
-                robot.runIntake(this.aOpMode, 0, 0);
-                robot.intakeState = STOPPED;
-                Thread.sleep(500); //absorb the extra key presses
-            }
-        }
         if(robot.intakeState==RUNNING){
             runIntakeWithDiagonalCheck(aOpMode, isIntake); //check for cubes going in sideways
-            //so we can counter rotate to straighten
+            //so we can counter rotate to straighted
         }
     }
 
