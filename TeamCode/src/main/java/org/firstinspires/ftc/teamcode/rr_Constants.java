@@ -55,6 +55,11 @@ public class rr_Constants {
 
     //Cube Control Constants
     //TODO: Change
+    final static int CUBE_LIFT_MAX_DURATION = 3000;
+    final static int CUBE_LIFT_POSITION_1 = 0;
+    final static int CUBE_LIFT_POSITION_2 = 0;
+    final static int CUBE_LIFT_POSITION_3 = 0;
+    final static float CUBE_LIFT_POWER = 0.5f;
     final static float CUBE_HORIZONTAL = 0.5f;
     final static float CUBE_VERTICAL = 0.5f;
     final static float CUBE_ARM_RAISE_POWER = -0.75f;

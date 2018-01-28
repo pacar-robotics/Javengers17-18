@@ -8,6 +8,10 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_RIGHT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_LIFT;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_RAISE_POWER;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_HORIZONTAL;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_LIFT_POSITION_1;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_LIFT_POSITION_2;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_LIFT_POSITION_3;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_LIFT_POWER;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_LIFT_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_VERTICAL;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DEBUG;
@@ -291,6 +295,12 @@ public class rr_TeleLib {
             robot.setCubeLiftPower(aOpMode, aOpMode.gamepad1.left_trigger * CUBE_LIFT_POWER_FACTOR);
         } else if (aOpMode.gamepad1.right_trigger >= TRIGGER_THRESHOLD) {
             robot.setCubeLiftPower(aOpMode, aOpMode.gamepad1.right_trigger * CUBE_LIFT_POWER_FACTOR);
+        } else if (aOpMode.gamepad1.x){
+            robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_LIFT_POSITION_1, CUBE_LIFT_POWER);
+        } else if (aOpMode.gamepad1.y){
+            robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_LIFT_POSITION_2, CUBE_LIFT_POWER);
+        } else if (aOpMode.gamepad1.b){
+            robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_LIFT_POSITION_3, CUBE_LIFT_POWER);
         } else {
             robot.setCubeLiftPower(aOpMode, 0);
         }

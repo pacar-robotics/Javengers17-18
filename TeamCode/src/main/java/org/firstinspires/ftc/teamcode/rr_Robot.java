@@ -6,6 +6,7 @@ import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -29,6 +30,7 @@ import java.util.Locale;
 import static org.firstinspires.ftc.teamcode.rr_Constants.ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_RIGHT_MOTOR;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_LIFT_MAX_DURATION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_HORIZONTAL;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_LIFT;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DEBUG;
@@ -107,6 +109,10 @@ public class rr_Robot {
 
     private DistanceSensor leftJewelRangeSensor;
     private DistanceSensor rightJewelRangeSensor;
+
+    private DigitalChannel cubeArmUpperLimit;
+    private DigitalChannel cubeArmLowerLimit;
+
 
     private ModernRoboticsI2cRangeSensor intakeRightRangeSensor;
 
@@ -294,6 +300,13 @@ public class rr_Robot {
         motorArray[CUBE_LIFT].setDirection(DcMotorSimple.Direction.FORWARD);
     }
 
+    public void initCubeArmSensors(rr_OpMode aOpMode) throws InterruptedException {
+        cubeArmUpperLimit = hwMap.get(DigitalChannel.class, "cube_arm_upper_limit");
+        cubeArmLowerLimit = hwMap.get(DigitalChannel.class, "cube_arm_lower_limit");
+
+        cubeArmUpperLimit.setMode(DigitalChannel.Mode.INPUT);
+        cubeArmLowerLimit.setMode(DigitalChannel.Mode.INPUT);
+    }
     /***********************************************
      *
      *     MOTOR METHODS
@@ -1026,6 +1039,40 @@ public class rr_Robot {
     public void runIntake(rr_OpMode aOpMode, float leftPower, float rightPower) throws InterruptedException{
         setPower(aOpMode,INTAKE_LEFT_MOTOR,leftPower);
         setPower(aOpMode,INTAKE_RIGHT_MOTOR, rightPower);
+    }
+
+    public void moveCubeArmToPositionWithTouchLimits(rr_OpMode aOpMode, int position, float power) throws InterruptedException {
+        //set the mode to be RUN_TO_POSITION
+        motorArray[CUBE_LIFT].setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        Thread.sleep(50);
+
+        //Now set the target
+        motorArray[CUBE_LIFT].setTargetPosition(position);
+
+        //now set the power
+        motorArray[CUBE_LIFT].setPower(power);
+
+        //reset clock for checking stall
+        aOpMode.reset_timer_array(GENERIC_TIMER);
+
+
+        while (motorArray[CUBE_LIFT].isBusy() &&
+                (position < motorArray[CUBE_LIFT].getCurrentPosition()) ? !isCubeUpperLimitPressed() : !isCubeLowerLimitPressed()
+                && (aOpMode.time_elapsed_array(GENERIC_TIMER) < CUBE_LIFT_MAX_DURATION) && Math.abs(motorArray[CUBE_LIFT].getCurrentPosition() - position) > rr_Constants.MOTOR_ENCODER_THRESHOLD) {
+            aOpMode.idle();
+        }
+        //stop the motor
+        motorArray[CUBE_LIFT].setPower(0.0f);
+
+        motorArray[CUBE_LIFT].setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
+    public boolean isCubeUpperLimitPressed() {
+        return !cubeArmUpperLimit.getState();
+    }
+
+    public boolean isCubeLowerLimitPressed() {
+        return !cubeArmLowerLimit.getState();
     }
 
     public void setCubeOrientation(float position) throws InterruptedException {
