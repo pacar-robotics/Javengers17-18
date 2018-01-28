@@ -60,8 +60,10 @@ public class rr_Constants {
     final static int CUBE_LIFT_POSITION_2 = 0;
     final static int CUBE_LIFT_POSITION_3 = 0;
     final static float CUBE_LIFT_POWER = 0.5f;
-    final static float CUBE_HORIZONTAL = 0.5f;
-    final static float CUBE_VERTICAL = 0.5f;
+    final static float CUBE_HORIZONTAL_SERVO1 = 0.5f;
+    final static float CUBE_VERTICAL_SERVO1 = 0.5f;
+    final static float CUBE_HORIZONTAL_SERVO2 = 0.5f;
+    final static float CUBE_VERTICAL_SERVO2 = 0.5f;
     final static float CUBE_ARM_RAISE_POWER = -0.75f;
     final static float CUBE_LIFT_POWER_FACTOR = 0.5f;
     final static float INTAKE_POWER_LOW = 0.2f;

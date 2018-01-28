@@ -5,15 +5,17 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import static org.firstinspires.ftc.teamcode.rr_Constants.ANALOG_STICK_THRESHOLD;
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_RIGHT_MOTOR;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_HORIZONTAL_SERVO2;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_LIFT;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_RAISE_POWER;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_HORIZONTAL;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_HORIZONTAL_SERVO1;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_LIFT_POSITION_1;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_LIFT_POSITION_2;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_LIFT_POSITION_3;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_LIFT_POWER;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_LIFT_POWER_FACTOR;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_VERTICAL;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_VERTICAL_SERVO1;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_VERTICAL_SERVO2;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DEBUG;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FIELD_ORIENTED_DRIVE_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_LEFT_MOTOR;
@@ -282,10 +284,12 @@ public class rr_TeleLib {
 
     public void processCubeOrientation() throws InterruptedException {
         if (aOpMode.gamepad1.a){
-            if (robot.getCubeOrientation() == CUBE_HORIZONTAL){
-                robot.setCubeOrientation(CUBE_VERTICAL);
-            } else if (robot.getCubeOrientation() == CUBE_VERTICAL){
-                robot.setCubeOrientation(CUBE_HORIZONTAL);
+            if (robot.getCubeOrientationServo1() == CUBE_HORIZONTAL_SERVO1){
+                robot.setCubeOrientationServo1(CUBE_VERTICAL_SERVO1);
+                robot.setCubeOrientationServo1(CUBE_VERTICAL_SERVO2);
+            } else if (robot.getCubeOrientationServo1() == CUBE_VERTICAL_SERVO1){
+                robot.setCubeOrientationServo1(CUBE_HORIZONTAL_SERVO1);
+                robot.setCubeOrientationServo1(CUBE_HORIZONTAL_SERVO2);
             }
         }
     }

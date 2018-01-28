@@ -30,8 +30,9 @@ import java.util.Locale;
 import static org.firstinspires.ftc.teamcode.rr_Constants.ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_RIGHT_MOTOR;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_HORIZONTAL_SERVO2;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_LIFT_MAX_DURATION;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_HORIZONTAL;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_HORIZONTAL_SERVO1;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_LIFT;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DEBUG;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DEBUG_LEVEL;
@@ -102,7 +103,8 @@ public class rr_Robot {
     private Servo jewelPusher;
     private Servo relicClaw;
     private Servo relicArm;
-    private Servo cubeOrientation;
+    private Servo cubeOrientationServo1;
+    private Servo cubeOrientationServo2;
 
     private ColorSensor leftJewelColorSensor;
     private ColorSensor rightJewelColorSensor;
@@ -291,8 +293,11 @@ public class rr_Robot {
     }
 
     public void initCubeOrientation(rr_OpMode aOpMode) throws InterruptedException{
-        cubeOrientation = hwMap.get(Servo.class, "servo_cube_orientation");
-        setCubeOrientation(CUBE_HORIZONTAL);
+        cubeOrientationServo1 = hwMap.get(Servo.class, "servo_cube_orientation1");
+        setCubeOrientationServo1(CUBE_HORIZONTAL_SERVO1);
+
+        cubeOrientationServo2 = hwMap.get(Servo.class, "servo_cube_orientation2");
+        setCubeOrientationServo2(CUBE_HORIZONTAL_SERVO2);
     }
 
     public void initCubeLife(rr_OpMode aOpMode) throws InterruptedException {
@@ -1075,12 +1080,20 @@ public class rr_Robot {
         return !cubeArmLowerLimit.getState();
     }
 
-    public void setCubeOrientation(float position) throws InterruptedException {
-        cubeOrientation.setPosition(position);
+    public void setCubeOrientationServo1(float position) throws InterruptedException {
+        cubeOrientationServo1.setPosition(position);
     }
 
-    public float getCubeOrientation() throws InterruptedException {
-        return (float) cubeOrientation.getPosition();
+    public float getCubeOrientationServo1() throws InterruptedException {
+        return (float) cubeOrientationServo1.getPosition();
+    }
+
+    public void setCubeOrientationServo2(float position) throws InterruptedException {
+        cubeOrientationServo2.setPosition(position);
+    }
+
+    public float getCubeOrientationServo2() throws InterruptedException {
+        return (float) cubeOrientationServo2.getPosition();
     }
 
 
