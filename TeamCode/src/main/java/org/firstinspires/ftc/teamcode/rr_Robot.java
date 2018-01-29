@@ -82,6 +82,8 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.TURN_POWER_FACTOR;
 
 public class rr_Robot {
 
+//    JewelDetector jewelDetector;
+
     enum pictographType {
         LEFT,
         RIGHT,
@@ -132,11 +134,8 @@ public class rr_Robot {
 
     private ElapsedTime period = new ElapsedTime();
 
-    // Vuforia
-//    public static final String TAG = "Vuforia VuMark Sample";
-//    VuforiaLocalizer vuforia;
-
-    //JewelDetector jewelDetector;
+    public static final String TAG = "Vuforia VuMark Sample";
+    VuforiaLocalizer vuforia;
 
     public rr_Robot(rr_OpMode aOpMode) throws InterruptedException {
         this.aOpMode = aOpMode;
@@ -146,36 +145,37 @@ public class rr_Robot {
     //INITIALIZE METHODS
 
     public void autonomousInit(rr_OpMode aOpMode, HardwareMap ahwMap) throws InterruptedException {
+
         aOpMode.telemetry.setAutoClear(false); //useful to see the debug values stay on screen
 
         aOpMode.DBG("in Robot init");
         hwMap = ahwMap;
 
-        //Instantiate motorArray
-        motorArray = new DcMotor[10];
+//        //Instantiate motorArray
+//        motorArray = new DcMotor[10];
+//
+//        //Initialize Drive Motors
+//        initDriveMotors(aOpMode);
+//
+//        //Initialize Gyro
+//        initIMUGyro(aOpMode);
+//
+//
+//        //Initialize Cube Arm
+//        initCubeArmMotor(aOpMode);
+//
+//        initCubeArmSensors(aOpMode);
+//        initCubeArmServos(aOpMode);
+//
+//        //Initialize Relic Arm
+//        initRelicArm(aOpMode);
+//        initRelicArmSensors(aOpMode);
+//
+//        //Initialize Jewel Arm
+//        initJewelSensors(aOpMode);
+//        initJewelServos(aOpMode);
 
-        //Initialize Drive Motors
-        initDriveMotors(aOpMode);
-
-        //Initialize Gyro
-        initIMUGyro(aOpMode);
-
-
-        //Initialize Cube Arm
-        initCubeArmMotor(aOpMode);
-
-        initCubeArmSensors(aOpMode);
-        initCubeArmServos(aOpMode);
-
-        //Initialize Relic Arm
-        initRelicArm(aOpMode);
-        initRelicArmSensors(aOpMode);
-
-        //Initialize Jewel Arm
-        initJewelSensors(aOpMode);
-        initJewelServos(aOpMode);
-
-        initOpenCVJewelDetection(aOpMode);
+//        initOpenCVJewelDetection(aOpMode);
 
         //jewelDetector = new JewelDetector();
 
@@ -301,12 +301,6 @@ public class rr_Robot {
         leftJewelRangeSensor = hwMap.get(DistanceSensor.class, "left_jewel_color_distance");
         rightJewelRangeSensor = hwMap.get(DistanceSensor.class, "right_jewel_color_distance");
 
-    }
-
-    public void initOpenCVJewelDetection(rr_OpMode aOpMode) throws InterruptedException {
-        JewelDetector jewelDetector = new JewelDetector();
-        jewelDetector.init(aOpMode.hardwareMap.appContext, CameraViewDisplay.getInstance());
-        jewelDetector.enable();
     }
 
     //MOTOR METHODS
@@ -1483,55 +1477,55 @@ public class rr_Robot {
     }
 
 
-//    public RelicRecoveryVuMark getPictograph(rr_OpMode aOpMode) throws InterruptedException {
-//        aOpMode.telemetry.setAutoClear(true); //neccessary for using Vuforia
-//        int cameraMonitorViewId = aOpMode.hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", aOpMode.hardwareMap.appContext.getPackageName());
-//        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-//
-//        parameters.vuforiaLicenseKey = "AevlBL3/////AAAAGZ3T16bk1EepnUsSLPkQW/sFqYxxQLGZ0w6paGMug92slctEFAuXjXeMqrzDuCLvLZmY1sWjvn4kb5WKPKH4RdCZB7ccft3XGKh8rVn0r+TxhcJUmZwsdciAzCBYVe5FLnGtldKTV1eVbNFcN6FpDfZstRXXBdjqyMBg5XzJmhJp5rcG5TIi0qMcjaoHFqaBdnMyYBAeERylDVGBbDbIAX0dLDiQ5bjxA/lAphyHjDDyetpVjGlEwziUzcYbdvZK3zjGpR7WH62RqM6QzO1s7PcTppQMgRi3FxhisqKKZdWWF5pFGBPMP6bpsOzHTd8TDxPjwXiYIZxt3MwkhQ+1JpyAG9CVo+I0T/b/oNT0/ulZ";
-//
-//        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-//        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
-//
-//        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
-//        VuforiaTrackable relicTemplate = relicTrackables.get(0);
-//        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
-//
-//        relicTrackables.activate();
-//
-//        for (int i = 0; i < 25; i++) {
-//
-//            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-//
-//            if (vuMark == RelicRecoveryVuMark.LEFT) {
-//                aOpMode.telemetryAddData("VuMark", "VuMark Left", "%s visible");
-//                aOpMode.telemetryUpdate();
-//                detectedPictograph = pictographType.LEFT;
-//                return vuMark;
-//            } else if (vuMark == RelicRecoveryVuMark.CENTER) {
-//                aOpMode.telemetryAddData("VuMark", "VuMark Center", "%s visible" + detectedPictograph);
-//                aOpMode.telemetryUpdate();
-//                detectedPictograph = pictographType.CENTER;
-//                return vuMark;
-//            } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
-//                aOpMode.telemetryAddData("VuMark", "VuMark Right", "%s visible" + detectedPictograph);
-//                aOpMode.telemetryUpdate();
-//                detectedPictograph = pictographType.RIGHT;
-//
-//                return vuMark;
-//            } else {
-//                aOpMode.telemetryAddData("VuMark", "Unknown", "No VuMark Detected");
-//                aOpMode.telemetryUpdate();
-//                detectedPictograph = pictographType.UNKNOWN;
-//            }
-//
-//            Thread.sleep(100);
-//            //aOpMode.telemetryUpdate();
-//        }
-//
-//        return RelicRecoveryVuMark.UNKNOWN;
-//
-//    }
+    public RelicRecoveryVuMark getPictograph(rr_OpMode aOpMode) throws InterruptedException {
+        aOpMode.telemetry.setAutoClear(true); //neccessary for using Vuforia
+        int cameraMonitorViewId = aOpMode.hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", aOpMode.hardwareMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+
+        parameters.vuforiaLicenseKey = "AevlBL3/////AAAAGZ3T16bk1EepnUsSLPkQW/sFqYxxQLGZ0w6paGMug92slctEFAuXjXeMqrzDuCLvLZmY1sWjvn4kb5WKPKH4RdCZB7ccft3XGKh8rVn0r+TxhcJUmZwsdciAzCBYVe5FLnGtldKTV1eVbNFcN6FpDfZstRXXBdjqyMBg5XzJmhJp5rcG5TIi0qMcjaoHFqaBdnMyYBAeERylDVGBbDbIAX0dLDiQ5bjxA/lAphyHjDDyetpVjGlEwziUzcYbdvZK3zjGpR7WH62RqM6QzO1s7PcTppQMgRi3FxhisqKKZdWWF5pFGBPMP6bpsOzHTd8TDxPjwXiYIZxt3MwkhQ+1JpyAG9CVo+I0T/b/oNT0/ulZ";
+
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+
+        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        VuforiaTrackable relicTemplate = relicTrackables.get(0);
+        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
+
+        relicTrackables.activate();
+
+        for (int i = 0; i < 25; i++) {
+
+            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+
+            if (vuMark == RelicRecoveryVuMark.LEFT) {
+                aOpMode.telemetryAddData("VuMark", "VuMark Left", "%s visible");
+                aOpMode.telemetryUpdate();
+                detectedPictograph = pictographType.LEFT;
+                return vuMark;
+            } else if (vuMark == RelicRecoveryVuMark.CENTER) {
+                aOpMode.telemetryAddData("VuMark", "VuMark Center", "%s visible" + detectedPictograph);
+                aOpMode.telemetryUpdate();
+                detectedPictograph = pictographType.CENTER;
+                return vuMark;
+            } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
+                aOpMode.telemetryAddData("VuMark", "VuMark Right", "%s visible" + detectedPictograph);
+                aOpMode.telemetryUpdate();
+                detectedPictograph = pictographType.RIGHT;
+
+                return vuMark;
+            } else {
+                aOpMode.telemetryAddData("VuMark", "Unknown", "No VuMark Detected");
+                aOpMode.telemetryUpdate();
+                detectedPictograph = pictographType.UNKNOWN;
+            }
+
+            Thread.sleep(100);
+            //aOpMode.telemetryUpdate();
+        }
+
+        return RelicRecoveryVuMark.UNKNOWN;
+
+    }
 
     public void setJewelArmPosition(rr_OpMode aOpMode, float position) throws InterruptedException
     {
