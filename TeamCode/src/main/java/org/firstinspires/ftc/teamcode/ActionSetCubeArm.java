@@ -17,7 +17,6 @@ public class ActionSetCubeArm extends rr_OpMode {
 
         telemetry.setAutoClear(true);
 
-        lib.initializeCubeArm(this);
         Thread.sleep(300);
     }
 }

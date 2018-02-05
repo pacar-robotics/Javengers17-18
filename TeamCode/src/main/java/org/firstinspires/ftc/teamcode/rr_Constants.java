@@ -85,6 +85,19 @@ public class rr_Constants {
     final static float RELIC_CLAW_OPEN_STABILIZED=0.4f;
     final static float RELIC_CLAW_CLOSED = 0.21f;
 
+    //Cube Tray Constants
+    //these numbers need to be tuned based on a calibration op
+    final static float TRAY_HEIGHT_COLLECTION_POSITION=0.445f;
+    final static float TRAY_FLIP_HORIZONTAL_POSITION=0.88f;
+    final static float TRAY_FLIP_COLLECTION_POSITION=1.0f;
+    final static float TRAY_FLIP_SCORING_POSITION=0.5f;
+    final static float TRAY_HEIGHT_1CUBE_POSITION=0.65f;
+    final static float TRAY_HEIGHT_MAX_POSITION=0.725f;
+
+    //Cube Pusher Constants
+    final static float CUBE_PUSHER_RESTED_POSITION= 0.95f;
+    final static float CUBE_PUSHER_PUSHED_POSITION= 0.0f;
+
 
     //Jewel Arm Constants
     final static float JEWEL_PUSHER_LEFT = 0.90f; // make bigger

@@ -9,9 +9,6 @@ import java.util.InputMismatchException;
 import static org.firstinspires.ftc.teamcode.rr_Constants.ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION;
 
 
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_GRAB;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_LOWERING_POWER;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_MIDDLE;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_RAISE_POWER;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DirectionEnum.Backward;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DirectionEnum.Forward;
@@ -25,8 +22,6 @@ public class rr_AutoLib {
 
     //TODO: Declarations of Conditions
 
-    protected blueLineDetectCondition blueLineDetectStop = new blueLineDetectCondition();
-    protected redLineDetectCondition redLineDetectStop = new redLineDetectCondition();
     protected FalseCondition falseStop = new FalseCondition();
 //    protected EopdProximityCondition eopdProximityStop = new EopdProximityCondition();
 //    protected RangeSensorProximityOrColorVerifiedCondition rangeSensorProximityOrColorVerifiedStop =
@@ -68,8 +63,8 @@ public class rr_AutoLib {
 
         robot.setJewelPusherNeutral();
 
-        robot.closeCubeClawServoOneCube();
-        robot.moveCubeArmToPositionWithTouchLimits(aOpMode, rr_Constants.CUBE_ARM_MIDDLE, CUBE_ARM_RAISE_POWER);
+        //robot.closeCubeClawServoOneCube();
+       // robot.moveCubeArmToPositionWithTouchLimits(aOpMode, rr_Constants.CUBE_ARM_MIDDLE, CUBE_ARM_RAISE_POWER);
 
         detectColorAndPushJewel(aOpMode, rr_Constants.AllianceColorEnum.BLUE);
         Thread.sleep(300);
@@ -89,7 +84,7 @@ public class rr_AutoLib {
         Thread.sleep(250);
         moveWheels(aOpMode, 6, .4f, rr_Constants.DirectionEnum.SidewaysRight, true);
         Thread.sleep(250);
-        robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_GRAB - 100, CUBE_ARM_LOWERING_POWER);
+        //robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_GRAB - 100, CUBE_ARM_LOWERING_POWER);
         Thread.sleep(250);
         robot.turnAbsoluteBoschGyroDegrees(aOpMode, -90);
         Thread.sleep(250);
@@ -99,7 +94,7 @@ public class rr_AutoLib {
         Thread.sleep(250);
         universalMoveRobot(aOpMode, -20, .3f, 0, 1500, falseStop, false, 0, 0);
         Thread.sleep(250);
-        robot.openCubeClawServoOneCube();
+       // robot.openCubeClawServoOneCube();
         Thread.sleep(300);
         universalMoveRobot(aOpMode, -20, .3f, 0, 500, falseStop , false, 0, 0);
         Thread.sleep(250);
@@ -121,8 +116,8 @@ public class rr_AutoLib {
 
         robot.setJewelPusherNeutral();
 
-        robot.closeCubeClawServoOneCube();
-        robot.moveCubeArmToPositionWithTouchLimits(aOpMode, rr_Constants.CUBE_ARM_MIDDLE, CUBE_ARM_RAISE_POWER);
+       // robot.closeCubeClawServoOneCube();
+        //robot.moveCubeArmToPositionWithTouchLimits(aOpMode, rr_Constants.CUBE_ARM_MIDDLE, CUBE_ARM_RAISE_POWER);
 
         detectColorAndPushJewel(aOpMode, rr_Constants.AllianceColorEnum.BLUE);
         Thread.sleep(300);
@@ -143,13 +138,13 @@ public class rr_AutoLib {
         Thread.sleep(300);
         moveWheels(aOpMode, columnDistance, .4f, moveDirection, true);
         Thread.sleep(300);
-        robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_GRAB - 100, CUBE_ARM_LOWERING_POWER);
+        //robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_GRAB - 100, CUBE_ARM_LOWERING_POWER);
         Thread.sleep(300);
         robot.turnAbsoluteBoschGyroDegrees(aOpMode, 25);
         Thread.sleep(300);
         universalMoveRobot(aOpMode, 20, .3f, 0, 1250, falseStop, false, 0, 0);
         Thread.sleep(300);
-        robot.openCubeClawServoOneCube();
+       // robot.openCubeClawServoOneCube();
         Thread.sleep(300);
         universalMoveRobot(aOpMode, 20, .3f, 0, 500, falseStop , false, 0, 0);
         Thread.sleep(300);
@@ -170,8 +165,8 @@ public class rr_AutoLib {
 
         robot.setJewelPusherNeutral();
 
-        robot.closeCubeClawServoOneCube();
-        robot.moveCubeArmToPositionWithTouchLimits(aOpMode, rr_Constants.CUBE_ARM_MIDDLE - 200, CUBE_ARM_RAISE_POWER);
+       // robot.closeCubeClawServoOneCube();
+       // robot.moveCubeArmToPositionWithTouchLimits(aOpMode, rr_Constants.CUBE_ARM_MIDDLE - 200, CUBE_ARM_RAISE_POWER);
 
         aOpMode.DBG("In Red One Common");
 
@@ -203,7 +198,7 @@ public class rr_AutoLib {
             Thread.sleep(300);
             moveWheels(aOpMode, 6, .4f, rr_Constants.DirectionEnum.SidewaysRight, true);
             Thread.sleep(300);
-            robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_GRAB - 100, CUBE_ARM_LOWERING_POWER);
+          //  robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_GRAB - 100, CUBE_ARM_LOWERING_POWER);
             Thread.sleep(300);
             robot.turnAbsoluteBoschGyroDegrees(aOpMode, -90);
             Thread.sleep(300);
@@ -211,11 +206,11 @@ public class rr_AutoLib {
             Thread.sleep(300);
             robot.turnAbsoluteBoschGyroDegrees(aOpMode, -110);
             Thread.sleep(300);
-            robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_GRAB - 100, CUBE_ARM_LOWERING_POWER);
+          //  robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_GRAB - 100, CUBE_ARM_LOWERING_POWER);
             Thread.sleep(300);
             universalMoveRobot(aOpMode, 20, .3f, 0, 1500, falseStop, false, 0, 0);
             Thread.sleep(250);
-            robot.openCubeClawServoOneCube();
+            //robot.openCubeClawServoOneCube();
             Thread.sleep(300);
             universalMoveRobot(aOpMode, 20, .3f, 0, 500, falseStop, false, 0, 0);
             Thread.sleep(300);
@@ -239,8 +234,8 @@ public class rr_AutoLib {
 
         robot.setJewelPusherNeutral();
 
-        robot.closeCubeClawServoOneCube();
-        robot.moveCubeArmToPositionWithTouchLimits(aOpMode, rr_Constants.CUBE_ARM_MIDDLE - 200, CUBE_ARM_RAISE_POWER);
+       // robot.closeCubeClawServoOneCube();
+      //  robot.moveCubeArmToPositionWithTouchLimits(aOpMode, rr_Constants.CUBE_ARM_MIDDLE - 200, CUBE_ARM_RAISE_POWER);
 
         detectColorAndPushJewel(aOpMode, rr_Constants.AllianceColorEnum.RED);
         aOpMode.telemetry.setAutoClear(true); //neccessary for using Vuforia
@@ -257,7 +252,7 @@ public class rr_AutoLib {
         Thread.sleep(300);
         moveWheels(aOpMode, 21 , .3f, rr_Constants.DirectionEnum.Backward, true);
         Thread.sleep(300);
-        robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_GRAB - 100, CUBE_ARM_LOWERING_POWER);
+      //  robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_GRAB - 100, CUBE_ARM_LOWERING_POWER);
         Thread.sleep(300);
         robot.turnUsingEncoders(aOpMode, 120, .3f, rr_Constants.TurnDirectionEnum.Clockwise);
         Thread.sleep(300);
@@ -272,7 +267,7 @@ public class rr_AutoLib {
         Thread.sleep(300);
         universalMoveRobot(aOpMode, 20, .3f, 0, 900, falseStop , false, 0, 0);
         Thread.sleep(250);
-        robot.openCubeClawServoOneCube();
+        //robot.openCubeClawServoOneCube();
         Thread.sleep(300);
         universalMoveRobot(aOpMode, 20, .3f, 0, 500, falseStop , false, 0, 0);
         Thread.sleep(300);
@@ -487,19 +482,6 @@ public class rr_AutoLib {
     }
 
 
-    public class blueLineDetectCondition implements rr_OpMode.StopCondition {
-
-        public boolean stopCondition(rr_OpMode aOpMode) throws InterruptedException {
-            return ((robot.getFloorBlueReading() >= (rr_Constants.FLOOR_BLUE_THRESHOLD)));
-        }
-    }
-
-    public class redLineDetectCondition implements rr_OpMode.StopCondition {
-
-        public boolean stopCondition(rr_OpMode aOpMode) throws InterruptedException {
-            return ((robot.getFloorRedReading() >= (rr_Constants.FLOOR_RED_THRESHOLD)));
-        }
-    }
 
 
     public class FalseCondition implements rr_OpMode.StopCondition {

@@ -34,6 +34,7 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_HORIZONTAL_SERVO2
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_LIFT_MAX_DURATION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_HORIZONTAL_SERVO1;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_LIFT;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_PUSHER_RESTED_POSITION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DEBUG;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DEBUG_LEVEL;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_LEFT_MOTOR;
@@ -70,6 +71,8 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_CLAW_OPEN;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WINCH;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RIGHT_MOTOR_TRIM_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.ROBOT_TRACK_DISTANCE;
+import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_FLIP_COLLECTION_POSITION;
+import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_HEIGHT_COLLECTION_POSITION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TURN_POWER_FACTOR;
 
 
@@ -87,11 +90,18 @@ public class rr_Robot {
         STOPPED
     }
 
+    enum cubePusherStateEnum{
+        REST,
+        PUSHED
+    }
+
     rr_OpMode aOpMode;
 
     pictographType detectedPictograph = pictographType.UNKNOWN;
 
     intakeStateEnum intakeState = intakeStateEnum.STOPPED;
+
+    cubePusherStateEnum cubePusherState=cubePusherStateEnum.REST;
 
     HardwareMap hwMap = null;
 
@@ -105,6 +115,11 @@ public class rr_Robot {
     private Servo relicArm;
     private Servo cubeOrientationServo1;
     private Servo cubeOrientationServo2;
+
+    private Servo trayHeightServo;
+    private Servo trayFlipServo;
+
+    private Servo cubePusherServo;
 
     private ColorSensor leftJewelColorSensor;
     private ColorSensor rightJewelColorSensor;
@@ -131,6 +146,11 @@ public class rr_Robot {
     private double prevFRVelocity = 0.0f;
     private double prevBLVelocity = 0.0f;
     private double prevBRVelocity = 0.0f;
+
+    float trayHeightPosition = rr_Constants.TRAY_HEIGHT_COLLECTION_POSITION;
+    float trayFlipPosition = rr_Constants.TRAY_FLIP_COLLECTION_POSITION;
+
+    float cubePusherPosition= CUBE_PUSHER_RESTED_POSITION;
 
     private ElapsedTime period = new ElapsedTime();
 
@@ -178,6 +198,10 @@ public class rr_Robot {
        // initJewelServos(aOpMode);
         //setJewelPusherPosition(JEWEL_PUSHER_RIGHT - 0.1f);
 
+        initTrayServos(aOpMode);
+
+        initCubePusherServo(aOpMode);
+
         aOpMode.DBG("Exiting Robot init");
     }
 
@@ -211,6 +235,10 @@ public class rr_Robot {
         //initJewelServos(aOpMode);
        // setJewelPusherPosition(JEWEL_PUSHER_NEUTRAL);
 
+        initTrayServos(aOpMode);
+
+        initCubePusherServo(aOpMode);
+
         //initialize Gyro.
         initIMUGyro(aOpMode);
 
@@ -221,6 +249,25 @@ public class rr_Robot {
         aOpMode.DBG("Starting Initialize Bosch Gyro");
         initializeBoschIMU(aOpMode); //use shared method for initialization of bosch gyro
         aOpMode.DBG("End Initialize Bosch Gyro");
+    }
+
+    public void initTrayServos(rr_OpMode aOpMode) throws InterruptedException{
+        trayHeightServo = hwMap.get(Servo.class, "servo_tray_height");
+        Thread.sleep(100);
+        trayHeightServo.setPosition(TRAY_HEIGHT_COLLECTION_POSITION);
+        Thread.sleep(100);
+
+        trayFlipServo = hwMap.get(Servo.class, "servo_tray_flip");
+        Thread.sleep(100);
+        trayFlipServo.setPosition(TRAY_FLIP_COLLECTION_POSITION);
+        Thread.sleep(250);
+    }
+
+    public void initCubePusherServo(rr_OpMode aOpMode) throws InterruptedException{
+        cubePusherServo = hwMap.get(Servo.class, "servo_cube_pusher");
+        Thread.sleep(100);
+        cubePusherServo.setPosition(CUBE_PUSHER_RESTED_POSITION);
+        Thread.sleep(100);
     }
 
     public void initDriveMotors(rr_OpMode aOpMode) throws InterruptedException {
@@ -945,37 +992,6 @@ public class rr_Robot {
     }
 
 
-    /***********************************************
-     *
-     *     RELIC ARM CONTROL
-     *
-     ***********************************************/
-
-
-    public void setRelicWinchPosition(rr_OpMode aOpMode, int position, float power) throws InterruptedException {
-        //set the mode to be RUN_TO_POSITION
-        motorArray[RELIC_WINCH].setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        Thread.sleep(50);
-
-        //Now set the target
-        motorArray[RELIC_WINCH].setTargetPosition(position);
-
-        //now set the power
-        motorArray[RELIC_WINCH].setPower(power);
-
-        //reset clock for checking stall
-        aOpMode.reset_timer_array(GENERIC_TIMER);
-
-
-        while (motorArray[RELIC_WINCH].isBusy()) {
-            aOpMode.idle();
-        }
-        //stop the motor
-        motorArray[RELIC_WINCH].setPower(0.0f);
-
-        motorArray[RELIC_WINCH].setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-    }
-
     public void setRelicWinchPower(float power) {
         motorArray[RELIC_WINCH].setPower(power);
     }
@@ -1505,5 +1521,22 @@ public class rr_Robot {
 
         return RelicRecoveryVuMark.UNKNOWN;
 
+    }
+
+    public void setTrayHeightPosition(rr_OpMode aOpMode, float position) throws InterruptedException{
+        trayHeightServo.setPosition(position);
+        trayHeightPosition=position;
+        Thread.sleep(100);
+    }
+    public void setTrayFlipPosition(rr_OpMode aOpMode, float position) throws InterruptedException{
+        trayFlipServo.setPosition(position);
+        trayFlipPosition=position;
+        Thread.sleep(100);
+    }
+
+    public void setCubePusherPosition(rr_OpMode aOpMode, float position) throws InterruptedException{
+        cubePusherServo.setPosition(position);
+        cubePusherPosition=position;
+        Thread.sleep(250);
     }
 }
