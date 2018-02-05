@@ -22,6 +22,7 @@ public class TestRelicAll extends rr_OpMode {
         telemetry.setAutoClear(true);
 
         while (opModeIsActive()) {
+            processWinchTest();
             processArmTest();
             processClawTest();
             printPositions();
@@ -35,6 +36,22 @@ public class TestRelicAll extends rr_OpMode {
         robot.teleopInit(this, this.hardwareMap);
         robot.setRelicArmPosition(armPosition);
         robot.setRelicClawPosition(clawPosition);
+    }
+
+    private void processWinchTest() throws InterruptedException {
+        if (gamepad1.right_trigger >= .05f) {
+            robot.setRelicWinchPower(gamepad1.right_trigger * RELIC_WINCH_EXTEND_POWER_FACTOR);
+        } else if (gamepad1.left_trigger >= .05f) {
+            robot.setRelicWinchPower(-gamepad1.left_trigger * RELIC_WINCH_RETRACT_POWER_FACTOR);
+        } else {
+            robot.setRelicWinchPower(0);
+        }
+
+        if (gamepad1.dpad_up) {
+            robot.setRelicWinchPosition(this, RELIC_WINCH_UPPER_LIMIT, 50);
+        } else if (gamepad1.dpad_down) {
+            robot.setRelicWinchPosition(this, RELIC_WINCH_REST, 50);
+        }
     }
 
     private void processArmTest() throws InterruptedException {

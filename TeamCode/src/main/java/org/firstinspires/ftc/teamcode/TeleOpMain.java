@@ -17,11 +17,11 @@ public class TeleOpMain extends rr_OpMode {
 
         telemetry.setAutoClear(true);
 
-        //lib.initializeCubeArm(this);
+        lib.initializeCubeArm(this);
 
         while (opModeIsActive()) {
-            //lib.processClaw();
-            //lib.processCubeArm();
+            lib.processClaw();
+            lib.processCubeArm();
             lib.processTeleOpDrive();
             lib.processRelicSlide();
             lib.processRelicClaw();

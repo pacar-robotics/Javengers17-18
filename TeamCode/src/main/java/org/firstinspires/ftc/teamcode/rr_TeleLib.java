@@ -14,8 +14,6 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_LIFT_POSITION_2;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_LIFT_POSITION_3;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_LIFT_POWER;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_LIFT_POWER_FACTOR;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_PUSHER_PUSHED_POSITION;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_PUSHER_RESTED_POSITION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_VERTICAL_SERVO1;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_VERTICAL_SERVO2;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DEBUG;
@@ -30,16 +28,8 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_CLAW_CLOSED;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WINCH_EXTEND_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WINCH_RETRACT_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.STANDARD_DRIVE_POWER_FACTOR;
-import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_FLIP_COLLECTION_POSITION;
-import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_FLIP_HORIZONTAL_POSITION;
-import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_FLIP_SCORING_POSITION;
-import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_HEIGHT_1CUBE_POSITION;
-import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_HEIGHT_COLLECTION_POSITION;
-import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_HEIGHT_MAX_POSITION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRIGGER_THRESHOLD;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TURN_POWER_FACTOR;
-import static org.firstinspires.ftc.teamcode.rr_Robot.cubePusherStateEnum.PUSHED;
-import static org.firstinspires.ftc.teamcode.rr_Robot.cubePusherStateEnum.REST;
 import static org.firstinspires.ftc.teamcode.rr_Robot.intakeStateEnum.RUNNING;
 import static org.firstinspires.ftc.teamcode.rr_Robot.intakeStateEnum.STOPPED;
 
@@ -290,15 +280,6 @@ public class rr_TeleLib {
             runIntakeWithDiagonalCheck(aOpMode, isIntake); //check for cubes going in sideways
             //so we can counter rotate to straighted
         }
-        if(aOpMode.gamepad1.left_bumper){
-            if(robot.cubePusherState== REST){
-                robot.cubePusherState=PUSHED;
-                robot.setCubePusherPosition(aOpMode, CUBE_PUSHER_PUSHED_POSITION);
-            }else{
-                robot.cubePusherState=REST;
-                robot.setCubePusherPosition(aOpMode, CUBE_PUSHER_RESTED_POSITION);
-            }
-        }
     }
 
     public void processCubeOrientation() throws InterruptedException {
@@ -328,43 +309,6 @@ public class rr_TeleLib {
             robot.setCubeLiftPower(aOpMode, 0);
         }
     }
-    public void processTrayLift(rr_OpMode aOpMode) throws InterruptedException {
-        if(aOpMode.gamepad1.right_trigger>TRIGGER_THRESHOLD){
-            //raise the height of the tray
-            if(robot.trayHeightPosition>=TRAY_HEIGHT_MAX_POSITION){ //check for limit
-                robot.trayHeightPosition=TRAY_HEIGHT_MAX_POSITION;
-            }else{
-                robot.trayHeightPosition+=0.025;
-            }
-            robot.setTrayHeightPosition(aOpMode, robot.trayHeightPosition);
-        }
-        if(aOpMode.gamepad1.left_trigger>TRIGGER_THRESHOLD){
-            //lower the height of the tray
-            if(robot.trayHeightPosition<=TRAY_HEIGHT_COLLECTION_POSITION){ //check for limit
-                robot.trayHeightPosition=TRAY_HEIGHT_COLLECTION_POSITION;
-            }else{
-                robot.trayHeightPosition-=0.025;
-            }
-            robot.setTrayHeightPosition(aOpMode, robot.trayHeightPosition);
-
-        } else if (aOpMode.gamepad1.x){
-            robot.setTrayHeightPosition(aOpMode, TRAY_HEIGHT_COLLECTION_POSITION);
-            robot.setTrayFlipPosition(aOpMode, TRAY_FLIP_COLLECTION_POSITION);
-
-        } else if (aOpMode.gamepad1.b){
-            //flip tray horizontal and go to scoring depending on position
-            if(robot.trayFlipPosition==TRAY_FLIP_COLLECTION_POSITION){
-                robot.setTrayFlipPosition(aOpMode, TRAY_FLIP_HORIZONTAL_POSITION);
-            }else{
-                robot.setTrayFlipPosition(aOpMode, TRAY_FLIP_SCORING_POSITION);
-            }
-        } else if (aOpMode.gamepad1.y){
-            robot.setTrayHeightPosition(aOpMode, TRAY_HEIGHT_MAX_POSITION);
-        } else if (aOpMode.gamepad1.a){
-        robot.setTrayHeightPosition(aOpMode, TRAY_HEIGHT_1CUBE_POSITION);
-    }
-}
-
 
     public void printTelemetry() throws InterruptedException {
         if (DEBUG) {
@@ -539,70 +483,6 @@ public class rr_TeleLib {
         {
             robot.runIntake(aOpMode, polarity * INTAKE_POWER_HIGH, polarity * INTAKE_POWER_HIGH);
         }
-    }
-
-    private void processTrayHeightAdjustments(rr_OpMode aOpMode) throws InterruptedException{
-
-        if(aOpMode.gamepad1.right_trigger>TRIGGER_THRESHOLD){
-            //raise the height of the tray
-            if(robot.trayHeightPosition>=TRAY_HEIGHT_MAX_POSITION){ //check for limit
-                robot.trayHeightPosition=TRAY_HEIGHT_MAX_POSITION;
-            }else{
-                robot.trayHeightPosition+=0.025;
-            }
-            robot.setTrayHeightPosition(aOpMode, robot.trayHeightPosition);
-        }
-        if(aOpMode.gamepad1.left_trigger>TRIGGER_THRESHOLD){
-            //lower the height of the tray
-            if(robot.trayHeightPosition<=TRAY_HEIGHT_COLLECTION_POSITION){ //check for limit
-                robot.trayHeightPosition=TRAY_HEIGHT_COLLECTION_POSITION;
-            }else{
-                robot.trayHeightPosition-=0.025;
-            }
-            robot.setTrayHeightPosition(aOpMode, robot.trayHeightPosition);
-        }
-
-
-
-
-
-    }
-
-    private void processTrayFlipAdjustments(rr_OpMode aOpMode) throws InterruptedException{
-        if(aOpMode.gamepad1.y){
-            //increase angle of tray flip to be more vertical.
-            if(robot.trayFlipPosition<=TRAY_FLIP_SCORING_POSITION){ //check for limit
-                robot.trayFlipPosition=TRAY_FLIP_SCORING_POSITION;
-            }else{
-                robot.trayFlipPosition-=0.025;
-            }
-            robot.setTrayFlipPosition(aOpMode, robot.trayFlipPosition);
-        }
-        if(aOpMode.gamepad1.a){
-            //decrease angle of tray flip to be more vertical.
-            if(robot.trayFlipPosition>=TRAY_FLIP_COLLECTION_POSITION){ //check for limit
-                robot.trayFlipPosition=TRAY_FLIP_COLLECTION_POSITION;
-            }else{
-                robot.trayFlipPosition+=0.025;
-            }
-            robot.setTrayFlipPosition(aOpMode, robot.trayFlipPosition);
-        }
-        if(aOpMode.gamepad1.x){
-            //set tray to collection
-            robot.trayFlipPosition=TRAY_FLIP_COLLECTION_POSITION;
-            robot.setTrayFlipPosition(aOpMode, robot.trayFlipPosition);
-        }
-        if(aOpMode.gamepad1.b){
-            //set tray to scoring
-            robot.trayFlipPosition=TRAY_FLIP_SCORING_POSITION;
-            robot.setTrayFlipPosition(aOpMode, robot.trayFlipPosition);
-        }
-        if(aOpMode.gamepad1.left_bumper){
-            //set tray to horizontal
-            robot.trayFlipPosition=TRAY_FLIP_HORIZONTAL_POSITION;
-            robot.setTrayFlipPosition(aOpMode, robot.trayFlipPosition);
-        }
-
     }
 
 }
