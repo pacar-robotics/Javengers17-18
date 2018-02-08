@@ -43,12 +43,12 @@ public class ActionRunIntake extends rr_OpMode {
              //we should switch to low power but reverse one of the motors
              //this should cause the motors to rotate the cube so it is straight
              //this has to be tested and adjusted.
-             lib.robot.runIntake(aOpMode, INTAKE_POWER_MEDIUM, -INTAKE_POWER_MEDIUM);
+             lib.robot.setIntakePower(aOpMode, INTAKE_POWER_MEDIUM, -INTAKE_POWER_MEDIUM);
              Thread.sleep(200); //wait for a second for rotation.
-             lib.robot.runIntake(aOpMode, 0, 0);
+             lib.robot.setIntakePower(aOpMode, 0, 0);
              Thread.sleep(100); //wait for a second for rotation.
          }else{
-             lib.robot.runIntake(aOpMode, INTAKE_POWER_LOW, INTAKE_POWER_LOW);
+             lib.robot.setIntakePower(aOpMode, INTAKE_POWER_LOW, INTAKE_POWER_LOW);
          }
 
      }

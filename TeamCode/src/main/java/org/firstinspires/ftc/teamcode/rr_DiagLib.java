@@ -9,11 +9,11 @@ import java.util.GregorianCalendar;
 
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_RIGHT_MOTOR;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_LIFT;
+import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_LIFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_RIGHT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_EXTEND_UP;
-import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WINCH;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WINCH_MOTOR;
 
 class rr_DiagLib {
 
@@ -187,13 +187,13 @@ class rr_DiagLib {
 
     private class TestCubeArmMotor implements AutomaticTest {
         public TestResult runTest() throws InterruptedException {
-            return genericMotorTest(CUBE_LIFT, "Cube arm motor", false);
+            return genericMotorTest(TRAY_LIFT_MOTOR, "Cube arm motor", false);
         }
     }
 
     private class TestRelicWinchMotor implements AutomaticTest {
         public TestResult runTest() throws InterruptedException {
-            return genericMotorTest(RELIC_WINCH, "Relic winch motor", true);
+            return genericMotorTest(RELIC_WINCH_MOTOR, "Relic winch motor", true);
         }
     }
 

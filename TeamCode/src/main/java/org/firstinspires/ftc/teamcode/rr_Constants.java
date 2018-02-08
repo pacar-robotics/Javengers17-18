@@ -53,19 +53,8 @@ public class rr_Constants {
     final static float LEFT_MOTOR_TRIM_FACTOR = 0.95f;
     final static float RIGHT_MOTOR_TRIM_FACTOR = 1.0f;
 
-    //Cube Control Constants
-    //TODO: Change
-    final static int CUBE_LIFT_MAX_DURATION = 3000;
-    final static int CUBE_LIFT_POSITION_1 = 0;
-    final static int CUBE_LIFT_POSITION_2 = 0;
-    final static int CUBE_LIFT_POSITION_3 = 0;
-    final static float CUBE_LIFT_POWER = 0.5f;
-    final static float CUBE_HORIZONTAL_SERVO1 = 0.5f;
-    final static float CUBE_VERTICAL_SERVO1 = 0.5f;
-    final static float CUBE_HORIZONTAL_SERVO2 = 0.5f;
-    final static float CUBE_VERTICAL_SERVO2 = 0.5f;
-    final static float CUBE_ARM_RAISE_POWER = -0.75f;
-    final static float CUBE_LIFT_POWER_FACTOR = 0.5f;
+    //intake controls
+
     final static float INTAKE_POWER_LOW = 0.2f;
     final static float INTAKE_POWER_MEDIUM = 0.5f;
     final static float INTAKE_POWER_HIGH = 1.0f;
@@ -87,12 +76,16 @@ public class rr_Constants {
 
     //Cube Tray Constants
     //these numbers need to be tuned based on a calibration op
-    final static float TRAY_HEIGHT_COLLECTION_POSITION=0.445f;
+    final static int TRAY_HEIGHT_COLLECTION_POSITION=0;
+    final static int TRAY_HEIGHT_1CUBE_POSITION=300;
+    final static int TRAY_HEIGHT_MAX_POSITION=950;
+    final static float TRAY_LIFT_POWER_FACTOR=1.0f;
+    final static float TRAY_LIFT_POWER=1.0f;
+
     final static float TRAY_FLIP_HORIZONTAL_POSITION=0.88f;
-    final static float TRAY_FLIP_COLLECTION_POSITION=1.0f;
-    final static float TRAY_FLIP_SCORING_POSITION=0.5f;
-    final static float TRAY_HEIGHT_1CUBE_POSITION=0.65f;
-    final static float TRAY_HEIGHT_MAX_POSITION=0.725f;
+    final static float TRAY_FLIP_COLLECTION_POSITION=0.95f;
+    final static float TRAY_FLIP_SCORING_POSITION=0.45f;
+
 
     //Cube Pusher Constants
     final static float CUBE_PUSHER_RESTED_POSITION= 0.95f;
@@ -120,10 +113,11 @@ public class rr_Constants {
     final static int FRONT_RIGHT_MOTOR = 1;
     final static int BACK_LEFT_MOTOR = 2;
     final static int BACK_RIGHT_MOTOR = 3;
-    final static int CUBE_LIFT = 4;
-    final static int RELIC_WINCH = 5;
+    final static int TRAY_LIFT_MOTOR= 4;
+    final static int RELIC_WINCH_MOTOR = 5;
     final static int INTAKE_RIGHT_MOTOR=6;
     final static int INTAKE_LEFT_MOTOR=7;
+
 
     //Mecanum wheel properties
     final static float MECANUM_WHEEL_DIAMETER = 4f;   //in inches

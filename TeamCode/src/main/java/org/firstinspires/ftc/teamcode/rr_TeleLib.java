@@ -5,19 +5,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import static org.firstinspires.ftc.teamcode.rr_Constants.ANALOG_STICK_THRESHOLD;
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_RIGHT_MOTOR;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_HORIZONTAL_SERVO2;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_LIFT;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_RAISE_POWER;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_HORIZONTAL_SERVO1;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_LIFT_POSITION_1;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_LIFT_POSITION_2;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_LIFT_POSITION_3;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_LIFT_POWER;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_LIFT_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_PUSHER_PUSHED_POSITION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_PUSHER_RESTED_POSITION;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_VERTICAL_SERVO1;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_VERTICAL_SERVO2;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DEBUG;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FIELD_ORIENTED_DRIVE_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_LEFT_MOTOR;
@@ -36,6 +25,9 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_FLIP_SCORING_POSI
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_HEIGHT_1CUBE_POSITION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_HEIGHT_COLLECTION_POSITION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_HEIGHT_MAX_POSITION;
+import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_LIFT_MOTOR;
+import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_LIFT_POWER;
+import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_LIFT_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRIGGER_THRESHOLD;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TURN_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Robot.cubePusherStateEnum.PUSHED;
@@ -269,7 +261,7 @@ public class rr_TeleLib {
                 Thread.sleep(500); //absorb the extra key presses
 
             } else {
-                robot.runIntake(this.aOpMode, 0, 0);
+                robot.setIntakePower(this.aOpMode, 0, 0);
                 robot.intakeState = STOPPED;
                 Thread.sleep(500); //absorb the extra key presses
             }
@@ -281,7 +273,7 @@ public class rr_TeleLib {
                 Thread.sleep(500); //absorb the extra key presses
 
             } else {
-                robot.runIntake(this.aOpMode, 0, 0);
+                robot.setIntakePower(this.aOpMode, 0, 0);
                 robot.intakeState = STOPPED;
                 Thread.sleep(500); //absorb the extra key presses
             }
@@ -301,54 +293,44 @@ public class rr_TeleLib {
         }
     }
 
-    public void processCubeOrientation() throws InterruptedException {
-        if (aOpMode.gamepad1.a){
-            if (robot.getCubeOrientationServo1() == CUBE_HORIZONTAL_SERVO1){
-                robot.setCubeOrientationServo1(CUBE_VERTICAL_SERVO1);
-                robot.setCubeOrientationServo1(CUBE_VERTICAL_SERVO2);
-            } else if (robot.getCubeOrientationServo1() == CUBE_VERTICAL_SERVO1){
-                robot.setCubeOrientationServo1(CUBE_HORIZONTAL_SERVO1);
-                robot.setCubeOrientationServo1(CUBE_HORIZONTAL_SERVO2);
-            }
+    /*
+    public void processTrayLift() throws InterruptedException {
+        if (aOpMode.gamepad1.left_trigger >= TRIGGER_THRESHOLD) {
+            robot.setTrayLiftPower(aOpMode, aOpMode.gamepad1.left_trigger * TRAY_LIFT_POWER_FACTOR);
+        } else if (aOpMode.gamepad1.right_trigger >= TRIGGER_THRESHOLD) {
+            robot.setTrayLiftPower(aOpMode, aOpMode.gamepad1.right_trigger * TRAY_LIFT_POWER_FACTOR);
+        } else if (aOpMode.gamepad1.x){
+            robot.setTrayHeightPositionWithTouchLimits(aOpMode, TRAY_HEIGHT_COLLECTION_POSITION, TRAY_LIFT_POWER);
+        } else if (aOpMode.gamepad1.b){
+            robot.setTrayHeightPositionWithTouchLimits(aOpMode, TRAY_HEIGHT_1CUBE_POSITION, TRAY_LIFT_POWER);
+        } else if (aOpMode.gamepad1.y){
+            robot.setTrayHeightPositionWithTouchLimits(aOpMode, TRAY_HEIGHT_MAX_POSITION, TRAY_LIFT_POWER);
+        } else {
+            robot.setTrayLiftPower(aOpMode, 0);
         }
     }
 
-    public void processCubeLift() throws InterruptedException {
-        if (aOpMode.gamepad1.left_trigger >= TRIGGER_THRESHOLD) {
-            robot.setCubeLiftPower(aOpMode, aOpMode.gamepad1.left_trigger * CUBE_LIFT_POWER_FACTOR);
-        } else if (aOpMode.gamepad1.right_trigger >= TRIGGER_THRESHOLD) {
-            robot.setCubeLiftPower(aOpMode, aOpMode.gamepad1.right_trigger * CUBE_LIFT_POWER_FACTOR);
-        } else if (aOpMode.gamepad1.x){
-            robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_LIFT_POSITION_1, CUBE_LIFT_POWER);
-        } else if (aOpMode.gamepad1.y){
-            robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_LIFT_POSITION_2, CUBE_LIFT_POWER);
-        } else if (aOpMode.gamepad1.b){
-            robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_LIFT_POSITION_3, CUBE_LIFT_POWER);
-        } else {
-            robot.setCubeLiftPower(aOpMode, 0);
-        }
-    }
+    */
     public void processTrayLift(rr_OpMode aOpMode) throws InterruptedException {
+        robot.trayHeightPosition=robot.getTrayPosition(aOpMode);
         if(aOpMode.gamepad1.right_trigger>TRIGGER_THRESHOLD){
             //raise the height of the tray
-            if(robot.trayHeightPosition>=TRAY_HEIGHT_MAX_POSITION){ //check for limit
-                robot.trayHeightPosition=TRAY_HEIGHT_MAX_POSITION;
+            if(robot.trayHeightPosition>=TRAY_HEIGHT_MAX_POSITION-50){ //check for limit
+               robot.setTrayHeightPositionWithTouchLimits(aOpMode, TRAY_HEIGHT_MAX_POSITION, TRAY_LIFT_POWER);
             }else{
-                robot.trayHeightPosition+=0.025;
+                robot.setTrayHeightPositionWithTouchLimits(aOpMode, robot.trayHeightPosition+50, TRAY_LIFT_POWER);
             }
-            robot.setTrayHeightPosition(aOpMode, robot.trayHeightPosition);
         }
         if(aOpMode.gamepad1.left_trigger>TRIGGER_THRESHOLD){
             //lower the height of the tray
-            if(robot.trayHeightPosition<=TRAY_HEIGHT_COLLECTION_POSITION){ //check for limit
-                robot.trayHeightPosition=TRAY_HEIGHT_COLLECTION_POSITION;
+            if(robot.trayHeightPosition<=TRAY_HEIGHT_COLLECTION_POSITION+50){ //check for limit
+                robot.setTrayHeightPositionWithTouchLimits(aOpMode,TRAY_HEIGHT_COLLECTION_POSITION, TRAY_LIFT_POWER);
             }else{
-                robot.trayHeightPosition-=0.025;
+                robot.setTrayHeightPositionWithTouchLimits(aOpMode, robot.trayHeightPosition-50, TRAY_LIFT_POWER);
             }
-            robot.setTrayHeightPosition(aOpMode, robot.trayHeightPosition);
 
         } else if (aOpMode.gamepad1.x){
-            robot.setTrayHeightPosition(aOpMode, TRAY_HEIGHT_COLLECTION_POSITION);
+            robot.setTrayHeightPositionWithTouchLimits(aOpMode, TRAY_HEIGHT_COLLECTION_POSITION, TRAY_LIFT_POWER);
             robot.setTrayFlipPosition(aOpMode, TRAY_FLIP_COLLECTION_POSITION);
 
         } else if (aOpMode.gamepad1.b){
@@ -359,16 +341,16 @@ public class rr_TeleLib {
                 robot.setTrayFlipPosition(aOpMode, TRAY_FLIP_SCORING_POSITION);
             }
         } else if (aOpMode.gamepad1.y){
-            robot.setTrayHeightPosition(aOpMode, TRAY_HEIGHT_MAX_POSITION);
+            robot.setTrayHeightPositionWithTouchLimits(aOpMode, TRAY_HEIGHT_MAX_POSITION, TRAY_LIFT_POWER);
         } else if (aOpMode.gamepad1.a){
-        robot.setTrayHeightPosition(aOpMode, TRAY_HEIGHT_1CUBE_POSITION);
+        robot.setTrayHeightPositionWithTouchLimits(aOpMode, TRAY_HEIGHT_1CUBE_POSITION, TRAY_LIFT_POWER);
     }
 }
 
 
     public void printTelemetry() throws InterruptedException {
         if (DEBUG) {
-            aOpMode.telemetry.addLine("Cube Arm Pos: " + robot.getMotorPosition(aOpMode, CUBE_LIFT));
+            aOpMode.telemetry.addLine("Tray Arm Pos: " + robot.getMotorPosition(aOpMode, TRAY_LIFT_MOTOR));
             aOpMode.telemetryAddLine("BRPower" + robot.getMotorPower(aOpMode, BACK_RIGHT_MOTOR));
             aOpMode.telemetryAddLine("FRPower" + robot.getMotorPower(aOpMode, FRONT_LEFT_MOTOR));
             aOpMode.telemetryAddLine("BLPower" + robot.getMotorPower(aOpMode, BACK_LEFT_MOTOR));
@@ -502,15 +484,15 @@ public class rr_TeleLib {
         return magnitude;
     }
 
-    public double clipAndScaleCubeArmPower(double magnitude) {
+    public double clipAndScaleTrayLiftPower(double magnitude) {
         magnitude = magnitude - TRIGGER_THRESHOLD + MOTOR_LOWER_POWER_THRESHOLD;
         if (magnitude > 1.0f) {
             magnitude = 1.0f;
         } else if (magnitude < MOTOR_LOWER_POWER_THRESHOLD) {
-            magnitude = CUBE_ARM_RAISE_POWER;
+            magnitude = TRAY_LIFT_POWER;
         }
 
-        aOpMode.telemetryAddData("Cube Arm Power", "cubeArmPower", "[" + magnitude + "]");
+        aOpMode.telemetryAddData("Tray Lift Power", "trayLiftPower", "[" + magnitude + "]");
         return magnitude;
     }
 
@@ -530,14 +512,15 @@ public class rr_TeleLib {
             //we should switch to low power but reverse one of the motors
             //this should cause the motors to rotate the cube so it is straight
             //this has to be tested and adjusted.
-            robot.runIntake(aOpMode, INTAKE_POWER_HIGH, -INTAKE_POWER_HIGH);
+            robot.setIntakePower(aOpMode, INTAKE_POWER_HIGH, -INTAKE_POWER_HIGH);
             Thread.sleep(200); //wait for a little time for rotation.
-            robot.runIntake(aOpMode, 0, 0);
+            robot.setIntakePower(aOpMode, 0, 0);
             Thread.sleep(100); //wait for a second for rotation.
         } else
 
         {
-            robot.runIntake(aOpMode, polarity * INTAKE_POWER_HIGH, polarity * INTAKE_POWER_HIGH);
+            robot.setIntakePower(aOpMode, polarity * INTAKE_POWER_HIGH,
+                    polarity * INTAKE_POWER_HIGH);
         }
     }
 
@@ -550,7 +533,7 @@ public class rr_TeleLib {
             }else{
                 robot.trayHeightPosition+=0.025;
             }
-            robot.setTrayHeightPosition(aOpMode, robot.trayHeightPosition);
+            robot.setTrayHeightPositionWithTouchLimits(aOpMode, robot.trayHeightPosition, TRAY_LIFT_POWER);
         }
         if(aOpMode.gamepad1.left_trigger>TRIGGER_THRESHOLD){
             //lower the height of the tray
@@ -559,7 +542,7 @@ public class rr_TeleLib {
             }else{
                 robot.trayHeightPosition-=0.025;
             }
-            robot.setTrayHeightPosition(aOpMode, robot.trayHeightPosition);
+            robot.setTrayHeightPositionWithTouchLimits(aOpMode, robot.trayHeightPosition, TRAY_LIFT_POWER);
         }
 
 

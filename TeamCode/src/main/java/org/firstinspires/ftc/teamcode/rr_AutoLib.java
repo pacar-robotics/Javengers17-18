@@ -9,7 +9,7 @@ import java.util.InputMismatchException;
 import static org.firstinspires.ftc.teamcode.rr_Constants.ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION;
 
 
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM_RAISE_POWER;
+import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_LIFT_POWER;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DirectionEnum.Backward;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DirectionEnum.Forward;
 import static org.firstinspires.ftc.teamcode.rr_Constants.INTAKE_LEFT_MOTOR;
