@@ -33,6 +33,7 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_RIGHT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_PUSHER_RESTED_POSITION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DEBUG;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DEBUG_LEVEL;
+import static org.firstinspires.ftc.teamcode.rr_Constants.ENCODER_COUNT_PER_DEGREE_TURN;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_RIGHT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.GENERIC_TIMER;
@@ -456,7 +457,7 @@ public class rr_Robot {
 
 
     /**
-     * Runs robot to a specific cubeClawPos. Can be called by other, more specific methods to move forwards, backwards or sideways.
+     * Runs robot to a specific position. Can be called by other, more specific methods to move forwards, backwards or sideways.
      *
      * @param aOpMode     an object of the rr_OpMode class
      * @param fl_Power    front right motor power
@@ -483,7 +484,7 @@ public class rr_Robot {
         motorArray[BACK_RIGHT_MOTOR].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         Thread.sleep(50);
 
-        //sets all motors to run to a cubeClawPos
+        //sets all motors to run to a position
         motorArray[FRONT_LEFT_MOTOR].setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motorArray[FRONT_RIGHT_MOTOR].setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motorArray[BACK_LEFT_MOTOR].setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -566,7 +567,7 @@ public class rr_Robot {
             //apply the new power values.
             //sets the the power of all motors
 
-            //in this runmode, the power does not control direction but the sign of the target cubeClawPos does.
+            //in this runmode, the power does not control direction but the sign of the target position does.
 
             motorArray[FRONT_LEFT_MOTOR].setPower(rampedPower * LEFT_MOTOR_TRIM_FACTOR);
             motorArray[FRONT_RIGHT_MOTOR].setPower(rampedPower * RIGHT_MOTOR_TRIM_FACTOR);
@@ -975,10 +976,14 @@ public class rr_Robot {
 
         //calculate the turn distance to be used in terms of encoder clicks.
         //for Andymark encoders.
-
+/*
         int turnDistance = (int) (2 * ((ROBOT_TRACK_DISTANCE) * angle
                 * ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION) /
                 (MECANUM_WHEEL_DIAMETER * 360));
+
+*/
+        int turnDistance=Math.round(angle*ENCODER_COUNT_PER_DEGREE_TURN); //this should be a better calculation for turns.
+
 
         switch (TurnDirection) {
             case Clockwise:

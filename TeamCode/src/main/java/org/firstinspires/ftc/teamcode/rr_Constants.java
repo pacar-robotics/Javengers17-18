@@ -125,6 +125,9 @@ public class rr_Constants {
     final static float MECANUM_WHEEL_SIDE_TRACK_DISTANCE = 8.25f;
     final static float MECANUM_WHEEL_FRONT_TRACK_DISTANCE = 15.5f;
 
+    //encoder count calculations from CalibEncoderTurn
+    final static float ENCODER_COUNT_PER_DEGREE_TURN=13.74f;
+
     //Power Factors
     final static float STANDARD_DRIVE_POWER_FACTOR = 0.95f;
     final static float FIELD_ORIENTED_DRIVE_POWER_FACTOR = 0.95f;
