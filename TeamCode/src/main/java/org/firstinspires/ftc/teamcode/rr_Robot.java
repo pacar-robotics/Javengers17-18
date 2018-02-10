@@ -151,31 +151,29 @@ public class rr_Robot {
         aOpMode.DBG("in Robot init");
         hwMap = ahwMap;
 
-//        //Instantiate motorArray
-//        motorArray = new DcMotor[10];
+        //Instantiate motorArray
+        motorArray = new DcMotor[10];
+
+        //Initialize Drive Motors
+        initDriveMotors(aOpMode);
+
+        //Initialize Gyro
+        initIMUGyro(aOpMode);
+
+
+        //Initialize Cube Arm
+        initCubeArmMotor(aOpMode);
+
+        initCubeArmSensors(aOpMode);
+        initCubeArmServos(aOpMode);
 //
-//        //Initialize Drive Motors
-//        initDriveMotors(aOpMode);
-//
-//        //Initialize Gyro
-//        initIMUGyro(aOpMode);
-//
-//
-//        //Initialize Cube Arm
-//        initCubeArmMotor(aOpMode);
-//
-//        initCubeArmSensors(aOpMode);
-//        initCubeArmServos(aOpMode);
-//
-//        //Initialize Relic Arm
-//        initRelicArm(aOpMode);
-//        initRelicArmSensors(aOpMode);
+        //Initialize Relic Arm
+        initRelicArm(aOpMode);
+        initRelicArmSensors(aOpMode);
 //
 //        //Initialize Jewel Arm
 //        initJewelSensors(aOpMode);
 //        initJewelServos(aOpMode);
-
-//        initOpenCVJewelDetection(aOpMode);
 
         //jewelDetector = new JewelDetector();
 
