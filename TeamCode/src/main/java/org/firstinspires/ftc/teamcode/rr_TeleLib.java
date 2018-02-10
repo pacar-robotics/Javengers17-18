@@ -46,6 +46,8 @@ public class rr_TeleLib {
     private boolean isIntake = true;
     private float turnVelocity = 0.0f;
     private double polarMagnitude = 0.0f;
+    private double heading=0.0f;
+    private double polarAngle=0.0f;
     private double cubeArmPower = 0.0f;
 
     public rr_TeleLib(rr_OpMode aOpMode, HardwareMap aHwMap) throws InterruptedException {
@@ -70,6 +72,9 @@ public class rr_TeleLib {
 
         if (Math.abs(aOpMode.gamepad2.left_stick_x) > ANALOG_STICK_THRESHOLD ||
                 Math.abs(aOpMode.gamepad2.left_stick_y) > ANALOG_STICK_THRESHOLD) {
+
+            //this is for the second game pad during the relic drive.
+
             //we are not in deadzone. Driver is pushing left joystick
             //lets make the robot move in chosen angle and magnitude.
 
@@ -95,6 +100,7 @@ public class rr_TeleLib {
             }
         } else if (Math.abs(aOpMode.gamepad1.left_stick_x) > ANALOG_STICK_THRESHOLD ||
                 Math.abs(aOpMode.gamepad1.left_stick_y) > ANALOG_STICK_THRESHOLD) {
+            //this is for the main drive while scoring glyphs
             //we are not in deadzone. Driver is pushing left joystick
             //lets make the robot move in chosen angle and magnitude.
             //add to  previous turnvelocity and divide by 2, to smoothen out the turn response.
@@ -106,14 +112,16 @@ public class rr_TeleLib {
             //adjust the power to address the effect of checking for deadzone.
             //if the clip and scale operation is not performed, the starting
             polarMagnitude =
-                    clipAndScaleTranslationPower(polarMagnitude + (getGamePad1LeftJoystickPolarMagnitude(aOpMode) * FIELD_ORIENTED_DRIVE_POWER_FACTOR)) / 2;
+                            getGamePad1LeftJoystickPolarMagnitude(aOpMode)
+                                    * FIELD_ORIENTED_DRIVE_POWER_FACTOR;
+
+            heading=robot.getBoschGyroSensorHeading(aOpMode);
+            polarAngle= getGamePad1LeftJoystickPolarAngle(aOpMode)-heading;
 
 
             robot.universalMoveRobot(aOpMode,
-                    getXVelocity(polarMagnitude,
-                            getGamePad1LeftJoystickPolarAngle(aOpMode) - robot.getBoschGyroSensorHeading(aOpMode)),
-                    getYVelocity(polarMagnitude,
-                            getGamePad1LeftJoystickPolarAngle(aOpMode) - robot.getBoschGyroSensorHeading(aOpMode)));
+                    getXVelocity(polarMagnitude,polarAngle),
+                    getYVelocity(polarMagnitude, polarAngle));
 
         } else if (Math.abs(aOpMode.gamepad1.right_stick_x) > ANALOG_STICK_THRESHOLD) {
 
@@ -139,6 +147,7 @@ public class rr_TeleLib {
             robot.stopBaseMotors(aOpMode);
         }
 
+        /*
         if (aOpMode.gamepad1.dpad_up || aOpMode.gamepad2.dpad_up) {
             robot.turnAbsoluteBoschGyroDegrees(aOpMode, 0);
         }
@@ -151,6 +160,7 @@ public class rr_TeleLib {
         if (aOpMode.gamepad1.dpad_left || aOpMode.gamepad2.dpad_left) {
             robot.turnAbsoluteBoschGyroDegrees(aOpMode, -90);
         }
+        */
     }
 
     public void processIMUGyroReset() throws InterruptedException {
@@ -488,8 +498,6 @@ public class rr_TeleLib {
         magnitude = magnitude - TRIGGER_THRESHOLD + MOTOR_LOWER_POWER_THRESHOLD;
         if (magnitude > 1.0f) {
             magnitude = 1.0f;
-        } else if (magnitude < MOTOR_LOWER_POWER_THRESHOLD) {
-            magnitude = TRAY_LIFT_POWER;
         }
 
         aOpMode.telemetryAddData("Tray Lift Power", "trayLiftPower", "[" + magnitude + "]");

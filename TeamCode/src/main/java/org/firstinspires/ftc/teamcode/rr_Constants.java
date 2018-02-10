@@ -50,7 +50,7 @@ public class rr_Constants {
 
 
     //Base Motor Trims
-    final static float LEFT_MOTOR_TRIM_FACTOR = 0.95f;
+    final static float LEFT_MOTOR_TRIM_FACTOR = 1.0f;
     final static float RIGHT_MOTOR_TRIM_FACTOR = 1.0f;
 
     //intake controls
@@ -82,9 +82,9 @@ public class rr_Constants {
     final static float TRAY_LIFT_POWER_FACTOR=1.0f;
     final static float TRAY_LIFT_POWER=1.0f;
 
-    final static float TRAY_FLIP_HORIZONTAL_POSITION=0.88f;
-    final static float TRAY_FLIP_COLLECTION_POSITION=0.95f;
-    final static float TRAY_FLIP_SCORING_POSITION=0.45f;
+    final static float TRAY_FLIP_HORIZONTAL_POSITION=0.7f;
+    final static float TRAY_FLIP_COLLECTION_POSITION=0.82f;
+    final static float TRAY_FLIP_SCORING_POSITION=0.22f;
 
 
     //Cube Pusher Constants
@@ -120,13 +120,13 @@ public class rr_Constants {
 
 
     //Mecanum wheel properties
-    final static float MECANUM_WHEEL_DIAMETER = 4f;   //in inches
+    final static float MECANUM_WHEEL_DIAMETER = 4f*1.5f;   //in inches multiplied by gearing factor.
     final static float MECANUM_WHEEL_ENCODER_MARGIN = 50;
-    final static float MECANUM_WHEEL_SIDE_TRACK_DISTANCE = 8.25f;
-    final static float MECANUM_WHEEL_FRONT_TRACK_DISTANCE = 15.5f;
+    final static float MECANUM_WHEEL_SIDE_TRACK_DISTANCE = 9.5f;
+    final static float MECANUM_WHEEL_FRONT_TRACK_DISTANCE = 14.75f;
 
     //encoder count calculations from CalibEncoderTurn
-    final static float ENCODER_COUNT_PER_DEGREE_TURN=13.74f;
+    final static float ENCODER_COUNT_PER_DEGREE_TURN=13.70f;
 
     //Power Factors
     final static float STANDARD_DRIVE_POWER_FACTOR = 0.95f;
