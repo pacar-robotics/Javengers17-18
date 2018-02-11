@@ -26,10 +26,11 @@ public class TestJewelDetector extends rr_OpMode {
 
         telemetry.clear();
 
-        while (opModeIsActive()) {
             telemetry.addLine(String.valueOf(jewelDetector.getCurrentOrder()));
             telemetry.update();
             Thread.sleep(500);
-        }
+
+            while(opModeIsActive());
+
     }
 }

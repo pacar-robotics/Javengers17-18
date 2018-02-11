@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 
+import com.disnodeteam.dogecv.CameraViewDisplay;
+import com.disnodeteam.dogecv.detectors.JewelDetector;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -79,6 +81,8 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.TURN_POWER_FACTOR;
 
 public class rr_Robot {
 
+//    JewelDetector jewelDetector;
+
     enum pictographType {
         LEFT,
         RIGHT,
@@ -148,7 +152,6 @@ public class rr_Robot {
 
     private ElapsedTime period = new ElapsedTime();
 
-    // Vuforia
     public static final String TAG = "Vuforia VuMark Sample";
     VuforiaLocalizer vuforia;
 
@@ -165,6 +168,7 @@ public class rr_Robot {
 
 
     public void autonomousInit(rr_OpMode aOpMode, HardwareMap ahwMap) throws InterruptedException {
+
         aOpMode.telemetry.setAutoClear(false); //useful to see the debug values stay on screen
 
         aOpMode.DBG("in Robot init");
@@ -180,6 +184,7 @@ public class rr_Robot {
 
         //initialize intake range sensor.
         initIntakeSensors(aOpMode);
+
 
        //dont initilize gyro, because we have to adjust position before this operation.
 
@@ -1432,7 +1437,7 @@ public class rr_Robot {
 
         parameters.vuforiaLicenseKey = "AevlBL3/////AAAAGZ3T16bk1EepnUsSLPkQW/sFqYxxQLGZ0w6paGMug92slctEFAuXjXeMqrzDuCLvLZmY1sWjvn4kb5WKPKH4RdCZB7ccft3XGKh8rVn0r+TxhcJUmZwsdciAzCBYVe5FLnGtldKTV1eVbNFcN6FpDfZstRXXBdjqyMBg5XzJmhJp5rcG5TIi0qMcjaoHFqaBdnMyYBAeERylDVGBbDbIAX0dLDiQ5bjxA/lAphyHjDDyetpVjGlEwziUzcYbdvZK3zjGpR7WH62RqM6QzO1s7PcTppQMgRi3FxhisqKKZdWWF5pFGBPMP6bpsOzHTd8TDxPjwXiYIZxt3MwkhQ+1JpyAG9CVo+I0T/b/oNT0/ulZ";
 
-        parameters.cameraDirection = ClosableVuforiaLocalizer.CameraDirection.BACK;
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
 
         VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");

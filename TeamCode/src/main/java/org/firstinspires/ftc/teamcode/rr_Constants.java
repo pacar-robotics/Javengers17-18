@@ -185,4 +185,10 @@ public class rr_Constants {
     enum TurnDirectionEnum {
         Clockwise, Counterclockwise
     }
+
+    enum JewelOrderEnum {
+        BLUE_RED,
+        RED_BLUE,
+        UNKNOWN
+    }
 }
