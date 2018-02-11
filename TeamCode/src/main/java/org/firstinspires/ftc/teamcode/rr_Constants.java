@@ -77,19 +77,20 @@ public class rr_Constants {
     //Cube Tray Constants
     //these numbers need to be tuned based on a calibration op
     final static int TRAY_HEIGHT_COLLECTION_POSITION=0; //also 1 cube position
-    final static int TRAY_HEIGHT_2CUBE_POSITION=300;
+    final static int TRAY_HEIGHT_2CUBE_POSITION=625;
     final static int TRAY_HEIGHT_MAX_POSITION=950;
     final static float TRAY_LIFT_POWER_FACTOR=1.0f;
     final static float TRAY_LIFT_POWER=1.0f;
 
-    final static float TRAY_FLIP_HORIZONTAL_POSITION=0.7f;
-    final static float TRAY_FLIP_COLLECTION_POSITION=0.82f;
-    final static float TRAY_FLIP_SCORING_POSITION=0.22f;
+    final static float TRAY_FLIP_HORIZONTAL_POSITION=0.6f;
+    final static float TRAY_FLIP_COLLECTION_POSITION=0.72f;
+    final static float TRAY_FLIP_SCORING_POSITION=0.0f;
 
 
     //Cube Pusher Constants
-    final static float CUBE_PUSHER_RESTED_POSITION= 0.95f;
-    final static float CUBE_PUSHER_PUSHED_POSITION= 0.0f;
+    final static float CUBE_PUSHER_RESTED_POSITION= 0f;
+    final static float CUBE_PUSHER_INIT_POSITION= 0.85f;
+    final static float CUBE_PUSHER_PUSHED_POSITION= 1.0f;
 
 
     //Jewel Arm Constants

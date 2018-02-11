@@ -22,19 +22,14 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.STANDARD_DRIVE_POWER_F
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_FLIP_COLLECTION_POSITION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_FLIP_HORIZONTAL_POSITION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_FLIP_SCORING_POSITION;
-import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_HEIGHT_1CUBE_POSITION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_HEIGHT_2CUBE_POSITION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_HEIGHT_COLLECTION_POSITION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_HEIGHT_MAX_POSITION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_LIFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_LIFT_POWER;
-import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_LIFT_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRIGGER_THRESHOLD;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TURN_POWER_FACTOR;
-import static org.firstinspires.ftc.teamcode.rr_Robot.cubePusherStateEnum.PUSHED;
-import static org.firstinspires.ftc.teamcode.rr_Robot.cubePusherStateEnum.REST;
-import static org.firstinspires.ftc.teamcode.rr_Robot.intakeStateEnum.RUNNING;
-import static org.firstinspires.ftc.teamcode.rr_Robot.intakeStateEnum.STOPPED;
+
 
 public class rr_TeleLib {
 
@@ -264,14 +259,12 @@ public class rr_TeleLib {
 
     public void processIntake() throws InterruptedException {
         if (aOpMode.gamepad1.right_trigger > TRIGGER_THRESHOLD) {
-            robot.intakeState = RUNNING;
             isIntake = true;
             runIntakeWithDiagonalCheck(aOpMode, isIntake); //check for cubes going in sideways
             //so we can counter rotate to straighted
             Thread.sleep(500); //absorb the extra key presses
         }
         if (aOpMode.gamepad1.left_trigger > TRIGGER_THRESHOLD) {
-            robot.intakeState = STOPPED;
             isIntake = false;
             robot.setIntakePower(this.aOpMode, 0, 0);
             Thread.sleep(500); //absorb the extra key presses
@@ -282,7 +275,7 @@ public class rr_TeleLib {
     //push cubes into tray for alignment
         if (aOpMode.gamepad1.right_bumper) {
             robot.setCubePusherPosition(aOpMode, CUBE_PUSHER_PUSHED_POSITION);
-            Thread.sleep(200);
+            Thread.sleep(300);
             robot.setCubePusherPosition(aOpMode, CUBE_PUSHER_RESTED_POSITION);
         }
     }
@@ -294,6 +287,9 @@ public class rr_TeleLib {
         } else if (aOpMode.gamepad1.b) {
             //flip tray horizontal and go to scoring depending on position
             if (robot.trayFlipPosition == TRAY_FLIP_COLLECTION_POSITION) {
+                robot.setCubePusherPosition(aOpMode, CUBE_PUSHER_PUSHED_POSITION);
+                Thread.sleep(300);
+                robot.setCubePusherPosition(aOpMode, CUBE_PUSHER_RESTED_POSITION);
                 robot.setTrayFlipPosition(aOpMode, TRAY_FLIP_HORIZONTAL_POSITION);
             }
             if (robot.trayFlipPosition == TRAY_FLIP_HORIZONTAL_POSITION) {

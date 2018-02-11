@@ -30,6 +30,7 @@ import java.util.Locale;
 import static org.firstinspires.ftc.teamcode.rr_Constants.ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_RIGHT_MOTOR;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_PUSHER_INIT_POSITION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_PUSHER_RESTED_POSITION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DEBUG;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DEBUG_LEVEL;
@@ -274,7 +275,7 @@ public class rr_Robot {
     public void initCubePusherServo(rr_OpMode aOpMode) throws InterruptedException{
         cubePusherServo = hwMap.get(Servo.class, "servo_cube_pusher");
         Thread.sleep(100);
-        cubePusherServo.setPosition(CUBE_PUSHER_RESTED_POSITION);
+        cubePusherServo.setPosition(CUBE_PUSHER_INIT_POSITION);
         Thread.sleep(100);
     }
 
