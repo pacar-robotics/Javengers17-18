@@ -275,8 +275,7 @@ public class rr_Robot {
     public void initCubePusherServo(rr_OpMode aOpMode) throws InterruptedException{
         cubePusherServo = hwMap.get(Servo.class, "servo_cube_pusher");
         Thread.sleep(100);
-        cubePusherServo.setPosition(CUBE_PUSHER_INIT_POSITION);
-        Thread.sleep(100);
+        setCubePusherPosition(aOpMode, CUBE_PUSHER_INIT_POSITION);
     }
 
     public void initDriveMotors(rr_OpMode aOpMode) throws InterruptedException {
@@ -1556,4 +1555,5 @@ public class rr_Robot {
         motorArray[motorNumber].setPower(0.0f);
 
     }
+
 }

@@ -291,18 +291,17 @@ public class rr_TeleLib {
                 Thread.sleep(300);
                 robot.setCubePusherPosition(aOpMode, CUBE_PUSHER_RESTED_POSITION);
                 robot.setTrayFlipPosition(aOpMode, TRAY_FLIP_HORIZONTAL_POSITION);
-            }
-            if (robot.trayFlipPosition == TRAY_FLIP_HORIZONTAL_POSITION) {
+            }else if (robot.trayFlipPosition == TRAY_FLIP_HORIZONTAL_POSITION) {
                 robot.setTrayFlipPosition(aOpMode, TRAY_FLIP_SCORING_POSITION);
                 Thread.sleep(200);
                 //return to collection position
                 robot.setTrayHeightPositionWithTouchLimits(aOpMode, TRAY_HEIGHT_COLLECTION_POSITION, TRAY_LIFT_POWER);
                 robot.setTrayFlipPosition(aOpMode, TRAY_FLIP_COLLECTION_POSITION);
-            }
-            if (robot.trayFlipPosition == TRAY_FLIP_SCORING_POSITION) {
+            }else if (robot.trayFlipPosition == TRAY_FLIP_SCORING_POSITION) {
                 //probably not used because of auto return to collection
                 robot.setTrayFlipPosition(aOpMode, TRAY_FLIP_COLLECTION_POSITION);
             }
+
         } else if (aOpMode.gamepad1.y) {
             robot.setTrayHeightPositionWithTouchLimits(aOpMode, TRAY_HEIGHT_MAX_POSITION, TRAY_LIFT_POWER);
         } else if (aOpMode.gamepad1.a) {
@@ -337,6 +336,7 @@ public class rr_TeleLib {
             }
 
         }
+        Thread.sleep(250); // to absorb key presses
     }
 
 
