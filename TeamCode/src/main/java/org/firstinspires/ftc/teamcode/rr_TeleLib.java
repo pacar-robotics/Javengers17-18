@@ -259,15 +259,10 @@ public class rr_TeleLib {
 
     public void processIntake() throws InterruptedException {
         if (aOpMode.gamepad1.right_trigger > TRIGGER_THRESHOLD) {
-            isIntake = true;
-            runIntakeWithDiagonalCheck(aOpMode, isIntake); //check for cubes going in sideways
-            //so we can counter rotate to straighted
-            Thread.sleep(500); //absorb the extra key presses
+           runIntake(aOpMode);
         }
         if (aOpMode.gamepad1.left_trigger > TRIGGER_THRESHOLD) {
-            isIntake = false;
-            robot.setIntakePower(this.aOpMode, 0, 0);
-            Thread.sleep(500); //absorb the extra key presses
+           stopIntake(aOpMode);
         }
     }
 
@@ -282,10 +277,14 @@ public class rr_TeleLib {
 
     public void processTrayLift(rr_OpMode aOpMode) throws InterruptedException {
         if (aOpMode.gamepad1.x) {
+            //first lets stop the intake.
+            stopIntake(aOpMode);
             robot.setTrayHeightPositionWithTouchLimits(aOpMode, TRAY_HEIGHT_2CUBE_POSITION, TRAY_LIFT_POWER);
 
         } else if (aOpMode.gamepad1.b) {
             //flip tray horizontal and go to scoring depending on position
+            //first lets stop the intake.
+            stopIntake(aOpMode);
             if (robot.trayFlipPosition == TRAY_FLIP_COLLECTION_POSITION) {
                 robot.setCubePusherPosition(aOpMode, CUBE_PUSHER_PUSHED_POSITION);
                 Thread.sleep(300);
@@ -303,9 +302,13 @@ public class rr_TeleLib {
             }
 
         } else if (aOpMode.gamepad1.y) {
+            //first lets stop the intake.
+            stopIntake(aOpMode);
             robot.setTrayHeightPositionWithTouchLimits(aOpMode, TRAY_HEIGHT_MAX_POSITION, TRAY_LIFT_POWER);
         } else if (aOpMode.gamepad1.a) {
             robot.setTrayHeightPositionWithTouchLimits(aOpMode, TRAY_HEIGHT_COLLECTION_POSITION, TRAY_LIFT_POWER);
+            //lets start Intake:
+            runIntake(aOpMode);
         } else if (aOpMode.gamepad1.left_bumper) {
             //alt key mode
 
@@ -576,6 +579,20 @@ public class rr_TeleLib {
             robot.setTrayFlipPosition(aOpMode, robot.trayFlipPosition);
         }
 
+    }
+
+    public void runIntake(rr_OpMode aOpMode) throws InterruptedException {
+        isIntake = true;
+        runIntakeWithDiagonalCheck(aOpMode, isIntake); //check for cubes going in sideways
+        //so we can counter rotate to straighted
+        Thread.sleep(500); //absorb the extra key presses
+    }
+
+
+    public void stopIntake(rr_OpMode aOpMode) throws InterruptedException {
+        isIntake = false;
+        robot.setIntakePower(this.aOpMode, 0, 0);
+        Thread.sleep(500); //absorb the extra key presses
     }
 
 }
