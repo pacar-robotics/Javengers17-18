@@ -9,11 +9,11 @@ import java.util.GregorianCalendar;
 
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_RIGHT_MOTOR;
-import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_ARM;
+import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_LIFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_RIGHT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_EXTEND_UP;
-import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WINCH;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WINCH_MOTOR;
 
 class rr_DiagLib {
 
@@ -129,12 +129,9 @@ class rr_DiagLib {
         robotTests.add(new RobotTest("Platform Left", TestType.AUTOMATIC, new TestPlatformLeft()));
         robotTests.add(new RobotTest("Platform Diagonal", TestType.AUTOMATIC, new TestPlatformDiagonal()));
 
-        robotTests.add(new RobotTest("Cube Upper Arm Limit", TestType.AUTOMATIC, new TestCubeArmUpperLimit()));
-        robotTests.add(new RobotTest("Cube Lower Arm Limit", TestType.AUTOMATIC, new TestCubeArmLowerLimit()));
         robotTests.add(new RobotTest("Jewel Arm and Color Sensors", TestType.AUTOMATIC, new TestJewelArmAndColorSensors()));
 
 
-        robotTests.add(new RobotTest("Cube Claw", TestType.MANUAL, new TestCubeClaw()));
         robotTests.add(new RobotTest("Relic Arm", TestType.MANUAL, new TestRelicArm()));
         robotTests.add(new RobotTest("Relic Claw", TestType.MANUAL, new TestRelicClaw()));
 
@@ -190,13 +187,13 @@ class rr_DiagLib {
 
     private class TestCubeArmMotor implements AutomaticTest {
         public TestResult runTest() throws InterruptedException {
-            return genericMotorTest(CUBE_ARM, "Cube arm motor", false);
+            return genericMotorTest(TRAY_LIFT_MOTOR, "Cube arm motor", false);
         }
     }
 
     private class TestRelicWinchMotor implements AutomaticTest {
         public TestResult runTest() throws InterruptedException {
-            return genericMotorTest(RELIC_WINCH, "Relic winch motor", true);
+            return genericMotorTest(RELIC_WINCH_MOTOR, "Relic winch motor", true);
         }
     }
 
@@ -375,13 +372,6 @@ class rr_DiagLib {
 
     //***************** SERVO TESTS *****************//
 
-    private class TestCubeClaw implements ManualTest {
-        public void runTest() throws InterruptedException {
-            robot.closeCubeClawServoTwoCube();
-            Thread.sleep(SERVO_WAIT_TIME);
-            robot.closeCubeClawServoOneCube();
-        }
-    }
 
     private class TestRelicArm implements ManualTest {
         public void runTest() throws InterruptedException {
@@ -410,51 +400,6 @@ class rr_DiagLib {
 
     //***************** SENSOR TESTS *****************//
 
-    private class TestCubeArmUpperLimit implements AutomaticTest {
-        public TestResult runTest() throws InterruptedException {
-            Calendar cal = new GregorianCalendar();
-            cal.setTimeInMillis(System.currentTimeMillis());
-
-            robot.setCubeArmPower(aOpMode, -.5f);
-
-            // Waits for touch sensor to be pressed while motor is moving
-            while (!robot.isCubeUpperLimitPressed() && (System.currentTimeMillis() - cal.getTimeInMillis() < TOUCH_WAIT_TIME)) {
-                aOpMode.idle();
-            }
-
-            robot.setCubeArmPower(aOpMode, 0);
-
-            if (robot.isCubeUpperLimitPressed()) {
-                return new TestResult("Cube Arm Upper Limit", true);
-            } else {
-                return new TestResult("Cube Arm Upper Limit", false, "Cube Arm not moving or " +
-                        "touch sensor disconnected");
-            }
-        }
-    }
-
-    private class TestCubeArmLowerLimit implements AutomaticTest {
-        public TestResult runTest() throws InterruptedException {
-            Calendar cal = new GregorianCalendar();
-            cal.setTimeInMillis(System.currentTimeMillis());
-
-            robot.setCubeArmPower(aOpMode, .4f);
-
-            // Waits for touch sensor to be pressed while motor is moving
-            while (!robot.isCubeLowerLimitPressed() && (System.currentTimeMillis() - cal.getTimeInMillis() < TOUCH_WAIT_TIME)) {
-                aOpMode.idle();
-            }
-
-            robot.setCubeArmPower(aOpMode, 0);
-
-            if (robot.isCubeLowerLimitPressed()) {
-                return new TestResult("Cube Arm Lower Limit", true);
-            } else {
-                return new TestResult("Cube Arm Lower Limit", false, "Cube Arm not moving or " +
-                        "touch sensor disconnected");
-            }
-        }
-    }
 
     private class TestJewelArmAndColorSensors implements AutomaticTest {
         public TestResult runTest() throws InterruptedException {
