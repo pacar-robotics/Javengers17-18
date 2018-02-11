@@ -24,6 +24,8 @@ public class TeleOpJ2 extends rr_OpMode {
             //lib.processRelicClaw();
             //lib.processRelicHand();
             lib.processIntake();
+            lib.processCubeAlignment();
+
             lib.processTrayLift(this);
             lib.processBalance();
             lib.processIMUGyroReset();

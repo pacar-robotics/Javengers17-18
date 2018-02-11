@@ -23,6 +23,7 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_FLIP_COLLECTION_P
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_FLIP_HORIZONTAL_POSITION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_FLIP_SCORING_POSITION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_HEIGHT_1CUBE_POSITION;
+import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_HEIGHT_2CUBE_POSITION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_HEIGHT_COLLECTION_POSITION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_HEIGHT_MAX_POSITION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_LIFT_MOTOR;
@@ -46,8 +47,8 @@ public class rr_TeleLib {
     private boolean isIntake = true;
     private float turnVelocity = 0.0f;
     private double polarMagnitude = 0.0f;
-    private double heading=0.0f;
-    private double polarAngle=0.0f;
+    private double heading = 0.0f;
+    private double polarAngle = 0.0f;
     private double cubeArmPower = 0.0f;
 
     public rr_TeleLib(rr_OpMode aOpMode, HardwareMap aHwMap) throws InterruptedException {
@@ -112,15 +113,15 @@ public class rr_TeleLib {
             //adjust the power to address the effect of checking for deadzone.
             //if the clip and scale operation is not performed, the starting
             polarMagnitude =
-                            getGamePad1LeftJoystickPolarMagnitude(aOpMode)
-                                    * FIELD_ORIENTED_DRIVE_POWER_FACTOR;
+                    getGamePad1LeftJoystickPolarMagnitude(aOpMode)
+                            * FIELD_ORIENTED_DRIVE_POWER_FACTOR;
 
-            heading=robot.getBoschGyroSensorHeading(aOpMode);
-            polarAngle= getGamePad1LeftJoystickPolarAngle(aOpMode)-heading;
+            heading = robot.getBoschGyroSensorHeading(aOpMode);
+            polarAngle = getGamePad1LeftJoystickPolarAngle(aOpMode) - heading;
 
 
             robot.universalMoveRobot(aOpMode,
-                    getXVelocity(polarMagnitude,polarAngle),
+                    getXVelocity(polarMagnitude, polarAngle),
                     getYVelocity(polarMagnitude, polarAngle));
 
         } else if (Math.abs(aOpMode.gamepad1.right_stick_x) > ANALOG_STICK_THRESHOLD) {
@@ -147,7 +148,7 @@ public class rr_TeleLib {
             robot.stopBaseMotors(aOpMode);
         }
 
-        /*
+
         if (aOpMode.gamepad1.dpad_up || aOpMode.gamepad2.dpad_up) {
             robot.turnAbsoluteBoschGyroDegrees(aOpMode, 0);
         }
@@ -160,7 +161,7 @@ public class rr_TeleLib {
         if (aOpMode.gamepad1.dpad_left || aOpMode.gamepad2.dpad_left) {
             robot.turnAbsoluteBoschGyroDegrees(aOpMode, -90);
         }
-        */
+
     }
 
     public void processIMUGyroReset() throws InterruptedException {
@@ -262,100 +263,85 @@ public class rr_TeleLib {
     }
 
     public void processIntake() throws InterruptedException {
-        //checks if the alternate button is pressed
-        if (aOpMode.gamepad1.left_bumper && aOpMode.gamepad1.right_bumper) {
-            if (robot.intakeState == STOPPED) {
-                robot.intakeState = RUNNING;
-                isIntake = false;
-
-                Thread.sleep(500); //absorb the extra key presses
-
-            } else {
-                robot.setIntakePower(this.aOpMode, 0, 0);
-                robot.intakeState = STOPPED;
-                Thread.sleep(500); //absorb the extra key presses
-            }
-        } else if (aOpMode.gamepad1.right_bumper) {
-            if (robot.intakeState == STOPPED) {
-                robot.intakeState = RUNNING;
-                isIntake = true;
-
-                Thread.sleep(500); //absorb the extra key presses
-
-            } else {
-                robot.setIntakePower(this.aOpMode, 0, 0);
-                robot.intakeState = STOPPED;
-                Thread.sleep(500); //absorb the extra key presses
-            }
-        }
-        if(robot.intakeState==RUNNING){
+        if (aOpMode.gamepad1.right_trigger > TRIGGER_THRESHOLD) {
+            robot.intakeState = RUNNING;
+            isIntake = true;
             runIntakeWithDiagonalCheck(aOpMode, isIntake); //check for cubes going in sideways
             //so we can counter rotate to straighted
+            Thread.sleep(500); //absorb the extra key presses
         }
-        if(aOpMode.gamepad1.left_bumper){
-            if(robot.cubePusherState== REST){
-                robot.cubePusherState=PUSHED;
-                robot.setCubePusherPosition(aOpMode, CUBE_PUSHER_PUSHED_POSITION);
-            }else{
-                robot.cubePusherState=REST;
-                robot.setCubePusherPosition(aOpMode, CUBE_PUSHER_RESTED_POSITION);
-            }
+        if (aOpMode.gamepad1.left_trigger > TRIGGER_THRESHOLD) {
+            robot.intakeState = STOPPED;
+            isIntake = false;
+            robot.setIntakePower(this.aOpMode, 0, 0);
+            Thread.sleep(500); //absorb the extra key presses
         }
     }
 
-    /*
-    public void processTrayLift() throws InterruptedException {
-        if (aOpMode.gamepad1.left_trigger >= TRIGGER_THRESHOLD) {
-            robot.setTrayLiftPower(aOpMode, aOpMode.gamepad1.left_trigger * TRAY_LIFT_POWER_FACTOR);
-        } else if (aOpMode.gamepad1.right_trigger >= TRIGGER_THRESHOLD) {
-            robot.setTrayLiftPower(aOpMode, aOpMode.gamepad1.right_trigger * TRAY_LIFT_POWER_FACTOR);
-        } else if (aOpMode.gamepad1.x){
-            robot.setTrayHeightPositionWithTouchLimits(aOpMode, TRAY_HEIGHT_COLLECTION_POSITION, TRAY_LIFT_POWER);
-        } else if (aOpMode.gamepad1.b){
-            robot.setTrayHeightPositionWithTouchLimits(aOpMode, TRAY_HEIGHT_1CUBE_POSITION, TRAY_LIFT_POWER);
-        } else if (aOpMode.gamepad1.y){
-            robot.setTrayHeightPositionWithTouchLimits(aOpMode, TRAY_HEIGHT_MAX_POSITION, TRAY_LIFT_POWER);
-        } else {
-            robot.setTrayLiftPower(aOpMode, 0);
+    public void processCubeAlignment() throws InterruptedException{
+    //push cubes into tray for alignment
+        if (aOpMode.gamepad1.right_bumper) {
+            robot.setCubePusherPosition(aOpMode, CUBE_PUSHER_PUSHED_POSITION);
+            Thread.sleep(200);
+            robot.setCubePusherPosition(aOpMode, CUBE_PUSHER_RESTED_POSITION);
         }
     }
 
-    */
     public void processTrayLift(rr_OpMode aOpMode) throws InterruptedException {
-        robot.trayHeightPosition=robot.getTrayPosition(aOpMode);
-        if(aOpMode.gamepad1.right_trigger>TRIGGER_THRESHOLD){
-            //raise the height of the tray
-            if(robot.trayHeightPosition>=TRAY_HEIGHT_MAX_POSITION-50){ //check for limit
-               robot.setTrayHeightPositionWithTouchLimits(aOpMode, TRAY_HEIGHT_MAX_POSITION, TRAY_LIFT_POWER);
-            }else{
-                robot.setTrayHeightPositionWithTouchLimits(aOpMode, robot.trayHeightPosition+50, TRAY_LIFT_POWER);
-            }
-        }
-        if(aOpMode.gamepad1.left_trigger>TRIGGER_THRESHOLD){
-            //lower the height of the tray
-            if(robot.trayHeightPosition<=TRAY_HEIGHT_COLLECTION_POSITION+50){ //check for limit
-                robot.setTrayHeightPositionWithTouchLimits(aOpMode,TRAY_HEIGHT_COLLECTION_POSITION, TRAY_LIFT_POWER);
-            }else{
-                robot.setTrayHeightPositionWithTouchLimits(aOpMode, robot.trayHeightPosition-50, TRAY_LIFT_POWER);
-            }
+        if (aOpMode.gamepad1.x) {
+            robot.setTrayHeightPositionWithTouchLimits(aOpMode, TRAY_HEIGHT_2CUBE_POSITION, TRAY_LIFT_POWER);
 
-        } else if (aOpMode.gamepad1.x){
-            robot.setTrayHeightPositionWithTouchLimits(aOpMode, TRAY_HEIGHT_COLLECTION_POSITION, TRAY_LIFT_POWER);
-            robot.setTrayFlipPosition(aOpMode, TRAY_FLIP_COLLECTION_POSITION);
-
-        } else if (aOpMode.gamepad1.b){
+        } else if (aOpMode.gamepad1.b) {
             //flip tray horizontal and go to scoring depending on position
-            if(robot.trayFlipPosition==TRAY_FLIP_COLLECTION_POSITION){
+            if (robot.trayFlipPosition == TRAY_FLIP_COLLECTION_POSITION) {
                 robot.setTrayFlipPosition(aOpMode, TRAY_FLIP_HORIZONTAL_POSITION);
-            }else{
-                robot.setTrayFlipPosition(aOpMode, TRAY_FLIP_SCORING_POSITION);
             }
-        } else if (aOpMode.gamepad1.y){
+            if (robot.trayFlipPosition == TRAY_FLIP_HORIZONTAL_POSITION) {
+                robot.setTrayFlipPosition(aOpMode, TRAY_FLIP_SCORING_POSITION);
+                Thread.sleep(200);
+                //return to collection position
+                robot.setTrayHeightPositionWithTouchLimits(aOpMode, TRAY_HEIGHT_COLLECTION_POSITION, TRAY_LIFT_POWER);
+                robot.setTrayFlipPosition(aOpMode, TRAY_FLIP_COLLECTION_POSITION);
+            }
+            if (robot.trayFlipPosition == TRAY_FLIP_SCORING_POSITION) {
+                //probably not used because of auto return to collection
+                robot.setTrayFlipPosition(aOpMode, TRAY_FLIP_COLLECTION_POSITION);
+            }
+        } else if (aOpMode.gamepad1.y) {
             robot.setTrayHeightPositionWithTouchLimits(aOpMode, TRAY_HEIGHT_MAX_POSITION, TRAY_LIFT_POWER);
-        } else if (aOpMode.gamepad1.a){
-        robot.setTrayHeightPositionWithTouchLimits(aOpMode, TRAY_HEIGHT_1CUBE_POSITION, TRAY_LIFT_POWER);
+        } else if (aOpMode.gamepad1.a) {
+            robot.setTrayHeightPositionWithTouchLimits(aOpMode, TRAY_HEIGHT_COLLECTION_POSITION, TRAY_LIFT_POWER);
+        } else if (aOpMode.gamepad1.left_bumper) {
+            //alt key mode
+
+
+            if (aOpMode.gamepad1.right_trigger > TRIGGER_THRESHOLD) {
+                robot.trayHeightPosition = robot.getTrayPosition(aOpMode);
+                //raise the height of the tray
+                if (robot.trayHeightPosition >= TRAY_HEIGHT_MAX_POSITION - 50) { //check for limit
+                    robot.setTrayHeightPositionWithTouchLimits(aOpMode, TRAY_HEIGHT_MAX_POSITION, TRAY_LIFT_POWER);
+                } else {
+                    robot.setTrayHeightPositionWithTouchLimits(aOpMode, robot.trayHeightPosition + 50, TRAY_LIFT_POWER);
+                }
+            }else if (aOpMode.gamepad1.left_trigger > TRIGGER_THRESHOLD) {
+                robot.trayHeightPosition = robot.getTrayPosition(aOpMode);
+                //lower the height of the tray
+                if (robot.trayHeightPosition <= TRAY_HEIGHT_COLLECTION_POSITION + 50) { //check for limit
+                    robot.setTrayHeightPositionWithTouchLimits(aOpMode, TRAY_HEIGHT_COLLECTION_POSITION, TRAY_LIFT_POWER);
+                } else {
+                    robot.setTrayHeightPositionWithTouchLimits(aOpMode, robot.trayHeightPosition - 50, TRAY_LIFT_POWER);
+                }
+
+            }else if(aOpMode.gamepad1.b){
+                //score slowly to let the cubes fall down.
+                for(float f=TRAY_FLIP_COLLECTION_POSITION;f<TRAY_FLIP_SCORING_POSITION;f=-0.1f){
+                    robot.setTrayFlipPosition(aOpMode,f);
+                    Thread.sleep(50);
+                }
+            }
+
+        }
     }
-}
 
 
     public void printTelemetry() throws InterruptedException {
