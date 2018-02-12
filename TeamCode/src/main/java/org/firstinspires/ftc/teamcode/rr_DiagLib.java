@@ -4,22 +4,19 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_RIGHT_MOTOR;
-import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_LIFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_RIGHT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_EXTEND_UP;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WINCH_MOTOR;
+import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_LIFT_MOTOR;
 
 class rr_DiagLib {
 
     // Used for motor and platform movements
     private final static float MECCANUM_WHEEL_ENCODER_MARGIN = 50;
-    private final static int TOUCH_WAIT_TIME = 2500;    // milliseconds
     private static final int SERVO_WAIT_TIME = 250;     // milliseconds
 
     private rr_Robot robot;
@@ -122,20 +119,16 @@ class rr_DiagLib {
         robotTests.add(new RobotTest("Front Right Wheel", TestType.AUTOMATIC, new TestFrontRightWheel()));
         robotTests.add(new RobotTest("Back Left Wheel", TestType.AUTOMATIC, new TestBackLeftWheel()));
         robotTests.add(new RobotTest("Back Right Wheel", TestType.AUTOMATIC, new TestBackRightWheel()));
-        robotTests.add(new RobotTest("Cube Arm Motor", TestType.AUTOMATIC, new TestCubeArmMotor()));
+        robotTests.add(new RobotTest("Tray Lift Motor", TestType.AUTOMATIC, new TestTrayLiftMotor()));
         robotTests.add(new RobotTest("Relic Winch Motor", TestType.AUTOMATIC, new TestRelicWinchMotor()));
 
         robotTests.add(new RobotTest("Platform Forward", TestType.AUTOMATIC, new TestPlatformForward()));
         robotTests.add(new RobotTest("Platform Left", TestType.AUTOMATIC, new TestPlatformLeft()));
         robotTests.add(new RobotTest("Platform Diagonal", TestType.AUTOMATIC, new TestPlatformDiagonal()));
 
-        robotTests.add(new RobotTest("Jewel Arm and Color Sensors", TestType.AUTOMATIC, new TestJewelArmAndColorSensors()));
-
 
         robotTests.add(new RobotTest("Relic Arm", TestType.MANUAL, new TestRelicArm()));
         robotTests.add(new RobotTest("Relic Claw", TestType.MANUAL, new TestRelicClaw()));
-
-        robotTests.add(new RobotTest("Jewel Pusher", TestType.MANUAL, new TestJewelPusher()));
 
         robotTests.add(new RobotTest("Test Connection", TestType.MANUAL, new TestConnection()));
     }
@@ -185,9 +178,9 @@ class rr_DiagLib {
         }
     }
 
-    private class TestCubeArmMotor implements AutomaticTest {
+    private class TestTrayLiftMotor implements AutomaticTest {
         public TestResult runTest() throws InterruptedException {
-            return genericMotorTest(TRAY_LIFT_MOTOR, "Cube arm motor", false);
+            return genericMotorTest(TRAY_LIFT_MOTOR, "Tray lift motor", false);
         }
     }
 
@@ -372,7 +365,6 @@ class rr_DiagLib {
 
     //***************** SERVO TESTS *****************//
 
-
     private class TestRelicArm implements ManualTest {
         public void runTest() throws InterruptedException {
             robot.setRelicArmPosition(RELIC_ARM_EXTEND_UP);
@@ -386,48 +378,6 @@ class rr_DiagLib {
             robot.setRelicClawOpen();
             Thread.sleep(SERVO_WAIT_TIME);
             robot.setRelicClawClosed();
-        }
-    }
-
-    private class TestJewelPusher implements ManualTest {
-        public void runTest() throws InterruptedException {
-            robot.pushRightJewel();
-            robot.pushLeftJewel();
-            robot.setJewelPusherNeutral();
-        }
-    }
-
-
-    //***************** SENSOR TESTS *****************//
-
-
-    private class TestJewelArmAndColorSensors implements AutomaticTest {
-        public TestResult runTest() throws InterruptedException {
-            // Works by attempting to move the servo and comparing sensor values before and after
-            // If the values of the sensors are the same, something is wrong
-
-            float prevLeftColor = robot.getJewelLeftLuminosity(aOpMode),
-                    prevRightColor = robot.getJewelRightLuminosity(aOpMode);
-            robot.setJewelArmDownRead();
-
-            Thread.sleep(500);  // Give some time to move the arm
-
-            float curLeftColor = robot.getJewelLeftLuminosity(aOpMode),
-                    curRightColor = robot.getJewelRightLuminosity(aOpMode);
-            robot.setJewelArmUp();
-
-            if (prevLeftColor == curLeftColor && prevRightColor == curRightColor) {
-                return new TestResult("Jewel Arm and Color Sensors", false,
-                        "Both color values are the same. Sensors and/or servo disconnected");
-            } else if (prevLeftColor == curLeftColor) {
-                return new TestResult("Jewel Arm and Color Sensors", false,
-                        "Left color sensor not working");
-            } else if (prevRightColor == curRightColor) {
-                return new TestResult("Jewel Arm and Color Sensors", false,
-                        "Right color sensor not working");
-            } else {
-                return new TestResult("Jewel Arm and Color Sensors", true);
-            }
         }
     }
 
