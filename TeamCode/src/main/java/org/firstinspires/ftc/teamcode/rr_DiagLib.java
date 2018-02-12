@@ -241,6 +241,7 @@ class rr_DiagLib {
     }
 
     private class TestPlatformDiagonal implements AutomaticTest {
+        @SuppressWarnings("ConstantConditions")
         public TestResult runTest() throws InterruptedException {
             // We will move the robot in 4 phases to test all 4 diagonals.
             // We will pick representative motors based on the specific diagonal as all
