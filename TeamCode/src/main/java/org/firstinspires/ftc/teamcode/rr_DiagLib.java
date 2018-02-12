@@ -9,6 +9,7 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_RIGHT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_RIGHT_MOTOR;
+import static org.firstinspires.ftc.teamcode.rr_Constants.INTAKE_POWER_MEDIUM;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_EXTEND_UP;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WINCH_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_LIFT_MOTOR;
@@ -127,6 +128,7 @@ class rr_DiagLib {
         robotTests.add(new RobotTest("Platform Diagonal", TestType.AUTOMATIC, new TestPlatformDiagonal()));
 
 
+        robotTests.add(new RobotTest("Intake Motors", TestType.MANUAL, new TestIntakeMotors()));
         robotTests.add(new RobotTest("Relic Arm", TestType.MANUAL, new TestRelicArm()));
         robotTests.add(new RobotTest("Relic Claw", TestType.MANUAL, new TestRelicClaw()));
 
@@ -187,6 +189,14 @@ class rr_DiagLib {
     private class TestRelicWinchMotor implements AutomaticTest {
         public TestResult runTest() throws InterruptedException {
             return genericMotorTest(RELIC_WINCH_MOTOR, "Relic winch motor", true);
+        }
+    }
+
+    private class TestIntakeMotors implements ManualTest {
+        public void runTest() throws InterruptedException {
+            robot.setIntakePower(aOpMode, INTAKE_POWER_MEDIUM, -INTAKE_POWER_MEDIUM);
+            Thread.sleep(SERVO_WAIT_TIME);
+            robot.setIntakePower(aOpMode, 0, 0);
         }
     }
 
