@@ -277,8 +277,8 @@ public class rr_TeleLib {
 
     public void processTrayLift(rr_OpMode aOpMode) throws InterruptedException {
         if (aOpMode.gamepad1.x) {
-            //first lets stop the intake.
-            stopIntake(aOpMode);
+            //prepare to score, stop intake, move tray to horizontal etc.
+            prepareToScore(aOpMode);
             robot.setTrayHeightPositionWithTouchLimits(aOpMode, TRAY_HEIGHT_2CUBE_POSITION, TRAY_LIFT_POWER);
 
         } else if (aOpMode.gamepad1.b) {
@@ -286,29 +286,24 @@ public class rr_TeleLib {
             //first lets stop the intake.
             stopIntake(aOpMode);
             if (robot.trayFlipPosition == TRAY_FLIP_COLLECTION_POSITION) {
-                robot.setCubePusherPosition(aOpMode, CUBE_PUSHER_PUSHED_POSITION);
-                Thread.sleep(300);
-                robot.setCubePusherPosition(aOpMode, CUBE_PUSHER_RESTED_POSITION);
+                alignCubes(aOpMode);
                 robot.setTrayFlipPosition(aOpMode, TRAY_FLIP_HORIZONTAL_POSITION);
             }else if (robot.trayFlipPosition == TRAY_FLIP_HORIZONTAL_POSITION) {
                 robot.setTrayFlipPosition(aOpMode, TRAY_FLIP_SCORING_POSITION);
-                Thread.sleep(200);
+                Thread.sleep(1000);
                 //return to collection position
-                robot.setTrayHeightPositionWithTouchLimits(aOpMode, TRAY_HEIGHT_COLLECTION_POSITION, TRAY_LIFT_POWER);
-                robot.setTrayFlipPosition(aOpMode, TRAY_FLIP_COLLECTION_POSITION);
+                prepareToCollect(aOpMode);
             }else if (robot.trayFlipPosition == TRAY_FLIP_SCORING_POSITION) {
                 //probably not used because of auto return to collection
-                robot.setTrayFlipPosition(aOpMode, TRAY_FLIP_COLLECTION_POSITION);
+                prepareToCollect(aOpMode);
             }
 
         } else if (aOpMode.gamepad1.y) {
-            //first lets stop the intake.
-            stopIntake(aOpMode);
+            //prepare to score, stop intake, move tray to horizontal etc.
+            prepareToScore(aOpMode);
             robot.setTrayHeightPositionWithTouchLimits(aOpMode, TRAY_HEIGHT_MAX_POSITION, TRAY_LIFT_POWER);
         } else if (aOpMode.gamepad1.a) {
-            robot.setTrayHeightPositionWithTouchLimits(aOpMode, TRAY_HEIGHT_COLLECTION_POSITION, TRAY_LIFT_POWER);
-            //lets start Intake:
-            runIntake(aOpMode);
+            prepareToCollect(aOpMode);
         } else if (aOpMode.gamepad1.left_bumper) {
             //alt key mode
 
@@ -332,10 +327,14 @@ public class rr_TeleLib {
 
             }else if(aOpMode.gamepad1.b){
                 //score slowly to let the cubes fall down.
+                alignCubes(aOpMode);
                 for(float f=TRAY_FLIP_COLLECTION_POSITION;f<TRAY_FLIP_SCORING_POSITION;f=-0.1f){
                     robot.setTrayFlipPosition(aOpMode,f);
                     Thread.sleep(50);
                 }
+                prepareToCollect(aOpMode);
+
+
             }
 
         }
@@ -589,10 +588,34 @@ public class rr_TeleLib {
     }
 
 
+    public void alignCubes(rr_OpMode aOpMode) throws InterruptedException{
+        robot.setCubePusherPosition(aOpMode, CUBE_PUSHER_PUSHED_POSITION);
+        Thread.sleep(300);
+        robot.setCubePusherPosition(aOpMode, CUBE_PUSHER_RESTED_POSITION);
+    }
+
     public void stopIntake(rr_OpMode aOpMode) throws InterruptedException {
         isIntake = false;
         robot.setIntakePower(this.aOpMode, 0, 0);
         Thread.sleep(500); //absorb the extra key presses
     }
+
+    public void prepareToCollect(rr_OpMode aOpMode) throws InterruptedException{
+        robot.setTrayHeightPositionWithTouchLimits(aOpMode, TRAY_HEIGHT_COLLECTION_POSITION, TRAY_LIFT_POWER);
+        robot.setTrayFlipPosition(aOpMode, TRAY_FLIP_COLLECTION_POSITION);
+        runIntake(aOpMode);
+    }
+
+    public void prepareToScore(rr_OpMode aOpMode) throws InterruptedException{
+        stopIntake(aOpMode);
+        alignCubes(aOpMode);
+        setTrayFlipToHorizontal(aOpMode);
+
+    }
+
+    public void setTrayFlipToHorizontal(rr_OpMode aOpMode) throws InterruptedException{
+        robot.setTrayFlipPosition(aOpMode, TRAY_FLIP_HORIZONTAL_POSITION);
+    }
+
 
 }
