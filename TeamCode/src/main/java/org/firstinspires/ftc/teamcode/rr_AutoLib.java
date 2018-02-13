@@ -11,6 +11,7 @@ import java.util.InputMismatchException;
 import static org.firstinspires.ftc.teamcode.rr_Constants.ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION;
 
 
+import static org.firstinspires.ftc.teamcode.rr_Constants.INTAKE_POWER_HIGH;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_LIFT_POWER;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DirectionEnum.Backward;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DirectionEnum.Forward;
@@ -63,10 +64,6 @@ public class rr_AutoLib {
 
         float columnDistance;
 
-        //robot.setJewelPusherNeutral();
-
-
-
         aOpMode.telemetry.setAutoClear(true);
 
         pushJewelOpenCV(aOpMode, rr_Constants.AllianceColorEnum.BLUE);
@@ -88,19 +85,24 @@ public class rr_AutoLib {
         Thread.sleep(250);
         moveWheels(aOpMode, 6, .4f, rr_Constants.DirectionEnum.SidewaysRight, true);
         Thread.sleep(250);
-        //robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_GRAB - 100, CUBE_ARM_LOWERING_POWER);
-        Thread.sleep(250);
+
         robot.turnAbsoluteBoschGyroDegrees(aOpMode, -90);
         Thread.sleep(250);
         robot.turnAbsoluteBoschGyroDegrees(aOpMode, -90);
         Thread.sleep(250);
         robot.turnAbsoluteBoschGyroDegrees(aOpMode, -65);
         Thread.sleep(250);
-        universalMoveRobot(aOpMode, -20, .3f, 0, 1500, falseStop, false, 0, 0);
+        universalMoveRobot(aOpMode, -0, .3f, 0, 1500, falseStop, false, 0, 0);
         Thread.sleep(250);
-       // robot.openCubeClawServoOneCube();
-        Thread.sleep(300);
-        universalMoveRobot(aOpMode, -20, .3f, 0, 500, falseStop , false, 0, 0);
+        robot.setTrayHeightPositionWithTouchLimits(aOpMode, rr_Constants.TRAY_HEIGHT_COLLECTION_POSITION, rr_Constants.TRAY_LIFT_POWER);
+        Thread.sleep(250);
+        robot.setTrayFlipPosition(aOpMode, rr_Constants.TRAY_FLIP_SCORING_POSITION);
+        Thread.sleep(250);
+        robot.setIntakePower(aOpMode, -1 * INTAKE_POWER_HIGH,-1 * INTAKE_POWER_HIGH);
+        Thread.sleep(750);
+        robot.setIntakePower(aOpMode, 0, 0);
+        Thread.sleep(250);
+        universalMoveRobot(aOpMode, -0, .3f, 0, 500, falseStop , false, 0, 0);
         Thread.sleep(250);
         moveWheels(aOpMode, 2f, 0.4f, Backward, false);
 
@@ -360,14 +362,12 @@ public class rr_AutoLib {
 
             if(jewelDetector.getCurrentOrder() == JewelDetector.JewelOrder.BLUE_RED) {
                 aOpMode.telemetryAddData("Jewel Order","BLUE_RED", "Left is Blue");
-//                robot.setJewelArmDownPush();
-//                robot.pushRightJewel();
+                robot.turnAbsoluteBoschGyroDegrees(aOpMode, -85);
           }
 
             else if(jewelDetector.getCurrentOrder() == JewelDetector.JewelOrder.RED_BLUE) {
                 aOpMode.telemetryAddData("Jewel Order","RED_BLUE", "Right is Blue");
-//                robot.setJewelArmDownPush();
-//                robot.pushLeftJewel();
+                robot.turnAbsoluteBoschGyroDegrees(aOpMode, -95);
             }
 
             else if(jewelDetector.getCurrentOrder() == JewelDetector.JewelOrder.UNKNOWN) {
@@ -378,14 +378,12 @@ public class rr_AutoLib {
         if(teamColor == rr_Constants.AllianceColorEnum.RED) {
             if(jewelDetector.getCurrentOrder() == JewelDetector.JewelOrder.BLUE_RED) {
                 aOpMode.telemetryAddData("Jewel Order","BLUE_RED", "Right is Red");
-//                robot.setJewelArmDownPush();
-//                robot.pushLeftJewel();
+                robot.turnAbsoluteBoschGyroDegrees(aOpMode, -95);
             }
 
             else if(jewelDetector.getCurrentOrder() == JewelDetector.JewelOrder.RED_BLUE) {
                 aOpMode.telemetryAddData("Jewel Order","RED_BLUE", "Left is Red");
-//                robot.setJewelArmDownPush();
-//                robot.pushRightJewel();
+                robot.turnAbsoluteBoschGyroDegrees(aOpMode, -95);
             }
 
             else if(jewelDetector.getCurrentOrder() == JewelDetector.JewelOrder.UNKNOWN) {
