@@ -408,7 +408,7 @@ class rr_DiagLib {
 
             float prevLeftColor = robot.getJewelLeftLuminosity(aOpMode),
                     prevRightColor = robot.getJewelRightLuminosity(aOpMode);
-            robot.setJewelArmDownRead();
+            //robot.setJewelArmDownRead();
 
             Thread.sleep(500);  // Give some time to move the arm
 
