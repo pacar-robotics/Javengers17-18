@@ -83,22 +83,22 @@ public class rr_Constants {
     final static float TRAY_LIFT_POWER=1.0f;
 
     final static float TRAY_FLIP_HORIZONTAL_POSITION=0.6f;
-    final static float TRAY_FLIP_COLLECTION_POSITION=0.72f;
+    final static float TRAY_FLIP_COLLECTION_POSITION=0.68f;
     final static float TRAY_FLIP_SCORING_POSITION=0.0f;
 
 
     //Cube Pusher Constants
     final static float CUBE_PUSHER_RESTED_POSITION= 0f;
     final static float CUBE_PUSHER_INIT_POSITION= 0.85f;
-    final static float CUBE_PUSHER_PUSHED_POSITION= 1.0f;
+    final static float CUBE_PUSHER_PUSHED_POSITION= 0.95f;
 
 
     //Jewel Arm Constants
     final static float JEWEL_PUSHER_LEFT = 0.90f; // make bigger
     final static float JEWEL_PUSHER_RIGHT = 0.10f; // make smaller
     final static float JEWEL_PUSHER_NEUTRAL = 0.50f;
-    final static float JEWEL_ARM_UP = 0.25f;
-    final static float JEWEL_ARM_DOWN_READ = .89f;
+    final static float JEWEL_ARM_UP = 0.42f;
+    //final static float JEWEL_ARM_DOWN_READ = .89f;
     final static float JEWEL_ARM_DOWN_PUSH = .92f;
     static final double JEWEL_ARM_INCREMENT = 0.01;     // amount to slew servo each cycle
     static final int JEWEL_ARM_CYCLE = 50;     // period of each cycle
@@ -121,7 +121,7 @@ public class rr_Constants {
 
 
     //Mecanum wheel properties
-    final static float MECANUM_WHEEL_DIAMETER = 4f*1.5f;   //in inches multiplied by gearing factor.
+    final static float MECANUM_WHEEL_DIAMETER = 4f*2.0f;   //in inches multiplied by gearing factor.
     final static float MECANUM_WHEEL_ENCODER_MARGIN = 50;
     final static float MECANUM_WHEEL_SIDE_TRACK_DISTANCE = 9.5f;
     final static float MECANUM_WHEEL_FRONT_TRACK_DISTANCE = 14.75f;
