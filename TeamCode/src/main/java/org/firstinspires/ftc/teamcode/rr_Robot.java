@@ -195,6 +195,7 @@ public class rr_Robot {
         //Initialize Jewel Arm
         //initJewelSensors(aOpMode);
         initJewelServos(aOpMode);
+
         //setJewelPusherPosition(JEWEL_PUSHER_RIGHT - 0.1f);
 
         initTrayServo(aOpMode);
@@ -240,8 +241,8 @@ public class rr_Robot {
 
         //Initialize Jewel Arm
         //initJewelSensors(aOpMode);
-        //initJewelServos(aOpMode);
-       // setJewelPusherPosition(JEWEL_PUSHER_NEUTRAL);
+        initJewelServos(aOpMode);
+        //setJewelPusherPosition(JEWEL_PUSHER_NEUTRAL);
 
         initTrayServo(aOpMode);
 
@@ -760,6 +761,7 @@ public class rr_Robot {
 
         //calculate velocities at each wheel.
 
+        /**
         //blend with prev velocities to smooth out start
 
         fl_velocity = ((yAxisVelocity + xAxisVelocity) + prevFLVelocity) / 2;
@@ -769,6 +771,17 @@ public class rr_Robot {
         bl_velocity = ((yAxisVelocity - xAxisVelocity) + prevBLVelocity) / 2;
 
         br_velocity = ((yAxisVelocity + xAxisVelocity) + prevBRVelocity) / 2;
+        *
+        **/
+
+        //ignores rotational velocity
+        fl_velocity = yAxisVelocity + xAxisVelocity ;
+
+        fr_velocity = yAxisVelocity - xAxisVelocity ;
+
+        bl_velocity = yAxisVelocity - xAxisVelocity;
+
+        br_velocity = yAxisVelocity + xAxisVelocity ;
 
         //save these in variables that are part of vvRobot to be used in next cycle.
 
