@@ -43,7 +43,7 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.GENERIC_TIMER;
 import static org.firstinspires.ftc.teamcode.rr_Constants.INTAKE_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.INTAKE_RIGHT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_ARM_DOWN_PUSH;
-import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_ARM_DOWN_READ;
+//import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_ARM_DOWN_READ;
 import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_ARM_UP;
 import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_COLOR_DIFFERENTIAL_THRESHOLD;
 import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_COLOR_FILTER_COUNT;
@@ -194,7 +194,7 @@ public class rr_Robot {
 
         //Initialize Jewel Arm
         //initJewelSensors(aOpMode);
-       // initJewelServos(aOpMode);
+        initJewelServos(aOpMode);
         //setJewelPusherPosition(JEWEL_PUSHER_RIGHT - 0.1f);
 
         initTrayServo(aOpMode);
@@ -341,9 +341,9 @@ public class rr_Robot {
 
     public void initJewelServos(rr_OpMode aOpMode) throws InterruptedException {
         jewelArm = hwMap.get(Servo.class, "servo_jewel_arm");
-        jewelPusher = hwMap.get(Servo.class, "servo_jewel_pusher");
+        //jewelPusher = hwMap.get(Servo.class, "servo_jewel_pusher");
 
-        setJewelPusherPosition(JEWEL_PUSHER_RIGHT - 0.1f);
+        //setJewelPusherPosition(JEWEL_PUSHER_RIGHT - 0.1f);
         setJewelArmUp();
     }
 
@@ -1143,10 +1143,10 @@ public class rr_Robot {
         setJewelArmPosition(JEWEL_ARM_DOWN_PUSH);
     }
 
-    public void setJewelArmDownRead() throws InterruptedException {
-        setJewelArmPosition(JEWEL_ARM_DOWN_READ);
-        setJewelArmPosition(JEWEL_ARM_DOWN_READ);
-    }
+//    public void setJewelArmDownRead() throws InterruptedException {
+//        setJewelArmPosition(JEWEL_ARM_DOWN_READ);
+//        setJewelArmPosition(JEWEL_ARM_DOWN_READ);
+//    }
 
 
     public double getLeftJewelRange(rr_OpMode aOpMode) {
