@@ -41,7 +41,6 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.GENERIC_TIMER;
 import static org.firstinspires.ftc.teamcode.rr_Constants.INTAKE_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.INTAKE_RIGHT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_ARM_DOWN_PUSH;
-import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_ARM_DOWN_READ;
 import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_ARM_UP;
 import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_COLOR_DIFFERENTIAL_THRESHOLD;
 import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_COLOR_FILTER_COUNT;
@@ -1150,10 +1149,6 @@ public class rr_Robot {
         setJewelArmPosition(JEWEL_ARM_DOWN_PUSH);
     }
 
-    public void setJewelArmDownRead() throws InterruptedException {
-        setJewelArmPosition(JEWEL_ARM_DOWN_READ);
-        setJewelArmPosition(JEWEL_ARM_DOWN_READ);
-    }
 
 
     public double getLeftJewelRange(rr_OpMode aOpMode) {
