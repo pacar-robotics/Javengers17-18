@@ -1464,17 +1464,17 @@ public class rr_Robot {
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
 
             if (vuMark == RelicRecoveryVuMark.LEFT) {
-                aOpMode.telemetryAddData("VuMark", "VuMark Left", "%s visible");
+                aOpMode.telemetryAddData("VuMark", "VuMark Left", "Left visible");
                 aOpMode.telemetryUpdate();
                 detectedPictograph = pictographType.LEFT;
                 return vuMark;
             } else if (vuMark == RelicRecoveryVuMark.CENTER) {
-                aOpMode.telemetryAddData("VuMark", "VuMark Center", "%s visible" + detectedPictograph);
+                aOpMode.telemetryAddData("VuMark", "VuMark Center", "Center visible");
                 aOpMode.telemetryUpdate();
                 detectedPictograph = pictographType.CENTER;
                 return vuMark;
             } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
-                aOpMode.telemetryAddData("VuMark", "VuMark Right", "%s visible" + detectedPictograph);
+                aOpMode.telemetryAddData("VuMark", "VuMark Right", "Right visible");
                 aOpMode.telemetryUpdate();
                 detectedPictograph = pictographType.RIGHT;
 

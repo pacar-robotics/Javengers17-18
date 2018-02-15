@@ -120,9 +120,9 @@ public class rr_Constants {
     final static int INTAKE_RIGHT_MOTOR=6;
     final static int INTAKE_LEFT_MOTOR=7;
 
-
     //Mecanum wheel properties
-    final static float MECANUM_WHEEL_DIAMETER = 4f*2.0f;   //in inches multiplied by gearing factor.
+    //TODO: Correct constant for diameter?
+    final static float MECANUM_WHEEL_DIAMETER = 4f;   //in inches multiplied by gearing factor.
     final static float MECANUM_WHEEL_ENCODER_MARGIN = 50;
     final static float MECANUM_WHEEL_SIDE_TRACK_DISTANCE = 9.5f;
     final static float MECANUM_WHEEL_FRONT_TRACK_DISTANCE = 14.75f;

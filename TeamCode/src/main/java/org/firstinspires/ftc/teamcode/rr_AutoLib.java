@@ -71,22 +71,22 @@ public class rr_AutoLib {
         Thread.sleep(300);
 
         // turn to view Vuforia pictograph
-        robot.turnAbsoluteBoschGyroDegrees(aOpMode, -20);
+        robot.turnAbsoluteBoschGyroDegrees(aOpMode, -25);
         Thread.sleep(250);
 
         aOpMode.telemetry.setAutoClear(true); //necessary for using Vuforia
         switch (robot.getPictograph(aOpMode)) {
             case RIGHT:
-                columnDistance = 40;
+                columnDistance = 34 + 7;
                 break; // 7 inches between cube columns
             case CENTER:
-                columnDistance = 40 - 7;
+                columnDistance = 34;
                 break; // 7 inches between cube columns
             case LEFT:
-                columnDistance = 40 - 14;
+                columnDistance = 34 - 7;
                 break; // 7 inches between cube columns
             default:
-                columnDistance = 40 - 7;
+                columnDistance = 34;
                 break;
         }
         aOpMode.telemetry.setAutoClear(false); //turning off the auto clear afterward
@@ -97,31 +97,22 @@ public class rr_AutoLib {
         Thread.sleep(250);
 
         // navigate to column, turn to face it
-        moveWheels(aOpMode, columnDistance, .4f, rr_Constants.DirectionEnum.Forward, true);
+        moveWheels(aOpMode, columnDistance*(2f/3), .4f, rr_Constants.DirectionEnum.Forward, true);
         Thread.sleep(250);
-        moveWheels(aOpMode, 10, .4f, rr_Constants.DirectionEnum.SidewaysRight, true);
-        Thread.sleep(250);
-        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 90);
+        moveWheels(aOpMode, 10*(2f/3), .4f, rr_Constants.DirectionEnum.SidewaysRight, true);
         Thread.sleep(250);
         robot.turnAbsoluteBoschGyroDegrees(aOpMode, 90);
         Thread.sleep(250);
-
-        // turn and score at angle
-        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 65);
+        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 90);
+        Thread.sleep(250);
+        moveWheels(aOpMode, 17*(2f/3), .4f, rr_Constants.DirectionEnum.Backward, true);
         Thread.sleep(250);
         scoreCube(aOpMode);
+        Thread.sleep(500);
+        robot.setCubePusherPosition(aOpMode, rr_Constants.CUBE_PUSHER_PUSHED_POSITION);
         Thread.sleep(250);
-        universalMoveRobot(aOpMode, 0, .3f, 0, 1500, falseStop, false, 0, 0);
+        moveWheels(aOpMode, 6*(2f/3), .4f, rr_Constants.DirectionEnum.Backward, true);
         Thread.sleep(250);
-        universalMoveRobot(aOpMode, 0, .3f, 0, 500, falseStop, false, 0, 0);
-        Thread.sleep(250);
-
-        // move back, move forward, move back to ensure scoring
-        moveWheels(aOpMode, 2f, 0.4f, Forward, false);
-        universalMoveRobot(aOpMode, 0, .3f, 0, 500, falseStop, false, 0, 0);
-        Thread.sleep(300);
-        moveWheels(aOpMode, 2f, 0.4f, Forward, false);
-
     }
 
     // robot starts farther away from audience
@@ -215,17 +206,17 @@ public class rr_AutoLib {
 
         switch (robot.getPictograph(aOpMode)) {
             case RIGHT: {
-                columnDistance = 40 - 7;
+                columnDistance = 34 - 7;
                 break; // 7 inches between cube columns
             }
             case CENTER:
-                columnDistance = 40;
+                columnDistance = 34;
                 break; // 7 inches between cube columns
             case LEFT:
-                columnDistance = 40 + 7;
+                columnDistance = 34 + 7;
                 break; // 7 inches between cube columns
             default:
-                columnDistance = 40;
+                columnDistance = 34;
                 break;
         }
 
@@ -236,31 +227,22 @@ public class rr_AutoLib {
         robot.turnAbsoluteBoschGyroDegrees(aOpMode, 0);
         Thread.sleep(250);
 
-        // navigate to column, turn to face it
-        moveWheels(aOpMode, columnDistance, .4f, rr_Constants.DirectionEnum.Backward, true);
+        moveWheels(aOpMode, columnDistance*(2f/3), .4f, rr_Constants.DirectionEnum.Backward, true);
         Thread.sleep(250);
-        moveWheels(aOpMode, 6, .4f, rr_Constants.DirectionEnum.SidewaysRight, true);
-        Thread.sleep(250);
-        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 90);
+        moveWheels(aOpMode, 10*(2f/3), .4f, rr_Constants.DirectionEnum.SidewaysLeft, true);
         Thread.sleep(250);
         robot.turnAbsoluteBoschGyroDegrees(aOpMode, 90);
         Thread.sleep(250);
-
-        // turn and score at angle
-        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 65);
+        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 90);
+        Thread.sleep(250);
+        moveWheels(aOpMode, 17*(2f/3), .4f, rr_Constants.DirectionEnum.Backward, true);
         Thread.sleep(250);
         scoreCube(aOpMode);
+        Thread.sleep(500);
+        robot.setCubePusherPosition(aOpMode, rr_Constants.CUBE_PUSHER_PUSHED_POSITION);
         Thread.sleep(250);
-        universalMoveRobot(aOpMode, 0, .3f, 0, 1500, falseStop, false, 0, 0);
+        moveWheels(aOpMode, 6*(2f/3), .4f, rr_Constants.DirectionEnum.Backward, true);
         Thread.sleep(250);
-        universalMoveRobot(aOpMode, 0, .3f, 0, 500, falseStop, false, 0, 0);
-        Thread.sleep(250);
-
-        // move back, move forward, move back to ensure scoring
-        moveWheels(aOpMode, 2f, 0.4f, Forward, false);
-        universalMoveRobot(aOpMode, 0, .3f, 0, 500, falseStop, false, 0, 0);
-        Thread.sleep(300);
-        moveWheels(aOpMode, 2f, 0.4f, Forward, false);
 
     }
 
