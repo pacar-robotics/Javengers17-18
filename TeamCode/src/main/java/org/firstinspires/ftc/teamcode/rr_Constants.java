@@ -65,40 +65,45 @@ public class rr_Constants {
     final static float RELIC_WINCH_RETRACT_POWER_FACTOR = -.5f;
     final static int RELIC_WINCH_REST = -220;                   // TODO: Change
     final static int RELIC_WINCH_UPPER_LIMIT = 11000;           // TODO: Change
-    final static float RELIC_ARM_GRAB = 0.3f;
-    final static float RELIC_ARM_EXTEND_UP = 0.75f;//feet of robot pointing up
+    final static float RELIC_ARM_GRAB = 0.65f;
+    final static float RELIC_ARM_EXTEND_UP = 0.0f;//feet of robot pointing up
     final static float RELIC_ARM_OPEN_PULSE = 0.25f;
-    final static float RELIC_ARM_MAX = 1f;              // TODO: Change
-    final static float RELIC_ARM_MIN = .1f;              // TODO: Change
-    final static float RELIC_CLAW_OPEN = 0.8f;
+    final static float RELIC_ARM_MAX = 0f;              // TODO: Change
+    final static float RELIC_ARM_MIN = .92f;              // TODO: Change
+    final static float RELIC_ARM_INIT = 0.0f;
+    final static float RELIC_CLAW_OPEN = 1.0f;
     final static float RELIC_CLAW_OPEN_STABILIZED=0.4f;
-    final static float RELIC_CLAW_CLOSED = 0.21f;
+    final static float RELIC_CLAW_CLOSED = 0.0f;
+    final static float RELIC_CLAW_INIT=0.0f;
+    final static float RELIC_WRIST_PICKUP=0.25f;
+    final static float RELIC_WRIST_INIT=0.0f;
 
     //Cube Tray Constants
     //these numbers need to be tuned based on a calibration op
     final static int TRAY_HEIGHT_COLLECTION_POSITION=0; //also 1 cube position
-    final static int TRAY_HEIGHT_2CUBE_POSITION=625;
+    final static int TRAY_HEIGHT_2CUBE_POSITION=700;
     final static int TRAY_HEIGHT_MAX_POSITION=950;
     final static float TRAY_LIFT_POWER_FACTOR=1.0f;
     final static float TRAY_LIFT_POWER=1.0f;
 
-    final static float TRAY_FLIP_HORIZONTAL_POSITION=0.6f;
-    final static float TRAY_FLIP_COLLECTION_POSITION=0.72f;
-    final static float TRAY_FLIP_SCORING_POSITION=0.0f;
+    final static float TRAY_FLIP_HORIZONTAL_POSITION=0.68f;
+    final static float TRAY_FLIP_COLLECTION_POSITION=0.80f;
+    final static float TRAY_FLIP_SCORING_POSITION=0.17f;
 
 
     //Cube Pusher Constants
     final static float CUBE_PUSHER_RESTED_POSITION= 0f;
     final static float CUBE_PUSHER_INIT_POSITION= 0.85f;
-    final static float CUBE_PUSHER_PUSHED_POSITION= 1.0f;
+    final static float CUBE_PUSHER_PUSHED_POSITION= 0.95f;
 
 
     //Jewel Arm Constants
     final static float JEWEL_PUSHER_LEFT = 0.90f; // make bigger
     final static float JEWEL_PUSHER_RIGHT = 0.10f; // make smaller
     final static float JEWEL_PUSHER_NEUTRAL = 0.50f;
-    final static float JEWEL_ARM_UP = 0.25f;
-    final static float JEWEL_ARM_DOWN_READ = .89f;
+    final static float JEWEL_ARM_UP = 0.42f;
+
+    //final static float JEWEL_ARM_DOWN_READ = .89f;
     final static float JEWEL_ARM_DOWN_PUSH = .92f;
     static final double JEWEL_ARM_INCREMENT = 0.01;     // amount to slew servo each cycle
     static final int JEWEL_ARM_CYCLE = 50;     // period of each cycle
@@ -119,9 +124,9 @@ public class rr_Constants {
     final static int INTAKE_RIGHT_MOTOR=6;
     final static int INTAKE_LEFT_MOTOR=7;
 
-
     //Mecanum wheel properties
-    final static float MECANUM_WHEEL_DIAMETER = 4f*1.5f;   //in inches multiplied by gearing factor.
+    //TODO: Correct constant for diameter?
+    final static float MECANUM_WHEEL_DIAMETER = 4f;   //in inches ---multiplied by gearing factor (2).
     final static float MECANUM_WHEEL_ENCODER_MARGIN = 50;
     final static float MECANUM_WHEEL_SIDE_TRACK_DISTANCE = 9.5f;
     final static float MECANUM_WHEEL_FRONT_TRACK_DISTANCE = 14.75f;
@@ -184,5 +189,11 @@ public class rr_Constants {
     // Direction of turning
     enum TurnDirectionEnum {
         Clockwise, Counterclockwise
+    }
+
+    enum JewelOrderEnum {
+        BLUE_RED,
+        RED_BLUE,
+        UNKNOWN
     }
 }

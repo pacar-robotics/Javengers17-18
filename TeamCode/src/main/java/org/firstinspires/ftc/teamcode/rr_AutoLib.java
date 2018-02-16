@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.disnodeteam.dogecv.CameraViewDisplay;
+import com.disnodeteam.dogecv.detectors.JewelDetector;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
@@ -9,6 +11,9 @@ import java.util.InputMismatchException;
 import static org.firstinspires.ftc.teamcode.rr_Constants.ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION;
 
 
+import static org.firstinspires.ftc.teamcode.rr_Constants.DirectionEnum.SidewaysLeft;
+import static org.firstinspires.ftc.teamcode.rr_Constants.GENERIC_TIMER;
+import static org.firstinspires.ftc.teamcode.rr_Constants.INTAKE_POWER_HIGH;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_LIFT_POWER;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DirectionEnum.Backward;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DirectionEnum.Forward;
@@ -61,49 +66,59 @@ public class rr_AutoLib {
 
         float columnDistance;
 
-        robot.setJewelPusherNeutral();
+        aOpMode.telemetry.setAutoClear(true);
 
-        //robot.closeCubeClawServoOneCube();
-       // robot.moveCubeArmToPositionWithTouchLimits(aOpMode, rr_Constants.CUBE_ARM_MIDDLE, CUBE_ARM_RAISE_POWER);
-
-        detectColorAndPushJewel(aOpMode, rr_Constants.AllianceColorEnum.BLUE);
+        pushJewelOpenCV(aOpMode, rr_Constants.AllianceColorEnum.BLUE);
         Thread.sleep(300);
 
-        aOpMode.telemetry.setAutoClear(true); //neccessary for using Vuforia
-        switch(robot.getPictograph(aOpMode)) {
-            case RIGHT: columnDistance = 34; break; // 7 inches between cube columns
-            case CENTER: columnDistance = 34 - 7; break; // 7 inches between cube columns
-            case LEFT: columnDistance = 34 - 14; break; // 7 inches between cube columns
-            default: columnDistance = 34 - 7; break;
+        // turn to view Vuforia pictograph
+        robot.turnAbsoluteBoschGyroDegrees(aOpMode, -25);
+        Thread.sleep(250);
+
+        aOpMode.telemetry.setAutoClear(true); //necessary for using Vuforia
+        switch (robot.getPictograph(aOpMode)) {
+            case RIGHT:
+                columnDistance = 34 + 7;
+                break; // 7 inches between cube columns
+            case CENTER:
+                columnDistance = 34;
+                break; // 7 inches between cube columns
+            case LEFT:
+                columnDistance = 34 - 7;
+                break; // 7 inches between cube columns
+            default:
+                columnDistance = 34;
+                break;
         }
         aOpMode.telemetry.setAutoClear(false); //turning off the auto clear afterward
 
         aOpMode.DBG("Detected" + robot.detectedPictograph);
 
-        moveWheels(aOpMode, columnDistance, .4f, rr_Constants.DirectionEnum.Forward, true);
+        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 0);
         Thread.sleep(250);
-        moveWheels(aOpMode, 6, .4f, rr_Constants.DirectionEnum.SidewaysRight, true);
-        Thread.sleep(250);
-        //robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_GRAB - 100, CUBE_ARM_LOWERING_POWER);
-        Thread.sleep(250);
-        robot.turnAbsoluteBoschGyroDegrees(aOpMode, -90);
-        Thread.sleep(250);
-        robot.turnAbsoluteBoschGyroDegrees(aOpMode, -90);
-        Thread.sleep(250);
-        robot.turnAbsoluteBoschGyroDegrees(aOpMode, -65);
-        Thread.sleep(250);
-        universalMoveRobot(aOpMode, -20, .3f, 0, 1500, falseStop, false, 0, 0);
-        Thread.sleep(250);
-       // robot.openCubeClawServoOneCube();
-        Thread.sleep(300);
-        universalMoveRobot(aOpMode, -20, .3f, 0, 500, falseStop , false, 0, 0);
-        Thread.sleep(250);
-        moveWheels(aOpMode, 2f, 0.4f, Backward, false);
 
-        universalMoveRobot(aOpMode, -20, .3f, 0, 500, falseStop , false, 0, 0);
-        Thread.sleep(300);
-        moveWheels(aOpMode, 2f, 0.4f, Backward, false);
+        moveWheels(aOpMode, columnDistance*(2f/3), .4f, rr_Constants.DirectionEnum.Forward, true);
+        Thread.sleep(250);
+        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 90);
+        Thread.sleep(250);
+        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 90);
+        Thread.sleep(250);
+        moveWheels(aOpMode, 11*(2f/3), .4f, rr_Constants.DirectionEnum.Backward, true);
+        Thread.sleep(250);
+        scoreCube(aOpMode);
+        Thread.sleep(500);
+        robot.setCubePusherPosition(aOpMode, rr_Constants.CUBE_PUSHER_PUSHED_POSITION);
+        Thread.sleep(250);
+        moveWheels(aOpMode, 6*(2f/3), .4f, rr_Constants.DirectionEnum.Backward, true);
+        Thread.sleep(250);
+        moveWheels(aOpMode, 8*(2f/3), .4f, rr_Constants.DirectionEnum.Forward, true);
+        Thread.sleep(250);
 
+        // ensure that glyph has been scored
+        moveWheels(aOpMode, 8*(2f/3), 0.4f, Backward, false);
+        Thread.sleep(250);
+        moveWheels(aOpMode, 7*(2f/3), 0.4f, Forward, false);
+        Thread.sleep(250);
     }
 
     // robot starts farther away from audience
@@ -114,169 +129,180 @@ public class rr_AutoLib {
         float columnDistance;
         rr_Constants.DirectionEnum moveDirection;
 
-        robot.setJewelPusherNeutral();
+        aOpMode.telemetry.setAutoClear(true);
 
-       // robot.closeCubeClawServoOneCube();
-        //robot.moveCubeArmToPositionWithTouchLimits(aOpMode, rr_Constants.CUBE_ARM_MIDDLE, CUBE_ARM_RAISE_POWER);
+        pushJewelOpenCV(aOpMode, rr_Constants.AllianceColorEnum.BLUE);
+        Thread.sleep(500);
 
-        detectColorAndPushJewel(aOpMode, rr_Constants.AllianceColorEnum.BLUE);
-        Thread.sleep(300);
+        // turn to view Vuforia pictograph
+        robot.turnAbsoluteBoschGyroDegrees(aOpMode, -25);
+        Thread.sleep(250);
 
-        aOpMode.telemetry.setAutoClear(true); //neccessary for using Vuforia
-        switch(robot.getPictograph(aOpMode)) {
-            case RIGHT: columnDistance = 3 + 7; moveDirection = rr_Constants.DirectionEnum.SidewaysRight; break; // 7 inches between cube columns
-            case CENTER: columnDistance = 3; moveDirection = rr_Constants.DirectionEnum.SidewaysRight; break; // 7 inches between cube columns
-            case LEFT: columnDistance = 7; moveDirection = rr_Constants.DirectionEnum.SidewaysLeft; break; // 7 inches between cube columns
-            default: columnDistance = 3; moveDirection = rr_Constants.DirectionEnum.SidewaysRight; break;
+        switch (robot.getPictograph(aOpMode)) {
+            case RIGHT:
+                columnDistance = 10 + 7;
+                moveDirection = rr_Constants.DirectionEnum.SidewaysRight;
+                break; // 7 inches between cube columns
+            case CENTER:
+                columnDistance = 10;
+                moveDirection = rr_Constants.DirectionEnum.SidewaysRight;
+                break; // 7 inches between cube columns
+            case LEFT:
+                columnDistance = 10 - 7;
+                moveDirection = rr_Constants.DirectionEnum.SidewaysLeft;
+                break; // 7 inches between cube columns
+            default:
+                columnDistance = 10;
+                moveDirection = rr_Constants.DirectionEnum.SidewaysRight;
+                break;
         }
         aOpMode.telemetry.setAutoClear(false); //turning off the auto clear afterward
 
         aOpMode.DBG("Detected" + robot.detectedPictograph);
 
+        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 0);
+        Thread.sleep(250);
 
-        moveWheels(aOpMode, 23, .4f, rr_Constants.DirectionEnum.Forward, true);
-        Thread.sleep(300);
-        moveWheels(aOpMode, columnDistance, .4f, moveDirection, true);
-        Thread.sleep(300);
-        //robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_GRAB - 100, CUBE_ARM_LOWERING_POWER);
-        Thread.sleep(300);
-        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 25);
-        Thread.sleep(300);
-        universalMoveRobot(aOpMode, 20, .3f, 0, 1250, falseStop, false, 0, 0);
-        Thread.sleep(300);
-       // robot.openCubeClawServoOneCube();
-        Thread.sleep(300);
-        universalMoveRobot(aOpMode, 20, .3f, 0, 500, falseStop , false, 0, 0);
-        Thread.sleep(300);
-        moveWheels(aOpMode, 2f, 0.4f, Backward, false);
 
-        universalMoveRobot(aOpMode, 20, .3f, 0, 500, falseStop , false, 0, 0);
-        Thread.sleep(300);
-        moveWheels(aOpMode, 2f, 0.4f, Backward, false);
+        moveWheels(aOpMode, 29*(2f/3), .4f, rr_Constants.DirectionEnum.Forward, true);
+        Thread.sleep(250);
+        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 180);
+        Thread.sleep(250);
+        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 180);
+        Thread.sleep(250);
+        moveWheels(aOpMode, columnDistance*(2f/3), .4f, rr_Constants.DirectionEnum.SidewaysLeft, true);
+        Thread.sleep(250);
+        scoreCube(aOpMode);
+        Thread.sleep(500);
+        moveWheels(aOpMode, 7*(2f/3), 0.4f, Backward, false);
+        Thread.sleep(250);
+        moveWheels(aOpMode, 5*(2f/3), 0.4f, Forward, false);
+        Thread.sleep(250);
 
+        // ensure that glyph has been scored
+        moveWheels(aOpMode, 5*(2f/3), 0.4f, Backward, false);
+        Thread.sleep(250);
+        moveWheels(aOpMode, 7*(2f/3), 0.4f, Forward, false);
+        Thread.sleep(250);
     }
 
     // robot starts closer to audience
     public void redOneAutonomousCommonAction(rr_OpMode aOpMode) throws InterruptedException {
 
         float columnDistance;
-
         rr_Constants.DirectionEnum moveDirection;
-
-        robot.setJewelPusherNeutral();
-
-       // robot.closeCubeClawServoOneCube();
-       // robot.moveCubeArmToPositionWithTouchLimits(aOpMode, rr_Constants.CUBE_ARM_MIDDLE - 200, CUBE_ARM_RAISE_POWER);
 
         aOpMode.DBG("In Red One Common");
 
-        detectColorAndPushJewel(aOpMode, rr_Constants.AllianceColorEnum.RED);
+        aOpMode.telemetry.setAutoClear(true); //necessary for using Vuforia
+
+        pushJewelOpenCV(aOpMode, rr_Constants.AllianceColorEnum.RED);
         Thread.sleep(300);
-        aOpMode.telemetry.setAutoClear(true); //neccessary for using Vuforia
+
+        // turn to view Vuforia pictograph
+        robot.turnAbsoluteBoschGyroDegrees(aOpMode, -20);
+        Thread.sleep(250);
+
         switch (robot.getPictograph(aOpMode)) {
             case RIGHT: {
-                columnDistance = 31 - 7;
+                columnDistance = 34 - 7;
                 break; // 7 inches between cube columns
             }
             case CENTER:
-                columnDistance = 31;
+                columnDistance = 34;
                 break; // 7 inches between cube columns
             case LEFT:
-                columnDistance = 31 + 7;
+                columnDistance = 34 + 7;
                 break; // 7 inches between cube columns
             default:
-                columnDistance = 31;
+                columnDistance = 34;
                 break;
         }
 
-          aOpMode.telemetry.setAutoClear(false); //turning off the auto clear afterward
+        aOpMode.telemetry.setAutoClear(false); //turning off the auto clear afterward
 
-            aOpMode.DBG("Detected" + robot.detectedPictograph);
+        aOpMode.DBG("Detected" + robot.detectedPictograph);
 
+        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 0);
+        Thread.sleep(250);
 
-            moveWheels(aOpMode, columnDistance, .4f, rr_Constants.DirectionEnum.Backward, true);
-            Thread.sleep(300);
-            moveWheels(aOpMode, 6, .4f, rr_Constants.DirectionEnum.SidewaysRight, true);
-            Thread.sleep(300);
-          //  robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_GRAB - 100, CUBE_ARM_LOWERING_POWER);
-            Thread.sleep(300);
-            robot.turnAbsoluteBoschGyroDegrees(aOpMode, -90);
-            Thread.sleep(300);
-            robot.turnAbsoluteBoschGyroDegrees(aOpMode, -90);
-            Thread.sleep(300);
-            robot.turnAbsoluteBoschGyroDegrees(aOpMode, -110);
-            Thread.sleep(300);
-          //  robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_GRAB - 100, CUBE_ARM_LOWERING_POWER);
-            Thread.sleep(300);
-            universalMoveRobot(aOpMode, 20, .3f, 0, 1500, falseStop, false, 0, 0);
-            Thread.sleep(250);
-            //robot.openCubeClawServoOneCube();
-            Thread.sleep(300);
-            universalMoveRobot(aOpMode, 20, .3f, 0, 500, falseStop, false, 0, 0);
-            Thread.sleep(300);
-            moveWheels(aOpMode, 2f, 0.4f, Backward, false);
+        moveWheels(aOpMode, columnDistance*(2f/3), .4f, rr_Constants.DirectionEnum.Backward, true);
+        Thread.sleep(250);
+        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 90);
+        Thread.sleep(250);
+        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 90);
+        Thread.sleep(250);
+        //moveWheels(aOpMode, 2*(2f/3), .4f, rr_Constants.DirectionEnum.Backward, true);
+        Thread.sleep(250);
+        scoreCube(aOpMode);
+        Thread.sleep(500);
+        moveWheels(aOpMode, 9*(2f/3), .4f, rr_Constants.DirectionEnum.Backward, true);
+        Thread.sleep(250);
+        moveWheels(aOpMode, 8*(2f/3), .4f, rr_Constants.DirectionEnum.Forward, true);
+        Thread.sleep(250);
 
-
-            // universalMoveRobot - backwards until red line is detected
-            // Move forward / backward based on Vuforia pattern detected
-            // rotate counterclockwise 90 degrees
-
-        }
-
-
+        // ensure that glyph has been scored
+        moveWheels(aOpMode, 7*(2f/3), 0.4f, Backward, false);
+        Thread.sleep(250);
+        moveWheels(aOpMode, 7*(2f/3), 0.4f, Forward, false);
+        Thread.sleep(250);
+    }
 
 
     // robot starts farther away from audience
-    public void redTwoAutonomousCommonAction(rr_OpMode aOpMode)throws InterruptedException{
+    public void redTwoAutonomousCommonAction(rr_OpMode aOpMode) throws InterruptedException {
 
         float columnDistance;
         rr_Constants.DirectionEnum moveDirection;
 
-        robot.setJewelPusherNeutral();
+        aOpMode.telemetry.setAutoClear(true);
 
-       // robot.closeCubeClawServoOneCube();
-      //  robot.moveCubeArmToPositionWithTouchLimits(aOpMode, rr_Constants.CUBE_ARM_MIDDLE - 200, CUBE_ARM_RAISE_POWER);
+        pushJewelOpenCV(aOpMode, rr_Constants.AllianceColorEnum.RED);
+        Thread.sleep(300);
 
-        detectColorAndPushJewel(aOpMode, rr_Constants.AllianceColorEnum.RED);
-        aOpMode.telemetry.setAutoClear(true); //neccessary for using Vuforia
-        switch(robot.getPictograph(aOpMode)) {
-            case RIGHT: columnDistance = 14 - 7; moveDirection = rr_Constants.DirectionEnum.SidewaysLeft; break; // 7 inches between cube columns
-            case CENTER: columnDistance = 14; moveDirection = rr_Constants.DirectionEnum.SidewaysLeft; break; // 7 inches between cube columns
-            case LEFT: columnDistance = 14 + 7; moveDirection = rr_Constants.DirectionEnum.SidewaysLeft; break; // 7 inches between cube columns
-            default: columnDistance = 14 ; moveDirection = rr_Constants.DirectionEnum.SidewaysLeft; break;
+        // turn to view Vuforia pictograph
+        robot.turnAbsoluteBoschGyroDegrees(aOpMode, -25);
+        Thread.sleep(250);
+
+        switch (robot.getPictograph(aOpMode)) {
+            case RIGHT:
+                columnDistance = 19 - 7;
+                break; // 7 inches between cube columns
+            case CENTER:
+                columnDistance = 19;
+                break; // 7 inches between cube columns
+            case LEFT:
+                columnDistance = 19 + 7;
+                break; // 7 inches between cube columns
+            default:
+                columnDistance = 19;
+                break;
         }
         aOpMode.telemetry.setAutoClear(false); //turning off the auto clear afterward
 
         aOpMode.DBG("Detected" + robot.detectedPictograph);
 
-        Thread.sleep(300);
-        moveWheels(aOpMode, 21 , .3f, rr_Constants.DirectionEnum.Backward, true);
-        Thread.sleep(300);
-      //  robot.moveCubeArmToPositionWithTouchLimits(aOpMode, CUBE_ARM_GRAB - 100, CUBE_ARM_LOWERING_POWER);
-        Thread.sleep(300);
-        robot.turnUsingEncoders(aOpMode, 120, .3f, rr_Constants.TurnDirectionEnum.Clockwise);
-        Thread.sleep(300);
-        moveWheels(aOpMode, 2 , .3f, rr_Constants.DirectionEnum.Backward, true);
-        Thread.sleep(300);
-        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 180);
-        moveWheels(aOpMode, 2, 0.4f, Backward, false);
-        Thread.sleep(300);
-        moveWheels(aOpMode, columnDistance, .4f, moveDirection, true);
-        Thread.sleep(300);
-        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 167);
-        Thread.sleep(300);
-        universalMoveRobot(aOpMode, 20, .3f, 0, 900, falseStop , false, 0, 0);
+        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 0);
         Thread.sleep(250);
-        //robot.openCubeClawServoOneCube();
-        Thread.sleep(300);
-        universalMoveRobot(aOpMode, 20, .3f, 0, 500, falseStop , false, 0, 0);
-        Thread.sleep(300);
-        moveWheels(aOpMode, 2f, 0.4f, Backward, false);
 
-        universalMoveRobot(aOpMode, 20, .3f, 0, 1200, falseStop , false, 0, 0);
-        Thread.sleep(300);
-        moveWheels(aOpMode, 2f, 0.4f, Backward, false);
+        moveWheels(aOpMode, 27*(2f/3), .4f, rr_Constants.DirectionEnum.Backward, true);
+        Thread.sleep(250);
+        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 0);
+        Thread.sleep(250);
+        moveWheels(aOpMode, columnDistance*(2f/3), .4f, rr_Constants.DirectionEnum.SidewaysRight, true);
+        Thread.sleep(250);
+        scoreCube(aOpMode);
+        Thread.sleep(500);
+        moveWheels(aOpMode, 7*(2f/3), 0.4f, Backward, false);
+        Thread.sleep(250);
+        moveWheels(aOpMode, 5*(2f/3), 0.4f, Forward, false);
+        Thread.sleep(250);
 
+        // ensure that glyph has been scored
+        moveWheels(aOpMode, 5*(2f/3), 0.4f, Backward, false);
+        Thread.sleep(250);
+        moveWheels(aOpMode, 7*(2f/3), 0.4f, Forward, false);
+        Thread.sleep(250);
     }
 
     public void adjustJewelArmUsingRange(rr_OpMode aOpMode) throws InterruptedException {
@@ -313,7 +339,7 @@ public class rr_AutoLib {
 
 
         while (robot.getJewelArmPosition() < rr_Constants.BOTTOM_JEWEL_POSITION) {
-            robot.setJewelArmPosition(aOpMode, robot.getJewelArmPosition() + (float)rr_Constants.JEWEL_ARM_INCREMENT);
+            robot.setJewelArmPosition(aOpMode, robot.getJewelArmPosition() + (float) rr_Constants.JEWEL_ARM_INCREMENT);
 
             if (minDistanceFromJewel > robot.getFilteredLeftJewelRangeReading(aOpMode)) {
                 minDistanceFromJewel = (float) robot.getFilteredLeftJewelRangeReading(aOpMode);
@@ -323,15 +349,76 @@ public class rr_AutoLib {
         }
 
 
-
-   robot.setJewelArmPosition(aOpMode, servoPosition);
-
+        robot.setJewelArmPosition(aOpMode, servoPosition);
 
     }
 
+
+    public void pushJewelOpenCV(rr_OpMode aOpMode, rr_Constants.AllianceColorEnum teamColor) throws InterruptedException {
+
+        JewelDetector jewelDetector = new JewelDetector();
+        jewelDetector.init(aOpMode.hardwareMap.appContext, CameraViewDisplay.getInstance());
+        jewelDetector.enable();
+
+        // This works - not sure why - do not change
+        for (int i = 0; i < 100; i++) {
+            jewelDetector.getCurrentOrder();
+            Thread.sleep(10);
+        }
+
+        aOpMode.telemetry.addLine(String.valueOf(jewelDetector.getCurrentOrder()));
+        aOpMode.telemetry.update();
+        Thread.sleep(1000);
+
+        if (teamColor == rr_Constants.AllianceColorEnum.BLUE) {
+
+            if (jewelDetector.getCurrentOrder() == JewelDetector.JewelOrder.BLUE_RED) {
+                aOpMode.telemetryAddData("Jewel Order", "BLUE_RED", "Left is Blue");
+                robot.setJewelArmDownPush();
+                Thread.sleep(250);
+                robot.turnAbsoluteBoschGyroDegrees(aOpMode, 15);
+                Thread.sleep(250);
+            } else if (jewelDetector.getCurrentOrder() == JewelDetector.JewelOrder.RED_BLUE) {
+                aOpMode.telemetryAddData("Jewel Order", "RED_BLUE", "Right is Blue");
+                robot.setJewelArmDownPush();
+                Thread.sleep(250);
+                robot.turnAbsoluteBoschGyroDegrees(aOpMode, -15);
+                Thread.sleep(250);
+            } else if (jewelDetector.getCurrentOrder() == JewelDetector.JewelOrder.UNKNOWN) {
+                robot.setJewelArmDownPush();
+                aOpMode.telemetryAddData("No Color Detected", "UNKNOWN", "Unknown");
+            }
+        }
+
+        if (teamColor == rr_Constants.AllianceColorEnum.RED) {
+            if (jewelDetector.getCurrentOrder() == JewelDetector.JewelOrder.BLUE_RED) {
+                aOpMode.telemetryAddData("Jewel Order", "BLUE_RED", "Right is Red");
+                robot.setJewelArmDownPush();
+                Thread.sleep(250);
+                robot.turnAbsoluteBoschGyroDegrees(aOpMode, -15);
+                Thread.sleep(250);
+            } else if (jewelDetector.getCurrentOrder() == JewelDetector.JewelOrder.RED_BLUE) {
+                aOpMode.telemetryAddData("Jewel Order", "RED_BLUE", "Left is Red");
+                robot.setJewelArmDownPush();
+                Thread.sleep(250);
+                robot.turnAbsoluteBoschGyroDegrees(aOpMode, 15);
+                Thread.sleep(250);
+            } else if (jewelDetector.getCurrentOrder() == JewelDetector.JewelOrder.UNKNOWN) {
+                aOpMode.telemetryAddData("No Color Detected", "UNKNOWN", "Unknown");
+            }
+        }
+        aOpMode.telemetryUpdate();
+        Thread.sleep(500);
+
+        robot.setJewelArmUp();
+
+        jewelDetector.disable();
+    }
+
+
     public void detectColorAndPushJewel(rr_OpMode aOpMode, rr_Constants.AllianceColorEnum teamColor) throws InterruptedException {
 
-        robot.setJewelArmDownRead();
+        robot.setJewelArmDownPush();
 
         Thread.sleep(500);
 
@@ -346,7 +433,7 @@ public class rr_AutoLib {
 
             if ((leftJewelColor == rr_Constants.JewelColorEnum.BLUE) &&
                     (rightJewelColor == rr_Constants.JewelColorEnum.RED)) {
-                aOpMode.telemetryAddData("LEFT IS BLUE","LEFT_BLUE", "Left is Blue");
+                aOpMode.telemetryAddData("LEFT IS BLUE", "LEFT_BLUE", "Left is Blue");
                 aOpMode.telemetryUpdate();
                 robot.setJewelArmDownPush();
                 robot.pushRightJewel();
@@ -355,16 +442,15 @@ public class rr_AutoLib {
                 }
             } else if ((leftJewelColor == rr_Constants.JewelColorEnum.RED) &&
                     (rightJewelColor == rr_Constants.JewelColorEnum.BLUE)) {
-                 aOpMode.telemetryAddData("RIGHT IS BLUE","RIGHT_BLUE", "RIGHT is Blue");
-                 aOpMode.telemetryUpdate();
+                aOpMode.telemetryAddData("RIGHT IS BLUE", "RIGHT_BLUE", "RIGHT is Blue");
+                aOpMode.telemetryUpdate();
                 robot.setJewelArmDownPush();
                 robot.pushLeftJewel();
                 if (rightJewelColor == rr_Constants.JewelColorEnum.RED) {
                     robot.pushRightJewel();
                 }
-            }
-            else if(((leftJewelColor) == rr_Constants.JewelColorEnum.UNKNOWN) ||
-            (rightJewelColor == rr_Constants.JewelColorEnum.UNKNOWN)) {
+            } else if (((leftJewelColor) == rr_Constants.JewelColorEnum.UNKNOWN) ||
+                    (rightJewelColor == rr_Constants.JewelColorEnum.UNKNOWN)) {
                 aOpMode.telemetryAddData("Unknown:BlueTeam", "Unknown", "No color detected");
                 aOpMode.telemetryAddData("Left color", "left color", "Left color" + robot.getJewelLeftColor(aOpMode));
                 aOpMode.telemetryAddData("Right color", "Right color", "Right color" + robot.getJewelRightColor(aOpMode));
@@ -380,7 +466,7 @@ public class rr_AutoLib {
 
             if ((leftJewelColor == rr_Constants.JewelColorEnum.BLUE) &&
                     (robot.getJewelRightColor(aOpMode) == rr_Constants.JewelColorEnum.RED)) {
-                 aOpMode.telemetryAddData("RIGHT IS RED","RIGHT_RED", "Right is RED");
+                aOpMode.telemetryAddData("RIGHT IS RED", "RIGHT_RED", "Right is RED");
                 aOpMode.telemetryUpdate();
                 robot.setJewelArmDownPush();
                 robot.pushLeftJewel();
@@ -388,16 +474,15 @@ public class rr_AutoLib {
                     robot.pushRightJewel();
                 }
             } else if ((leftJewelColor == rr_Constants.JewelColorEnum.RED) &&
-                    (rightJewelColor== rr_Constants.JewelColorEnum.BLUE)) {
-                 aOpMode.telemetryAddData("LEFT IS RED","LEFT_RED", "Left is RED");
+                    (rightJewelColor == rr_Constants.JewelColorEnum.BLUE)) {
+                aOpMode.telemetryAddData("LEFT IS RED", "LEFT_RED", "Left is RED");
                 aOpMode.telemetryUpdate();
                 robot.setJewelArmDownPush();
                 robot.pushRightJewel();
                 if (leftJewelColor == rr_Constants.JewelColorEnum.BLUE) {
                     robot.pushLeftJewel();
                 }
-            }
-            else if((leftJewelColor == rr_Constants.JewelColorEnum.UNKNOWN) ||
+            } else if ((leftJewelColor == rr_Constants.JewelColorEnum.UNKNOWN) ||
                     ((rightJewelColor) == rr_Constants.JewelColorEnum.UNKNOWN)) {
                 aOpMode.telemetryAddData("Unknown: RedTeam", "Unknown", "No color detected");
                 aOpMode.telemetryAddData("Left color", "left color", "Left color" + robot.getJewelLeftColor(aOpMode));
@@ -460,7 +545,6 @@ public class rr_AutoLib {
     }
 
 
-
     /**
      * Runs robot to a specific position while driving sideways
      *
@@ -481,9 +565,6 @@ public class rr_AutoLib {
                 -targetPosition, targetPosition, targetPosition, -targetPosition, isRampedPower);
     }
 
-
-
-
     public class FalseCondition implements rr_OpMode.StopCondition {
         //can be used as an empty condition, so the robot keeps running in universal movement
         public boolean stopCondition(rr_OpMode aOpMode) throws InterruptedException {
@@ -491,7 +572,14 @@ public class rr_AutoLib {
         }
     }
 
-
+    public void scoreCube(rr_OpMode aOpMode) throws InterruptedException {
+        robot.setTrayHeightPositionWithTouchLimits(aOpMode, rr_Constants.TRAY_HEIGHT_COLLECTION_POSITION, rr_Constants.TRAY_LIFT_POWER);
+        Thread.sleep(500);
+        robot.setTrayFlipPosition(aOpMode, rr_Constants.TRAY_FLIP_SCORING_POSITION);
+        Thread.sleep(500);
+        robot.setTrayFlipPosition(aOpMode, rr_Constants.TRAY_FLIP_COLLECTION_POSITION);
+        Thread.sleep(500);
+    }
 
 
 }

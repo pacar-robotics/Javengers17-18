@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 
+import com.disnodeteam.dogecv.CameraViewDisplay;
+import com.disnodeteam.dogecv.detectors.JewelDetector;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -41,7 +43,6 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.GENERIC_TIMER;
 import static org.firstinspires.ftc.teamcode.rr_Constants.INTAKE_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.INTAKE_RIGHT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_ARM_DOWN_PUSH;
-import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_ARM_DOWN_READ;
 import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_ARM_UP;
 import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_COLOR_DIFFERENTIAL_THRESHOLD;
 import static org.firstinspires.ftc.teamcode.rr_Constants.JEWEL_COLOR_FILTER_COUNT;
@@ -79,6 +80,8 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.TURN_POWER_FACTOR;
 
 public class rr_Robot {
 
+//    JewelDetector jewelDetector;
+
     enum pictographType {
         LEFT,
         RIGHT,
@@ -114,6 +117,7 @@ public class rr_Robot {
     private Servo jewelPusher;
     private Servo relicClaw;
     private Servo relicArm;
+    private Servo relicWrist;
 
     private Servo trayFlipServo;
 
@@ -131,6 +135,7 @@ public class rr_Robot {
 
     private ModernRoboticsI2cRangeSensor intakeRightRangeSensor;
 
+    private  BNO055IMU.Parameters parameters;
     private BNO055IMU imu; //bosch imu embedded in the Rev Expansion Hub.
     Orientation angles; //part of IMU processing state
     Acceleration gravity; //part of IMU processing state
@@ -148,7 +153,6 @@ public class rr_Robot {
 
     private ElapsedTime period = new ElapsedTime();
 
-    // Vuforia
     public static final String TAG = "Vuforia VuMark Sample";
     VuforiaLocalizer vuforia;
 
@@ -165,6 +169,7 @@ public class rr_Robot {
 
 
     public void autonomousInit(rr_OpMode aOpMode, HardwareMap ahwMap) throws InterruptedException {
+
         aOpMode.telemetry.setAutoClear(false); //useful to see the debug values stay on screen
 
         aOpMode.DBG("in Robot init");
@@ -177,20 +182,18 @@ public class rr_Robot {
         //Initialize Drive Motors
         initDriveMotors(aOpMode);
 
-
         //initialize intake range sensor.
         initIntakeSensors(aOpMode);
 
-       //dont initilize gyro, because we have to adjust position before this operation.
+       //setup the Bosch IMU
+        setupBoschIMU(aOpMode); //only needed once per program run.
 
         //Initialize Relic Arm
-        //initRelicArm(aOpMode);
+        initRelicArm(aOpMode);
         //initRelicArmSensors(aOpMode);
 
         //Initialize Jewel Arm
-        //initJewelSensors(aOpMode);
-       // initJewelServos(aOpMode);
-        //setJewelPusherPosition(JEWEL_PUSHER_RIGHT - 0.1f);
+        initJewelServos(aOpMode);
 
         initTrayServo(aOpMode);
 
@@ -200,12 +203,9 @@ public class rr_Robot {
         initIMUGyro(aOpMode);
 
         //initialize trayMotor
-
         initTrayMotor(aOpMode);
-
         initTraySensors(aOpMode);
-
-
+        
         aOpMode.DBG("Exiting Robot init");
     }
 
@@ -218,6 +218,9 @@ public class rr_Robot {
         //Instantiate motorArray
         motorArray = new DcMotor[10];
 
+        //setup and initialize the gyro.
+
+        setupBoschIMU(aOpMode);
 
         //Initialize Drive Motors
         initDriveMotors(aOpMode);
@@ -230,13 +233,13 @@ public class rr_Robot {
 
 
         //Initialize Relic Arm
-       // initRelicArm(aOpMode);
+       initRelicArm(aOpMode);
         //initRelicArmSensors(aOpMode);
 
         //Initialize Jewel Arm
         //initJewelSensors(aOpMode);
-        //initJewelServos(aOpMode);
-       // setJewelPusherPosition(JEWEL_PUSHER_NEUTRAL);
+        initJewelServos(aOpMode);
+        //setJewelPusherPosition(JEWEL_PUSHER_NEUTRAL);
 
         initTrayServo(aOpMode);
 
@@ -329,29 +332,18 @@ public class rr_Robot {
         motorArray[RELIC_WINCH_MOTOR] = hwMap.get(DcMotor.class, "motor_relic_slide");
         relicClaw = hwMap.get(Servo.class, "servo_relic_claw");
         relicArm = hwMap.get(Servo.class, "servo_relic_arm");
+        relicWrist = hwMap.get(Servo.class, "servo_relic_wrist");
 
         setRelicClawClosed();
         setRelicArmGrab();
+        //setRelicWristDown();
     }
 
     public void initJewelServos(rr_OpMode aOpMode) throws InterruptedException {
         jewelArm = hwMap.get(Servo.class, "servo_jewel_arm");
-        jewelPusher = hwMap.get(Servo.class, "servo_jewel_pusher");
-
-        setJewelPusherPosition(JEWEL_PUSHER_RIGHT - 0.1f);
         setJewelArmUp();
     }
 
-    public void initJewelSensors(rr_OpMode aOpMode) throws InterruptedException {
-        // Color sensors
-        leftJewelColorSensor = hwMap.get(ColorSensor.class, "left_jewel_color_distance");
-        rightJewelColorSensor = hwMap.get(ColorSensor.class, "right_jewel_color_distance");
-
-        // Range sensors
-        leftJewelRangeSensor = hwMap.get(DistanceSensor.class, "left_jewel_color_distance");
-        rightJewelRangeSensor = hwMap.get(DistanceSensor.class, "right_jewel_color_distance");
-
-    }
 
     public void initTraySensors(rr_OpMode aOpMode) throws InterruptedException {
         trayUpperLimit = hwMap.get(DigitalChannel.class, "tray_upper_limit");
@@ -421,6 +413,8 @@ public class rr_Robot {
         aOpMode.DBG("Heading:" + -angles.firstAngle);
         return -angles.firstAngle;
 
+
+
     }
 
 
@@ -428,9 +422,9 @@ public class rr_Robot {
         initializeBoschIMU(aOpMode);
     }
 
-    protected void initializeBoschIMU(rr_OpMode aOpMode) throws InterruptedException {
-        aOpMode.DBG("Starting Initialize Bosch Gyro");
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+    protected void setupBoschIMU(rr_OpMode aOpMode) throws InterruptedException {
+        aOpMode.DBG("Starting Setup Bosch Gyro");
+        parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
@@ -445,7 +439,17 @@ public class rr_Robot {
         // Start the logging of measured acceleration
         //imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
         Thread.sleep(500);
-        aOpMode.DBG("End Initialize Bosch Gyro");
+        aOpMode.DBG("End Setup Bosch Gyro");
+    }
+
+    protected void initializeBoschIMU(rr_OpMode aOpMode) throws InterruptedException {
+        aOpMode.Echo("Starting Initialize Bosch Gyro");
+
+        imu.initialize(parameters);
+        // Start the logging of measured acceleration
+        //imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+        Thread.sleep(500);
+        aOpMode.Echo("End Initialize Bosch Gyro");
     }
 
 
@@ -755,6 +759,7 @@ public class rr_Robot {
 
         //calculate velocities at each wheel.
 
+        /**
         //blend with prev velocities to smooth out start
 
         fl_velocity = ((yAxisVelocity + xAxisVelocity) + prevFLVelocity) / 2;
@@ -764,6 +769,17 @@ public class rr_Robot {
         bl_velocity = ((yAxisVelocity - xAxisVelocity) + prevBLVelocity) / 2;
 
         br_velocity = ((yAxisVelocity + xAxisVelocity) + prevBRVelocity) / 2;
+        *
+        **/
+
+        //ignores rotational velocity
+        fl_velocity = yAxisVelocity + xAxisVelocity ;
+
+        fr_velocity = yAxisVelocity - xAxisVelocity ;
+
+        bl_velocity = yAxisVelocity - xAxisVelocity;
+
+        br_velocity = yAxisVelocity + xAxisVelocity ;
 
         //save these in variables that are part of vvRobot to be used in next cycle.
 
@@ -1015,6 +1031,11 @@ public class rr_Robot {
         relicArm.setPosition(position);
     }
 
+    public void setRelicWristPosition(float position) {
+        relicWrist.setPosition(position);
+    }
+
+
     public float getRelicArmPosition() {
         return (float) relicArm.getPosition();
     }
@@ -1137,12 +1158,6 @@ public class rr_Robot {
     public void setJewelArmDownPush() throws InterruptedException {
         setJewelArmPosition(JEWEL_ARM_DOWN_PUSH);
     }
-
-    public void setJewelArmDownRead() throws InterruptedException {
-        setJewelArmPosition(JEWEL_ARM_DOWN_READ);
-        setJewelArmPosition(JEWEL_ARM_DOWN_READ);
-    }
-
 
     public double getLeftJewelRange(rr_OpMode aOpMode) {
         return leftJewelRangeSensor.getDistance(DistanceUnit.CM);
@@ -1446,17 +1461,17 @@ public class rr_Robot {
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
 
             if (vuMark == RelicRecoveryVuMark.LEFT) {
-                aOpMode.telemetryAddData("VuMark", "VuMark Left", "%s visible");
+                aOpMode.telemetryAddData("VuMark", "VuMark Left", "Left visible");
                 aOpMode.telemetryUpdate();
                 detectedPictograph = pictographType.LEFT;
                 return vuMark;
             } else if (vuMark == RelicRecoveryVuMark.CENTER) {
-                aOpMode.telemetryAddData("VuMark", "VuMark Center", "%s visible" + detectedPictograph);
+                aOpMode.telemetryAddData("VuMark", "VuMark Center", "Center visible");
                 aOpMode.telemetryUpdate();
                 detectedPictograph = pictographType.CENTER;
                 return vuMark;
             } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
-                aOpMode.telemetryAddData("VuMark", "VuMark Right", "%s visible" + detectedPictograph);
+                aOpMode.telemetryAddData("VuMark", "VuMark Right", "Right visible");
                 aOpMode.telemetryUpdate();
                 detectedPictograph = pictographType.RIGHT;
 
@@ -1508,7 +1523,7 @@ public class rr_Robot {
     public void setTrayFlipPosition(rr_OpMode aOpMode, float position) throws InterruptedException{
         trayFlipServo.setPosition(position);
         trayFlipPosition=position;
-        Thread.sleep(100);
+        Thread.sleep(750);
     }
 
     public void setCubePusherPosition(rr_OpMode aOpMode, float position) throws InterruptedException{
@@ -1531,7 +1546,7 @@ public class rr_Robot {
     }
 
     public double getIntakeUltrasonicRightSensorRange(rr_OpMode aOpMode) throws InterruptedException{
-        return intakeRightRangeSensor.cmOptical();
+        return intakeRightRangeSensor.cmUltrasonic();
     }
 
     public void initTrayPosition(rr_OpMode aOpMode) throws InterruptedException{
