@@ -130,6 +130,7 @@ public class rr_Robot {
 
     private ModernRoboticsI2cRangeSensor intakeRightRangeSensor;
 
+    private  BNO055IMU.Parameters parameters;
     private BNO055IMU imu; //bosch imu embedded in the Rev Expansion Hub.
     Orientation angles; //part of IMU processing state
     Acceleration gravity; //part of IMU processing state
@@ -180,7 +181,8 @@ public class rr_Robot {
         //initialize intake range sensor.
         initIntakeSensors(aOpMode);
 
-       //dont initilize gyro, because we have to adjust position before this operation.
+       //setup the Bosch IMU
+        setupBoschIMU(aOpMode); //only needed once per program run.
 
         //Initialize Relic Arm
         //initRelicArm(aOpMode);
@@ -217,6 +219,9 @@ public class rr_Robot {
         //Instantiate motorArray
         motorArray = new DcMotor[10];
 
+        //setup and initialize the gyro.
+
+        setupBoschIMU(aOpMode);
 
         //Initialize Drive Motors
         initDriveMotors(aOpMode);
@@ -420,6 +425,8 @@ public class rr_Robot {
         aOpMode.DBG("Heading:" + -angles.firstAngle);
         return -angles.firstAngle;
 
+
+
     }
 
 
@@ -427,9 +434,9 @@ public class rr_Robot {
         initializeBoschIMU(aOpMode);
     }
 
-    protected void initializeBoschIMU(rr_OpMode aOpMode) throws InterruptedException {
-        aOpMode.DBG("Starting Initialize Bosch Gyro");
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+    protected void setupBoschIMU(rr_OpMode aOpMode) throws InterruptedException {
+        aOpMode.DBG("Starting Setup Bosch Gyro");
+        parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
@@ -444,7 +451,17 @@ public class rr_Robot {
         // Start the logging of measured acceleration
         //imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
         Thread.sleep(500);
-        aOpMode.DBG("End Initialize Bosch Gyro");
+        aOpMode.DBG("End Setup Bosch Gyro");
+    }
+
+    protected void initializeBoschIMU(rr_OpMode aOpMode) throws InterruptedException {
+        aOpMode.Echo("Starting Initialize Bosch Gyro");
+
+        imu.initialize(parameters);
+        // Start the logging of measured acceleration
+        //imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+        Thread.sleep(500);
+        aOpMode.Echo("End Initialize Bosch Gyro");
     }
 
 
@@ -1439,7 +1456,7 @@ public class rr_Robot {
 
         parameters.vuforiaLicenseKey = "AevlBL3/////AAAAGZ3T16bk1EepnUsSLPkQW/sFqYxxQLGZ0w6paGMug92slctEFAuXjXeMqrzDuCLvLZmY1sWjvn4kb5WKPKH4RdCZB7ccft3XGKh8rVn0r+TxhcJUmZwsdciAzCBYVe5FLnGtldKTV1eVbNFcN6FpDfZstRXXBdjqyMBg5XzJmhJp5rcG5TIi0qMcjaoHFqaBdnMyYBAeERylDVGBbDbIAX0dLDiQ5bjxA/lAphyHjDDyetpVjGlEwziUzcYbdvZK3zjGpR7WH62RqM6QzO1s7PcTppQMgRi3FxhisqKKZdWWF5pFGBPMP6bpsOzHTd8TDxPjwXiYIZxt3MwkhQ+1JpyAG9CVo+I0T/b/oNT0/ulZ";
 
-        parameters.cameraDirection = ClosableVuforiaLocalizer.CameraDirection.BACK;
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
 
         VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
