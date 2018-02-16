@@ -7,9 +7,12 @@ import java.util.ArrayList;
 
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_RIGHT_MOTOR;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_PUSHER_INIT_POSITION;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_PUSHER_RESTED_POSITION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_RIGHT_MOTOR;
-import static org.firstinspires.ftc.teamcode.rr_Constants.INTAKE_POWER_MEDIUM;
+import static org.firstinspires.ftc.teamcode.rr_Constants.INTAKE_LEFT_MOTOR;
+import static org.firstinspires.ftc.teamcode.rr_Constants.INTAKE_RIGHT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_EXTEND_UP;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WINCH_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_LIFT_MOTOR;
@@ -131,6 +134,8 @@ class rr_DiagLib {
         robotTests.add(new RobotTest("Intake Motors", TestType.MANUAL, new TestIntakeMotors()));
         robotTests.add(new RobotTest("Relic Arm", TestType.MANUAL, new TestRelicArm()));
         robotTests.add(new RobotTest("Relic Claw", TestType.MANUAL, new TestRelicClaw()));
+        robotTests.add(new RobotTest("Cube Pusher", TestType.MANUAL, new TestCubePusher()));
+        robotTests.add(new RobotTest("Jewel Arm", TestType.MANUAL, new TestJewelArm()));
 
         robotTests.add(new RobotTest("Test Connection", TestType.MANUAL, new TestConnection()));
     }
@@ -194,9 +199,8 @@ class rr_DiagLib {
 
     private class TestIntakeMotors implements ManualTest {
         public void runTest() throws InterruptedException {
-            robot.setIntakePower(aOpMode, INTAKE_POWER_MEDIUM, -INTAKE_POWER_MEDIUM);
-            Thread.sleep(SERVO_WAIT_TIME);
-            robot.setIntakePower(aOpMode, 0, 0);
+            robot.testMotor(aOpMode, INTAKE_RIGHT_MOTOR, 0.5f, 1000);
+            robot.testMotor(aOpMode, INTAKE_LEFT_MOTOR, 0.5f, 1000);
         }
     }
 
@@ -389,6 +393,22 @@ class rr_DiagLib {
             robot.setRelicClawOpen();
             Thread.sleep(SERVO_WAIT_TIME);
             robot.setRelicClawClosed();
+        }
+    }
+
+    private class TestCubePusher implements ManualTest {
+        public void runTest() throws InterruptedException {
+            robot.setCubePusherPosition(aOpMode, CUBE_PUSHER_RESTED_POSITION);
+            Thread.sleep(SERVO_WAIT_TIME);
+            robot.setCubePusherPosition(aOpMode, CUBE_PUSHER_INIT_POSITION);
+        }
+    }
+
+    private class TestJewelArm implements ManualTest {
+        public void runTest() throws InterruptedException {
+            robot.setJewelArmDownPush();
+            Thread.sleep(SERVO_WAIT_TIME);
+            robot.setJewelPusherNeutral();
         }
     }
 
