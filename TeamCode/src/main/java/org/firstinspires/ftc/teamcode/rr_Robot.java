@@ -113,6 +113,7 @@ public class rr_Robot {
     private Servo jewelPusher;
     private Servo relicClaw;
     private Servo relicArm;
+    private Servo relicWrist;
 
     private Servo trayFlipServo;
 
@@ -185,7 +186,7 @@ public class rr_Robot {
         setupBoschIMU(aOpMode); //only needed once per program run.
 
         //Initialize Relic Arm
-        //initRelicArm(aOpMode);
+        initRelicArm(aOpMode);
         //initRelicArmSensors(aOpMode);
 
         //Initialize Jewel Arm
@@ -234,7 +235,7 @@ public class rr_Robot {
 
 
         //Initialize Relic Arm
-       // initRelicArm(aOpMode);
+       initRelicArm(aOpMode);
         //initRelicArmSensors(aOpMode);
 
         //Initialize Jewel Arm
@@ -333,29 +334,18 @@ public class rr_Robot {
         motorArray[RELIC_WINCH_MOTOR] = hwMap.get(DcMotor.class, "motor_relic_slide");
         relicClaw = hwMap.get(Servo.class, "servo_relic_claw");
         relicArm = hwMap.get(Servo.class, "servo_relic_arm");
+        relicWrist = hwMap.get(Servo.class, "servo_relic_wrist");
 
         setRelicClawClosed();
         setRelicArmGrab();
+        //setRelicWristDown();
     }
 
     public void initJewelServos(rr_OpMode aOpMode) throws InterruptedException {
         jewelArm = hwMap.get(Servo.class, "servo_jewel_arm");
-        //jewelPusher = hwMap.get(Servo.class, "servo_jewel_pusher");
-
-        //setJewelPusherPosition(JEWEL_PUSHER_RIGHT - 0.1f);
         setJewelArmUp();
     }
 
-    public void initJewelSensors(rr_OpMode aOpMode) throws InterruptedException {
-        // Color sensors
-        leftJewelColorSensor = hwMap.get(ColorSensor.class, "left_jewel_color_distance");
-        rightJewelColorSensor = hwMap.get(ColorSensor.class, "right_jewel_color_distance");
-
-        // Range sensors
-        leftJewelRangeSensor = hwMap.get(DistanceSensor.class, "left_jewel_color_distance");
-        rightJewelRangeSensor = hwMap.get(DistanceSensor.class, "right_jewel_color_distance");
-
-    }
 
     public void initTraySensors(rr_OpMode aOpMode) throws InterruptedException {
         trayUpperLimit = hwMap.get(DigitalChannel.class, "tray_upper_limit");
@@ -1043,6 +1033,11 @@ public class rr_Robot {
         relicArm.setPosition(position);
     }
 
+    public void setRelicWristPosition(float position) {
+        relicWrist.setPosition(position);
+    }
+
+
     public float getRelicArmPosition() {
         return (float) relicArm.getPosition();
     }
@@ -1555,7 +1550,7 @@ public class rr_Robot {
     }
 
     public double getIntakeUltrasonicRightSensorRange(rr_OpMode aOpMode) throws InterruptedException{
-        return intakeRightRangeSensor.cmOptical();
+        return intakeRightRangeSensor.cmUltrasonic();
     }
 
     public void initTrayPosition(rr_OpMode aOpMode) throws InterruptedException{
