@@ -20,6 +20,6 @@ public class AutoOpBlue2 extends rr_OpMode {
         rrAutoLib = new rr_AutoLib(this, this.hardwareMap);
 
         waitForStart();
-        //rrAutoLib.blueTwoAutonomousCommonAction(this);
+        rrAutoLib.blueTwoAutonomousCommonAction(this);
     }
 }

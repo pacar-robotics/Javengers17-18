@@ -192,10 +192,7 @@ public class rr_Robot {
         //initRelicArmSensors(aOpMode);
 
         //Initialize Jewel Arm
-        //initJewelSensors(aOpMode);
         initJewelServos(aOpMode);
-
-        //setJewelPusherPosition(JEWEL_PUSHER_RIGHT - 0.1f);
 
         initTrayServo(aOpMode);
 
@@ -205,9 +202,7 @@ public class rr_Robot {
         initIMUGyro(aOpMode);
 
         //initialize trayMotor
-
         initTrayMotor(aOpMode);
-
         initTraySensors(aOpMode);
 
 
