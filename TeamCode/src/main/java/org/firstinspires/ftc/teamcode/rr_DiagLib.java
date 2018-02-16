@@ -15,6 +15,8 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.INTAKE_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.INTAKE_RIGHT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_EXTEND_UP;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WINCH_MOTOR;
+import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_FLIP_COLLECTION_POSITION;
+import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_FLIP_SCORING_POSITION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_LIFT_MOTOR;
 
 class rr_DiagLib {
@@ -135,6 +137,7 @@ class rr_DiagLib {
         robotTests.add(new RobotTest("Relic Arm", TestType.MANUAL, new TestRelicArm()));
         robotTests.add(new RobotTest("Relic Claw", TestType.MANUAL, new TestRelicClaw()));
         robotTests.add(new RobotTest("Cube Pusher", TestType.MANUAL, new TestCubePusher()));
+        robotTests.add(new RobotTest("Tray Flipper", TestType.MANUAL, new TestTrayFlipper()));
         robotTests.add(new RobotTest("Jewel Arm", TestType.MANUAL, new TestJewelArm()));
 
         robotTests.add(new RobotTest("Test Connection", TestType.MANUAL, new TestConnection()));
@@ -409,6 +412,14 @@ class rr_DiagLib {
             robot.setJewelArmDownPush();
             Thread.sleep(SERVO_WAIT_TIME);
             robot.setJewelPusherNeutral();
+        }
+    }
+
+    private class TestTrayFlipper implements ManualTest {
+        public void runTest() throws InterruptedException {
+            robot.setTrayFlipPosition(aOpMode, TRAY_FLIP_COLLECTION_POSITION);
+            Thread.sleep(SERVO_WAIT_TIME);
+            robot.setTrayFlipPosition(aOpMode, TRAY_FLIP_SCORING_POSITION);
         }
     }
 
