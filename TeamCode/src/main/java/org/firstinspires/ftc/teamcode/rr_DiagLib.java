@@ -417,9 +417,9 @@ class rr_DiagLib {
 
     private class TestTrayFlipper implements ManualTest {
         public void runTest() throws InterruptedException {
-            robot.setTrayFlipPosition(aOpMode, TRAY_FLIP_COLLECTION_POSITION);
-            Thread.sleep(SERVO_WAIT_TIME);
             robot.setTrayFlipPosition(aOpMode, TRAY_FLIP_SCORING_POSITION);
+            Thread.sleep(SERVO_WAIT_TIME);
+            robot.setTrayFlipPosition(aOpMode, TRAY_FLIP_COLLECTION_POSITION);
         }
     }
 
