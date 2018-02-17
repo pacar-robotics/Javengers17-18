@@ -35,13 +35,12 @@ public class TestCubeCounterRotation extends rr_OpMode {
 
     private void processCounterRotation() throws InterruptedException {
        double  opticalRange=robot.getIntakeOpticalRightSensorRange(this);
-       double  ultrasoniceRange=robot.getIntakeUltrasonicRightSensorRange(this);
+       double  ultrasonicRange=robot.getIntakeUltrasonicRightSensorRange(this);
 
         if (
-                ((opticalRange > 4)&&(opticalRange<5))
-                || (ultrasoniceRange <4)
+                (opticalRange > 4.5)
+                        && (ultrasonicRange <4)
                 )
-
         {
             //the cube is going in sideways
             //we should switch to low power but reverse one of the motors

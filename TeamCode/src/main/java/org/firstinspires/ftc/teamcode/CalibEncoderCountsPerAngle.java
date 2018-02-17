@@ -24,7 +24,7 @@ public class CalibEncoderCountsPerAngle extends rr_OpMode{
 
         for(int i=0;i<trialCount;i++) {
             //trials
-            rrAutoLib.robot.initIMUGyro(this); //initialize gyro. to reset angle.
+            rrAutoLib.robot.initializeBoschIMU(this); //initialize gyro. to reset angle.
 
             rrAutoLib.robot.runRobotToPosition(this, .4f, .4f, .4f, .4f,
                     encoderCountToBeTurned, -encoderCountToBeTurned,

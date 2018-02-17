@@ -61,22 +61,18 @@ public class rr_Constants {
 
     //Relic Arm Constants
     final static float RELIC_WINCH_MAX_DURATION = 5000;
-    final static float RELIC_WINCH_EXTEND_POWER_FACTOR = .5f;
-    final static float RELIC_WINCH_RETRACT_POWER_FACTOR = -.5f;
+    final static float RELIC_WINCH_EXTEND_POWER_FACTOR = 0.99f;
+    final static float RELIC_WINCH_RETRACT_POWER_FACTOR = -0.99f;
     final static int RELIC_WINCH_REST = -220;                   // TODO: Change
     final static int RELIC_WINCH_UPPER_LIMIT = 11000;           // TODO: Change
-    final static float RELIC_ARM_GRAB = 0.65f;
-    final static float RELIC_ARM_EXTEND_UP = 0.0f;//feet of robot pointing up
-    final static float RELIC_ARM_OPEN_PULSE = 0.25f;
-    final static float RELIC_ARM_MAX = 0f;              // TODO: Change
-    final static float RELIC_ARM_MIN = .92f;              // TODO: Change
-    final static float RELIC_ARM_INIT = 0.0f;
-    final static float RELIC_CLAW_OPEN = 1.0f;
-    final static float RELIC_CLAW_OPEN_STABILIZED=0.4f;
-    final static float RELIC_CLAW_CLOSED = 0.0f;
-    final static float RELIC_CLAW_INIT=0.0f;
-    final static float RELIC_WRIST_PICKUP=0.25f;
-    final static float RELIC_WRIST_INIT=0.0f;
+    final static float RELIC_ARM_REST = 0f;              // TODO: Change
+    final static float RELIC_ARM_PICKUP = 0.7f;              // TODO: Change
+    final static float RELIC_ARM_INIT = 0.935f;
+    final static float RELIC_CLAW_OPEN = 0.0f;
+    final static float RELIC_CLAW_CLOSED = 0.3f;
+    final static float RELIC_CLAW_INIT=0.3f;
+    final static float RELIC_WRIST_PICKUP=0.3f;
+    final static float RELIC_WRIST_INIT=0.05f;
 
     //Cube Tray Constants
     //these numbers need to be tuned based on a calibration op
@@ -138,7 +134,9 @@ public class rr_Constants {
     final static float STANDARD_DRIVE_POWER_FACTOR = 0.95f;
     final static float FIELD_ORIENTED_DRIVE_POWER_FACTOR = 0.95f;
     final static float TURN_POWER_FACTOR = 0.5f;
+    final static float TURN_AUTONOMOUS_POWER_FACTOR = 0.25f;
     final static float SCORING_DRIVE_POWER_FACTOR = 0.25f;  //TODO: CHANGE LATER
+    final static float RELIC_DRIVE_POWER_FACTOR=0.25f;
 
     //Gamepad Thresholds
     final static float ANALOG_STICK_THRESHOLD = .25f;
@@ -195,5 +193,11 @@ public class rr_Constants {
         BLUE_RED,
         RED_BLUE,
         UNKNOWN
+    }
+
+    enum IntakeStateEnum{
+        INTAKE,
+        OUTTAKE,
+        STOPPED
     }
 }

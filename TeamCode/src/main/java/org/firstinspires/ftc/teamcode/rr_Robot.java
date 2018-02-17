@@ -64,17 +64,20 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.MOTOR_RAMP_FB_POWER_LO
 import static org.firstinspires.ftc.teamcode.rr_Constants.MOTOR_RAMP_FB_POWER_UPPER_LIMIT;
 import static org.firstinspires.ftc.teamcode.rr_Constants.MOTOR_RAMP_SIDEWAYS_POWER_LOWER_LIMIT;
 import static org.firstinspires.ftc.teamcode.rr_Constants.MOTOR_RAMP_SIDEWAYS_POWER_UPPER_LIMIT;
-import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_CLAW_OPEN_STABILIZED;
-import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_GRAB;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_INIT;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_PICKUP;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_CLAW_INIT;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_CLAW_CLOSED;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_CLAW_OPEN;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WINCH_MOTOR;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WRIST_INIT;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RIGHT_MOTOR_TRIM_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.ROBOT_TRACK_DISTANCE;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_FLIP_COLLECTION_POSITION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_HEIGHT_COLLECTION_POSITION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_LIFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_LIFT_POWER;
+import static org.firstinspires.ftc.teamcode.rr_Constants.TURN_AUTONOMOUS_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TURN_POWER_FACTOR;
 
 
@@ -148,6 +151,9 @@ public class rr_Robot {
 
     int trayHeightPosition = rr_Constants.TRAY_HEIGHT_COLLECTION_POSITION;
     float trayFlipPosition = rr_Constants.TRAY_FLIP_COLLECTION_POSITION;
+    float relicArmPosition=RELIC_ARM_INIT;
+    float relicWristPosition=RELIC_WRIST_INIT;
+    float relicClawPosition=RELIC_CLAW_INIT;
 
     float cubePusherPosition= CUBE_PUSHER_RESTED_POSITION;
 
@@ -189,7 +195,7 @@ public class rr_Robot {
         setupBoschIMU(aOpMode); //only needed once per program run.
 
         //Initialize Relic Arm
-        initRelicArm(aOpMode);
+        initRelic(aOpMode);
         //initRelicArmSensors(aOpMode);
 
         //Initialize Jewel Arm
@@ -199,8 +205,6 @@ public class rr_Robot {
 
         initCubePusherServo(aOpMode);
 
-        //initialize Gyro.
-        initIMUGyro(aOpMode);
 
         //initialize trayMotor
         initTrayMotor(aOpMode);
@@ -233,7 +237,7 @@ public class rr_Robot {
 
 
         //Initialize Relic Arm
-       initRelicArm(aOpMode);
+       initRelic(aOpMode);
         //initRelicArmSensors(aOpMode);
 
         //Initialize Jewel Arm
@@ -261,11 +265,6 @@ public class rr_Robot {
         aOpMode.DBG("Exiting Robot init");
     }
 
-    public void initIMUGyro(rr_OpMode aOpMode) throws InterruptedException {
-        aOpMode.DBG("Starting Initialize Bosch Gyro");
-        initializeBoschIMU(aOpMode); //use shared method for initialization of bosch gyro
-        aOpMode.DBG("End Initialize Bosch Gyro");
-    }
 
     public void initTrayServo(rr_OpMode aOpMode) throws InterruptedException{
 
@@ -328,15 +327,15 @@ public class rr_Robot {
         intakeRightRangeSensor=hwMap.get(ModernRoboticsI2cRangeSensor.class, "RightIntakeRangeSensor");
     }
 
-    public void initRelicArm(rr_OpMode aOpMode) throws InterruptedException {
+    public void initRelic(rr_OpMode aOpMode) throws InterruptedException {
         motorArray[RELIC_WINCH_MOTOR] = hwMap.get(DcMotor.class, "motor_relic_slide");
         relicClaw = hwMap.get(Servo.class, "servo_relic_claw");
         relicArm = hwMap.get(Servo.class, "servo_relic_arm");
         relicWrist = hwMap.get(Servo.class, "servo_relic_wrist");
 
-        setRelicClawClosed();
-        setRelicArmGrab();
-        //setRelicWristDown();
+        setRelicClawPosition(RELIC_CLAW_INIT);
+        setRelicArmPosition(RELIC_ARM_INIT);
+        setRelicWristPosition(RELIC_WRIST_INIT);
     }
 
     public void initJewelServos(rr_OpMode aOpMode) throws InterruptedException {
@@ -909,6 +908,60 @@ public class rr_Robot {
         stopBaseMotors(aOpMode);
     }
 
+    public void turnAbsoluteBoschGyroDegreesAuto(rr_OpMode aOpMode, float fieldReferenceDegrees) throws InterruptedException {
+        //clockwise is represented by clockwise numbers.
+        //counterclockwise by negative angle numbers in degrees.
+        //the fieldReferenceDegrees parameters measures degrees off the initial reference frame when the robot is started and the gyro is
+        //calibrated.
+        // >> IMPORTANT: This depends on the zIntegratedHeading not being altered by relative turns !!!
+
+        //first take the absolute degrees and modulus down to 0 and 359.
+
+        float targetDegrees = fieldReferenceDegrees % 360;
+
+        //compare to the current gyro zIntegrated heading and store the result.
+        //the Integrated zValue returned is positive for clockwise turns
+        //read the heading and store it.
+        float startingHeading = getBoschGyroSensorHeading(aOpMode);
+        float turnDegrees = targetDegrees - startingHeading;
+
+        //make the turn using encoders
+
+        if (DEBUG) {
+            aOpMode.telemetryAddData("targetDegrees", "Value",
+                    ":" + targetDegrees);
+            aOpMode.telemetryAddData("Starting Z", "Value",
+                    ":" + startingHeading);
+            aOpMode.telemetryAddData("Turn Degrees", "Value",
+                    ":" + turnDegrees);
+
+            aOpMode.telemetryUpdate();
+        }
+
+        //optimize the turn, so that direction of turn results in smallest turn needed.
+
+        if (Math.abs(turnDegrees) > 180) {
+            turnDegrees = Math.signum(turnDegrees) * -1 * (360 - Math.abs(turnDegrees));
+        }
+
+        turnUsingEncoders(aOpMode, Math.abs(turnDegrees), TURN_AUTONOMOUS_POWER_FACTOR,
+                turnDegrees > 0 ? rr_Constants.TurnDirectionEnum.Clockwise :
+                        rr_Constants.TurnDirectionEnum.Counterclockwise);
+
+        float finalDegrees = getBoschGyroSensorHeading(aOpMode);
+        Thread.sleep(50); //cooling off after gyro read to prevent error in next run.
+
+        if (DEBUG) {
+            aOpMode.telemetryAddData("New Bearing Degrees", "Value:",
+                    ":" + finalDegrees);
+            aOpMode.telemetryAddData("Turn Error Degrees", "Value:",
+                    ":" + (targetDegrees - finalDegrees));
+            aOpMode.telemetryUpdate();
+        }
+
+    }
+
+
     public void turnAbsoluteBoschGyroDegrees(rr_OpMode aOpMode, float fieldReferenceDegrees) throws InterruptedException {
         //clockwise is represented by clockwise numbers.
         //counterclockwise by negative angle numbers in degrees.
@@ -961,7 +1014,6 @@ public class rr_Robot {
         }
 
     }
-
     public void  turnUsingEncodersWithoutRamped(rr_OpMode aOpMode, float angle, float power, rr_Constants.TurnDirectionEnum TurnDirection)
             throws InterruptedException {
 
@@ -1022,16 +1074,18 @@ public class rr_Robot {
     }
 
     public void setRelicArmGrab() throws InterruptedException {
-        relicArm.setPosition(RELIC_ARM_GRAB);
+        relicArm.setPosition(RELIC_ARM_PICKUP);
         Thread.sleep(100);
     }
 
 
     public void setRelicArmPosition(float position) {
+        relicArmPosition=position;
         relicArm.setPosition(position);
     }
 
     public void setRelicWristPosition(float position) {
+        relicWristPosition=position;
         relicWrist.setPosition(position);
     }
 
@@ -1050,7 +1104,7 @@ public class rr_Robot {
     }
 
     public void setRelicClawOpen() throws InterruptedException {
-        relicClaw.setPosition(RELIC_CLAW_OPEN_STABILIZED);
+        relicClaw.setPosition(RELIC_CLAW_OPEN+0.05);
         Thread.sleep(500);
         relicClaw.setPosition(RELIC_CLAW_OPEN);
         Thread.sleep(100);

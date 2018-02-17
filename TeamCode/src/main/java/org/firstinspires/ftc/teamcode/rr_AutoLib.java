@@ -72,7 +72,7 @@ public class rr_AutoLib {
         Thread.sleep(300);
 
         // turn to view Vuforia pictograph
-        robot.turnAbsoluteBoschGyroDegrees(aOpMode, -25);
+        robot.turnAbsoluteBoschGyroDegreesAuto(aOpMode, -25);
         Thread.sleep(250);
 
         aOpMode.telemetry.setAutoClear(true); //necessary for using Vuforia
@@ -94,16 +94,18 @@ public class rr_AutoLib {
 
         aOpMode.DBG("Detected" + robot.detectedPictograph);
 
-        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 0);
+        robot.turnAbsoluteBoschGyroDegreesAuto(aOpMode, 0);
         Thread.sleep(250);
 
         moveWheels(aOpMode, columnDistance*(2f/3), .4f, rr_Constants.DirectionEnum.Forward, true);
         Thread.sleep(250);
-        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 90);
+        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 95);
         Thread.sleep(250);
-        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 90);
+        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 95);
         Thread.sleep(250);
         moveWheels(aOpMode, 11*(2f/3), .4f, rr_Constants.DirectionEnum.Backward, true);
+        Thread.sleep(250);
+        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 95);
         Thread.sleep(250);
         scoreCube(aOpMode);
         Thread.sleep(500);
@@ -135,7 +137,7 @@ public class rr_AutoLib {
         Thread.sleep(500);
 
         // turn to view Vuforia pictograph
-        robot.turnAbsoluteBoschGyroDegrees(aOpMode, -25);
+        robot.turnAbsoluteBoschGyroDegreesAuto(aOpMode, -25);
         Thread.sleep(250);
 
         switch (robot.getPictograph(aOpMode)) {
@@ -160,17 +162,19 @@ public class rr_AutoLib {
 
         aOpMode.DBG("Detected" + robot.detectedPictograph);
 
-        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 0);
+        robot.turnAbsoluteBoschGyroDegreesAuto(aOpMode, 0);
         Thread.sleep(250);
 
 
         moveWheels(aOpMode, 29*(2f/3), .4f, rr_Constants.DirectionEnum.Forward, true);
         Thread.sleep(250);
-        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 180);
+        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 175);
         Thread.sleep(250);
-        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 180);
+        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 175);
         Thread.sleep(250);
         moveWheels(aOpMode, columnDistance*(2f/3), .4f, rr_Constants.DirectionEnum.SidewaysLeft, true);
+        Thread.sleep(250);
+        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 175);
         Thread.sleep(250);
         scoreCube(aOpMode);
         Thread.sleep(500);
@@ -200,7 +204,7 @@ public class rr_AutoLib {
         Thread.sleep(300);
 
         // turn to view Vuforia pictograph
-        robot.turnAbsoluteBoschGyroDegrees(aOpMode, -20);
+        robot.turnAbsoluteBoschGyroDegreesAuto(aOpMode, -25);
         Thread.sleep(250);
 
         switch (robot.getPictograph(aOpMode)) {
@@ -223,14 +227,14 @@ public class rr_AutoLib {
 
         aOpMode.DBG("Detected" + robot.detectedPictograph);
 
-        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 0);
+        robot.turnAbsoluteBoschGyroDegreesAuto(aOpMode, 0);
         Thread.sleep(250);
 
         moveWheels(aOpMode, columnDistance*(2f/3), .4f, rr_Constants.DirectionEnum.Backward, true);
         Thread.sleep(250);
-        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 90);
+        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 95);
         Thread.sleep(250);
-        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 90);
+        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 95);
         Thread.sleep(250);
         //moveWheels(aOpMode, 2*(2f/3), .4f, rr_Constants.DirectionEnum.Backward, true);
         Thread.sleep(250);
@@ -261,7 +265,7 @@ public class rr_AutoLib {
         Thread.sleep(300);
 
         // turn to view Vuforia pictograph
-        robot.turnAbsoluteBoschGyroDegrees(aOpMode, -25);
+        robot.turnAbsoluteBoschGyroDegreesAuto(aOpMode, -25);
         Thread.sleep(250);
 
         switch (robot.getPictograph(aOpMode)) {
@@ -282,14 +286,16 @@ public class rr_AutoLib {
 
         aOpMode.DBG("Detected" + robot.detectedPictograph);
 
-        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 0);
+        robot.turnAbsoluteBoschGyroDegreesAuto(aOpMode, 0);
         Thread.sleep(250);
 
         moveWheels(aOpMode, 27*(2f/3), .4f, rr_Constants.DirectionEnum.Backward, true);
         Thread.sleep(250);
-        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 0);
+        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 5);
         Thread.sleep(250);
         moveWheels(aOpMode, columnDistance*(2f/3), .4f, rr_Constants.DirectionEnum.SidewaysRight, true);
+        Thread.sleep(250);
+        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 5);
         Thread.sleep(250);
         scoreCube(aOpMode);
         Thread.sleep(500);
@@ -376,13 +382,13 @@ public class rr_AutoLib {
                 aOpMode.telemetryAddData("Jewel Order", "BLUE_RED", "Left is Blue");
                 robot.setJewelArmDownPush();
                 Thread.sleep(250);
-                robot.turnAbsoluteBoschGyroDegrees(aOpMode, 15);
+                robot.turnAbsoluteBoschGyroDegreesAuto(aOpMode, 15);
                 Thread.sleep(250);
             } else if (jewelDetector.getCurrentOrder() == JewelDetector.JewelOrder.RED_BLUE) {
                 aOpMode.telemetryAddData("Jewel Order", "RED_BLUE", "Right is Blue");
                 robot.setJewelArmDownPush();
                 Thread.sleep(250);
-                robot.turnAbsoluteBoschGyroDegrees(aOpMode, -15);
+                robot.turnAbsoluteBoschGyroDegreesAuto(aOpMode, -15);
                 Thread.sleep(250);
             } else if (jewelDetector.getCurrentOrder() == JewelDetector.JewelOrder.UNKNOWN) {
                 robot.setJewelArmDownPush();
@@ -395,13 +401,13 @@ public class rr_AutoLib {
                 aOpMode.telemetryAddData("Jewel Order", "BLUE_RED", "Right is Red");
                 robot.setJewelArmDownPush();
                 Thread.sleep(250);
-                robot.turnAbsoluteBoschGyroDegrees(aOpMode, -15);
+                robot.turnAbsoluteBoschGyroDegreesAuto(aOpMode, -15);
                 Thread.sleep(250);
             } else if (jewelDetector.getCurrentOrder() == JewelDetector.JewelOrder.RED_BLUE) {
                 aOpMode.telemetryAddData("Jewel Order", "RED_BLUE", "Left is Red");
                 robot.setJewelArmDownPush();
                 Thread.sleep(250);
-                robot.turnAbsoluteBoschGyroDegrees(aOpMode, 15);
+                robot.turnAbsoluteBoschGyroDegreesAuto(aOpMode, 15);
                 Thread.sleep(250);
             } else if (jewelDetector.getCurrentOrder() == JewelDetector.JewelOrder.UNKNOWN) {
                 aOpMode.telemetryAddData("No Color Detected", "UNKNOWN", "Unknown");
