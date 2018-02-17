@@ -117,6 +117,7 @@ public class rr_Robot {
     private Servo jewelPusher;
     private Servo relicClaw;
     private Servo relicArm;
+    private Servo relicWrist;
 
     private Servo trayFlipServo;
 
@@ -134,6 +135,7 @@ public class rr_Robot {
 
     private ModernRoboticsI2cRangeSensor intakeRightRangeSensor;
 
+    private  BNO055IMU.Parameters parameters;
     private BNO055IMU imu; //bosch imu embedded in the Rev Expansion Hub.
     Orientation angles; //part of IMU processing state
     Acceleration gravity; //part of IMU processing state
@@ -180,15 +182,14 @@ public class rr_Robot {
         //Initialize Drive Motors
         initDriveMotors(aOpMode);
 
-
         //initialize intake range sensor.
         initIntakeSensors(aOpMode);
 
-
-       //dont initilize gyro, because we have to adjust position before this operation.
+       //setup the Bosch IMU
+        setupBoschIMU(aOpMode); //only needed once per program run.
 
         //Initialize Relic Arm
-        //initRelicArm(aOpMode);
+        initRelicArm(aOpMode);
         //initRelicArmSensors(aOpMode);
 
         //Initialize Jewel Arm
@@ -204,8 +205,7 @@ public class rr_Robot {
         //initialize trayMotor
         initTrayMotor(aOpMode);
         initTraySensors(aOpMode);
-
-
+        
         aOpMode.DBG("Exiting Robot init");
     }
 
@@ -218,6 +218,9 @@ public class rr_Robot {
         //Instantiate motorArray
         motorArray = new DcMotor[10];
 
+        //setup and initialize the gyro.
+
+        setupBoschIMU(aOpMode);
 
         //Initialize Drive Motors
         initDriveMotors(aOpMode);
@@ -230,7 +233,7 @@ public class rr_Robot {
 
 
         //Initialize Relic Arm
-       // initRelicArm(aOpMode);
+       initRelicArm(aOpMode);
         //initRelicArmSensors(aOpMode);
 
         //Initialize Jewel Arm
@@ -329,29 +332,18 @@ public class rr_Robot {
         motorArray[RELIC_WINCH_MOTOR] = hwMap.get(DcMotor.class, "motor_relic_slide");
         relicClaw = hwMap.get(Servo.class, "servo_relic_claw");
         relicArm = hwMap.get(Servo.class, "servo_relic_arm");
+        relicWrist = hwMap.get(Servo.class, "servo_relic_wrist");
 
         setRelicClawClosed();
         setRelicArmGrab();
+        //setRelicWristDown();
     }
 
     public void initJewelServos(rr_OpMode aOpMode) throws InterruptedException {
         jewelArm = hwMap.get(Servo.class, "servo_jewel_arm");
-        //jewelPusher = hwMap.get(Servo.class, "servo_jewel_pusher");
-
-        //setJewelPusherPosition(JEWEL_PUSHER_RIGHT - 0.1f);
         setJewelArmUp();
     }
 
-    public void initJewelSensors(rr_OpMode aOpMode) throws InterruptedException {
-        // Color sensors
-        leftJewelColorSensor = hwMap.get(ColorSensor.class, "left_jewel_color_distance");
-        rightJewelColorSensor = hwMap.get(ColorSensor.class, "right_jewel_color_distance");
-
-        // Range sensors
-        leftJewelRangeSensor = hwMap.get(DistanceSensor.class, "left_jewel_color_distance");
-        rightJewelRangeSensor = hwMap.get(DistanceSensor.class, "right_jewel_color_distance");
-
-    }
 
     public void initTraySensors(rr_OpMode aOpMode) throws InterruptedException {
         trayUpperLimit = hwMap.get(DigitalChannel.class, "tray_upper_limit");
@@ -421,6 +413,8 @@ public class rr_Robot {
         aOpMode.DBG("Heading:" + -angles.firstAngle);
         return -angles.firstAngle;
 
+
+
     }
 
 
@@ -428,9 +422,9 @@ public class rr_Robot {
         initializeBoschIMU(aOpMode);
     }
 
-    protected void initializeBoschIMU(rr_OpMode aOpMode) throws InterruptedException {
-        aOpMode.DBG("Starting Initialize Bosch Gyro");
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+    protected void setupBoschIMU(rr_OpMode aOpMode) throws InterruptedException {
+        aOpMode.DBG("Starting Setup Bosch Gyro");
+        parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
@@ -445,7 +439,17 @@ public class rr_Robot {
         // Start the logging of measured acceleration
         //imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
         Thread.sleep(500);
-        aOpMode.DBG("End Initialize Bosch Gyro");
+        aOpMode.DBG("End Setup Bosch Gyro");
+    }
+
+    protected void initializeBoschIMU(rr_OpMode aOpMode) throws InterruptedException {
+        aOpMode.Echo("Starting Initialize Bosch Gyro");
+
+        imu.initialize(parameters);
+        // Start the logging of measured acceleration
+        //imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+        Thread.sleep(500);
+        aOpMode.Echo("End Initialize Bosch Gyro");
     }
 
 
@@ -1027,6 +1031,11 @@ public class rr_Robot {
         relicArm.setPosition(position);
     }
 
+    public void setRelicWristPosition(float position) {
+        relicWrist.setPosition(position);
+    }
+
+
     public float getRelicArmPosition() {
         return (float) relicArm.getPosition();
     }
@@ -1537,7 +1546,7 @@ public class rr_Robot {
     }
 
     public double getIntakeUltrasonicRightSensorRange(rr_OpMode aOpMode) throws InterruptedException{
-        return intakeRightRangeSensor.cmOptical();
+        return intakeRightRangeSensor.cmUltrasonic();
     }
 
     public void initTrayPosition(rr_OpMode aOpMode) throws InterruptedException{

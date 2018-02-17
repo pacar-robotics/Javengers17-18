@@ -515,8 +515,8 @@ public class rr_TeleLib {
         double  ultrasoniceRange=robot.getIntakeUltrasonicRightSensorRange(aOpMode);
 
         if (
-                ((opticalRange > 5)&&(opticalRange<9))
-                        || ((ultrasoniceRange >5)&&(ultrasoniceRange<9))
+                ((opticalRange > 4)&&(opticalRange<5))
+                        || (ultrasoniceRange <4)
                 )
 
         {

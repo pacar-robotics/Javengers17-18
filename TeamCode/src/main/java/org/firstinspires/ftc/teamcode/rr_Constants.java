@@ -65,14 +65,18 @@ public class rr_Constants {
     final static float RELIC_WINCH_RETRACT_POWER_FACTOR = -.5f;
     final static int RELIC_WINCH_REST = -220;                   // TODO: Change
     final static int RELIC_WINCH_UPPER_LIMIT = 11000;           // TODO: Change
-    final static float RELIC_ARM_GRAB = 0.3f;
-    final static float RELIC_ARM_EXTEND_UP = 0.75f;//feet of robot pointing up
+    final static float RELIC_ARM_GRAB = 0.65f;
+    final static float RELIC_ARM_EXTEND_UP = 0.0f;//feet of robot pointing up
     final static float RELIC_ARM_OPEN_PULSE = 0.25f;
-    final static float RELIC_ARM_MAX = 1f;              // TODO: Change
-    final static float RELIC_ARM_MIN = .1f;              // TODO: Change
-    final static float RELIC_CLAW_OPEN = 0.8f;
+    final static float RELIC_ARM_MAX = 0f;              // TODO: Change
+    final static float RELIC_ARM_MIN = .92f;              // TODO: Change
+    final static float RELIC_ARM_INIT = 0.0f;
+    final static float RELIC_CLAW_OPEN = 1.0f;
     final static float RELIC_CLAW_OPEN_STABILIZED=0.4f;
-    final static float RELIC_CLAW_CLOSED = 0.21f;
+    final static float RELIC_CLAW_CLOSED = 0.0f;
+    final static float RELIC_CLAW_INIT=0.0f;
+    final static float RELIC_WRIST_PICKUP=0.25f;
+    final static float RELIC_WRIST_INIT=0.0f;
 
     //Cube Tray Constants
     //these numbers need to be tuned based on a calibration op

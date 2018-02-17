@@ -21,6 +21,11 @@ public abstract class rr_OpMode extends LinearOpMode {
         }
     }
 
+    public void Echo(String message) throws InterruptedException {
+        telemetryAddData("Echo", "Message", ":" + message);
+        telemetryUpdate();
+    }
+
     public void telemetryAddData(String caption, String key, String message){
         telemetry.addLine(caption).addData(key,message);
     }
