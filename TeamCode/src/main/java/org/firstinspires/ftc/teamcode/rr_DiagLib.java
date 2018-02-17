@@ -411,7 +411,7 @@ class rr_DiagLib {
         public void runTest() throws InterruptedException {
             robot.setJewelArmDownPush();
             Thread.sleep(SERVO_WAIT_TIME);
-            robot.setJewelPusherNeutral();
+            robot.setJewelArmUp();
         }
     }
 
