@@ -266,16 +266,20 @@ public class rr_TeleLib {
     public void processRelicArmAdjustments() throws InterruptedException{
         if(aOpMode.gamepad2.dpad_up){
             robot.setRelicArmPosition(robot.relicArmPosition-0.05f);
+            Thread.sleep(200);
         }else if(aOpMode.gamepad2.dpad_down){
             robot.setRelicArmPosition(robot.relicArmPosition+0.05f);
+            Thread.sleep(200);
         }
     }
 
     public void processRelicWristAdjustments() throws InterruptedException{
         if(aOpMode.gamepad2.dpad_right){
             robot.setRelicWristPosition(robot.relicWristPosition+0.05f);
+            Thread.sleep(200);
         }else if(aOpMode.gamepad2.dpad_left){
             robot.setRelicWristPosition(robot.relicWristPosition-0.05f);
+            Thread.sleep(200);
         }
     }
 

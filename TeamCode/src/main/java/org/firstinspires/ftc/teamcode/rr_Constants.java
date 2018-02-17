@@ -65,7 +65,7 @@ public class rr_Constants {
     final static float RELIC_WINCH_RETRACT_POWER_FACTOR = -0.99f;
     final static int RELIC_WINCH_REST = -220;                   // TODO: Change
     final static int RELIC_WINCH_UPPER_LIMIT = 11000;           // TODO: Change
-    final static float RELIC_ARM_REST = 0f;              // TODO: Change
+    final static float RELIC_ARM_REST = 0.15f;              // TODO: Change
     final static float RELIC_ARM_PICKUP = 0.7f;              // TODO: Change
     final static float RELIC_ARM_INIT = 0.935f;
     final static float RELIC_CLAW_OPEN = 0.0f;
