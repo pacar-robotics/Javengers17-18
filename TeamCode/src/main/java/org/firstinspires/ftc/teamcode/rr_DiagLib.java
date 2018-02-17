@@ -13,7 +13,7 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_RIGHT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.INTAKE_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.INTAKE_RIGHT_MOTOR;
-import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_EXTEND_UP;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_REST;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WINCH_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_FLIP_COLLECTION_POSITION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_FLIP_SCORING_POSITION;
@@ -385,7 +385,7 @@ class rr_DiagLib {
 
     private class TestRelicArm implements ManualTest {
         public void runTest() throws InterruptedException {
-            robot.setRelicArmPosition(RELIC_ARM_EXTEND_UP);
+            robot.setRelicArmPosition(RELIC_ARM_REST);
             Thread.sleep(SERVO_WAIT_TIME);
             robot.setRelicArmGrab();
         }

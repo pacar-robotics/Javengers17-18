@@ -40,7 +40,6 @@ public class TeleOpJ2 extends rr_OpMode {
             lib.processBalance();
             lib.processIMUGyroReset();
             lib.printTelemetry();
-
             Thread.sleep(10);
         }
     }

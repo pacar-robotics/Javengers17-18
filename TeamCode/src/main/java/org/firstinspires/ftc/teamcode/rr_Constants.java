@@ -90,7 +90,7 @@ public class rr_Constants {
     //Cube Pusher Constants
     final static float CUBE_PUSHER_RESTED_POSITION= 0f;
     final static float CUBE_PUSHER_INIT_POSITION= 0.85f;
-    final static float CUBE_PUSHER_PUSHED_POSITION= 0.95f;
+    final static float CUBE_PUSHER_PUSHED_POSITION= 0.85f;
 
 
     //Jewel Arm Constants

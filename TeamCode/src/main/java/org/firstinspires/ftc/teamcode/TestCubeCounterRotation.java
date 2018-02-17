@@ -38,10 +38,19 @@ public class TestCubeCounterRotation extends rr_OpMode {
        double  ultrasonicRange=robot.getIntakeUltrasonicRightSensorRange(this);
 
         if (
-                (opticalRange > 4.5)
-                        && (ultrasonicRange <4)
+                (ultrasonicRange > 14)
+                        ||(ultrasonicRange <4)
                 )
+
         {
+            //cube is straight pass on straight
+            robot.setIntakePower(this,
+                    INTAKE_POWER_HIGH, INTAKE_POWER_HIGH);
+
+        } else
+
+        {
+
             //the cube is going in sideways
             //we should switch to low power but reverse one of the motors
             //this should cause the motors to rotate the cube so it is straight
@@ -50,10 +59,6 @@ public class TestCubeCounterRotation extends rr_OpMode {
             Thread.sleep(200); //wait for a little time for rotation.
             robot.setIntakePower(this, 0, 0);
             Thread.sleep(100); //wait for a second for rotation.
-        } else
-
-        {
-            robot.setIntakePower(this, INTAKE_POWER_HIGH, INTAKE_POWER_HIGH);
         }
     }
 }

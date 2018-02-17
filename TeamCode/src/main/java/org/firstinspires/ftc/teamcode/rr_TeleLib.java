@@ -306,7 +306,11 @@ public class rr_TeleLib {
         }
         if(intakeState== rr_Constants.IntakeStateEnum.STOPPED){
             stopIntake(aOpMode);
-        }else{
+        }else if(intakeState== rr_Constants.IntakeStateEnum.OUTTAKE){
+            robot.setIntakePower(aOpMode,
+                    -1*INTAKE_POWER_HIGH, -1*INTAKE_POWER_HIGH);
+        }else {
+            //when running intake forward
             runIntakeWithDiagonalCheck(aOpMode, intakeState);
         }
 
@@ -556,11 +560,19 @@ public class rr_TeleLib {
         double  ultrasonicRange=robot.getIntakeUltrasonicRightSensorRange(aOpMode);
 
         if (
-                (opticalRange > 4.5)
-                        && (ultrasonicRange <4)
+                (ultrasonicRange > 14)
+        ||(ultrasonicRange <4)
                 )
 
         {
+            //cube is straight pass on straight
+            robot.setIntakePower(aOpMode,
+                    polarity*INTAKE_POWER_HIGH, polarity*INTAKE_POWER_HIGH);
+
+        } else
+
+        {
+
             //the cube is going in sideways
             //we should switch to low power but reverse one of the motors
             //this should cause the motors to rotate the cube so it is straight
@@ -569,10 +581,6 @@ public class rr_TeleLib {
             Thread.sleep(200); //wait for a little time for rotation.
             robot.setIntakePower(aOpMode, 0, 0);
             Thread.sleep(100); //wait for a second for rotation.
-        } else
-
-        {
-            robot.setIntakePower(aOpMode, polarity*INTAKE_POWER_HIGH, polarity*INTAKE_POWER_HIGH);
         }
     }
 
@@ -650,7 +658,6 @@ public class rr_TeleLib {
     public void stopIntake(rr_OpMode aOpMode) throws InterruptedException {
         isIntake = false;
         robot.setIntakePower(this.aOpMode, 0, 0);
-        Thread.sleep(500); //absorb the extra key presses
     }
 
     public void prepareToCollect(rr_OpMode aOpMode) throws InterruptedException{
