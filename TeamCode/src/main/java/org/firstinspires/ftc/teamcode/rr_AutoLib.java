@@ -111,15 +111,17 @@ public class rr_AutoLib {
         Thread.sleep(500);
         robot.setCubePusherPosition(aOpMode, rr_Constants.CUBE_PUSHER_PUSHED_POSITION);
         Thread.sleep(250);
-        moveWheels(aOpMode, 6*(2f/3), .4f, rr_Constants.DirectionEnum.Backward, true);
+        moveWheels(aOpMode, 6*(2f/3), .4f, rr_Constants.DirectionEnum.Forward, true);
         Thread.sleep(250);
-        moveWheels(aOpMode, 8*(2f/3), .4f, rr_Constants.DirectionEnum.Forward, true);
+        moveWheels(aOpMode, 9*(2f/3), .4f, rr_Constants.DirectionEnum.Backward, true);
         Thread.sleep(250);
 
         // ensure that glyph has been scored
-        moveWheels(aOpMode, 8*(2f/3), 0.4f, Backward, false);
+        moveWheels(aOpMode, 8*(2f/3), 0.4f, Forward, false);
         Thread.sleep(250);
-        moveWheels(aOpMode, 7*(2f/3), 0.4f, Forward, false);
+        moveWheels(aOpMode, 9*(2f/3), 0.4f, Backward, false);
+        Thread.sleep(250);
+        moveWheels(aOpMode, 9*(2f/3), 0.4f, Forward, false);
         Thread.sleep(250);
     }
 
@@ -165,8 +167,8 @@ public class rr_AutoLib {
         robot.turnAbsoluteBoschGyroDegreesAuto(aOpMode, 0);
         Thread.sleep(250);
 
-
-        moveWheels(aOpMode, 29*(2f/3), .4f, rr_Constants.DirectionEnum.Forward, true);
+        //TODO: Changed from 29 to 27
+        moveWheels(aOpMode, 27*(2f/3), .4f, rr_Constants.DirectionEnum.Forward, true);
         Thread.sleep(250);
         robot.turnAbsoluteBoschGyroDegrees(aOpMode, 175);
         Thread.sleep(250);
@@ -178,17 +180,20 @@ public class rr_AutoLib {
         Thread.sleep(250);
         scoreCube(aOpMode);
         Thread.sleep(500);
-        moveWheels(aOpMode, 7*(2f/3), 0.4f, Backward, false);
+        moveWheels(aOpMode, 7*(2f/3), 0.4f, Forward, false);
         Thread.sleep(250);
-        moveWheels(aOpMode, 5*(2f/3), 0.4f, Forward, false);
+        moveWheels(aOpMode, 10*(2f/3), 0.4f, Backward, false);
         Thread.sleep(250);
 
         // ensure that glyph has been scored
-        moveWheels(aOpMode, 5*(2f/3), 0.4f, Backward, false);
+        moveWheels(aOpMode, 5*(2f/3), 0.4f, Forward, false);
+        Thread.sleep(250);
+        moveWheels(aOpMode, 7*(2f/3), 0.4f, Backward, false);
         Thread.sleep(250);
         moveWheels(aOpMode, 7*(2f/3), 0.4f, Forward, false);
         Thread.sleep(250);
     }
+
 
     // robot starts closer to audience
     public void redOneAutonomousCommonAction(rr_OpMode aOpMode) throws InterruptedException {
@@ -209,17 +214,17 @@ public class rr_AutoLib {
 
         switch (robot.getPictograph(aOpMode)) {
             case RIGHT: {
-                columnDistance = 34 - 7;
+                columnDistance = 36 - 7;
                 break; // 7 inches between cube columns
             }
             case CENTER:
-                columnDistance = 34;
+                columnDistance = 36;
                 break; // 7 inches between cube columns
             case LEFT:
-                columnDistance = 34 + 7;
+                columnDistance = 36 + 7;
                 break; // 7 inches between cube columns
             default:
-                columnDistance = 34;
+                columnDistance = 36;
                 break;
         }
 
@@ -236,17 +241,21 @@ public class rr_AutoLib {
         Thread.sleep(250);
         robot.turnAbsoluteBoschGyroDegrees(aOpMode, 95);
         Thread.sleep(250);
-        //moveWheels(aOpMode, 2*(2f/3), .4f, rr_Constants.DirectionEnum.Backward, true);
+        moveWheels(aOpMode, 2*(2f/3), .4f, rr_Constants.DirectionEnum.Backward, true);
+        Thread.sleep(250);
+        robot.turnAbsoluteBoschGyroDegrees(aOpMode, 95);
         Thread.sleep(250);
         scoreCube(aOpMode);
         Thread.sleep(500);
-        moveWheels(aOpMode, 9*(2f/3), .4f, rr_Constants.DirectionEnum.Backward, true);
+        moveWheels(aOpMode, 9*(2f/3), .4f, rr_Constants.DirectionEnum.Forward, true);
         Thread.sleep(250);
-        moveWheels(aOpMode, 8*(2f/3), .4f, rr_Constants.DirectionEnum.Forward, true);
+        moveWheels(aOpMode, 11*(2f/3), .4f, rr_Constants.DirectionEnum.Backward, true);
         Thread.sleep(250);
 
         // ensure that glyph has been scored
-        moveWheels(aOpMode, 7*(2f/3), 0.4f, Backward, false);
+        moveWheels(aOpMode, 7*(2f/3), 0.4f, Forward, false);
+        Thread.sleep(250);
+        moveWheels(aOpMode, 8*(2f/3), 0.4f, Backward, false);
         Thread.sleep(250);
         moveWheels(aOpMode, 7*(2f/3), 0.4f, Forward, false);
         Thread.sleep(250);
@@ -299,13 +308,15 @@ public class rr_AutoLib {
         Thread.sleep(250);
         scoreCube(aOpMode);
         Thread.sleep(500);
-        moveWheels(aOpMode, 7*(2f/3), 0.4f, Backward, false);
+        moveWheels(aOpMode, 7*(2f/3), 0.4f, Forward, false);
         Thread.sleep(250);
-        moveWheels(aOpMode, 5*(2f/3), 0.4f, Forward, false);
+        moveWheels(aOpMode, 11*(2f/3), 0.4f, Backward, false);
         Thread.sleep(250);
 
         // ensure that glyph has been scored
-        moveWheels(aOpMode, 5*(2f/3), 0.4f, Backward, false);
+        moveWheels(aOpMode, 5*(2f/3), 0.4f, Forward, false);
+        Thread.sleep(250);
+        moveWheels(aOpMode, 9*(2f/3), 0.4f, Backward, false);
         Thread.sleep(250);
         moveWheels(aOpMode, 7*(2f/3), 0.4f, Forward, false);
         Thread.sleep(250);
