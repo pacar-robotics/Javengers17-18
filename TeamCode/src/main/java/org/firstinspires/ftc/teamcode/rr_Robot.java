@@ -32,6 +32,7 @@ import java.util.Locale;
 import static org.firstinspires.ftc.teamcode.rr_Constants.ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_RIGHT_MOTOR;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_HOLDER_INIT_POSITION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_PUSHER_INIT_POSITION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_PUSHER_RESTED_POSITION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DEBUG;
@@ -125,6 +126,8 @@ public class rr_Robot {
     private Servo trayFlipServo;
 
     private Servo cubePusherServo;
+    private Servo cubeHolderServo; //servo that holds the cubes when tray is flipped and moves
+                                   //out of the way when scoring.
 
     private ColorSensor leftJewelColorSensor;
     private ColorSensor rightJewelColorSensor;
@@ -156,6 +159,7 @@ public class rr_Robot {
     float relicClawPosition=RELIC_CLAW_INIT;
 
     float cubePusherPosition= CUBE_PUSHER_RESTED_POSITION;
+    float cubeHolderPosition=CUBE_HOLDER_INIT_POSITION;
 
     private ElapsedTime period = new ElapsedTime();
 
@@ -205,6 +209,8 @@ public class rr_Robot {
 
         initCubePusherServo(aOpMode);
 
+        initCubeHolderServo(aOpMode);
+
 
         //initialize trayMotor
         initTrayMotor(aOpMode);
@@ -249,6 +255,8 @@ public class rr_Robot {
 
         initCubePusherServo(aOpMode);
 
+        initCubeHolderServo(aOpMode);
+
         //initialize trayMotor
 
         initTrayMotor(aOpMode);
@@ -279,6 +287,13 @@ public class rr_Robot {
         Thread.sleep(100);
         setCubePusherPosition(aOpMode, CUBE_PUSHER_INIT_POSITION);
     }
+
+    public void initCubeHolderServo(rr_OpMode aOpMode) throws InterruptedException{
+        cubeHolderServo = hwMap.get(Servo.class, "servo_cube_holder");
+        Thread.sleep(250);
+        setCubePusherPosition(aOpMode, CUBE_HOLDER_INIT_POSITION);
+    }
+
 
     public void initDriveMotors(rr_OpMode aOpMode) throws InterruptedException {
         //Map Motors
@@ -1585,6 +1600,13 @@ public class rr_Robot {
         cubePusherPosition=position;
         Thread.sleep(250);
     }
+
+    public void setCubeHolderPosition(rr_OpMode aOpMode, float position) throws InterruptedException{
+        cubeHolderServo.setPosition(position);
+        cubeHolderPosition=position;
+        Thread.sleep(250);
+    }
+
 
     public int getTrayPosition(rr_OpMode aOpMode) throws InterruptedException{
         return motorArray[TRAY_LIFT_MOTOR].getCurrentPosition();
