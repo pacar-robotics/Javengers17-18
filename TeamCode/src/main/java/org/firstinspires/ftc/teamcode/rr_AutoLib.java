@@ -42,6 +42,7 @@ public class rr_AutoLib {
 
     rr_Robot robot;
     rr_OpMode aOpMode;
+    int columnDistance;
 
     public rr_AutoLib(rr_OpMode aOpMode, HardwareMap aHwMap) throws InterruptedException {
         robot = new rr_Robot(aOpMode);
@@ -65,19 +66,9 @@ public class rr_AutoLib {
 
         aOpMode.DBG("In Blue One Common");
 
-        float columnDistance;
-
-        aOpMode.telemetry.setAutoClear(true);
-
-        pushJewelOpenCV(aOpMode, rr_Constants.AllianceColorEnum.BLUE);
-        Thread.sleep(300);
-
-        // turn to view Vuforia pictograph
-//        robot.turnAbsoluteBoschGyroDegreesAuto(aOpMode, -25);
-        moveWheels(aOpMode, 2.5f*(2f/3), .2f, rr_Constants.DirectionEnum.Backward, true);
-        Thread.sleep(250);
-
+        //first read Vuforia
         aOpMode.telemetry.setAutoClear(true); //necessary for using Vuforia
+
         switch (robot.getPictograph(aOpMode)) {
             case RIGHT:
                 columnDistance = 34 + 7;
@@ -96,9 +87,17 @@ public class rr_AutoLib {
 
         aOpMode.DBG("Detected" + robot.detectedPictograph);
 
-//      robot.turnAbsoluteBoschGyroDegreesAuto(aOpMode, 0);
-        moveWheels(aOpMode, 2.5f*(2f/3), .2f, rr_Constants.DirectionEnum.Forward, true);
-        Thread.sleep(250);
+        Thread.sleep(1000);
+
+        //now lets score the jewels.
+
+        aOpMode.telemetry.setAutoClear(true);
+
+        pushJewelOpenCV(aOpMode, rr_Constants.AllianceColorEnum.BLUE);
+        Thread.sleep(300);
+
+
+        //now we have to move to the right column based on the detected pictograph.
 
         moveWheels(aOpMode, columnDistance*(2f/3), .4f, rr_Constants.DirectionEnum.Forward, true);
         Thread.sleep(250);
@@ -399,8 +398,8 @@ public class rr_AutoLib {
                 Thread.sleep(250);
                 robot.setJewelArmUp();
                 Thread.sleep(250);
-                moveWheels(aOpMode, 3f*(2f/3), .2f, rr_Constants.DirectionEnum.Backward, true);
-                Thread.sleep(250);
+                columnDistance-=3f*(2f/3); //accounting for forward motion already done.
+
             } else if (jewelDetector.getCurrentOrder() == JewelDetector.JewelOrder.RED_BLUE) {
                 aOpMode.telemetryAddData("Jewel Order", "RED_BLUE", "Right is Blue");
                 robot.setJewelArmDownPush();
@@ -410,8 +409,8 @@ public class rr_AutoLib {
                 Thread.sleep(250);
                 robot.setJewelArmUp();
                 Thread.sleep(250);
-                moveWheels(aOpMode, 3f*(2f/3), .2f, rr_Constants.DirectionEnum.Forward, true);
-                Thread.sleep(250);
+                columnDistance+=3f*(2f/3); //accounting for backward motion already done.
+
             } else if (jewelDetector.getCurrentOrder() == JewelDetector.JewelOrder.UNKNOWN) {
                 robot.setJewelArmDownPush();
                 aOpMode.telemetryAddData("No Color Detected", "UNKNOWN", "Unknown");
@@ -428,8 +427,8 @@ public class rr_AutoLib {
                 Thread.sleep(250);
                 robot.setJewelArmUp();
                 Thread.sleep(250);
-                moveWheels(aOpMode, 3f*(2f/3), .2f, rr_Constants.DirectionEnum.Backward, true);
-                Thread.sleep(250);
+                columnDistance-=3f*(2f/3); //accounting for forward motion already done.
+
             } else if (jewelDetector.getCurrentOrder() == JewelDetector.JewelOrder.RED_BLUE) {
                 aOpMode.telemetryAddData("Jewel Order", "RED_BLUE", "Left is Red");
                 robot.setJewelArmDownPush();
@@ -439,8 +438,7 @@ public class rr_AutoLib {
                 Thread.sleep(250);
                 robot.setJewelArmUp();
                 Thread.sleep(250);
-                moveWheels(aOpMode, 3f*(2f/3), .2f, rr_Constants.DirectionEnum.Forward, true);
-                Thread.sleep(250);
+                columnDistance+=3f*(2f/3); //accounting for backward motion already done.
             } else if (jewelDetector.getCurrentOrder() == JewelDetector.JewelOrder.UNKNOWN) {
                 aOpMode.telemetryAddData("No Color Detected", "UNKNOWN", "Unknown");
             }
