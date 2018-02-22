@@ -5,23 +5,31 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import static org.firstinspires.ftc.teamcode.rr_Constants.ANALOG_STICK_THRESHOLD;
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.BACK_RIGHT_MOTOR;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_HOLDER_HOLD_POSITION;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_HOLDER_INIT_POSITION;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_HOLDER_RELEASE_POSITION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_PUSHER_PUSHED_POSITION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_PUSHER_RESTED_POSITION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DEBUG;
+import static org.firstinspires.ftc.teamcode.rr_Constants.DirectionEnum.Backward;
+import static org.firstinspires.ftc.teamcode.rr_Constants.DirectionEnum.Forward;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FIELD_ORIENTED_DRIVE_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.INTAKE_POWER_HIGH;
 import static org.firstinspires.ftc.teamcode.rr_Constants.MOTOR_LOWER_POWER_THRESHOLD;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_DROPOFF_INIT;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_PICKUP;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_REST;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_CLAW_CLOSED;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_DRIVE_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WINCH_EXTEND_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WINCH_RETRACT_POWER_FACTOR;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WRIST_DROPOFF_INIT;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WRIST_PICKUP;
 import static org.firstinspires.ftc.teamcode.rr_Constants.SCORING_DRIVE_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.STANDARD_DRIVE_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_FLIP_COLLECTION_POSITION;
+import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_FLIP_CRYPTO_ALIGN_POSITION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_FLIP_HORIZONTAL_POSITION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_FLIP_SCORING_POSITION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_HEIGHT_2CUBE_POSITION;
@@ -257,9 +265,23 @@ public class rr_TeleLib {
 
     }
 
-    public void processRelicWrist() throws InterruptedException {
+    public void processRelicDropoff() throws InterruptedException {
         if (aOpMode.gamepad2.y) {
-            robot.setRelicWristPosition(RELIC_WRIST_PICKUP);
+            //set the arm and wrist to a position just above ground, relic
+            //pointing down.
+            robot.setRelicWristPosition(RELIC_WRIST_DROPOFF_INIT);
+            robot.setRelicArmPosition(RELIC_ARM_DROPOFF_INIT);
+          
+        }else if(aOpMode.gamepad2.dpad_up){
+            robot.setRelicWristPosition(robot.relicWristPosition+0.11f);
+            robot.setRelicArmPosition(robot.relicArmPosition-0.05f);
+
+        }else if(aOpMode.gamepad2.dpad_down){
+
+                robot.setRelicWristPosition(robot.relicWristPosition - 0.11f);
+                robot.setRelicArmPosition(robot.relicArmPosition + 0.05f);
+
+
         }
     }
 
@@ -341,12 +363,18 @@ public class rr_TeleLib {
             //flip tray horizontal and go to scoring depending on position
             //first lets stop the intake.
             stopIntake(aOpMode);
+
             if (robot.trayFlipPosition == TRAY_FLIP_COLLECTION_POSITION) {
-                alignCubes(aOpMode);
-                robot.setTrayFlipPosition(aOpMode, TRAY_FLIP_HORIZONTAL_POSITION);
+                prepareToScore(aOpMode);
             }else if (robot.trayFlipPosition == TRAY_FLIP_HORIZONTAL_POSITION) {
+                //move tray to align to cryptobox position
+                robot.setCubeHolderPosition(aOpMode, CUBE_HOLDER_HOLD_POSITION);
+                robot.setTrayFlipPosition(aOpMode, TRAY_FLIP_CRYPTO_ALIGN_POSITION);
+                Thread.sleep(500);
+            }else if (robot.trayFlipPosition==TRAY_FLIP_CRYPTO_ALIGN_POSITION){
+               robot.setCubeHolderPosition(aOpMode,CUBE_HOLDER_RELEASE_POSITION);
                 robot.setTrayFlipPosition(aOpMode, TRAY_FLIP_SCORING_POSITION);
-                Thread.sleep(1000);
+                Thread.sleep(500);
                 //return to collection position
                 prepareToCollect(aOpMode);
             }else if (robot.trayFlipPosition == TRAY_FLIP_SCORING_POSITION) {
@@ -665,20 +693,46 @@ public class rr_TeleLib {
     }
 
     public void prepareToCollect(rr_OpMode aOpMode) throws InterruptedException{
+        moveWheels(aOpMode, 4, 0.5f,Forward, true);
         robot.setTrayFlipPosition(aOpMode, TRAY_FLIP_COLLECTION_POSITION);
         robot.setTrayHeightPositionWithTouchLimits(aOpMode, TRAY_HEIGHT_COLLECTION_POSITION, TRAY_LIFT_POWER);
+        robot.setCubeHolderPosition(aOpMode, CUBE_HOLDER_INIT_POSITION);
         runIntakeWithDiagonalCheck(aOpMode, rr_Constants.IntakeStateEnum.INTAKE);
     }
 
     public void prepareToScore(rr_OpMode aOpMode) throws InterruptedException{
         stopIntake(aOpMode);
         alignCubes(aOpMode);
-        setTrayFlipToHorizontal(aOpMode);
+        robot.setCubeHolderPosition(aOpMode, CUBE_HOLDER_HOLD_POSITION);
+        robot.setTrayFlipPosition(aOpMode, TRAY_FLIP_CRYPTO_ALIGN_POSITION);
 
     }
 
     public void setTrayFlipToHorizontal(rr_OpMode aOpMode) throws InterruptedException{
         robot.setTrayFlipPosition(aOpMode, TRAY_FLIP_HORIZONTAL_POSITION);
+    }
+
+    /**
+     * moveWheels method
+     *
+     * @param aOpMode   - object of vv_OpMode class
+     * @param distance  - in inches
+     * @param power     - float
+     * @param Direction - forward, backward, sideways left, or sideways right
+     * @throws InterruptedException
+     */
+    public void moveWheels(rr_OpMode aOpMode, float distance, float power,
+                           rr_Constants.DirectionEnum Direction, boolean isRampedPower)
+            throws InterruptedException {
+        if (Direction == Forward) {
+            robot.moveRobotToPositionFB(aOpMode, distance, power, isRampedPower);
+        } else if (Direction == Backward) {
+            robot.moveRobotToPositionFB(aOpMode, -distance, power, isRampedPower);
+        } else if (Direction == rr_Constants.DirectionEnum.SidewaysLeft) {
+            robot.moveRobotToPositionSideways(aOpMode, distance, power, isRampedPower);
+        } else if (Direction == rr_Constants.DirectionEnum.SidewaysRight) {
+            robot.moveRobotToPositionSideways(aOpMode, -distance, power, isRampedPower);
+        }
     }
 
 

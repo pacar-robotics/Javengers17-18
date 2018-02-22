@@ -66,24 +66,28 @@ public class rr_Constants {
     final static int RELIC_WINCH_REST = -220;                   // TODO: Change
     final static int RELIC_WINCH_UPPER_LIMIT = 11000;           // TODO: Change
     final static float RELIC_ARM_REST = 0.15f;              // TODO: Change
-    final static float RELIC_ARM_PICKUP = 0.7f;              // TODO: Change
+    final static float RELIC_ARM_PICKUP = 0.7f;
+    final static float RELIC_ARM_DROPOFF_INIT=0.6f;
+    // TODO: Change
     final static float RELIC_ARM_INIT = 0.935f;
     final static float RELIC_CLAW_OPEN = 0.0f;
     final static float RELIC_CLAW_CLOSED = 0.3f;
     final static float RELIC_CLAW_INIT=0.3f;
     final static float RELIC_WRIST_PICKUP=0.3f;
     final static float RELIC_WRIST_INIT=0.05f;
+    final static float RELIC_WRIST_DROPOFF_INIT=0.42f;
 
     //Cube Tray Constants
     //these numbers need to be tuned based on a calibration op
     final static int TRAY_HEIGHT_COLLECTION_POSITION=0; //also 1 cube position
-    final static int TRAY_HEIGHT_2CUBE_POSITION=700;
-    final static int TRAY_HEIGHT_MAX_POSITION=950;
+    final static int TRAY_HEIGHT_2CUBE_POSITION=310;
+    final static int TRAY_HEIGHT_MAX_POSITION=400;
     final static float TRAY_LIFT_POWER_FACTOR=1.0f;
     final static float TRAY_LIFT_POWER=1.0f;
 
     final static float TRAY_FLIP_HORIZONTAL_POSITION=0.68f;
     final static float TRAY_FLIP_COLLECTION_POSITION=0.80f;
+    final static float TRAY_FLIP_CRYPTO_ALIGN_POSITION=0.50f;
     final static float TRAY_FLIP_SCORING_POSITION=0.17f;
 
 
@@ -92,6 +96,10 @@ public class rr_Constants {
     final static float CUBE_PUSHER_INIT_POSITION= 0.75f;
     final static float CUBE_PUSHER_PUSHED_POSITION= 0.85f;
 
+    //cube holder position constants
+    final static float CUBE_HOLDER_INIT_POSITION=0.7f;
+    final static float CUBE_HOLDER_HOLD_POSITION=0.55f;
+    final static float CUBE_HOLDER_RELEASE_POSITION=0.0f;
 
     //Jewel Arm Constants
     final static float JEWEL_PUSHER_LEFT = 0.90f; // make bigger

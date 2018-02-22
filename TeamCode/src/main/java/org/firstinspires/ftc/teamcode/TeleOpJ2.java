@@ -31,7 +31,7 @@ public class TeleOpJ2 extends rr_OpMode {
             lib.processRelicSlide();
             lib.processRelicClaw();
             lib.processRelicArm();
-            lib.processRelicWrist();
+            lib.processRelicDropoff();
             lib.processRelicArmAdjustments();
             lib.processRelicWristAdjustments();
             lib.processIntake();
