@@ -80,7 +80,7 @@ public class rr_Constants {
     //Cube Tray Constants
     //these numbers need to be tuned based on a calibration op
     final static int TRAY_HEIGHT_COLLECTION_POSITION=0; //also 1 cube position
-    final static int TRAY_HEIGHT_2CUBE_POSITION=310;
+    final static int TRAY_HEIGHT_2CUBE_POSITION=325;
     final static int TRAY_HEIGHT_MAX_POSITION=400;
     final static float TRAY_LIFT_POWER_FACTOR=1.0f;
     final static float TRAY_LIFT_POWER=1.0f;
@@ -94,7 +94,7 @@ public class rr_Constants {
     //Cube Pusher Constants
     final static float CUBE_PUSHER_RESTED_POSITION= 0f;
     final static float CUBE_PUSHER_INIT_POSITION= 0.75f;
-    final static float CUBE_PUSHER_PUSHED_POSITION= 0.85f;
+    final static float CUBE_PUSHER_PUSHED_POSITION= 0.90f;
 
     //cube holder position constants
     final static float CUBE_HOLDER_INIT_POSITION=0.7f;
@@ -162,6 +162,8 @@ public class rr_Constants {
     //Timers
     public static final int GENERIC_TIMER = 0;
     public static final int DPAD_TIMER = 1;
+
+    public static final boolean SUPPRESS_COUNTER_ROTATION=false;
 
     //Enumerations
     DirectionEnum Direction;

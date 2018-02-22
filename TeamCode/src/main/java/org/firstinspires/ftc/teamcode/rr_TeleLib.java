@@ -28,6 +28,7 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WRIST_DROPOFF_IN
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WRIST_PICKUP;
 import static org.firstinspires.ftc.teamcode.rr_Constants.SCORING_DRIVE_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.STANDARD_DRIVE_POWER_FACTOR;
+import static org.firstinspires.ftc.teamcode.rr_Constants.SUPPRESS_COUNTER_ROTATION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_FLIP_COLLECTION_POSITION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_FLIP_CRYPTO_ALIGN_POSITION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.TRAY_FLIP_HORIZONTAL_POSITION;
@@ -78,7 +79,7 @@ public class rr_TeleLib {
         //process joysticks
 
         boolean inScoringMode=
-                (robot.trayFlipPosition==TRAY_FLIP_HORIZONTAL_POSITION)||
+                (robot.trayFlipPosition==TRAY_FLIP_CRYPTO_ALIGN_POSITION)||
                         (robot.trayHeightPosition!=TRAY_HEIGHT_COLLECTION_POSITION); //sets the mode
 
         float gamePad1PowerFactor=inScoringMode ?SCORING_DRIVE_POWER_FACTOR:FIELD_ORIENTED_DRIVE_POWER_FACTOR;
@@ -271,7 +272,7 @@ public class rr_TeleLib {
             //pointing down.
             robot.setRelicWristPosition(RELIC_WRIST_DROPOFF_INIT);
             robot.setRelicArmPosition(RELIC_ARM_DROPOFF_INIT);
-          
+
         }else if(aOpMode.gamepad2.dpad_up){
             robot.setRelicWristPosition(robot.relicWristPosition+0.11f);
             robot.setRelicArmPosition(robot.relicArmPosition-0.05f);
@@ -354,12 +355,16 @@ public class rr_TeleLib {
 
     public void processTrayLift(rr_OpMode aOpMode) throws InterruptedException {
         if (aOpMode.gamepad1.x) {
+            //stop the base motors
+            robot.stopBaseMotors(aOpMode);
             //prepare to score, stop intake, move tray to horizontal etc.
             prepareToScore(aOpMode);
             robot.setTrayHeightPositionWithTouchLimits(aOpMode, TRAY_HEIGHT_2CUBE_POSITION, TRAY_LIFT_POWER);
             Thread.sleep(250); // to absorb key presses
 
         } else if (aOpMode.gamepad1.b) {
+            //stop the base motors
+            robot.stopBaseMotors(aOpMode);
             //flip tray horizontal and go to scoring depending on position
             //first lets stop the intake.
             stopIntake(aOpMode);
@@ -384,16 +389,21 @@ public class rr_TeleLib {
             Thread.sleep(250); // to absorb key presses
 
         } else if (aOpMode.gamepad1.y) {
+            //stop the base motors
+            robot.stopBaseMotors(aOpMode);
             //prepare to score, stop intake, move tray to horizontal etc.
             prepareToScore(aOpMode);
             robot.setTrayHeightPositionWithTouchLimits(aOpMode, TRAY_HEIGHT_MAX_POSITION, TRAY_LIFT_POWER);
             Thread.sleep(250); // to absorb key presses
         } else if (aOpMode.gamepad1.a) {
+            //stop the base motors
+            robot.stopBaseMotors(aOpMode);
             prepareToCollect(aOpMode);
             Thread.sleep(250); // to absorb key presses
         } else if (aOpMode.gamepad1.left_bumper) {
             //alt key mode
-
+//stop the base motors
+            robot.stopBaseMotors(aOpMode);
 
             if (aOpMode.gamepad1.right_trigger > TRIGGER_THRESHOLD) {
                 robot.trayHeightPosition = robot.getTrayPosition(aOpMode);
@@ -592,8 +602,9 @@ public class rr_TeleLib {
         double  ultrasonicRange=robot.getIntakeUltrasonicRightSensorRange(aOpMode);
 
         if (
+
                 (ultrasonicRange > 14)
-        ||(ultrasonicRange <4)
+        ||(ultrasonicRange <4)||SUPPRESS_COUNTER_ROTATION //if set, will skip counter rotation
                 )
 
         {
@@ -610,9 +621,9 @@ public class rr_TeleLib {
             //this should cause the motors to rotate the cube so it is straight
             //this has to be tested and adjusted.
             robot.setIntakePower(aOpMode, INTAKE_POWER_HIGH, -INTAKE_POWER_HIGH);
-            Thread.sleep(200); //wait for a little time for rotation.
+            //Thread.sleep(200); //wait for a little time for rotation.
             robot.setIntakePower(aOpMode, 0, 0);
-            Thread.sleep(100); //wait for a second for rotation.
+            //Thread.sleep(100); //wait for a second for rotation.
         }
     }
 
@@ -645,6 +656,8 @@ public class rr_TeleLib {
 
     private void processTrayFlipAdjustments(rr_OpMode aOpMode) throws InterruptedException{
         if(aOpMode.gamepad1.y){
+            //stop the base motors.
+            robot.stopBaseMotors(aOpMode);
             //increase angle of tray flip to be more vertical.
             if(robot.trayFlipPosition<=TRAY_FLIP_SCORING_POSITION){ //check for limit
                 robot.trayFlipPosition=TRAY_FLIP_SCORING_POSITION;
@@ -654,6 +667,8 @@ public class rr_TeleLib {
             robot.setTrayFlipPosition(aOpMode, robot.trayFlipPosition);
         }
         if(aOpMode.gamepad1.a){
+            //stop the base motors.
+            robot.stopBaseMotors(aOpMode);
             //decrease angle of tray flip to be more vertical.
             if(robot.trayFlipPosition>=TRAY_FLIP_COLLECTION_POSITION){ //check for limit
                 robot.trayFlipPosition=TRAY_FLIP_COLLECTION_POSITION;
@@ -663,16 +678,22 @@ public class rr_TeleLib {
             robot.setTrayFlipPosition(aOpMode, robot.trayFlipPosition);
         }
         if(aOpMode.gamepad1.x){
+            //stop the base motors.
+            robot.stopBaseMotors(aOpMode);
             //set tray to collection
             robot.trayFlipPosition=TRAY_FLIP_COLLECTION_POSITION;
             robot.setTrayFlipPosition(aOpMode, robot.trayFlipPosition);
         }
         if(aOpMode.gamepad1.b){
+            //stop the base motors.
+            robot.stopBaseMotors(aOpMode);
             //set tray to scoring
             robot.trayFlipPosition=TRAY_FLIP_SCORING_POSITION;
             robot.setTrayFlipPosition(aOpMode, robot.trayFlipPosition);
         }
         if(aOpMode.gamepad1.left_bumper){
+            //stop the base motors.
+            robot.stopBaseMotors(aOpMode);
             //set tray to horizontal
             robot.trayFlipPosition=TRAY_FLIP_HORIZONTAL_POSITION;
             robot.setTrayFlipPosition(aOpMode, robot.trayFlipPosition);

@@ -1579,6 +1579,7 @@ public class rr_Robot {
                 (((position < motorArray[TRAY_LIFT_MOTOR].getCurrentPosition()) && !isTrayLowerLimitPressed())||
                 ((position > motorArray[TRAY_LIFT_MOTOR].getCurrentPosition()) && !isTrayUpperLimitPressed()))
                 && (aOpMode.time_elapsed_array(GENERIC_TIMER) < MAX_MOTOR_LOOP_TIME)
+                &&(!aOpMode.gamepad1.a) //check for cancel.
                         && Math.abs(motorArray[TRAY_LIFT_MOTOR].getCurrentPosition() - position)
                         > rr_Constants.MOTOR_ENCODER_THRESHOLD) {
             aOpMode.idle();
