@@ -142,7 +142,7 @@ public class rr_Constants {
     final static float STANDARD_DRIVE_POWER_FACTOR = 0.95f;
     final static float FIELD_ORIENTED_DRIVE_POWER_FACTOR = 0.95f;
     final static float TURN_POWER_FACTOR = 0.5f;
-    final static float TURN_AUTONOMOUS_POWER_FACTOR = 0.1f;
+    final static float TURN_AUTONOMOUS_POWER_FACTOR = 0.25f;
     final static float SCORING_DRIVE_POWER_FACTOR = 0.25f;  //TODO: CHANGE LATER
     final static float RELIC_DRIVE_POWER_FACTOR=0.95f;
 
