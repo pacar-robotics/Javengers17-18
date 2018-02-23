@@ -65,17 +65,17 @@ public class rr_Constants {
     final static float RELIC_WINCH_RETRACT_POWER_FACTOR = -0.99f;
     final static int RELIC_WINCH_REST = -220;                   // TODO: Change
     final static int RELIC_WINCH_UPPER_LIMIT = 11000;           // TODO: Change
-    final static float RELIC_ARM_REST = 0.15f;              // TODO: Change
+    final static float RELIC_ARM_REST = 0.0f;              // TODO: Change
     final static float RELIC_ARM_PICKUP = 0.7f;
-    final static float RELIC_ARM_DROPOFF_INIT=0.6f;
+    final static float RELIC_ARM_DROPOFF_INIT=0.5f;
     // TODO: Change
-    final static float RELIC_ARM_INIT = 0.935f;
+    final static float RELIC_ARM_INIT = 1.0f;
     final static float RELIC_CLAW_OPEN = 0.0f;
     final static float RELIC_CLAW_CLOSED = 0.3f;
     final static float RELIC_CLAW_INIT=0.3f;
     final static float RELIC_WRIST_PICKUP=0.3f;
     final static float RELIC_WRIST_INIT=0.05f;
-    final static float RELIC_WRIST_DROPOFF_INIT=0.42f;
+    final static float RELIC_WRIST_DROPOFF_INIT=0.6f;
 
     //Cube Tray Constants
     //these numbers need to be tuned based on a calibration op
@@ -92,9 +92,9 @@ public class rr_Constants {
 
 
     //Cube Pusher Constants
-    final static float CUBE_PUSHER_RESTED_POSITION= 0f;
-    final static float CUBE_PUSHER_INIT_POSITION= 0.75f;
-    final static float CUBE_PUSHER_PUSHED_POSITION= 0.90f;
+    final static float CUBE_PUSHER_RESTED_POSITION= 0.9f;
+    final static float CUBE_PUSHER_INIT_POSITION= 0.1f;
+    final static float CUBE_PUSHER_PUSHED_POSITION= 0.1f;
 
     //cube holder position constants
     final static float CUBE_HOLDER_INIT_POSITION=0.7f;
