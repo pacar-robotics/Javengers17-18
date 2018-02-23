@@ -1582,7 +1582,7 @@ public class rr_Robot {
                 &&(!aOpMode.gamepad1.a) //check for cancel.
                         && Math.abs(motorArray[TRAY_LIFT_MOTOR].getCurrentPosition() - position)
                         > rr_Constants.MOTOR_ENCODER_THRESHOLD) {
-            aOpMode.idle();
+            ((TeleOpJ2) aOpMode).lib.processTeleOpDrive();
         }
         //stop the motor
         motorArray[TRAY_LIFT_MOTOR].setPower(0.0f);
@@ -1593,7 +1593,7 @@ public class rr_Robot {
     public void setTrayFlipPosition(rr_OpMode aOpMode, float position) throws InterruptedException{
         trayFlipServo.setPosition(position);
         trayFlipPosition=position;
-        Thread.sleep(750);
+//        Thread.sleep(750);
     }
 
     public void setCubePusherPosition(rr_OpMode aOpMode, float position) throws InterruptedException{
