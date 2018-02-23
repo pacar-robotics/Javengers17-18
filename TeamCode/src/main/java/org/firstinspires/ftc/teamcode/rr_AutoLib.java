@@ -11,6 +11,7 @@ import java.util.InputMismatchException;
 import static org.firstinspires.ftc.teamcode.rr_Constants.ANDYMARK_MOTOR_ENCODER_COUNTS_PER_REVOLUTION;
 
 
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_HOLDER_RELEASE_POSITION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DirectionEnum.SidewaysLeft;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DirectionEnum.SidewaysRight;
 import static org.firstinspires.ftc.teamcode.rr_Constants.GENERIC_TIMER;
@@ -212,17 +213,17 @@ public class rr_AutoLib {
 
         switch (robot.getPictograph(aOpMode)) {
             case RIGHT: {
-                columnDistance = 36 - 7;
+                columnDistance = 38 - 7;
                 break; // 7 inches between cube columns
             }
             case CENTER:
-                columnDistance = 36;
+                columnDistance = 38;
                 break; // 7 inches between cube columns
             case LEFT:
-                columnDistance = 36 + 7;
+                columnDistance = 38 + 7;
                 break; // 7 inches between cube columns
             default:
-                columnDistance = 36;
+                columnDistance = 38;
                 break;
         }
 
@@ -278,16 +279,16 @@ public class rr_AutoLib {
 
         switch (robot.getPictograph(aOpMode)) {
             case RIGHT:
-                columnDistance = 22 - 7;
+                columnDistance = 15 - 7;
                 break; // 7 inches between cube columns
             case CENTER:
-                columnDistance = 22;
+                columnDistance = 15;
                 break; // 7 inches between cube columns
             case LEFT:
-                columnDistance = 22 + 7;
+                columnDistance = 15 + 7;
                 break; // 7 inches between cube columns
             default:
-                columnDistance = 22;
+                columnDistance = 15;
                 break;
         }
         aOpMode.telemetry.setAutoClear(false); //turning off the auto clear afterward
@@ -302,7 +303,7 @@ public class rr_AutoLib {
         // move to the correct column based on the detected pictograph
         moveWheels(aOpMode, 2, .3f, rr_Constants.DirectionEnum.SidewaysRight, true);
         Thread.sleep(100);
-        moveWheels(aOpMode, 33, .3f, rr_Constants.DirectionEnum.Backward, true);
+        moveWheels(aOpMode, 29, .3f, rr_Constants.DirectionEnum.Backward, true);
         Thread.sleep(100);
         robot.turnAbsoluteBoschGyroDegrees(aOpMode, 5);
         Thread.sleep(250);
@@ -400,22 +401,22 @@ public class rr_AutoLib {
                 robot.setJewelArmDownPush();
                 Thread.sleep(250);
                 //robot.turnAbsoluteBoschGyroDegreesAuto(aOpMode, 15);
-                moveWheels(aOpMode, 3f, .2f, rr_Constants.DirectionEnum.Forward, true);
+                moveWheels(aOpMode, 2.5f, .2f, rr_Constants.DirectionEnum.Forward, true);
                 Thread.sleep(250);
                 robot.setJewelArmUp();
                 Thread.sleep(250);
-                columnDistance -= 3f; //accounting for forward motion already done.
+                columnDistance -= 2.5f; //accounting for forward motion already done.
 
             } else if (jewelDetector.getCurrentOrder() == JewelDetector.JewelOrder.RED_BLUE) {
                 aOpMode.telemetryAddData("Jewel Order", "RED_BLUE", "Right is Blue");
                 robot.setJewelArmDownPush();
                 Thread.sleep(250);
                 // robot.turnAbsoluteBoschGyroDegreesAuto(aOpMode, -15);
-                moveWheels(aOpMode, 3f, .2f, rr_Constants.DirectionEnum.Backward, true);
+                moveWheels(aOpMode, 2.5f, .2f, rr_Constants.DirectionEnum.Backward, true);
                 Thread.sleep(250);
                 robot.setJewelArmUp();
                 Thread.sleep(250);
-                columnDistance += 3f; //accounting for backward motion already done.
+                columnDistance += 2.5f; //accounting for backward motion already done.
 
             } else if (jewelDetector.getCurrentOrder() == JewelDetector.JewelOrder.UNKNOWN) {
                 robot.setJewelArmDownPush();
@@ -429,22 +430,22 @@ public class rr_AutoLib {
                 robot.setJewelArmDownPush();
                 Thread.sleep(250);
                 //robot.turnAbsoluteBoschGyroDegreesAuto(aOpMode, -15);
-                moveWheels(aOpMode, 3f, .2f, rr_Constants.DirectionEnum.Backward, true);
+                moveWheels(aOpMode, 2.5f, .2f, rr_Constants.DirectionEnum.Backward, true);
                 Thread.sleep(250);
                 robot.setJewelArmUp();
                 Thread.sleep(250);
-                columnDistance -= 3f; //accounting for forward motion already done.
+                columnDistance -= 2.5f; //accounting for forward motion already done.
 
             } else if (jewelDetector.getCurrentOrder() == JewelDetector.JewelOrder.RED_BLUE) {
                 aOpMode.telemetryAddData("Jewel Order", "RED_BLUE", "Left is Red");
                 robot.setJewelArmDownPush();
                 Thread.sleep(250);
                 //robot.turnAbsoluteBoschGyroDegreesAuto(aOpMode, 15);
-                moveWheels(aOpMode, 3f, .2f, rr_Constants.DirectionEnum.Forward, true);
+                moveWheels(aOpMode, 2.5f, .2f, rr_Constants.DirectionEnum.Forward, true);
                 Thread.sleep(250);
                 robot.setJewelArmUp();
                 Thread.sleep(250);
-                columnDistance += 3f; //accounting for backward motion already done.
+                columnDistance += 2.5f; //accounting for backward motion already done.
             } else if (jewelDetector.getCurrentOrder() == JewelDetector.JewelOrder.UNKNOWN) {
                 aOpMode.telemetryAddData("No Color Detected", "UNKNOWN", "Unknown");
             }
@@ -615,6 +616,8 @@ public class rr_AutoLib {
     }
 
     public void scoreCube(rr_OpMode aOpMode) throws InterruptedException {
+        robot.setCubeHolderPosition(aOpMode, rr_Constants.CUBE_HOLDER_RELEASE_POSITION);
+        Thread.sleep(250);
         robot.setCubePusherPosition(aOpMode, rr_Constants.CUBE_PUSHER_PUSHED_POSITION);
         Thread.sleep(250);
         robot.setCubePusherPosition(aOpMode, rr_Constants.CUBE_PUSHER_INIT_POSITION);
