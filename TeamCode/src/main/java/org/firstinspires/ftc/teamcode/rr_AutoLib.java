@@ -171,31 +171,31 @@ public class rr_AutoLib {
 
         // move to the correct column based on the detected pictograph
         moveWheels(aOpMode, 27, .2f, rr_Constants.DirectionEnum.Forward, true);
-        Thread.sleep(250);
+        Thread.sleep(100);
         robot.turnAbsoluteBoschGyroDegrees(aOpMode, 175);
-        Thread.sleep(250);
+        Thread.sleep(100);
         robot.turnAbsoluteBoschGyroDegrees(aOpMode, 175);
-        Thread.sleep(250);
+        Thread.sleep(100);
         moveWheels(aOpMode, columnDistance, .4f, rr_Constants.DirectionEnum.SidewaysLeft, true);
-        Thread.sleep(250);
+        Thread.sleep(100);
         robot.turnAbsoluteBoschGyroDegrees(aOpMode, 175);
-        Thread.sleep(250);
+        Thread.sleep(100);
 
         // score cubes, move back, and then push to ensure scoring
         scoreCube(aOpMode);
         Thread.sleep(500);
         moveWheels(aOpMode, 7, 0.4f, Forward, false);
-        Thread.sleep(250);
+        Thread.sleep(100);
         moveWheels(aOpMode, 10, 0.4f, Backward, false);
-        Thread.sleep(250);
+        Thread.sleep(100);
 
         // ensure that glyph has been scored
         moveWheels(aOpMode, 5, 0.4f, Forward, false);
-        Thread.sleep(250);
+        Thread.sleep(100);
         moveWheels(aOpMode, 7, 0.4f, Backward, false);
-        Thread.sleep(250);
+        Thread.sleep(100);
         moveWheels(aOpMode, 7, 0.4f, Forward, false);
-        Thread.sleep(250);
+        Thread.sleep(100);
     }
 
 
@@ -239,31 +239,31 @@ public class rr_AutoLib {
 
         // move to the correct column based on the detected pictograph
         moveWheels(aOpMode, columnDistance, .2f, rr_Constants.DirectionEnum.Backward, true);
-        Thread.sleep(250);
+        Thread.sleep(100);
         robot.turnAbsoluteBoschGyroDegrees(aOpMode, 95);
-        Thread.sleep(250);
+        Thread.sleep(100);
         robot.turnAbsoluteBoschGyroDegrees(aOpMode, 95);
-        Thread.sleep(250);
+        Thread.sleep(100);
         moveWheels(aOpMode, 2, .4f, rr_Constants.DirectionEnum.Backward, true);
-        Thread.sleep(250);
+        Thread.sleep(100);
         robot.turnAbsoluteBoschGyroDegrees(aOpMode, 95);
-        Thread.sleep(250);
+        Thread.sleep(100);
 
         // score cubes, move back, and then push to ensure scoring
         scoreCube(aOpMode);
         Thread.sleep(500);
         moveWheels(aOpMode, 9, .4f, rr_Constants.DirectionEnum.Forward, true);
-        Thread.sleep(250);
+        Thread.sleep(100);
         moveWheels(aOpMode, 11, .4f, rr_Constants.DirectionEnum.Backward, true);
-        Thread.sleep(250);
+        Thread.sleep(100);
 
         // ensure that glyph has been scored
         moveWheels(aOpMode, 7, 0.4f, Forward, false);
-        Thread.sleep(250);
+        Thread.sleep(100);
         moveWheels(aOpMode, 8, 0.4f, Backward, false);
-        Thread.sleep(250);
+        Thread.sleep(100);
         moveWheels(aOpMode, 7, 0.4f, Forward, false);
-        Thread.sleep(250);
+        Thread.sleep(100);
     }
 
 
@@ -306,27 +306,27 @@ public class rr_AutoLib {
         moveWheels(aOpMode, 29, .3f, rr_Constants.DirectionEnum.Backward, true);
         Thread.sleep(100);
         robot.turnAbsoluteBoschGyroDegrees(aOpMode, 5);
-        Thread.sleep(250);
+        Thread.sleep(100);
         moveWheels(aOpMode, columnDistance, .4f, rr_Constants.DirectionEnum.SidewaysRight, true);
-        Thread.sleep(250);
+        Thread.sleep(100);
         robot.turnAbsoluteBoschGyroDegrees(aOpMode, 5);
-        Thread.sleep(250);
+        Thread.sleep(100);
 
         // score cubes, move back, and then push to ensure scoring
         scoreCube(aOpMode);
         Thread.sleep(500);
         moveWheels(aOpMode, 7, 0.4f, Forward, false);
-        Thread.sleep(250);
+        Thread.sleep(100);
         moveWheels(aOpMode, 11, 0.4f, Backward, false);
-        Thread.sleep(250);
+        Thread.sleep(100);
 
         // ensure that glyph has been scored
         moveWheels(aOpMode, 5, 0.4f, Forward, false);
-        Thread.sleep(250);
+        Thread.sleep(100);
         moveWheels(aOpMode, 9, 0.4f, Backward, false);
-        Thread.sleep(250);
+        Thread.sleep(100);
         moveWheels(aOpMode, 7, 0.4f, Forward, false);
-        Thread.sleep(250);
+        Thread.sleep(100);
     }
 
     public void adjustJewelArmUsingRange(rr_OpMode aOpMode) throws InterruptedException {
