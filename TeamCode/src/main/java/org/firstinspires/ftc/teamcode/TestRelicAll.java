@@ -26,7 +26,8 @@ public class TestRelicAll extends rr_OpMode {
         while (opModeIsActive()) {
             processArmTest();
             processClawTest();
-            processRelicWinch();
+            //processRelicWinch();
+            processRelicWrist();
             printPositions();
 
             Thread.sleep(50);  // Give time for servo to move
@@ -54,24 +55,13 @@ public class TestRelicAll extends rr_OpMode {
     }
 
     private void processClawTest() throws InterruptedException {
-        if (gamepad1.a) {
+        if (gamepad1.x) {
             clawPosition += .05f;
-        } else if (gamepad1.b) {
+        } else if (gamepad1.y) {
             clawPosition -= .05f;
         }
 
         robot.setRelicClawPosition(clawPosition);
-    }
-
-    private void processRelicWinch() throws InterruptedException {
-        if (gamepad1.a) {
-            clawPosition += .05f;
-        } else if (gamepad1.b) {
-            clawPosition -= .05f;
-        }
-
-        robot.setRelicClawPosition(clawPosition);
-        Thread.sleep(200);  // Give time for servo to move
     }
 
     private void processRelicWrist() throws InterruptedException {
