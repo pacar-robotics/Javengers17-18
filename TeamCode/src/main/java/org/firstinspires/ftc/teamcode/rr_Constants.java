@@ -93,8 +93,8 @@ public class rr_Constants {
 
     //Cube Pusher Constants
     final static float CUBE_PUSHER_RESTED_POSITION= 0.9f;
-    final static float CUBE_PUSHER_INIT_POSITION= 0.1f;
-    final static float CUBE_PUSHER_PUSHED_POSITION= 0.1f;
+    final static float CUBE_PUSHER_INIT_POSITION= 0.0f;
+    final static float CUBE_PUSHER_PUSHED_POSITION= 0.0f;
 
     //cube holder position constants
     final static float CUBE_HOLDER_INIT_POSITION=0.7f;

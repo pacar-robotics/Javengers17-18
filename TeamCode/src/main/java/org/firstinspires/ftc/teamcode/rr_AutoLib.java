@@ -618,9 +618,11 @@ public class rr_AutoLib {
     public void scoreCube(rr_OpMode aOpMode) throws InterruptedException {
         robot.setCubeHolderPosition(aOpMode, rr_Constants.CUBE_HOLDER_RELEASE_POSITION);
         Thread.sleep(250);
+        robot.setCubePusherPosition(aOpMode, rr_Constants.CUBE_PUSHER_RESTED_POSITION);
+        Thread.sleep(250);
         robot.setCubePusherPosition(aOpMode, rr_Constants.CUBE_PUSHER_PUSHED_POSITION);
         Thread.sleep(250);
-        robot.setCubePusherPosition(aOpMode, rr_Constants.CUBE_PUSHER_INIT_POSITION);
+        robot.setCubePusherPosition(aOpMode, rr_Constants.CUBE_PUSHER_RESTED_POSITION);
         Thread.sleep(250);
         robot.setTrayHeightPositionWithTouchLimits(aOpMode, rr_Constants.TRAY_HEIGHT_COLLECTION_POSITION, rr_Constants.TRAY_LIFT_POWER);
         Thread.sleep(750);

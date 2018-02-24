@@ -291,7 +291,7 @@ public class rr_Robot {
     public void initCubeHolderServo(rr_OpMode aOpMode) throws InterruptedException{
         cubeHolderServo = hwMap.get(Servo.class, "servo_cube_holder");
         Thread.sleep(250);
-        setCubePusherPosition(aOpMode, CUBE_HOLDER_INIT_POSITION);
+        setCubeHolderPosition(aOpMode, CUBE_HOLDER_INIT_POSITION);
     }
 
 
