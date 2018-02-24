@@ -87,7 +87,7 @@ public class rr_Constants {
 
     final static float TRAY_FLIP_HORIZONTAL_POSITION=0.12f;
     final static float TRAY_FLIP_COLLECTION_POSITION=0.0f;
-    final static float TRAY_FLIP_CRYPTO_ALIGN_POSITION=0.15f;
+    final static float TRAY_FLIP_CRYPTO_ALIGN_POSITION=0.30f;
     final static float TRAY_FLIP_SCORING_POSITION=0.45f;
 
 
