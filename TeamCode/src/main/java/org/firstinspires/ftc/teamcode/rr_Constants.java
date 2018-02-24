@@ -85,10 +85,10 @@ public class rr_Constants {
     final static float TRAY_LIFT_POWER_FACTOR=1.0f;
     final static float TRAY_LIFT_POWER=1.0f;
 
-    final static float TRAY_FLIP_HORIZONTAL_POSITION=0.68f;
-    final static float TRAY_FLIP_COLLECTION_POSITION=0.80f;
-    final static float TRAY_FLIP_CRYPTO_ALIGN_POSITION=0.50f;
-    final static float TRAY_FLIP_SCORING_POSITION=0.17f;
+    final static float TRAY_FLIP_HORIZONTAL_POSITION=0.12f;
+    final static float TRAY_FLIP_COLLECTION_POSITION=0.0f;
+    final static float TRAY_FLIP_CRYPTO_ALIGN_POSITION=0.15f;
+    final static float TRAY_FLIP_SCORING_POSITION=0.45f;
 
 
     //Cube Pusher Constants

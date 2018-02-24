@@ -71,36 +71,41 @@ public class TestTray extends rr_OpMode {
     private void processTrayFlipAdjustments() throws InterruptedException{
             if(gamepad1.y){
                 //increase angle of tray flip to be more vertical.
-                if(robot.trayFlipPosition<=TRAY_FLIP_SCORING_POSITION){ //check for limit
+                if(robot.trayFlipPosition>=TRAY_FLIP_SCORING_POSITION){ //check for limit
                     robot.trayFlipPosition=TRAY_FLIP_SCORING_POSITION;
-                }else{
-                    robot.trayFlipPosition-=0.025;
-                }
-                robot.setTrayFlipPosition(this, robot.trayFlipPosition);
-            }
-            if(gamepad1.a){
-                //decrease angle of tray flip to be more vertical.
-                if(robot.trayFlipPosition>=TRAY_FLIP_COLLECTION_POSITION){ //check for limit
-                    robot.trayFlipPosition=TRAY_FLIP_COLLECTION_POSITION;
                 }else{
                     robot.trayFlipPosition+=0.025;
                 }
+                robot.setTrayFlipPosition(this, robot.trayFlipPosition);
+                Thread.sleep(250);
+            }
+            if(gamepad1.a){
+                //decrease angle of tray flip to be more vertical.
+                if(robot.trayFlipPosition<=TRAY_FLIP_COLLECTION_POSITION){ //check for limit
+                    robot.trayFlipPosition=TRAY_FLIP_COLLECTION_POSITION;
+                }else{
+                    robot.trayFlipPosition-=0.025;
+                }
             robot.setTrayFlipPosition(this, robot.trayFlipPosition);
+                Thread.sleep(250);
         }
         if(gamepad1.x){
             //set tray to collection
             robot.trayFlipPosition=TRAY_FLIP_COLLECTION_POSITION;
             robot.setTrayFlipPosition(this, robot.trayFlipPosition);
+            Thread.sleep(250);
         }
         if(gamepad1.b){
             //set tray to scoring
             robot.trayFlipPosition=TRAY_FLIP_SCORING_POSITION;
             robot.setTrayFlipPosition(this, robot.trayFlipPosition);
+            Thread.sleep(250);
         }
         if(gamepad1.left_bumper){
             //set tray to horizontal
             robot.trayFlipPosition=TRAY_FLIP_HORIZONTAL_POSITION;
             robot.setTrayFlipPosition(this, robot.trayFlipPosition);
+            Thread.sleep(250);
         }
 
     }
