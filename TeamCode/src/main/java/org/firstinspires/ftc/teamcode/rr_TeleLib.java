@@ -17,13 +17,14 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.FIELD_ORIENTED_DRIVE_P
 import static org.firstinspires.ftc.teamcode.rr_Constants.FRONT_LEFT_MOTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.INTAKE_POWER_HIGH;
 import static org.firstinspires.ftc.teamcode.rr_Constants.MOTOR_LOWER_POWER_THRESHOLD;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_CARRY;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_DROPOFF_INIT;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_PICKUP;
-import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_REST;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_CLAW_CLOSED;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_DRIVE_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WINCH_EXTEND_POWER_FACTOR;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WINCH_RETRACT_POWER_FACTOR;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WRIST_CARRY;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WRIST_DROPOFF_INIT;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_WRIST_PICKUP;
 import static org.firstinspires.ftc.teamcode.rr_Constants.SCORING_DRIVE_POWER_FACTOR;
@@ -256,12 +257,19 @@ public class rr_TeleLib {
 
     public void processRelicArm() throws InterruptedException {
         if (aOpMode.gamepad2.a) {
-            robot.setRelicWristPosition(RELIC_WRIST_PICKUP);
+            robot.setRelicClawOpen();
             robot.setRelicArmPosition(RELIC_ARM_PICKUP);
+            robot.setRelicWristPosition(RELIC_WRIST_PICKUP);
 
         }
         if (aOpMode.gamepad2.right_bumper) {
-            robot.setRelicArmPosition(RELIC_ARM_REST);
+            //release the cube.
+            robot.setRelicClawOpen();
+            Thread.sleep(200);
+            robot.setRelicWristPosition(robot.relicWristPosition+0.125f);
+            Thread.sleep(200);
+            robot.setRelicArmPosition(robot.relicArmPosition-0.1f);
+            Thread.sleep(200);
         }
 
     }
@@ -347,9 +355,7 @@ public class rr_TeleLib {
     public void processCubeAlignment() throws InterruptedException{
     //push cubes into tray for alignment
         if (aOpMode.gamepad1.right_bumper) {
-            robot.setCubePusherPosition(aOpMode, CUBE_PUSHER_PUSHED_POSITION);
-            Thread.sleep(300);
-            robot.setCubePusherPosition(aOpMode, CUBE_PUSHER_RESTED_POSITION);
+            alignCubes(aOpMode);
         }
     }
 
@@ -704,7 +710,7 @@ public class rr_TeleLib {
 
     public void alignCubes(rr_OpMode aOpMode) throws InterruptedException{
         robot.setCubePusherPosition(aOpMode, CUBE_PUSHER_PUSHED_POSITION);
-        Thread.sleep(300);
+        Thread.sleep(500);
         robot.setCubePusherPosition(aOpMode, CUBE_PUSHER_RESTED_POSITION);
     }
 

@@ -3,8 +3,9 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_PUSHER_RESTED_POSITION;
+import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_CARRY;
 import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_INIT;
-import static org.firstinspires.ftc.teamcode.rr_Constants.RELIC_ARM_REST;
+
 
 @TeleOp(name = "TeleOp J2", group = "TeleOp")
 public class TeleOpJ2 extends rr_OpMode {
@@ -23,7 +24,7 @@ public class TeleOpJ2 extends rr_OpMode {
         //lets move the cube pusher arm to the raised state and out of the way.
         lib.robot.setCubePusherPosition(this, CUBE_PUSHER_RESTED_POSITION);
         //lets move the relic arm up to rest position.
-        lib.robot.setRelicArmPosition(RELIC_ARM_REST);
+        lib.robot.setRelicArmPosition(RELIC_ARM_CARRY);
 
         while (opModeIsActive()) {
 

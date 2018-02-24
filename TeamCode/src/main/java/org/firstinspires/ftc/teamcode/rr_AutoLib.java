@@ -12,6 +12,8 @@ import static org.firstinspires.ftc.teamcode.rr_Constants.ANDYMARK_MOTOR_ENCODER
 
 
 import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_HOLDER_RELEASE_POSITION;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_PUSHER_PUSHED_POSITION;
+import static org.firstinspires.ftc.teamcode.rr_Constants.CUBE_PUSHER_RESTED_POSITION;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DirectionEnum.SidewaysLeft;
 import static org.firstinspires.ftc.teamcode.rr_Constants.DirectionEnum.SidewaysRight;
 import static org.firstinspires.ftc.teamcode.rr_Constants.GENERIC_TIMER;
@@ -618,18 +620,21 @@ public class rr_AutoLib {
     public void scoreCube(rr_OpMode aOpMode) throws InterruptedException {
         robot.setCubeHolderPosition(aOpMode, rr_Constants.CUBE_HOLDER_RELEASE_POSITION);
         Thread.sleep(250);
-        robot.setCubePusherPosition(aOpMode, rr_Constants.CUBE_PUSHER_RESTED_POSITION);
-        Thread.sleep(250);
-        robot.setCubePusherPosition(aOpMode, rr_Constants.CUBE_PUSHER_PUSHED_POSITION);
-        Thread.sleep(250);
-        robot.setCubePusherPosition(aOpMode, rr_Constants.CUBE_PUSHER_RESTED_POSITION);
-        Thread.sleep(250);
+        alignCubes(aOpMode);
         robot.setTrayHeightPositionWithTouchLimits(aOpMode, rr_Constants.TRAY_HEIGHT_COLLECTION_POSITION, rr_Constants.TRAY_LIFT_POWER);
         Thread.sleep(750);
         robot.setTrayFlipPosition(aOpMode, rr_Constants.TRAY_FLIP_SCORING_POSITION);
         Thread.sleep(750);
         robot.setTrayFlipPosition(aOpMode, rr_Constants.TRAY_FLIP_COLLECTION_POSITION);
         Thread.sleep(750);
+    }
+
+    public void alignCubes(rr_OpMode aOpMode) throws InterruptedException{
+        robot.setCubePusherPosition(aOpMode, CUBE_PUSHER_RESTED_POSITION);
+        Thread.sleep(500);
+        robot.setCubePusherPosition(aOpMode, CUBE_PUSHER_PUSHED_POSITION);
+        Thread.sleep(500);
+        robot.setCubePusherPosition(aOpMode, CUBE_PUSHER_RESTED_POSITION);
     }
 
 

@@ -1119,8 +1119,6 @@ public class rr_Robot {
     }
 
     public void setRelicClawOpen() throws InterruptedException {
-        relicClaw.setPosition(RELIC_CLAW_OPEN+0.05);
-        Thread.sleep(500);
         relicClaw.setPosition(RELIC_CLAW_OPEN);
         Thread.sleep(100);
     }
