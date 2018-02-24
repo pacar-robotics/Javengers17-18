@@ -144,7 +144,7 @@ public class rr_Constants {
     final static float TURN_POWER_FACTOR = 0.5f;
     final static float TURN_AUTONOMOUS_POWER_FACTOR = 0.25f;
     final static float SCORING_DRIVE_POWER_FACTOR = 0.25f;  //TODO: CHANGE LATER
-    final static float RELIC_DRIVE_POWER_FACTOR=0.95f;
+    final static float RELIC_DRIVE_POWER_FACTOR=0.5f;
 
     //Gamepad Thresholds
     final static float ANALOG_STICK_THRESHOLD = .25f;
