@@ -1591,7 +1591,7 @@ public class rr_Robot {
     public void setTrayFlipPosition(rr_OpMode aOpMode, float position) throws InterruptedException{
         trayFlipServo.setPosition(position);
         trayFlipPosition=position;
-//        Thread.sleep(750);
+      Thread.sleep(500);
     }
 
     public void setCubePusherPosition(rr_OpMode aOpMode, float position) throws InterruptedException{

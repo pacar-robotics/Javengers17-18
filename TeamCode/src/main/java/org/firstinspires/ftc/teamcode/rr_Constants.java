@@ -66,14 +66,14 @@ public class rr_Constants {
     final static int RELIC_WINCH_REST = -220;                   // TODO: Change
     final static int RELIC_WINCH_UPPER_LIMIT = 11000;           // TODO: Change
     final static float RELIC_ARM_CARRY = 0.3f;              // TODO: Change
-    final static float RELIC_ARM_PICKUP = 0.68f;
+    final static float RELIC_ARM_PICKUP = 0.7f;
     final static float RELIC_ARM_DROPOFF_INIT=0.45f;
     // TODO: Change
     final static float RELIC_ARM_INIT = 1.0f;
     final static float RELIC_CLAW_OPEN = 0.0f;
     final static float RELIC_CLAW_CLOSED = 0.3f;
     final static float RELIC_CLAW_INIT=0.3f;
-    final static float RELIC_WRIST_PICKUP=0.25f;
+    final static float RELIC_WRIST_PICKUP=0.3f;
     final static float RELIC_WRIST_INIT=0.05f;
     final static float RELIC_WRIST_DROPOFF_INIT=0.63f;
     final static float RELIC_WRIST_CARRY=0.85f;
@@ -87,9 +87,9 @@ public class rr_Constants {
     final static float TRAY_LIFT_POWER=1.0f;
 
     final static float TRAY_FLIP_HORIZONTAL_POSITION=0.12f;
-    final static float TRAY_FLIP_COLLECTION_POSITION=0.0f;
-    final static float TRAY_FLIP_CRYPTO_ALIGN_POSITION=0.15f;
-    final static float TRAY_FLIP_SCORING_POSITION=0.45f;
+    final static float TRAY_FLIP_COLLECTION_POSITION=0.6f;
+    final static float TRAY_FLIP_CRYPTO_ALIGN_POSITION=0.225f;
+    final static float TRAY_FLIP_SCORING_POSITION=0.0f;
 
 
     //Cube Pusher Constants

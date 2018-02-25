@@ -183,6 +183,8 @@ public class rr_AutoLib {
         robot.turnAbsoluteBoschGyroDegrees(aOpMode, 175);
         Thread.sleep(100);
 
+//        robot.setIntakePower(aOpMode, -INTAKE_POWER_HIGH, -INTAKE_POWER_HIGH);
+//        Thread.sleep(2000);
         // score cubes, move back, and then push to ensure scoring
         scoreCube(aOpMode);
         Thread.sleep(500);

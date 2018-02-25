@@ -722,6 +722,7 @@ public class rr_TeleLib {
     public void prepareToCollect(rr_OpMode aOpMode) throws InterruptedException{
         moveWheels(aOpMode, 4, 0.5f,Forward, true);
         robot.setTrayFlipPosition(aOpMode, TRAY_FLIP_COLLECTION_POSITION);
+        Thread.sleep(300);
         robot.setTrayHeightPositionWithTouchLimits(aOpMode, TRAY_HEIGHT_COLLECTION_POSITION, TRAY_LIFT_POWER);
         robot.setCubeHolderPosition(aOpMode, CUBE_HOLDER_INIT_POSITION);
         runIntakeWithDiagonalCheck(aOpMode, rr_Constants.IntakeStateEnum.INTAKE);
